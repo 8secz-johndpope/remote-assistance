@@ -1,0 +1,64 @@
+PODS:
+  - GoogleWebRTC (1.1.27828)
+  - IconFontKit/Core (2.1.2)
+  - IconFontKit/MaterialDesignIcons (2.1.2):
+    - IconFontKit/Core
+  - ReSwift (5.0.0)
+  - Socket.IO-Client-Swift (15.2.0):
+    - Starscream (~> 3.1)
+  - Starscream (3.1.1)
+  - SuperAlertController/Core (2.1.0)
+  - SuperAlertController/Ext (2.1.0):
+    - SuperAlertController/Core
+  - SwifterSwift (5.1.0):
+    - SwifterSwift/AppKit (= 5.1.0)
+    - SwifterSwift/CoreGraphics (= 5.1.0)
+    - SwifterSwift/CoreLocation (= 5.1.0)
+    - SwifterSwift/Dispatch (= 5.1.0)
+    - SwifterSwift/Foundation (= 5.1.0)
+    - SwifterSwift/MapKit (= 5.1.0)
+    - SwifterSwift/SceneKit (= 5.1.0)
+    - SwifterSwift/SpriteKit (= 5.1.0)
+    - SwifterSwift/SwiftStdlib (= 5.1.0)
+    - SwifterSwift/UIKit (= 5.1.0)
+  - SwifterSwift/AppKit (5.1.0)
+  - SwifterSwift/CoreGraphics (5.1.0)
+  - SwifterSwift/CoreLocation (5.1.0)
+  - SwifterSwift/Dispatch (5.1.0)
+  - SwifterSwift/Foundation (5.1.0)
+  - SwifterSwift/MapKit (5.1.0)
+  - SwifterSwift/SceneKit (5.1.0)
+  - SwifterSwift/SpriteKit (5.1.0)
+  - SwifterSwift/SwiftStdlib (5.1.0)
+  - SwifterSwift/UIKit (5.1.0)
+
+DEPENDENCIES:
+  - GoogleWebRTC
+  - IconFontKit/MaterialDesignIcons
+  - ReSwift
+  - Socket.IO-Client-Swift (~> 15.2.0)
+  - SuperAlertController/Ext
+  - SwifterSwift
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - GoogleWebRTC
+    - IconFontKit
+    - ReSwift
+    - Socket.IO-Client-Swift
+    - Starscream
+    - SuperAlertController
+    - SwifterSwift
+
+SPEC CHECKSUMS:
+  GoogleWebRTC: 55e46bee9ac2a4961542e9571bea589b64493f45
+  IconFontKit: 3ce6ef3f532016042405819cf983fed8d649dff7
+  ReSwift: 628f1a9b3ee52e3b3ca2a644435472fd77afafe1
+  Socket.IO-Client-Swift: 1e3e3a1f09f3312a167f0d781eb2f383d477357c
+  Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
+  SuperAlertController: 7e0587b26d8f0aaa28b0f93033737b1d89729557
+  SwifterSwift: a9e8e144832638c2850b43da5feaf9598c6ad65b
+
+PODFILE CHECKSUM: c0d97b36ddd1d8d4464c41441e34b930595e7c75
+
+COCOAPODS: 1.7.0

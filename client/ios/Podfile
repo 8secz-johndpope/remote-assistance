@@ -1,0 +1,11 @@
+source 'https://github.com/CocoaPods/Specs.git'
+target 'RemoteAssistance' do
+  platform :ios, '9.0'
+  use_frameworks!
+  pod 'GoogleWebRTC'
+  pod 'Socket.IO-Client-Swift', '~> 15.2.0'
+  pod 'ReSwift'
+  pod 'SuperAlertController/Ext'
+  pod 'IconFontKit/MaterialDesignIcons'
+  pod 'SwifterSwift'
+end
