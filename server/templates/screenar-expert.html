@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}ScreenAR Expert{% endblock %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="/static/css/main.css">
+{% endblock %}
+{% block header %}{% endblock %}
+{% block content %}
+Hello
+<video id='video'></video>
+{% endblock %}
+{% block js %}
+<script src="/static/ext/socket.io/2.2.0/socket.io.js"></script>
+<script src="/static/js/webrtc.js"></script>
+<script>
+// setup sample video
+var constraints = {
+    video: false,
+    audio: true
+}
+
+var wrtc;
+navigator.mediaDevices.getUserMedia(constraints).then(
+    function(stream) {
+        wrtc = new WebRTCClient({ stream: stream });
+        wrtc.on('stream', function(id, stream) {
+            var video = $('#video')[0]
+            video.srcObject = stream;
+            video.autoplay = true;
+        });
+    }
+);
+</script>
+{% endblock%}
