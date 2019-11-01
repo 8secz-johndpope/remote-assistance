@@ -1,0 +1,42 @@
+<!doctype html>
+<head>
+    <meta charset="utf-8">
+    <title>
+        {% block title %}Leap Motion Server{% endblock %}
+    </title>
+
+    <!-- meta -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <!-- /meta -->
+
+    <!-- styles -->
+    <link type="text/css" rel="stylesheet" href="/static/ext/twitter-bootstrap/4.2.1/css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="/static/ext/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- /styles -->
+    {% block css %}{% endblock %}
+</head>
+<body>
+    {% block header %}
+        <header class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-secondary border-bottom shadow-sm">
+            <h5 class="my-0 mr-md-auto font-weight-normal text-white">{% block headertitle %}Leap Motion Server{% endblock %}</h5>
+        </header>
+    {% endblock %}
+
+    <main role="main">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block footer %}
+        <footer class="text-muted mb-5">
+            <div class="container">
+            </div>
+        </footer>
+    {% endblock %}
+    <script src="/static/ext/webrtc-adapter/7.2.5/adapter.js"></script>
+    <script src="/static/ext/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/static/ext/twitter-bootstrap/4.2.1/bootstrap.min.js"></script>
+    {% block js %}{% endblock %}
+</body>
+</html>

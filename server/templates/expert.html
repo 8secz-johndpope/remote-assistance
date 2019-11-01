@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Leap Motion Server{% endblock %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="/static/css/expert.css">
+{% endblock %}
+{% block header %}{% endblock %}
+{% block content %}
+<div id="toolbar">
+    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <label class="btn btn-primary btn-xlg" id="zoom-small">
+            <input type="radio" name="options" autocomplete="off" checked> <i class="fa fa-search-minus"></i>
+        </label>
+        <label class="btn btn-primary btn-xlg active" id="zoom-medium">
+            <input type="radio" name="options" autocomplete="off"> <i class="fa fa-search"></i>
+        </label>
+        <label class="btn btn-primary btn-xlg" id="zoom-large">
+            <input type="radio" name="options" autocomplete="off"> <i class="fa fa-search-plus"></i>
+        </label>
+    </div>
+    <button class="btn btn-primary btn-xlg" id="reset" autocomplete="off"> Reset </button>    
+</div>
+<div class="container">
+    <h1>Expert View</h2>
+    <video id="video" autoplay="1"></video>
+</div>
+{% endblock %}
+{% block js %}
+<div id="info"></div>
+<script src="/static/ext/three.js/70/three.min.js"></script>
+<script src="/static/ext/socket.io/2.2.0/socket.io.js"></script>
+<script src="/static/ext/lodash.js/4.17.11/lodash.min.js"></script>
+<script src="/static/js/OBJLoader.js"></script>
+<script src="/static/js/MTLLoader.js"></script>
+<script src="/static/js/OBJMTLLoader.js"></script>
+<script src="/static/js/leap-0.6.4.js"></script>
+<script src="/static/js/leap-plugins-0.1.12.js"></script>
+<script src="/static/js/leap-rigged-handle-0.1.7.js"></script>
+<script src="/static/js/sioconnection.js"></script>
+<script src="/static/js/webrtc.js"></script>
+<script src="/static/js/leapmotionTrans.js"></script>
+<script src="/static/js/Renderer.js"></script>
+<script src="/static/js/expert.js"></script>
+{% endblock%}

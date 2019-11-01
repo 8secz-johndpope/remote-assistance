@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Leap Motion Customer{% endblock %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="/static/css/customer.css">
+{% endblock %}
+{% block header %}{% endblock %}
+{% block content %}
+    <div class="container">
+    <video id="video" autoplay playsinline></video>
+    <div class="controls my-auto margin y auto">
+        <button id="fullscreen" class="btn btn-primary" data-toggle="button" aria-pressed="false" autocomplete="off"><i class="fa fa-window-maximize"></i></button>
+        <button id="mute" class="btn btn-danger" data-toggle="button" aria-pressed="false" autocomplete="off"><i class="fa fa-microphone-slash"></i></button>
+    </div>
+    <div id="device-orientation-modal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Device Orientation Access</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>This app requires access to your device orientation.</p>
+              <p>Please click allow when prompted.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary">Ok</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+{% block js %}
+<div id="info"></div>
+<script src="/static/ext/three.js/70/three.min.js"></script>
+<script src="/static/ext/socket.io/2.2.0/socket.io.js"></script>
+<script src="/static/ext/lodash.js/4.17.11/lodash.min.js"></script>
+<script src="/static/js/OBJLoader.js"></script>
+<script src="/static/js/MTLLoader.js"></script>
+<script src="/static/js/OBJMTLLoader.js"></script>
+<script src="/static/js/leap-0.6.4.js"></script>
+<script src="/static/js/leap-plugins-0.1.12.js"></script>
+<script src="/static/js/leap-rigged-handle-0.1.7.js"></script>
+<script src="/static/js/sioconnection.js"></script>
+<script src="/static/js/webrtc.js"></script>
+<script src="/static/js/leapmotionTrans.js"></script>
+<script src="/static/js/Renderer.js"></script>
+<script src="/static/js/customer.js"></script>
+{% endblock%}
