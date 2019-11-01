@@ -25,6 +25,10 @@ app.get('/expert', function (req, res) {
     res.render('expert.html')
 });
 
+app.get('/screenarexpert', function (req, res) {
+    res.render('screenar-expert.html')
+});
+
 app.get('/customer', function (req, res) {
     res.render('customer.html')
 });
