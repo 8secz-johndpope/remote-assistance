@@ -33,36 +33,21 @@ module.exports = function(io) {
             }
         })
 
-        socket.on('keydown', function(data) {
-            Object.values(users).forEach(function(s) {
-                if (s !== socket) {
-                    s.emit('keydown', data);
-                }
+        // forwarded generic events
+        [
+            'keydown',
+            'wheel',
+            'camera_update',
+            'gyro'
+        ]
+        .forEach(function(eventName) {
+            socket.on(eventName, function(data) {
+                Object.values(users).forEach(function(s) {
+                    if (s !== socket) {
+                        s.emit(eventName, data);
+                    }
+                });
             });
-        });
-
-        socket.on('wheel', function(data) {
-            Object.values(users).forEach(function(s) {
-                if (s !== socket) {
-                    s.emit('wheel', data);
-                }
-            });
-        });
-
-        socket.on('camera_update', function(data) {
-            Object.values(users).forEach(function(s) {
-                if (s !== socket) {
-                    s.emit('camera_update', data);
-                }
-            });
-        });
-
-        socket.on('gyro', function(data) {
-            Object.values(users).forEach(function(s) {
-                if (s !== socket) {
-                    s.emit('gyro', data);
-                }
-            });
-        });
+        })
     });
 }
