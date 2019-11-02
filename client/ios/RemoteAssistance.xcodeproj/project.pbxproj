@@ -30,6 +30,7 @@
 		D7DB6A0B236DE7C700D7C367 /* TSReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DB6A08236DE7C700D7C367 /* TSReducer.swift */; };
 		D7DB6A0C236DE7C700D7C367 /* TSSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DB6A09236DE7C700D7C367 /* TSSwift.swift */; };
 		D7DB6A0E236DE91D00D7C367 /* TSSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DB6A0D236DE91D00D7C367 /* TSSettingsViewController.swift */; };
+		D7DB6A10236DF21C00D7C367 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D7DB6A0F236DF21C00D7C367 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +81,7 @@
 		D7DB6A08236DE7C700D7C367 /* TSReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSReducer.swift; sourceTree = "<group>"; };
 		D7DB6A09236DE7C700D7C367 /* TSSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSSwift.swift; sourceTree = "<group>"; };
 		D7DB6A0D236DE91D00D7C367 /* TSSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSSettingsViewController.swift; sourceTree = "<group>"; };
+		D7DB6A0F236DF21C00D7C367 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E2F10D05D152079F7937DA3B /* Pods-RemoteAssistance.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.release.xcconfig"; path = "Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -143,6 +145,7 @@
 		D7455DB62368BE77001594FA /* RemoteAssistance */ = {
 			isa = PBXGroup;
 			children = (
+				D7DB6A0F236DF21C00D7C367 /* README.md */,
 				D7455DB72368BE77001594FA /* AppDelegate.swift */,
 				D7455DC02368BE7F001594FA /* Assets.xcassets */,
 				D7455DBB2368BE77001594FA /* Experience.rcproject */,
@@ -344,6 +347,7 @@
 				D7DB69F0236DE2D500D7C367 /* materialdesignicons-webfont.ttf in Resources */,
 				D7455DC42368BE7F001594FA /* LaunchScreen.storyboard in Resources */,
 				D7DB69EB236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Right.dae in Resources */,
+				D7DB6A10236DF21C00D7C367 /* README.md in Resources */,
 				D7455DC12368BE7F001594FA /* Assets.xcassets in Resources */,
 				D7455DBF2368BE77001594FA /* Main.storyboard in Resources */,
 				D7DB69EF236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Left.dae in Resources */,
