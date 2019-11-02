@@ -34,13 +34,13 @@ module.exports = function(io) {
         })
 
         // forwarded generic events
-        [
+        let events = [
             'keydown',
             'wheel',
             'camera_update',
             'gyro'
         ]
-        .forEach(function(eventName) {
+        events.forEach(function(eventName) {
             socket.on(eventName, function(data) {
                 Object.values(users).forEach(function(s) {
                     if (s !== socket) {
