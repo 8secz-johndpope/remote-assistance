@@ -50,9 +50,11 @@ Planning
 Chat UI planning details
 -----------------
 * Implement basic decision tree chat from JSON with key-value pairs
-> ID: #_#_#
-> Question: “Question text”
-> Next: [ID,action,ID,…]
+```javascript
+ID: #_#_#
+Question: “Question text”
+Next: [ID,action,ID,…]
+```
 * Where “action” can be: launch phone call, send email, view video clip, launch AR session
 * One open-ended response will ask for a model number (which can be typed or scanned from a QR code using https://github.com/jbialobr/JsQRScanner)
 
