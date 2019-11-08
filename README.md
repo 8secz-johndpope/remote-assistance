@@ -29,6 +29,12 @@ Planning
 * Create DB backend with support for associated metadata (user, etc.)
 * Save clip metadata to backend along with user and marker data
 
+### Demo with chat UI for FXA
+* Target: ~ January 15
+* Build HTML5/Webview chat app
+* Implement basic decision tree chat
+* Connect one action from chat to iOS AR demo
+
 ### Internal test of stable branch
 * Target: ~ February 1
 * Experiment with live support tasks internal to FXPAL
@@ -40,3 +46,15 @@ Planning
 ### Experimentation with other features
 * Target: Ongoing in dev branch / external branch
 * (What features should go here?)
+
+Chat UI planning details
+-----------------
+* Implement basic decision tree chat from JSON with key-value pairs
+> ID: #_#_#
+> Question: “Question text”
+> Next: [ID,action,ID,…]
+* Where “action” can be: launch phone call, send email, view video clip, launch AR session
+* One open-ended response will ask for a model number (which can be typed or scanned from a QR code using https://github.com/jbialobr/JsQRScanner)
+
+
+
