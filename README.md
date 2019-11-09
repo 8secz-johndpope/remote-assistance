@@ -49,7 +49,7 @@ Planning
 
 Chat UI planning details
 -----------------
-* Implement basic decision tree chat from JSON with key-value pairs
+* Implement basic decision tree chat from JSON with key-value pairs (using e.g., https://codepen.io/sajadhsm/pen/odaBdd)
 ```javascript
 ID: #_#_#
 Question: “Question text”
