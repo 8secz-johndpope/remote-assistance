@@ -1,0 +1,65 @@
+:root{
+--blue:#3d73d3;
+}
+
+body{font-family:Arial}
+/*background-image:url(wood.jpg)*/
+
+}
+canvas,img{background-color:gray;vertical-align:top;border:1px solid blue;background-color:#ccc}
+#sourcecanvas{display:none}
+#dashboard{
+display:none;
+margin:32px;
+padding:32px;
+position:absolute;
+right:0;top:0;
+color:white;
+font-family:Courier;
+border-radius:2px;
+border:5px solid white;font-size:24px;width:400px;height:320px;
+background-color:#1B1A1C;
+cursor:pointer;
+}
+#dashboard button {
+outline:none;
+background-color:transparent;
+border-radius:0px;
+border:2px solid white;
+margin:2px;
+}
+#dashboard * { cursor:pointer;font-family:courier;font-size:24px;color:white}
+#dashboard td { border:2px solid white;text-align:center;width:32px;height:32px;}
+#dashboard input { outline:none;color:black}
+
+#canvas2,#canvas3,#overlay{pointer-events:all;position:absolute;background-color:transparent}
+
+/*.mark{
+transform-origin:0 0;
+padding:8px;
+color:white;
+font-size:32px;
+transform:scale(1.0) translate(-64px,-64px);
+position:absolute;
+width:128px;height:128px;
+background-color:rgba(0,0,255,0.5)
+}*/
+
+#overlay{overflow:hidden}
+
+.mark{
+padding:0.3%;
+color:white;
+font-size:30%;
+opacity:0;
+/*transform:translate(-5%,-5%);*/
+transform-origin:0 0;
+position:absolute;
+width:10%;height:10%;
+border:0px solid #ccc;
+border-radius:2px;
+background-color:rgba(0,0,255,0.3);
+transition:opacity 0.3s ease-in-out;
+}
+.mark > span {background-color:rgba(0,0,0,0.2);position:absolute;left:0;bottom:0;width:100%;text-align:center}
+

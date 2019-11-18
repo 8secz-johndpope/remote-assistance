@@ -2,16 +2,26 @@
 {% block title %}ScreenAR Expert{% endblock %}
 {% block css %}
 <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+<link rel="stylesheet" type="text/css" href="/static/css/screenar.css">
 {% endblock %}
 {% block header %}{% endblock %}
 {% block content %}
-Hello
+ScreenAR
 <video id='video'></video>
+<canvas id='sourcecanvas'></canvas>
+<div id='overlay'></div>
 {% endblock %}
 {% block js %}
 <script src="/static/ext/socket.io/2.2.0/socket.io.js"></script>
 <script src="/static/js/webrtc.js"></script>
 <script>
+var canvas = document.getElementById('sourcecanvas');
+var canvasw = 480;
+var canvash = 320;
+canvas.width = canvasw;
+canvas.height = canvash;
+var ctx = canvas.getContext('2d');
+
 // setup sample video
 var constraints = {
     video: false,
@@ -30,7 +40,61 @@ navigator.mediaDevices.getUserMedia(constraints).then(
     }
 );
 
-video.addEventListener('click',function (evt) {
+function showMark(x,y,text)
+{
+    let div = document.createElement('div');
+    div.className = 'mark';
+    div.style.left = x + '%';
+    div.style.top = y + '%';
+    let w = overlay.offsetWidth / 10 / 2;
+    div.style.transform = `translate(${-w}%,${-w}%)`;
+    div.innerHTML = `<span>${text}</span>`;
+    overlay.appendChild(div);
+    setTimeout(function () {div.style.opacity = 1;},0);
+}
+
+function drawVideo()
+{
+  if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight)
+  {
+    canvasw = video.videoWidth;
+    canvash = video.videoHeight;
+    canvas.width = canvasw;
+    canvas.height = canvash;
+    overlay.style.width = canvasw + 'px';
+    overlay.style.height = canvash + 'px';
+    //console.log('set width,height',canvasw,canvash);
+  }
+  ctx.drawImage(video,0,0,canvasw,canvash);
+  window.requestAnimationFrame(drawVideo);
+}
+
+function sendClick(x,y,text)
+{
+  if (wrtc && wrtc.sendChannel)
+    wrtc.sendChannel.send(`${x},${y},text`);
+}
+
+video.addEventListener('loadedmetadata',function (evt) {
+  console.log('video loaded');
+  drawVideo();
+},false);
+
+overlay.addEventListener('click',function (evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    let x = evt.pageX;
+    let y = evt.pageY;
+    x -= overlay.parentElement.offsetLeft;
+    y -= overlay.parentElement.offsetTop;
+    x = (x * 100 / overlay.offsetWidth) | 0;
+    y = (y * 100 / overlay.offsetHeight) | 0;
+    console.log(x,y);
+    showMark(x,y,'Click');
+    sendClick(x,y,'Click');
+});
+
+/*video.addEventListener('click',function (evt) {
     evt.preventDefault();
     evt.stopPropagation();
     let x = evt.pageX;
@@ -45,7 +109,7 @@ video.addEventListener('click',function (evt) {
     y0 |= 0;
     console.log('sending x0,y0=',x0,y0)
     wrtc.sendChannel.send(`${x0},${y0}`);
-});
+},false);*/
 
 </script>
 {% endblock%}
