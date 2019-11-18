@@ -12,7 +12,20 @@ function WebRTCClient(options) {
     this.url = this.options.url || url;
 
     var socket = io.connect(url);
-
+    var dataChannel = this.options.dataChannel;
+  
+    function createDataChannel(pc)
+    {
+        if (dataChannel) {
+            console.log('creating data channel=',dataChannel);
+            self.sendChannel = pc.createDataChannel(dataChannel, null);
+            self.sendChannel.onopen = function (event) { console.log('channel onopen',event);};
+            self.sendChannel.onclose = function (event) { console.log('channel onclose',event);};
+            self.sendChannel.onmessage = function (event) {
+                console.log('channel onmessage',event.data);
+            };
+        }
+    }
     function getPC(id) {
         if (self.pcs[id])
             return self.pcs[id];
@@ -43,6 +56,7 @@ function WebRTCClient(options) {
             }
         }
 
+        createDataChannel(pc);
         return pc;
     }
 
