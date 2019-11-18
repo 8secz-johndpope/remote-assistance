@@ -2,16 +2,28 @@
 {% block title %}ScreenAR Expert{% endblock %}
 {% block css %}
 <link rel="stylesheet" type="text/css" href="/static/css/main.css">
+<link rel="stylesheet" type="text/css" href="/static/css/screenar.css">
 {% endblock %}
 {% block header %}{% endblock %}
 {% block content %}
-Hello
+ScreenAR
 <video id='video'></video>
+<div id='screenarcontainer'>
+  <canvas id='sourcecanvas'></canvas>
+  <div id='overlay'></div>
+</div>
 {% endblock %}
 {% block js %}
 <script src="/static/ext/socket.io/2.2.0/socket.io.js"></script>
 <script src="/static/js/webrtc.js"></script>
 <script>
+var canvas = document.getElementById('sourcecanvas');
+var canvasw = 480;
+var canvash = 320;
+canvas.width = canvasw;
+canvas.height = canvash;
+var ctx = canvas.getContext('2d');
+
 // setup sample video
 var constraints = {
     video: false,
@@ -21,7 +33,7 @@ var constraints = {
 var wrtc;
 navigator.mediaDevices.getUserMedia(constraints).then(
     function(stream) {
-        wrtc = new WebRTCClient({ stream: stream });
+        wrtc = new WebRTCClient({ stream: stream, dataChannel:'ScreenAR' });
         wrtc.on('stream', function(id, stream) {
             var video = $('#video')[0]
             video.srcObject = stream;
@@ -29,5 +41,67 @@ navigator.mediaDevices.getUserMedia(constraints).then(
         });
     }
 );
+
+function showMark(x,y,text)
+{
+    let div = document.createElement('div');
+    div.className = 'mark';
+    div.style.left = x + '%';
+    div.style.top = y + '%';
+    let w = 20;
+    let h = 15;
+    div.style.width = w + '%';
+    div.style.height = h + '%';
+    div.innerHTML = `<span>${text}</span>`;
+    div.querySelector('span').style.fontSize = (overlay.offsetHeight / 30) + 'px'
+    overlay.appendChild(div);
+    setTimeout(function () {div.style.opacity = 1;},0);
+}
+
+function drawVideo()
+{
+  if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight)
+  {
+    canvasw = video.videoWidth;
+    canvash = video.videoHeight;
+
+    //screenarcontainer.style.width = canvasw + 'px';
+    //screenarcontainer.style.height = canvash + 'px';
+
+    canvas.width = canvasw;
+    canvas.height = canvash;
+    //overlay.style.width = canvasw + 'px';
+    //overlay.style.height = canvash + 'px';
+    //console.log('set width,height',canvasw,canvash);
+  }
+  //console.log('drawVideo');
+  ctx.drawImage(video,0,0,canvasw,canvash);
+  window.requestAnimationFrame(drawVideo);
+}
+
+function sendClick(x,y,text)
+{
+  if (wrtc && wrtc.sendChannel)
+    wrtc.sendChannel.send(`${x},${y},text`);
+}
+
+video.addEventListener('loadedmetadata',function (evt) {
+  console.log('video loaded');
+  drawVideo();
+},false);
+
+overlay.addEventListener('click',function (evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    let x = evt.pageX;
+    let y = evt.pageY;
+    x -= overlay.parentElement.offsetLeft;
+    y -= overlay.parentElement.offsetTop;
+    x = (x * 100 / overlay.offsetWidth) | 0;
+    y = (y * 100 / overlay.offsetHeight) | 0;
+    console.log(x,y);
+    showMark(x,y,'Tap');
+    sendClick(x,y,'Tap');
+});
 </script>
 {% endblock%}
