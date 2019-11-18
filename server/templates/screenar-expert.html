@@ -8,8 +8,10 @@
 {% block content %}
 ScreenAR
 <video id='video'></video>
-<canvas id='sourcecanvas'></canvas>
-<div id='overlay'></div>
+<div id='screenarcontainer'>
+  <canvas id='sourcecanvas'></canvas>
+  <div id='overlay'></div>
+</div>
 {% endblock %}
 {% block js %}
 <script src="/static/ext/socket.io/2.2.0/socket.io.js"></script>
@@ -46,9 +48,12 @@ function showMark(x,y,text)
     div.className = 'mark';
     div.style.left = x + '%';
     div.style.top = y + '%';
-    let w = overlay.offsetWidth / 10 / 2;
-    div.style.transform = `translate(${-w}%,${-w}%)`;
+    let w = 20;
+    let h = 15;
+    div.style.width = w + '%';
+    div.style.height = h + '%';
     div.innerHTML = `<span>${text}</span>`;
+    div.querySelector('span').style.fontSize = (overlay.offsetHeight / 30) + 'px'
     overlay.appendChild(div);
     setTimeout(function () {div.style.opacity = 1;},0);
 }
@@ -59,12 +64,17 @@ function drawVideo()
   {
     canvasw = video.videoWidth;
     canvash = video.videoHeight;
+
+    //screenarcontainer.style.width = canvasw + 'px';
+    //screenarcontainer.style.height = canvash + 'px';
+
     canvas.width = canvasw;
     canvas.height = canvash;
-    overlay.style.width = canvasw + 'px';
-    overlay.style.height = canvash + 'px';
+    //overlay.style.width = canvasw + 'px';
+    //overlay.style.height = canvash + 'px';
     //console.log('set width,height',canvasw,canvash);
   }
+  //console.log('drawVideo');
   ctx.drawImage(video,0,0,canvasw,canvash);
   window.requestAnimationFrame(drawVideo);
 }
@@ -90,26 +100,8 @@ overlay.addEventListener('click',function (evt) {
     x = (x * 100 / overlay.offsetWidth) | 0;
     y = (y * 100 / overlay.offsetHeight) | 0;
     console.log(x,y);
-    showMark(x,y,'Click');
-    sendClick(x,y,'Click');
+    showMark(x,y,'Tap');
+    sendClick(x,y,'Tap');
 });
-
-/*video.addEventListener('click',function (evt) {
-    evt.preventDefault();
-    evt.stopPropagation();
-    let x = evt.pageX;
-    let y = evt.pageY;
-    x -= this.offsetLeft;//rect.left;
-    y -= this.offsetTop;//rect.top;
-    x = x / this.offsetWidth;
-    y = y / this.offsetHeight;
-    let x0 = y * 1024;
-    let y0 = x * 1024;
-    x0 |= 0;
-    y0 |= 0;
-    console.log('sending x0,y0=',x0,y0)
-    wrtc.sendChannel.send(`${x0},${y0}`);
-},false);*/
-
 </script>
 {% endblock%}
