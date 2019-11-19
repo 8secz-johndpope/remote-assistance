@@ -12,23 +12,23 @@ function WebRTCClient(options) {
     this.url = this.options.url || url;
 
     var socket = io.connect(url);
-    var dataChannel = this.options.dataChannel;
+    var dataChannelName = this.options.dataChannel;
   
-    function createDataChannel(pc)
+    this.createDataChannel = function(name,pc)
     {
-        if (dataChannel) {
-            console.log('creating data channel=',dataChannel);
-            self.sendChannel = pc.createDataChannel(dataChannel, null);
-            self.sendChannel.onopen = function (event) { console.log('channel onopen',event);};
-            self.sendChannel.onclose = function (event) { console.log('channel onclose',event);};
-            self.sendChannel.onmessage = function (event) {
-                console.log('channel onmessage',event.data);
-            };
-        }
+      console.log('creating data channel=',name);
+      this.sendChannel = pc.createDataChannel(name, null);
+      this.sendChannel.onopen = function (event) { console.log('channel onopen',event);};
+      this.sendChannel.onclose = function (event) { console.log('channel onclose',event);};
+      this.sendChannel.onmessage = function (event) {
+          console.log('channel onmessage',event.data);
+      };
     }
     function getPC(id) {
         if (self.pcs[id])
+        {
             return self.pcs[id];
+        }
 
         var config = {
             "iceServers": [{ "urls": [
@@ -37,9 +37,29 @@ function WebRTCClient(options) {
         };
 
         var pc = new RTCPeerConnection(config);
+        
+        /*pc.ondatachannel = function(event) {
+          var channel = event.channel;
+        ﻿  channel.onopen = function(event) {
+            channel.send('Hi back!');
+          }
+          channel.onmessage = function(event) {
+            console.log(event.data);
+          }
+        }*/
+
         self.pcs[id] = pc;
         if (self.stream)
             pc.addStream(self.stream);
+
+        /*pc.onnegotiationneeded = function (event) {
+          console.error('negociation needed');
+        }*/
+
+        if (dataChannelName)
+        {
+          self.createDataChannel(dataChannelName,pc);
+        }
 
         pc.onaddstream = function(event) {
             var cb = self.callbacks['stream'];
@@ -56,7 +76,6 @@ function WebRTCClient(options) {
             }
         }
 
-        createDataChannel(pc);
         return pc;
     }
 
