@@ -1,0 +1,38 @@
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+</head>
+<section class="msger">
+  <main class="msger-chat">
+
+  </main>
+
+  <form class="msger-inputarea">
+    <input type="text" class="msger-input" placeholder="Enter your message...">
+    <button type="submit" class="msger-send-btn">Send</button>
+  </form>
+</section>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-full">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body" id="scanner">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/jquery-3.4.1.min.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/chat.js"></script>
+<script src="js/index.js"></script>
+<script type="text/javascript" src="js/jsqrscanner.nocache.js"></script>
+</html>
