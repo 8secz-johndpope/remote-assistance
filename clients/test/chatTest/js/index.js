@@ -8,11 +8,12 @@ const BOT_NAME = "DC Bot";
 const PERSON_NAME = " ";
 const BOT_DELAY = 500;
 const BOT_MSG_UNKNOWN = "I'm sorry, I didn't understand your response.";
+const SERVER_API = "/api/":
 
-const currentIndex = 0;
-const chatTree = JSON.parse(chatTreeJSON);
-const convArchive = []; 
+const CHAT_TREE = JSON.parse(CHAT_TREE_JSON);
 
+let convArchive = []; 
+let currentIndex = 0;
 let jbScanner;
 
 msgerForm.addEventListener("submit", event => {
@@ -106,25 +107,25 @@ function botResponse(msgText) {
 
   let msgTextInt = parseInt(msgText);
   if (isNaN(msgTextInt)) {
-    saveResponse(chatTree.responses[currentIndex].question,msgText);
-    currentIndex = chatTree.responses[currentIndex].next[1];
+    saveResponse(CHAT_TREE.responses[currentIndex].question,msgText);
+    currentIndex = CHAT_TREE.responses[currentIndex].next[1];
   } else {
-    for (let i = 0; i < chatTree.responses[currentIndex].length; i++) {
-     if (msgTextInt == chatTree.responses[currentIndex].next[i]) {
-      saveResponse(chatTree.responses[currentIndex].question,i+1);
-      currentIndex = chatTree.responses[currentIndex].next[i];
+    for (let i = 0; i < CHAT_TREE.responses[currentIndex].length; i++) {
+     if (msgTextInt == CHAT_TREE.responses[currentIndex].next[i]) {
+      saveResponse(CHAT_TREE.responses[currentIndex].question,i+1);
+      currentIndex = CHAT_TREE.responses[currentIndex].next[i];
      }
     }
   }  
 
-  for (let i = 0; i < chatTree.responses[currentIndex].next; i++) {
+  for (let i = 0; i < CHAT_TREE.responses[currentIndex].next; i++) {
     let pReg = /\+[0-9]+/;
     let eReg = /.+?@.+?\..+/;
-    let t = chatTree.responses[currentIndex].next[i];
+    let t = CHAT_TREE.responses[currentIndex].next[i];
     let nextBtn = new Object();
     if (isNaN(msgTextInt)) {
       if (t == "barcode") {
-        nextBtn.type = "barcode"; nextBtn.action = chatTree.responses[currentIndex].next[i+1];
+        nextBtn.type = "barcode"; nextBtn.action = CHAT_TREE.responses[currentIndex].next[i+1];
         botResponseArr.append(nextBtn);
         break;
       } else {

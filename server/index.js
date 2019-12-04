@@ -1,13 +1,15 @@
-const express = require('express');
-const app = express();
-const http = require('http');
-const https = require('https');
-const fs = require('fs');
+const express = require('express')
+const app = express()
+const http = require('http')
+const https = require('https')
+const fs = require('fs')
 // const server = require('http').Server(app);
-const io = require('socket.io');
-const WebSocket = require('ws');
-const nunjucks = require('nunjucks');
-const room = require('./room');
+const io = require('socket.io')
+const WebSocket = require('ws')
+const nunjucks = require('nunjucks')
+const room = require('./room')
+
+const db = require('./db')
 
 nunjucks.configure('templates', {
     autoescape: true,
@@ -33,8 +35,19 @@ app.get('/customer', function (req, res) {
     res.render('customer.html')
 });
 
-var clients = new Set()
+app.get('/api/getRoom/:uuid', function (req, res) {
+    db.getRoom(res,req.params.uuid)
+});
 
+app.get('/api/getUser/:uuid', function (req, res) {
+    db.getUser(res,req.params.uuid)
+});
+
+app.get('/api/getClip/:uuid', function (req, res) {
+    db.getClip(res,req.params.uuid)
+});
+
+var clients = new Set()
 
 var url = 'ws://localhost:6437/v7.json';
 var socket = new WebSocket(url);

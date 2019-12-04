@@ -1,4 +1,4 @@
-const chatTreeJSON = `
+const CHAT_TREE_JSON = `
  { "responses": [ 
     {
 	"id": 1,
