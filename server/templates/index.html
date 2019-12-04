@@ -5,38 +5,57 @@
 {% endblock %}
 {% block header %}{% endblock %}
 {% block content %}
-    <div class="container mt-5">
+  <div class="container mt-5">
     <div class="card-deck mb-3 text-center">
-    <div class="card mb-4 shadow-sm">
-      <div class="card-header">
-        <h4 class="my-0 font-weight-normal">Customer</h4>
+      <div class="card mb-4 shadow-sm">
+        <div class="card-header">
+          <h4 class="my-0 font-weight-normal">Customer</h4>
+        </div>
+        <div class="card-body">
+          <h1 class="card-title pricing-card-title">I am a customer</h1>
+          <ul class="list-unstyled mt-3 mb-4">
+            <li>Need to talk to expert</li>
+            <li>Camera or mobile phone</li>
+            <li>Microphone</li>
+          </ul>
+          <a href="/customer" class="btn btn-lg btn-block btn-outline-primary">I am a Customer</a>
+        </div>
       </div>
-      <div class="card-body">
-        <h1 class="card-title">I am a customer</h1>
-        <ul class="list-unstyled mt-3 mb-4">
-          <li>Need to talk to expert</li>
-          <li>Camera or mobile phone</li>
-          <li>Microphone</li>
-        </ul>
-        <a href="/customer" class="btn btn-lg btn-block btn-outline-primary">I am a Customer</a>
+      <div class="card mb-4 shadow-sm">
+        <div class="card-header">
+          <h4 class="my-0 font-weight-normal">Expert</h4>
+        </div>
+        <div class="card-body">
+          <h1 class="card-title pricing-card-title">I am an expert</h1>
+          <ul class="list-unstyled mt-3 mb-4">
+            <li>I can answer questions</li>
+            <li>Camera or mobile phone</li>
+            <li>Microphone</li>
+          </ul>
+          <a href="/expert" class="btn btn-lg btn-block btn-primary">I am an Expert</a>
+        </div>
       </div>
     </div>
-    <div class="card mb-4 shadow-sm">
-      <div class="card-header">
-        <h4 class="my-0 font-weight-normal">Expert</h4>
-      </div>
-      <div class="card-body">
-        <h1 class="card-title pricing-card-title">I am an expert</h1>
-        <ul class="list-unstyled mt-3 mb-4">
-          <li>I can answer questions</li>
-          <li>Camera or mobile phone</li>
-          <li>Microphone</li>
-        </ul>
-        <a href="/expert" class="btn btn-lg btn-block btn-primary">I am an Expert</a>
+    <div class="row">
+        <div class="col-10 text-center">
+            <h3 id="url" class="mb-5"></h3>
+            <div id="qrcode"></div>
+        </div>
+        <div class="col-2">
+        <div class="form-group">
+          <label>Network Interface</label>
+          <select class="form-control" id="interfaces">
+            <option value="default">Default</option>
+            {% for iface in ifaces %}
+            <option value="{{ iface.address }}">{{iface.name}}</option>
+            {% endfor %}
+          </select>
+        </div>
       </div>
     </div>
   </div>
-    </div>
 {% endblock %}
 {% block js %}
+<script src="/static/js/main.js"></script>
+<script src="/static/ext/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
 {% endblock%}
