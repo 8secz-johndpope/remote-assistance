@@ -1,0 +1,41 @@
+const os = require('os');
+const dns = require('dns');
+
+function reverseLookup(ip) {
+	dns.reverse(ip,function(err,domains){
+		if(err!=null)	callback(err);
+
+		domains.forEach(function(domain){
+			dns.lookup(domain,function(err, address, family){
+				console.log(domain,'[',address,']');
+				console.log('reverse:',ip==address);
+			});
+		});
+	});
+}
+
+function getInterfaces() {
+    var ifaces = os.networkInterfaces();
+
+    // ignore loopback
+    delete ifaces['lo'];
+    var keys = Object.keys(ifaces);
+    return keys.map(function(key) {
+        var addrs = ifaces[key];
+        var ipv4;
+        addrs.forEach(function(addr) {
+            if (addr.family == 'IPv4') {
+                ipv4 = addr;
+                addr.name = key;
+                return addr;
+            }
+        });
+        return ipv4;
+      }).filter(function(addr) {
+          return addr != null;
+      });
+}
+
+module.exports = {
+    getInterfaces
+}
