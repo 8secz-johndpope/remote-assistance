@@ -23,7 +23,7 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             video.autoplay = true;
         });
         wrtc.on('gyro', function(data) {
-            console.log('gyro', data); 
+            // console.log('gyro', data);
             //document.getElementById("info").innerHTML = data.alpha.toFixed(2)+" "+data.beta.toFixed(2)+" "+data.gamma.toFixed(2)+" "+data.absolute;
             
             renderer.rotateCameraBody(data.alpha, data.beta, data.gamma);
@@ -174,3 +174,30 @@ $('#reset').click(function(e) {
                                 quaternion: renderer.camera.quaternion});
     return false;
 });
+
+// ----- START: Comment this out to disable sending browser leapmotion data -----
+// connection to server
+var url = [window.location.protocol, '//', window.location.host, '/'].join('')
+var sio = io(url)
+
+// connection to leapmotion
+var url = 'ws://localhost:6437/v7.json';
+var socket = new WebSocket(url);
+
+socket.addEventListener('open', function() {
+    console.log('connected to ' + url);
+    socket.send(JSON.stringify({enableGestures: false}))
+    socket.send(JSON.stringify({background: false}))
+    socket.send(JSON.stringify({optimizeHMD: false}))
+    socket.send(JSON.stringify({focused: true}))
+
+});
+
+socket.addEventListener('message', function (data) {
+    // send leap motion hand data to server
+    sio.emit('update_frame', event.data);
+});
+
+socket.addEventListener('close', function(code, reason) { console.log(code, reason) });
+socket.addEventListener('error', function() { console.log('ws error') });
+// ----- END: Comment this out to disable sending browser leapmotion data -----

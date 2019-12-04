@@ -1,13 +1,14 @@
-const express = require('express')
-const app = express()
-const http = require('http')
-const https = require('https')
-const fs = require('fs')
+const express = require('express');
+const app = express();
+const http = require('http');
+const https = require('https');
+const fs = require('fs');
 // const server = require('http').Server(app);
-const io = require('socket.io')
-const WebSocket = require('ws')
-const nunjucks = require('nunjucks')
-const room = require('./room')
+const io = require('socket.io');
+const WebSocket = require('ws');
+const nunjucks = require('nunjucks');
+const room = require('./room');
+const util = require('./util');
 
 const db = require('./db')
 
@@ -20,7 +21,8 @@ nunjucks.configure('templates', {
 app.use('/static', express.static(__dirname + '/static'))
 
 app.get('/', function (req, res) {
-    res.render('index.html')
+    var ifaces = util.getInterfaces()
+    res.render('index.html', { ifaces })
 });
 
 app.get('/expert', function (req, res) {
@@ -49,24 +51,26 @@ app.get('/api/getClip/:uuid', function (req, res) {
 
 var clients = new Set()
 
-var url = 'ws://localhost:6437/v7.json';
-var socket = new WebSocket(url);
-socket.on('message', function (data) {
-    clients.forEach(function(s) {
-        s.emit('frame', data);
-    });
-});
+// ----- START: Uncomment to have Node.js fetch leapmotion ------
+// var url = 'ws://localhost:6437/v7.json';
+// var socket = new WebSocket(url);
+// socket.on('message', function (data) {
+//     clients.forEach(function(s) {
+//         s.emit('frame', data);
+//     });
+// });
 
-socket.on('open', function() {
-    console.log('connected to ' + url);
-    socket.send(JSON.stringify({enableGestures: false}))
-    socket.send(JSON.stringify({background: false}))
-    socket.send(JSON.stringify({optimizeHMD: false}))
-    socket.send(JSON.stringify({focused: true}))
+// socket.on('open', function() {
+//     console.log('connected to ' + url);
+//     socket.send(JSON.stringify({enableGestures: false}))
+//     socket.send(JSON.stringify({background: false}))
+//     socket.send(JSON.stringify({optimizeHMD: false}))
+//     socket.send(JSON.stringify({focused: true}))
 
-});
-socket.on('close', function(code, reason) { console.log(code, reason) });
-socket.on('error', function() { console.log('ws error') });
+// });
+// socket.on('close', function(code, reason) { console.log(code, reason) });
+// socket.on('error', function() { console.log('ws error') });
+// ----- END: Uncomment to have Node.js fetch leapmotion ------
 
 // setup http server
 var privateKey  = fs.readFileSync('ssl/wild.fxpal.net.key', 'utf8');
@@ -84,6 +88,13 @@ function onConnection(connection) {
     clients.add(connection);
     connection.on('disconnect', function() {
         clients.delete(connection);
+    });
+
+    // expert udpates the hand frame
+    connection.on('update_frame', function(data) {
+        clients.forEach(function(s) {
+            s.emit('frame', data);
+        });
     });
 }
 
