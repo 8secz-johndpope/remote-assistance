@@ -36,6 +36,18 @@ function getInterfaces() {
       });
 }
 
+function generateRandomRoomId() {
+    var text = "";
+    var l = 9;
+    //var char_list = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var char_list = "0123456789";
+    for(var i=0; i < l; i++) {
+        text += char_list.charAt(Math.floor(Math.random() * char_list.length));
+    }
+    return text;
+}
+
 module.exports = {
-    getInterfaces
+    getInterfaces,
+    generateRandomRoomId
 }

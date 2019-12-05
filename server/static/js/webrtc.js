@@ -12,6 +12,7 @@ function WebRTCClient(options) {
     this.url = this.options.url || url;
 
     var socket = io.connect(url);
+    SIOConnection.socket = socket;
     var dataChannelName = this.options.dataChannel;
 
     this.createDataChannel = function(name,pc)
@@ -40,7 +41,7 @@ function WebRTCClient(options) {
 
         /*pc.ondatachannel = function(event) {
           var channel = event.channel;
-        ﻿  channel.onopen = function(event) {
+            channel.onopen = function(event) {
             channel.send('Hi back!');
           }
           channel.onmessage = function(event) {

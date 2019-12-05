@@ -86,12 +86,7 @@ $('#mute').click(function() {
 
 
 //// Rendering
-var renderer = new Renderer( 
-    {add_interaction_box: false,
-     add_line_object: false,
-     add_leapmotion_device: false}, 
-    SIOConnection );
-
+var renderer;
 var wrtc;
 navigator.mediaDevices.getUserMedia(constraints).then(
     function(stream) {
@@ -107,7 +102,8 @@ navigator.mediaDevices.getUserMedia(constraints).then(
         });
 
         wrtc = new WebRTCClient({
-            stream: stream
+            stream: stream,
+            room: config.roomid
         });
 
         wrtc.on('stream', function(id, stream) {
@@ -129,6 +125,11 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             renderer.updateCameraByParameter(data.position, data.quaternion);
         });
 
+        renderer = new Renderer( 
+            {add_interaction_box: false,
+             add_line_object: false,
+             add_leapmotion_device: false}, 
+            SIOConnection );
     }
 )
 

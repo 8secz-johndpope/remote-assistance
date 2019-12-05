@@ -6,17 +6,16 @@ var constraints = {
 
 
 //// Rendering
-var renderer = new Renderer( 
-    {add_interaction_box: true,
-     add_line_object: false, 
-     add_leapmotion_device: false}, 
-    SIOConnection );
+var renderer;
 
 var first = true;
 var wrtc;
 navigator.mediaDevices.getUserMedia(constraints).then(
     function(stream) {
-        wrtc = new WebRTCClient({ stream: stream });
+        wrtc = new WebRTCClient({
+            stream: stream,
+            room: config.roomid
+        });
         wrtc.on('stream', function(id, stream) {
             var video = $('#video')[0]
             video.srcObject = stream;
@@ -36,6 +35,13 @@ navigator.mediaDevices.getUserMedia(constraints).then(
                                 quaternion: renderer.camera.quaternion});
                                 
         });
+
+        // Create renderer after wrtc because it shares the same socket
+        renderer = new Renderer( 
+            {add_interaction_box: true,
+             add_line_object: false, 
+             add_leapmotion_device: false}, 
+            SIOConnection );
     }
 );
 
@@ -175,11 +181,16 @@ $('#reset').click(function(e) {
     return false;
 });
 
-// ----- START: Comment this out to disable sending browser leapmotion data -----
-// connection to server
-var url = [window.location.protocol, '//', window.location.host, '/'].join('')
-var sio = io(url)
+$('#qr').click(function(e) {
+    e.preventDefault();
+    var url = ['https://', window.location.host, '/', config.roomid  ,'/customer'].join('');
+    $('#qrcode').empty().qrcode(url);
+    $('#url').text(url);
+    $('#qrcode-modal').modal();
+    return false;
+});
 
+// ----- START: Comment this out to disable sending browser leapmotion data -----
 // connection to leapmotion
 var url = 'ws://localhost:6437/v7.json';
 var socket = new WebSocket(url);
@@ -195,7 +206,9 @@ socket.addEventListener('open', function() {
 
 socket.addEventListener('message', function (data) {
     // send leap motion hand data to server
-    sio.emit('update_frame', event.data);
+    if (SIOConnection.socket) {
+        SIOConnection.socket.emit('frame', event.data);
+    }
 });
 
 socket.addEventListener('close', function(code, reason) { console.log(code, reason) });

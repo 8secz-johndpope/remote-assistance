@@ -21,20 +21,27 @@ nunjucks.configure('templates', {
 app.use('/static', express.static(__dirname + '/static'))
 
 app.get('/', function (req, res) {
-    var ifaces = util.getInterfaces()
-    res.render('index.html', { ifaces })
+    var roomid = util.generateRandomRoomId();
+    res.redirect('/' + roomid)
 });
 
-app.get('/expert', function (req, res) {
-    res.render('expert.html')
+app.get('/:roomid', function (req, res) {
+    var roomid = req.params.roomid;
+    res.render('index.html', { roomid });
+});
+
+app.get('/:roomid/expert', function (req, res) {
+    var roomid = req.params.roomid;
+    res.render('expert.html', { roomid });
+});
+
+app.get('/:roomid/customer', function (req, res) {
+    var roomid = req.params.roomid;
+    res.render('customer.html', { roomid });
 });
 
 app.get('/screenarexpert', function (req, res) {
     res.render('screenar-expert.html')
-});
-
-app.get('/customer', function (req, res) {
-    res.render('customer.html')
 });
 
 app.get('/api/getRoom/:uuid', function (req, res) {
@@ -77,33 +84,16 @@ var privateKey  = fs.readFileSync('ssl/wild.fxpal.net.key', 'utf8');
 var certificate = fs.readFileSync('ssl/wild.fxpal.net.bundle.crt', 'utf8');
 var credentials = {key: privateKey, cert: certificate};
 
-var httpServer = http.createServer(app);
+// var httpServer = http.createServer(app);
 var httpsServer = https.createServer(credentials, app);
 
-httpServer.listen(5000, '0.0.0.0');
+// httpServer.listen(5000, '0.0.0.0');
 httpsServer.listen(5443, '0.0.0.0');
 
-// socket.io connection
-function onConnection(connection) {
-    clients.add(connection);
-    connection.on('disconnect', function() {
-        clients.delete(connection);
-    });
-
-    // expert udpates the hand frame
-    connection.on('update_frame', function(data) {
-        clients.forEach(function(s) {
-            s.emit('frame', data);
-        });
-    });
-}
-
-var httpio = io(httpServer);
+// var httpio = io(httpServer);
 var httpsio = io(httpsServer);
-httpio.on('connection', onConnection);
-httpsio.on('connection', onConnection);
 
 roomio = httpsio.of('/room');
-require('./room')(roomio);
+room(roomio);
 
-console.log('listening to port http 5000, https 5443')
+console.log('listening to port https 5443');
