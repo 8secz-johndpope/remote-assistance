@@ -5,7 +5,7 @@ Renderer = function ( parameters, SIOConnection, domElement ) {
 
     this.parameters = parameters;
 
-    this.default_distance = 300;
+    this.default_distance = 500;
     this.default_height = 200;
 
     this.domElement = ( domElement !== undefined ) ? domElement : document.body;
@@ -55,7 +55,9 @@ Renderer = function ( parameters, SIOConnection, domElement ) {
 
 
     //// leapmotion transformation class
-    this.leapmotion_trans = new LeapmotionTrans();    
+    this.leapmotion_trans = new LeapmotionTrans({
+        d_init: this.default_distance
+    });    
     
     //// options
     this.tracking = true;

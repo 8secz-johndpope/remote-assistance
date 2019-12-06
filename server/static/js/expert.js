@@ -10,6 +10,10 @@ var renderer;
 
 var first = true;
 var wrtc;
+var connected = false;
+// hide the video until we have a stream
+$('#video').hide();
+
 navigator.mediaDevices.getUserMedia(constraints).then(
     function(stream) {
         wrtc = new WebRTCClient({
@@ -17,10 +21,18 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             room: config.roomid
         });
         wrtc.on('stream', function(id, stream) {
-            var video = $('#video')[0]
+            var video = $('#video').show().get(0)
             video.srcObject = stream;
             video.autoplay = true;
             $('#qrcode-modal').modal('hide');
+            connected = true;
+            stream.getVideoTracks().forEach(function(t) {
+                t.addEventListener('ended', function() {
+                    $('#video').hide();
+                    connected = false;
+                    onReset();
+                });
+            })
         });
         wrtc.on('gyro', function(data) {
             // console.log('gyro', data);
@@ -43,6 +55,9 @@ navigator.mediaDevices.getUserMedia(constraints).then(
              add_line_object: false, 
              add_leapmotion_device: false}, 
             SIOConnection, document.getElementById('container') );
+
+        // reset camera
+        onReset();
 
         // limit click to threejs canvas
         renderer.domElement.addEventListener('click', onMouseClick, false);
@@ -130,6 +145,9 @@ window.addEventListener('wheel', onWheel, false);
 
 function onMouseClick(event)
 {   
+    if (!connected) {
+        return;
+    }
     //console.log(event);
     //document.getElementById("info").innerHTML = event.clientX.toFixed(2)+" "+event.clientY.toFixed(2)+" "+event.screenX.toFixed(2)+" "+event.screenY.toFixed(2);
     renderer.moveLeapmotionSpaceByClick(event.clientX, event.clientY);
@@ -168,14 +186,20 @@ $('#zoom-large').click(function(e) {
                                 quaternion: renderer.camera.quaternion});
 });
 
-$('#reset').click(function(e) {
+function onReset() {
     console.log('reset');
+    renderer.rotateCameraBody(0, 90, 0);
     renderer.resetCameraParam();
     renderer.updateCamera();
+}
+
+$('#reset').click(function(e) {
+    onReset();
     wrtc.emit('camera_update', {msg: 'from_expert', 
                                 position: renderer.camera.position, 
                                 quaternion: renderer.camera.quaternion});
 });
+
 
 $('#qr').click(function(e) {
     var url = ['https://', window.location.host, '/', config.roomid  ,'/customer'].join('');
