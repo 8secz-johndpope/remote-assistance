@@ -9,8 +9,8 @@ const WebSocket = require('ws');
 const nunjucks = require('nunjucks');
 const room = require('./room');
 const util = require('./util');
-
-const db = require('./db')
+let useDB = true
+let leapMotion = false
 
 nunjucks.configure('templates', {
     autoescape: true,
@@ -18,6 +18,24 @@ nunjucks.configure('templates', {
     noCache: true
 });
 
+
+// Args
+const args = process.argv.slice(2)
+if (args.includes("--no_db")) {
+    useDB = false
+} 
+if (args.includes("--use_leap_motion")) {
+    leapMotion = true
+}
+if (args.includes("--help")) {
+    console.log("node index.js [--help]  [--no_db --use_leap_motion]")
+    console.log("--no_db              Do not attempt to connect to a database. This turns off API features.")
+    console.log("--use_leap_motion    Connect to Leap Motion device.")
+    console.log("--help               Print this help message and exit.")
+    process.exit()
+}
+
+// Routing
 app.use('/static', express.static(__dirname + '/static'))
 
 app.get('/', function (req, res) {
@@ -44,51 +62,55 @@ app.get('/:roomid/customer', function (req, res) {
     res.render('customer.html', { roomid });
 });
 
-app.get('/api/getRoom/:uuid', function (req, res) {
-    db.getRoom(res,req.params.uuid)
-});
+if (useDB) {
+    const db = require('./db')
 
-app.get('/api/getUser/:uuid', function (req, res) {
-    db.getUser(res,req.params.uuid)
-});
+    app.get('/api/getRoom/:uuid', function (req, res) {
+        db.getRoom(res,req.params.uuid)
+    });
 
-app.get('/api/getClip/:uuid', function (req, res) {
-    db.getClip(res,req.params.uuid)
-});
+    app.get('/api/getUser/:uuid', function (req, res) {
+        db.getUser(res,req.params.uuid)
+    });
 
-// TODO
-app.get('/api/createCustomer/', function (req, res) {
-    db.getUser(res,req.params.uuid)
-});
+    app.get('/api/getClip/:uuid', function (req, res) {
+        db.getClip(res,req.params.uuid)
+    });
 
-app.get('/api/createRoom/', function (req, res) {
-    db.getUser(res,req.params.uuid)
-});
+    // TODO
+    app.get('/api/createCustomer/', function (req, res) {
+        db.getUser(res,req.params.uuid)
+    });
+
+    app.get('/api/createRoom/', function (req, res) {
+        db.getUser(res,req.params.uuid)
+    });
+}
 
 var clients = new Set()
 
-// ----- START: Uncomment to have Node.js fetch leapmotion ------
-// var url = 'ws://localhost:6437/v7.json';
-// var socket = new WebSocket(url);
-// socket.on('message', function (data) {
-//     clients.forEach(function(s) {
-//         s.emit('frame', data);
-//     });
-// });
 
-// socket.on('open', function() {
-//     console.log('connected to ' + url);
-//     socket.send(JSON.stringify({enableGestures: false}))
-//     socket.send(JSON.stringify({background: false}))
-//     socket.send(JSON.stringify({optimizeHMD: false}))
-//     socket.send(JSON.stringify({focused: true}))
+if (leapMotion) {
+    var url = 'ws://localhost:6437/v7.json';
+    var socket = new WebSocket(url);
+    socket.on('message', function (data) {
+        clients.forEach(function(s) {
+            s.emit('frame', data);
+        });
+    });
 
-// });
-// socket.on('close', function(code, reason) { console.log(code, reason) });
-// socket.on('error', function() { console.log('ws error') });
-// ----- END: Uncomment to have Node.js fetch leapmotion ------
+    socket.on('open', function() {
+        console.log('connected to ' + url);
+        socket.send(JSON.stringify({enableGestures: false}))
+        socket.send(JSON.stringify({background: false}))
+        socket.send(JSON.stringify({optimizeHMD: false}))
+        socket.send(JSON.stringify({focused: true}))
+ });
+ socket.on('close', function(code, reason) { console.log(code, reason) });
+ socket.on('error', function() { console.log('ws error') });
+}
 
-// setup http server
+// Setup http server
 var privateKey  = fs.readFileSync('ssl/wild.fxpal.net.key', 'utf8');
 var certificate = fs.readFileSync('ssl/wild.fxpal.net.bundle.crt', 'utf8');
 var credentials = {key: privateKey, cert: certificate};
