@@ -8,7 +8,7 @@ Renderer = function ( parameters, SIOConnection, domElement ) {
     this.default_distance = 300;
     this.default_height = 200;
 
-    this.domElement = ( domElement !== undefined ) ? domElement : document;
+    this.domElement = ( domElement !== undefined ) ? domElement : document.body;
 
     //// scene
     this.scene = new THREE.Scene();
@@ -24,7 +24,7 @@ Renderer = function ( parameters, SIOConnection, domElement ) {
     this.renderer.domElement.style.width = '100%';
     this.renderer.domElement.style.height = '100%';
 
-    this.domElement.body.appendChild(this.renderer.domElement);
+    this.domElement.appendChild(this.renderer.domElement);
 
     //// light
     this.light = new THREE.DirectionalLight(0xffffff, 1);
