@@ -8,7 +8,6 @@ const io = require('socket.io')
 const WebSocket = require('ws')
 const nunjucks = require('nunjucks')
 const room = require('./room')
-
 const db = require('./db')
 
 nunjucks.configure('templates', {
@@ -45,6 +44,15 @@ app.get('/api/getUser/:uuid', function (req, res) {
 
 app.get('/api/getClip/:uuid', function (req, res) {
     db.getClip(res,req.params.uuid)
+});
+
+// TODO
+app.get('/api/createCustomer/', function (req, res) {
+    db.getUser(res,req.params.uuid)
+});
+
+app.get('/api/createRoom/', function (req, res) {
+    db.getUser(res,req.params.uuid)
 });
 
 var clients = new Set()

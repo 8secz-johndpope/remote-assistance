@@ -12,6 +12,10 @@ connection.connect(function(err) {
 
 module.exports = {
 	
+	getConnection: () => {
+		return connection
+	},
+
 	getRoom: (res,uuid) => {
 		connection.query('select * from room where uuid = ?',
 			[
