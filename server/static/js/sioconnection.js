@@ -7,18 +7,16 @@ SIOConnection.__proto__ = Leap.BrowserConnection;
 
 SIOConnection.prototype.setupSocket = function() {
     var connection = this;
-    var url = [window.location.protocol, '//', window.location.host, '/'].join('')
-    var socket = io(url)
-    socket.on('connection', function(socket) {
-        connection.handleOpen();
-    });
-    socket.on('disconnect', function () {
-        connection.handleClose(200, 'disconnect');
-    });
-    socket.on('frame', function(data) {
-        connection.handleData(data);
-    });
-    return socket;
+
+    if (SIOConnection.socket) {
+        var socket = SIOConnection.socket;
+        socket.on('frame', function(data) {
+            connection.handleData(data);
+        });
+        return socket;
+    } else {
+        return null;
+    }
 }
 
 

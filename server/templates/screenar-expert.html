@@ -17,6 +17,8 @@ ScreenAR
 <script src="/static/ext/socket.io/2.2.0/socket.io.js"></script>
 <script src="/static/js/webrtc.js"></script>
 <script>
+window.config = { room: 'fxpal' }
+
 var canvas = document.getElementById('sourcecanvas');
 var canvasw = 480;
 var canvash = 320;
@@ -33,7 +35,7 @@ var constraints = {
 var wrtc;
 navigator.mediaDevices.getUserMedia(constraints).then(
     function(stream) {
-        wrtc = new WebRTCClient({ stream: stream, dataChannel:'ScreenAR' });
+        wrtc = new WebRTCClient({ stream: stream, dataChannel:'ScreenAR', room: config.room });
         wrtc.on('stream', function(id, stream) {
             var video = $('#video')[0]
             video.srcObject = stream;

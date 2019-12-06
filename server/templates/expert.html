@@ -17,15 +17,48 @@
             <input type="radio" name="options" autocomplete="off"> <i class="fa fa-search-plus"></i>
         </label>
     </div>
-    <button class="btn btn-primary btn-xlg" id="reset" autocomplete="off"> Reset </button>    
+    <button class="btn btn-primary btn-xlg" id="reset"> Reset </button>
+    <button class="btn btn-primary btn-xlg" id="qr" data-toggle="modal" data-target="#qrcode-modal"> <i class="fa fa-qrcode"></i> </button>
 </div>
 <div class="container">
     <h1>Expert View</h2>
     <video id="video" autoplay="1"></video>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="qrcode-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Customer QRCode Link</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h3 id="url" class="mb-5"></h3>
+                    <div id="qrcode"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
+
 {% block js %}
 <div id="info"></div>
+<script>
+window.config = {
+    roomid: "{{ roomid }}"
+}
+</script>
+<script src="/static/ext/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
 <script src="/static/ext/three.js/70/three.min.js"></script>
 <script src="/static/ext/socket.io/2.2.0/socket.io.js"></script>
 <script src="/static/ext/lodash.js/4.17.11/lodash.min.js"></script>

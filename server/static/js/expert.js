@@ -6,24 +6,23 @@ var constraints = {
 
 
 //// Rendering
-var renderer = new Renderer( 
-    {add_interaction_box: true,
-     add_line_object: false, 
-     add_leapmotion_device: false}, 
-    SIOConnection );
+var renderer;
 
 var first = true;
 var wrtc;
 navigator.mediaDevices.getUserMedia(constraints).then(
     function(stream) {
-        wrtc = new WebRTCClient({ stream: stream });
+        wrtc = new WebRTCClient({
+            stream: stream,
+            room: config.roomid
+        });
         wrtc.on('stream', function(id, stream) {
             var video = $('#video')[0]
             video.srcObject = stream;
             video.autoplay = true;
         });
         wrtc.on('gyro', function(data) {
-            console.log('gyro', data); 
+            // console.log('gyro', data);
             //document.getElementById("info").innerHTML = data.alpha.toFixed(2)+" "+data.beta.toFixed(2)+" "+data.gamma.toFixed(2)+" "+data.absolute;
             
             renderer.rotateCameraBody(data.alpha, data.beta, data.gamma);
@@ -36,6 +35,13 @@ navigator.mediaDevices.getUserMedia(constraints).then(
                                 quaternion: renderer.camera.quaternion});
                                 
         });
+
+        // Create renderer after wrtc because it shares the same socket
+        renderer = new Renderer( 
+            {add_interaction_box: true,
+             add_line_object: false, 
+             add_leapmotion_device: false}, 
+            SIOConnection );
     }
 );
 
@@ -174,3 +180,37 @@ $('#reset').click(function(e) {
                                 quaternion: renderer.camera.quaternion});
     return false;
 });
+
+$('#qr').click(function(e) {
+    e.preventDefault();
+    var url = ['https://', window.location.host, '/', config.roomid  ,'/customer'].join('');
+    $('#qrcode').empty().qrcode(url);
+    $('#url').text(url);
+    $('#qrcode-modal').modal();
+    return false;
+});
+
+// ----- START: Comment this out to disable sending browser leapmotion data -----
+// connection to leapmotion
+var url = 'ws://localhost:6437/v7.json';
+var socket = new WebSocket(url);
+
+socket.addEventListener('open', function() {
+    console.log('connected to ' + url);
+    socket.send(JSON.stringify({enableGestures: false}))
+    socket.send(JSON.stringify({background: false}))
+    socket.send(JSON.stringify({optimizeHMD: false}))
+    socket.send(JSON.stringify({focused: true}))
+
+});
+
+socket.addEventListener('message', function (data) {
+    // send leap motion hand data to server
+    if (SIOConnection.socket) {
+        SIOConnection.socket.emit('frame', event.data);
+    }
+});
+
+socket.addEventListener('close', function(code, reason) { console.log(code, reason) });
+socket.addEventListener('error', function() { console.log('ws error') });
+// ----- END: Comment this out to disable sending browser leapmotion data -----
