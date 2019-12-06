@@ -4,7 +4,7 @@ module.exports = function(io) {
     var rooms = {};
     io.on('connect', function(socket) {
         var room;
-        var users;
+        var users = {};
         var sid = uuid.v4();
         socket.on('join', function(data) {
             room = data.room;

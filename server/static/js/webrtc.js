@@ -12,7 +12,10 @@ function WebRTCClient(options) {
     this.url = this.options.url || url;
 
     var socket = io.connect(url);
-    SIOConnection.socket = socket;
+    if (window.SIOConnection) {
+        // update the socket.io connection for leapmotion if exists
+        SIOConnection.socket = socket;
+    }
     var dataChannelName = this.options.dataChannel;
 
     this.createDataChannel = function(name,pc)

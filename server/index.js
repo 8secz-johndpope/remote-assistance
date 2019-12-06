@@ -25,6 +25,10 @@ app.get('/', function (req, res) {
     res.redirect('/' + roomid)
 });
 
+app.get('/screenarexpert', function (req, res) {
+    res.render('screenar-expert.html')
+});
+
 app.get('/:roomid', function (req, res) {
     var roomid = req.params.roomid;
     res.render('index.html', { roomid });
@@ -38,10 +42,6 @@ app.get('/:roomid/expert', function (req, res) {
 app.get('/:roomid/customer', function (req, res) {
     var roomid = req.params.roomid;
     res.render('customer.html', { roomid });
-});
-
-app.get('/screenarexpert', function (req, res) {
-    res.render('screenar-expert.html')
 });
 
 app.get('/api/getRoom/:uuid', function (req, res) {
