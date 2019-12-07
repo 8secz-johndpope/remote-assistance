@@ -22,20 +22,22 @@ msgerForm.addEventListener("submit", event => {
   const msgText = msgerInput.value;
   if (!msgText) return;
 
-  appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
+  appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText,[]);
   msgerInput.value = "";
 
   botResponse(msgText);
 });
 
 function injectMsg(msg) {
-  appendMessage(PERSON_NAME, PERSON_IMG, "right", msg);
+  appendMessage(PERSON_NAME, PERSON_IMG, "right", msg,[]);
   botResponse(msg);
 }
 
 function launchRA() {
-  // launch native app
-  // with convArchive
+  // TODO
+  // Use server API to generate room ID
+  // Call Swift code with room ID to start WebRTC session
+  // This should also send a server event to the expert UI
 }
 
 function launchEmail(msg) { 
@@ -71,9 +73,11 @@ function getButtonHTML(botResponseArr) {
        break;
      }
   }
+  return html;
 }
 
 function appendMessage(name, img, side, text, botResponseArr) {
+  const buttonHTML = getButtonHTML(botResponseArr)
 
   const msgHTML = `
     <div class="msg ${side}-msg">
@@ -86,6 +90,7 @@ function appendMessage(name, img, side, text, botResponseArr) {
         </div>
 
         <div class="msg-text">${text}</div>
+        <div>${buttonHTML}</div>
       </div>
     </div>
   `;
@@ -97,7 +102,7 @@ function appendMessage(name, img, side, text, botResponseArr) {
 function saveResponse(q,r) {
   let res = new Object();
   res.question = q; res.response = r;
-  convArchive.append(res);
+  convArchive.push(res);
 }
 
 function botResponse(msgText) {
@@ -145,7 +150,6 @@ function botResponse(msgText) {
   }
 
   setTimeout(() => {
-    if (next)
     appendMessage(BOT_NAME, BOT_IMG, "left", botMsgText, botResponseArr);
   }, BOT_DELAY);
 }
@@ -190,3 +194,5 @@ function JsQRScannerReady()
 function launchQRScanner() {
   $('#myModal').modal('show');
 }
+
+appendMessage(BOT_NAME, BOT_IMG, "left", "Hello, how may I help you today?", []);

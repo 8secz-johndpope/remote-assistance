@@ -43,6 +43,37 @@ app.get('/', function (req, res) {
     res.redirect('/' + roomid)
 });
 
+
+if (useDB) {
+    const db = require('./db')
+
+    app.get('/chat', function (req, res) {
+        res.render('chat.html')
+    });
+
+    app.get('/api/getRoom/:uuid', function (req, res) {
+        db.getRoom(res,req.params.uuid)
+    });
+
+    app.get('/api/getUser/:uuid', function (req, res) {
+        db.getUser(res,req.params.uuid)
+    });
+
+    app.get('/api/getClip/:uuid', function (req, res) {
+        db.getClip(res,req.params.uuid)
+    });
+
+    // TODO
+    app.get('/api/createCustomer/', function (req, res) {
+        //db.createUser(res,req.params.uuid)
+    });
+
+    app.get('/api/createRoom/', function (req, res) {
+        //db.createRoom(res,req.params.uuid)
+    });
+}
+
+
 app.get('/screenarexpert', function (req, res) {
     res.render('screenar-expert.html')
 });
@@ -62,30 +93,6 @@ app.get('/:roomid/customer', function (req, res) {
     res.render('customer.html', { roomid });
 });
 
-if (useDB) {
-    const db = require('./db')
-
-    app.get('/api/getRoom/:uuid', function (req, res) {
-        db.getRoom(res,req.params.uuid)
-    });
-
-    app.get('/api/getUser/:uuid', function (req, res) {
-        db.getUser(res,req.params.uuid)
-    });
-
-    app.get('/api/getClip/:uuid', function (req, res) {
-        db.getClip(res,req.params.uuid)
-    });
-
-    // TODO
-    app.get('/api/createCustomer/', function (req, res) {
-        db.getUser(res,req.params.uuid)
-    });
-
-    app.get('/api/createRoom/', function (req, res) {
-        db.getUser(res,req.params.uuid)
-    });
-}
 
 var clients = new Set()
 
