@@ -21,9 +21,10 @@
             <input type="radio" name="options" autocomplete="off"> <i class="fa fa-search-plus"></i>
         </label>
     </div>
-    <button class="btn btn-primary btn-xlg" id="reset"> Reset </button>
-    <button class="btn btn-primary btn-xlg" id="qr" data-toggle="modal" data-target="#qrcode-modal"> <i class="fa fa-qrcode"></i> </button>
-    <button class="btn  btn-xlg btn-danger" id="leapmotion"> Connect to Leapmotion </button>
+    <button class="btn btn-primary btn-xlg" id="reset" data-trigger="hover" data-placement="top" data-content="Reset camera orientation"> Reset </button>
+    <button class="btn btn-primary btn-xlg" id="fullscreen" data-trigger="hover" data-placement="top"  data-content="Toggle fullscreen"><i class="fa fa-window-maximize"></i></button>
+    <button class="btn btn-primary btn-xlg" id="qr" data-toggle="modal" data-target="#qrcode-modal" data-trigger="hover" data-placement="top" data-content="Show QR Code"> <i class="fa fa-qrcode"></i> </button>
+    <button class="btn  btn-xlg btn-danger" id="leapmotion" data-trigger="hover" data-placement="top" data-content="Leapmotion Websocket Connection. Click to reconnect."> Connect to Leapmotion </button>
 </div>
 
 <!-- Modal -->

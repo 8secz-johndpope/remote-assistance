@@ -1,3 +1,6 @@
+// enable popovers
+$('[data-trigger=hover]').popover()
+
 // setup sample video
 var constraints = {
     video: false,
@@ -211,6 +214,19 @@ $('#qr').click(function(e) {
 var lmSocket;
 $('#leapmotion').click(function(e) {
     reconnectLeapmotion();
+});
+
+function toggleFullScreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+    }
+}
+$('#fullscreen').click(function() {
+    toggleFullScreen()
 });
 
 // ----- START: Comment this out to disable sending browser leapmotion data -----
