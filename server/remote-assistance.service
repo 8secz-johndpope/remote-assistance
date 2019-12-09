@@ -1,0 +1,14 @@
+[Unit]
+Description=Remote Assistance Server
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=-/usr/bin/docker stop rhelp
+ExecStartPre=-/usr/bin/docker rm rhelp
+ExecStart=/usr/bin/docker run --rm --name rhelp -p 127.0.0.1:5443:5443 dreg.fxpal.net/rhelp
+
+[Install]
+WantedBy=multi-user.target

@@ -5,10 +5,10 @@ Renderer = function ( parameters, SIOConnection, domElement ) {
 
     this.parameters = parameters;
 
-    this.default_distance = 300;
+    this.default_distance = 500;
     this.default_height = 200;
 
-    this.domElement = ( domElement !== undefined ) ? domElement : document;
+    this.domElement = ( domElement !== undefined ) ? domElement : document.body;
 
     //// scene
     this.scene = new THREE.Scene();
@@ -24,7 +24,7 @@ Renderer = function ( parameters, SIOConnection, domElement ) {
     this.renderer.domElement.style.width = '100%';
     this.renderer.domElement.style.height = '100%';
 
-    this.domElement.body.appendChild(this.renderer.domElement);
+    this.domElement.appendChild(this.renderer.domElement);
 
     //// light
     this.light = new THREE.DirectionalLight(0xffffff, 1);
@@ -55,7 +55,9 @@ Renderer = function ( parameters, SIOConnection, domElement ) {
 
 
     //// leapmotion transformation class
-    this.leapmotion_trans = new LeapmotionTrans();    
+    this.leapmotion_trans = new LeapmotionTrans({
+        d_init: this.default_distance
+    });    
     
     //// options
     this.tracking = true;

@@ -1,7 +1,8 @@
 class LeapmotionTrans
 {
-    constructor() 
+    constructor(options) 
     {
+        options = options || {};
         this.alpha = 0; 
         this.beta = 0;
         this.gamma = 0;
@@ -10,7 +11,7 @@ class LeapmotionTrans
 
         this.d = 300;
 
-        this.d_init = 300;
+        this.d_init = options.d_init || 300;
 
         this.R_w_b = new THREE.Matrix4();         
         this.R_w_c = new THREE.Matrix4();
