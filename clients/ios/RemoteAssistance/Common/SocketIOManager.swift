@@ -26,7 +26,7 @@ class SocketIOManager {
                                      config: [.log(enableLogging), .selfSigned(true),
                                               .forceNew(true), .forceWebsockets(true)])
         self.rtcSocket = self.manager.socket(forNamespace: "/room")
-        self.lmSocket = self.manager.socket(forNamespace: "/")
+        self.lmSocket = self.rtcSocket
         
         store.ts.subscribe(self)
     }
@@ -48,7 +48,8 @@ extension SocketIOManager : StoreSubscriber {
                                                   .forceNew(true), .forceWebsockets(true)])
 
             self.rtcSocket = self.manager.socket(forNamespace: "/room")
-            self.lmSocket = self.manager.socket(forNamespace: "/")
+            self.lmSocket = self.rtcSocket
+//            self.lmSocket = self.manager.socket(forNamespace: "/")
             
             self.connect()
         }
