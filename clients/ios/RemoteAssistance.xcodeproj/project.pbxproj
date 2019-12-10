@@ -16,6 +16,15 @@
 		D7455DC42368BE7F001594FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7455DC22368BE7F001594FA /* LaunchScreen.storyboard */; };
 		D7455DCF2368BE7F001594FA /* RemoteAssistanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7455DCE2368BE7F001594FA /* RemoteAssistanceTests.swift */; };
 		D7455DDA2368BE80001594FA /* RemoteAssistanceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7455DD92368BE80001594FA /* RemoteAssistanceUITests.swift */; };
+		D7DA31EB239ECFCE00D1B73F /* SCNVector3+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E1239ECFCE00D1B73F /* SCNVector3+Extensions.swift */; };
+		D7DA31EC239ECFCE00D1B73F /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E2239ECFCE00D1B73F /* UIView+Extensions.swift */; };
+		D7DA31ED239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E3239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift */; };
+		D7DA31EE239ECFCE00D1B73F /* Collection+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E4239ECFCE00D1B73F /* Collection+Extensions.swift */; };
+		D7DA31EF239ECFCE00D1B73F /* RectangleNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E6239ECFCE00D1B73F /* RectangleNode.swift */; };
+		D7DA31F0239ECFCE00D1B73F /* SurfaceNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E7239ECFCE00D1B73F /* SurfaceNode.swift */; };
+		D7DA31F1239ECFCE00D1B73F /* PlaneRectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E8239ECFCE00D1B73F /* PlaneRectangle.swift */; };
+		D7DA31F2239ECFCE00D1B73F /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E9239ECFCE00D1B73F /* Message.swift */; };
+		D7DA31F4239ED04600D1B73F /* SARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31F3239ED04600D1B73F /* SARViewController.swift */; };
 		D7DB69EB236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Right.dae in Resources */ = {isa = PBXBuildFile; fileRef = D7DB69DD236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Right.dae */; };
 		D7DB69EF236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Left.dae in Resources */ = {isa = PBXBuildFile; fileRef = D7DB69E1236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Left.dae */; };
 		D7DB69F0236DE2D500D7C367 /* materialdesignicons-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D7DB69E2236DE2D500D7C367 /* materialdesignicons-webfont.ttf */; };
@@ -67,6 +76,15 @@
 		D7455DD52368BE80001594FA /* RemoteAssistanceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RemoteAssistanceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7455DD92368BE80001594FA /* RemoteAssistanceUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAssistanceUITests.swift; sourceTree = "<group>"; };
 		D7455DDB2368BE80001594FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D7DA31E1239ECFCE00D1B73F /* SCNVector3+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SCNVector3+Extensions.swift"; sourceTree = "<group>"; };
+		D7DA31E2239ECFCE00D1B73F /* UIView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
+		D7DA31E3239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ARHitTestResult+Extensions.swift"; sourceTree = "<group>"; };
+		D7DA31E4239ECFCE00D1B73F /* Collection+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Collection+Extensions.swift"; sourceTree = "<group>"; };
+		D7DA31E6239ECFCE00D1B73F /* RectangleNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RectangleNode.swift; sourceTree = "<group>"; };
+		D7DA31E7239ECFCE00D1B73F /* SurfaceNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SurfaceNode.swift; sourceTree = "<group>"; };
+		D7DA31E8239ECFCE00D1B73F /* PlaneRectangle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaneRectangle.swift; sourceTree = "<group>"; };
+		D7DA31E9239ECFCE00D1B73F /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		D7DA31F3239ED04600D1B73F /* SARViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SARViewController.swift; sourceTree = "<group>"; };
 		D7DB69DD236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Right.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = Leapmotion_Handsolo_Rig_Right.dae; sourceTree = "<group>"; };
 		D7DB69E1236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Left.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = Leapmotion_Handsolo_Rig_Left.dae; sourceTree = "<group>"; };
 		D7DB69E2236DE2D500D7C367 /* materialdesignicons-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "materialdesignicons-webfont.ttf"; sourceTree = "<group>"; };
@@ -154,6 +172,7 @@
 				D7455DBD2368BE77001594FA /* Main.storyboard */,
 				D7455DB92368BE77001594FA /* ViewController.swift */,
 				D7DB69F5236DE35100D7C367 /* Common */,
+				D7DA31DE239ECFCE00D1B73F /* ScreenAR */,
 				D7DB69D8236DE2D500D7C367 /* TeleSkele */,
 			);
 			path = RemoteAssistance;
@@ -175,6 +194,38 @@
 				D7455DDB2368BE80001594FA /* Info.plist */,
 			);
 			path = RemoteAssistanceUITests;
+			sourceTree = "<group>";
+		};
+		D7DA31DE239ECFCE00D1B73F /* ScreenAR */ = {
+			isa = PBXGroup;
+			children = (
+				D7DA31E0239ECFCE00D1B73F /* Extensions + Utilities */,
+				D7DA31E5239ECFCE00D1B73F /* Nodes */,
+				D7DA31E8239ECFCE00D1B73F /* PlaneRectangle.swift */,
+				D7DA31E9239ECFCE00D1B73F /* Message.swift */,
+				D7DA31F3239ED04600D1B73F /* SARViewController.swift */,
+			);
+			path = ScreenAR;
+			sourceTree = "<group>";
+		};
+		D7DA31E0239ECFCE00D1B73F /* Extensions + Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				D7DA31E1239ECFCE00D1B73F /* SCNVector3+Extensions.swift */,
+				D7DA31E2239ECFCE00D1B73F /* UIView+Extensions.swift */,
+				D7DA31E3239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift */,
+				D7DA31E4239ECFCE00D1B73F /* Collection+Extensions.swift */,
+			);
+			path = "Extensions + Utilities";
+			sourceTree = "<group>";
+		};
+		D7DA31E5239ECFCE00D1B73F /* Nodes */ = {
+			isa = PBXGroup;
+			children = (
+				D7DA31E6239ECFCE00D1B73F /* RectangleNode.swift */,
+				D7DA31E7239ECFCE00D1B73F /* SurfaceNode.swift */,
+			);
+			path = Nodes;
 			sourceTree = "<group>";
 		};
 		D7DB69D8236DE2D500D7C367 /* TeleSkele */ = {
@@ -418,17 +469,26 @@
 			buildActionMask = 2147483647;
 			files = (
 				D7455DBA2368BE77001594FA /* ViewController.swift in Sources */,
+				D7DA31F4239ED04600D1B73F /* SARViewController.swift in Sources */,
 				D7DB6A0C236DE7C700D7C367 /* TSSwift.swift in Sources */,
 				D7DB6A06236DE6CC00D7C367 /* TSRemoteHands.swift in Sources */,
 				D7455DB82368BE77001594FA /* AppDelegate.swift in Sources */,
+				D7DA31F0239ECFCE00D1B73F /* SurfaceNode.swift in Sources */,
+				D7DA31F1239ECFCE00D1B73F /* PlaneRectangle.swift in Sources */,
 				D7DB6A0B236DE7C700D7C367 /* TSReducer.swift in Sources */,
+				D7DA31ED239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift in Sources */,
+				D7DA31EC239ECFCE00D1B73F /* UIView+Extensions.swift in Sources */,
 				D7DB6A0A236DE7C700D7C367 /* TSActions.swift in Sources */,
 				D7DB6A0E236DE91D00D7C367 /* TSSettingsViewController.swift in Sources */,
 				D7DB6A02236DE67000D7C367 /* TSLeapMotion.swift in Sources */,
+				D7DA31EE239ECFCE00D1B73F /* Collection+Extensions.swift in Sources */,
 				D7455DBC2368BE77001594FA /* Experience.rcproject in Sources */,
 				D7DB6A01236DE67000D7C367 /* TSViewController.swift in Sources */,
+				D7DA31EB239ECFCE00D1B73F /* SCNVector3+Extensions.swift in Sources */,
+				D7DA31F2239ECFCE00D1B73F /* Message.swift in Sources */,
 				D7DB69F8236DE35100D7C367 /* MathExtension.swift in Sources */,
 				D7DB6A04236DE6AA00D7C367 /* SocketIOManager.swift in Sources */,
+				D7DA31EF239ECFCE00D1B73F /* RectangleNode.swift in Sources */,
 				D7DB69F9236DE35100D7C367 /* WRTCClient.swift in Sources */,
 				D7DB69FC236DE49A00D7C367 /* ArrowNode.swift in Sources */,
 			);

@@ -105,3 +105,6 @@ dist
 
 yarn.lock
 .vscode
+
+config/production.*
+config/development.*

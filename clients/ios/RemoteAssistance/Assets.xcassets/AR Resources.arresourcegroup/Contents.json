@@ -1,0 +1,20 @@
+{
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  },
+  "resources" : [
+    {
+      "filename" : "card.arreferenceimage"
+    },
+    {
+      "filename" : "docucolor-2-out.arreferenceimage"
+    },
+    {
+      "filename" : "docupal2-out.arreferenceimage"
+    },
+    {
+      "filename" : "omni.arreferenceimage"
+    }
+  ]
+}

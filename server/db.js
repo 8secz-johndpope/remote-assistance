@@ -1,13 +1,13 @@
 const mysql = require('mysql')
-const connection = mysql.createConnection({
-		host: "harddb.fxpal.net",
-		user: "ace",
-		password: "hmqN3kCmawG33whCnEGy65PUi",
-		database: "ace"
-})	
+const config = require('config');
+const parseDbUrl = require("parse-database-url");
+const databaseConfig = parseDbUrl(config.databaseUrl);
+
+// load the database info from config/...
+const connection = mysql.createConnection(databaseConfig);
 connection.connect(function(err) {
 	if (err) throw err
-	
+	console.log(`Connected to mysql: ${databaseConfig.host}/${databaseConfig.database}`);
 });
 
 module.exports = {
