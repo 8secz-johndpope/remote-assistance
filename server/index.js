@@ -39,7 +39,7 @@ if (args.includes("--help")) {
 app.use('/static', express.static(__dirname + '/static'))
 
 app.get('/', function (req, res) {
-    var roomid = util.generateRandomRoomId();
+    var roomid = util.generateRandomId();
     res.redirect('/' + roomid)
 });
 
@@ -65,7 +65,7 @@ if (useDB) {
 
     // TODO
     app.get('/api/createCustomer/', function (req, res) {
-        //db.createUser(res,req.params.uuid)
+        //db.createUser(res)
     });
 
     app.get('/api/createRoom/', function (req, res) {

@@ -52,5 +52,19 @@ module.exports = {
 		})
 	}
 
+	createCustomer: (res) => {
+		let uuid = util.generateRandomId();
+		connection.query('insert into user set uuid = ?, type = ?',
+			[
+				uuid,
+				"customer"
+			],
+			function (err, rows, fields) {
+				if (err) throw err
+				let obj = {'uuid': uuid }	
+				return res.end(JSON.stringify(obj));
+		})
+	}
+
 }
 

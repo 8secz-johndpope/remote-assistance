@@ -36,7 +36,7 @@ function getInterfaces() {
       });
 }
 
-function generateRandomRoomId() {
+function generateRandomId() {
     var text = "";
     var l = 9;
     //var char_list = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
