@@ -51,24 +51,46 @@ if (!args.no_db) {
     });
 
     app.get('/api/getRoom/:uuid', function (req, res) {
-        db.getRoom(res,req.params.uuid)
+        db.getRoom(res,req.params.uuid,function(data) {
+            res.json(data)
+        })
     });
 
     app.get('/api/getUser/:uuid', function (req, res) {
-        db.getUser(res,req.params.uuid)
+        db.getUser(res,req.params.uuid,function(data) {
+            res.json(data)
+        })
     });
 
     app.get('/api/getClip/:uuid', function (req, res) {
-        db.getClip(res,req.params.uuid)
+        db.getClip(res,req.params.uuid,function(data) {
+            res.json(data)
+        })
     });
 
-    // TODO
-    app.get('/api/createCustomer/', function (req, res) {
-        //db.createUser(res)
+    app.get('/api/getClips/:marker_uuid', function (req, res) {
+        db.getClips(res,req.params.marker_uuid,function(data) {
+            res.json(data)
+        })
     });
 
-    app.get('/api/createRoom/', function (req, res) {
-        //db.createRoom(res,req.params.uuid)
+    app.get('/api/createCustomer', function (req, res) {
+        db.createUser(res, function(data) {
+            res.json(data)
+        })
+    });
+
+    app.get('/api/createRoom/:user_uuid', function (req, res) {
+        db.getUser(res,req.params.user_uuid,function(userData) {
+            if (userData.length) {
+                db.createRoom(res,req.params.user_uuid, function(data) {
+                    res.json(data)
+                })
+            } else {
+                let out = {"error":"No user with that UUID"}
+                res.json(out)
+            }
+        })
     });
 }
 
