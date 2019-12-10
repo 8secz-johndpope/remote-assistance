@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="EGO-GX-8UF">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="7rk-Js-EZa">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -126,6 +126,114 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j2d-G7-9B2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="138" y="838"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="OWe-1c-zRd">
+            <objects>
+                <viewController id="7rk-Js-EZa" customClass="SARViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="qz9-01-HpG">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UlC-Kg-REj">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </arscnView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bg3-gV-iCh">
+                                <rect key="frame" x="0.0" y="809" width="414" height="53"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This is a message." textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xfs-GZ-YaJ">
+                                        <rect key="frame" x="16" y="16" width="382" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="IP address" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Vm-QU-kRn" userLabel="IP Label">
+                                        <rect key="frame" x="16" y="-46" width="382" height="28"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="Xfs-GZ-YaJ" firstAttribute="top" secondItem="bg3-gV-iCh" secondAttribute="top" constant="16" id="110-R4-nev"/>
+                                    <constraint firstAttribute="trailing" secondItem="0Vm-QU-kRn" secondAttribute="trailing" constant="16" id="CgR-sw-Xld"/>
+                                    <constraint firstItem="0Vm-QU-kRn" firstAttribute="leading" secondItem="bg3-gV-iCh" secondAttribute="leading" constant="16" id="Tmv-ka-csz"/>
+                                    <constraint firstAttribute="bottom" secondItem="Xfs-GZ-YaJ" secondAttribute="bottom" constant="16" id="dP1-qM-fVu"/>
+                                    <constraint firstAttribute="trailing" secondItem="Xfs-GZ-YaJ" secondAttribute="trailing" constant="16" id="jzp-MQ-cBb"/>
+                                    <constraint firstItem="Xfs-GZ-YaJ" firstAttribute="leading" secondItem="bg3-gV-iCh" secondAttribute="leading" constant="16" id="knO-rQ-m16"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uqk-kD-6B3">
+                                <rect key="frame" x="332" y="60" width="66" height="34"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
+                                <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
+                                <state key="normal" title="Restart">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onClearButton:" destination="7rk-Js-EZa" eventType="touchUpInside" id="jqV-22-3hu"/>
+                                    <action selector="onRestartButton:" destination="7rk-Js-EZa" eventType="touchUpInside" id="5YN-su-gdV"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F9r-6Q-h2x">
+                                <rect key="frame" x="16" y="60" width="62" height="34"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
+                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
+                                <state key="normal" title="Debug">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <state key="selected">
+                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="onClearButton:" destination="7rk-Js-EZa" eventType="touchUpInside" id="VcJ-xA-Bp5"/>
+                                    <action selector="onDebugButton:" destination="7rk-Js-EZa" eventType="touchUpInside" id="dtN-9w-Eob"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Eis-4e-C8v">
+                                <rect key="frame" x="229" y="60" width="95" height="34"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
+                                <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
+                                <state key="normal" title="Clear Rects">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="onClearButton:" destination="7rk-Js-EZa" eventType="touchUpInside" id="Hfr-W4-4qu"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Eis-4e-C8v" firstAttribute="centerY" secondItem="F9r-6Q-h2x" secondAttribute="centerY" id="0Pc-pv-2FX"/>
+                            <constraint firstItem="F9r-6Q-h2x" firstAttribute="top" secondItem="hdd-yb-fqN" secondAttribute="top" constant="16" id="6sQ-ei-tDg"/>
+                            <constraint firstItem="uqk-kD-6B3" firstAttribute="leading" secondItem="Eis-4e-C8v" secondAttribute="trailing" constant="8" id="96a-DC-uGw"/>
+                            <constraint firstItem="bg3-gV-iCh" firstAttribute="bottom" secondItem="hdd-yb-fqN" secondAttribute="bottom" id="Bi9-le-Cmu"/>
+                            <constraint firstItem="Eis-4e-C8v" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="F9r-6Q-h2x" secondAttribute="trailing" constant="16" id="Fx2-mo-jEZ"/>
+                            <constraint firstItem="hdd-yb-fqN" firstAttribute="trailing" secondItem="uqk-kD-6B3" secondAttribute="trailing" constant="16" id="H3F-gV-WL9"/>
+                            <constraint firstItem="bg3-gV-iCh" firstAttribute="trailing" secondItem="hdd-yb-fqN" secondAttribute="trailing" id="dv9-BG-5Td"/>
+                            <constraint firstItem="F9r-6Q-h2x" firstAttribute="leading" secondItem="hdd-yb-fqN" secondAttribute="leading" constant="16" id="klC-m4-QKv"/>
+                            <constraint firstItem="uqk-kD-6B3" firstAttribute="centerY" secondItem="F9r-6Q-h2x" secondAttribute="centerY" id="u2d-zK-UVV"/>
+                            <constraint firstItem="bg3-gV-iCh" firstAttribute="leading" secondItem="hdd-yb-fqN" secondAttribute="leading" id="ypm-cH-J4l"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="hdd-yb-fqN"/>
+                    </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <connections>
+                        <outlet property="clearButton" destination="Eis-4e-C8v" id="LM7-3M-Sau"/>
+                        <outlet property="debugButton" destination="F9r-6Q-h2x" id="Lgj-GC-1aA"/>
+                        <outlet property="ipLabel" destination="0Vm-QU-kRn" id="YdE-A1-B1I"/>
+                        <outlet property="messageLabel" destination="Xfs-GZ-YaJ" id="LSH-HU-zLt"/>
+                        <outlet property="messageView" destination="bg3-gV-iCh" id="nE9-iO-zEi"/>
+                        <outlet property="restartButton" destination="uqk-kD-6B3" id="39e-Ho-702"/>
+                        <outlet property="sceneView" destination="UlC-Kg-REj" id="bpf-dh-Pct"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="GfM-r4-BPA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="138" y="1532"/>
         </scene>
     </scenes>
 </document>
