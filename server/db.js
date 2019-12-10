@@ -50,9 +50,9 @@ module.exports = {
 				//res.end(JSON.stringify(objs));
 				res.json(rows)
 		})
-	}
+	},
 
-	createCustomer: (res) => {
+	createUser: (res) => {
 		let uuid = util.generateRandomId();
 		connection.query('insert into user set uuid = ?, type = ?',
 			[

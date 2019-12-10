@@ -49,5 +49,5 @@ function generateRandomId() {
 
 module.exports = {
     getInterfaces,
-    generateRandomRoomId
+    generateRandomId
 }
