@@ -34,10 +34,14 @@ function injectMsg(msg) {
 }
 
 function launchRA() {
-  // TODO
-  // Use server API to generate room ID
-  // Call Swift code with room ID to start WebRTC session
-  // This should also send a server event to the expert UI
+  $.getJSON(SERVER_API + "createCustomer").then(
+      function(customerData) {
+        $.getJSON(SERVER_API + "createRoom/"+customerData.uuid).then( 
+          function(data) {
+              let roomID = data.uuid;
+              // Connect to iOS
+          })
+      })
 }
 
 function launchEmail(msg) { 

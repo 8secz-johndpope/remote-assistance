@@ -7,6 +7,7 @@ const io = require('socket.io');
 const nunjucks = require('nunjucks');
 const argparse = require('argparse');
 const config = require('config');
+const WebSocketServer = require('ws').Server;
 
 const room = require('./room');
 const util = require('./util');
@@ -24,12 +25,21 @@ var parser = new argparse.ArgumentParser({
 });
 
 parser.addArgument(
-    [ '-n', '--no_db' ],
+    [ '-d', '--db_off' ],
     {
         action: 'storeConst',
         constant: true,
         defaultValue: false,
         help: 'Do not connect to the database'
+    }
+);
+parser.addArgument(
+    [ '-w', '--ws_off' ],
+    {
+        action: 'storeConst',
+        constant: true,
+        defaultValue: false,
+        help: 'Do not start web socket server'
     }
 );
 var args = parser.parseArgs();
@@ -41,7 +51,6 @@ app.get('/', function (req, res) {
     var roomid = util.generateRandomId();
     res.redirect('/' + roomid)
 });
-
 
 if (!args.no_db) {
     const db = require('./db')
@@ -80,6 +89,26 @@ if (!args.no_db) {
         })
     });
 
+    app.get('/api/createClip/:name/:user_uuid/:room_uuid', function (req, res) {
+        db.getUser(res,req.params.user_uuid,function(userData) {
+            if (userData.length) {
+                db.getRoom(res,req.params.room_uuid,function(roomData) {
+                    if (roomData.length) {
+                        db.createClip(res, req.params.name, req.params.user_uuid, req.params.room_uuid, function(data) {
+                         res.json(data)
+                        })
+                    } else {
+                        let out = {"error":"No room with that UUID"}
+                        res.json(out)                        
+                    }
+                })
+            } else {
+                let out = {"error":"No user with that UUID"}
+                res.json(out)
+            }
+        })
+    });
+
     app.get('/api/createRoom/:user_uuid', function (req, res) {
         db.getUser(res,req.params.user_uuid,function(userData) {
             if (userData.length) {
@@ -94,6 +123,24 @@ if (!args.no_db) {
     });
 }
 
+if (!args.no_ws) {
+    const wsServer = http.createServer(app).listen(config.wsport, () => {
+        console.log(`WS server listening on ${config.wsport}`);
+    });
+    const wss = new WebSocketServer({
+        server: wsServer
+    });
+    wss.on('connection', (ws, req) => {
+        console.log('creating file');
+        var filePath = config.clipLoc + req.params.name.webm;
+        const fileStream = fs.createWriteStream(filePath, { flags: 'w' });
+        ws.on('message', message => {
+            console.log('writing packet')
+            // Only raw blob data can be sent
+            fileStream.write(Buffer.from(new Uint8Array(message)));
+        });
+    });
+}
 
 app.get('/screenarexpert', function (req, res) {
     res.render('screenar-expert.html')

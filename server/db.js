@@ -75,6 +75,22 @@ module.exports = {
 		})
 	},
 
+	createClip: (res,name,user,room,cb) => {
+		let uuid = util.generateRandomId();
+		connection.query('insert into clip(uuid,name,user_uuid,room_uuid) values(?,?,?,?)',
+			[
+				uuid,
+				name,
+				user,
+				room
+			],
+			function (err, result) {
+				if (err) throw err
+				let obj = {'uuid': uuid }	
+				cb(obj)
+		})
+	},
+
 	createRoom: (res,user_uuid,cb) => {
 		let uuid = util.generateRandomId();
 		let now = new Date() / 1000;
