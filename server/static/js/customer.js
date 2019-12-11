@@ -117,18 +117,19 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             stream.addEventListener('ended', function() {
                 audio.remove();
             });
-        });       
-       
+        });
 
-        wrtc.on('camera_update', function(data) {            
+
+        wrtc.on('camera_update', function(data) {
             renderer.updateCameraByParameter(data.position, data.quaternion);
         });
 
-        renderer = new Renderer( 
+        renderer = new Renderer(
             {add_interaction_box: false,
              add_line_object: false,
-             add_leapmotion_device: false}, 
-            SIOConnection );
+             add_leapmotion_device: false,
+             sio_connection: SIOConenction
+            });
     }
 )
 

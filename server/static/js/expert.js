@@ -56,8 +56,11 @@ navigator.mediaDevices.getUserMedia(constraints).then(
         renderer = new Renderer( 
             {add_interaction_box: true,
              add_line_object: false, 
-             add_leapmotion_device: false}, 
-            SIOConnection, document.getElementById('container') );
+             add_leapmotion_device: false, 
+             sio_connection: SIOConnection,
+             dom_element: document.getElementById('container'),
+             video_element: document.getElementById('video'),
+            });
 
         // reset camera
         onReset();

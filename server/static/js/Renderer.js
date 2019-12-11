@@ -1,9 +1,13 @@
 // This requires three.js: <script src="three.js"></script>
 
-Renderer = function ( parameters, SIOConnection, domElement ) {
+Renderer = function ( parameters ) {
     var scope = this;
 
     this.parameters = parameters;
+
+    var SIOConnection = parameters.sio_connection;
+    var domElement = parameters.domElement;
+    var videoElement = parameters.videoElement;
 
     this.default_distance = 500;
     this.default_height = 200;
@@ -17,14 +21,18 @@ Renderer = function ( parameters, SIOConnection, domElement ) {
     this.renderer = new THREE.WebGLRenderer({alpha: true});
     this.renderer.setClearColor(0x000000, 0);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    
-    this.renderer.domElement.style.position = 'fixed';
-    this.renderer.domElement.style.top = 0;
-    this.renderer.domElement.style.left = 0;
-    this.renderer.domElement.style.width = '100%';
-    this.renderer.domElement.style.height = '100%';
 
-    this.domElement.appendChild(this.renderer.domElement);
+    // create composite canvas
+    this.canvas = document.createElement('canvas');
+    this.canvas2d = this.canvas.getContext('2d');
+    this.canvas.style.position = 'fixed';
+    this.canvas.style.top = 0;
+    this.canvas.style.left = 0;
+    this.canvas.style.width = '100%';
+    this.canvas.style.height = '100%';
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+    this.domElement.appendChild(this.canvas);
 
     //// light
     this.light = new THREE.DirectionalLight(0xffffff, 1);
@@ -165,9 +173,6 @@ Renderer = function ( parameters, SIOConnection, domElement ) {
     //// resize event
     window.addEventListener( 'resize', onWindowResize, false );
 
-    //// animate
-    animate();
-
     //
 	// internals
     //
@@ -182,7 +187,38 @@ Renderer = function ( parameters, SIOConnection, domElement ) {
     function animate()
     {
         requestAnimationFrame( animate );
+
+        var canvas = scope.canvas;
+        var ctx = scope.canvas2d;
+
+        // clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // render video if exists
+        if (videoElement && videoElement.videoWidth && videoElement.videoHeight) {
+            var x,y,width,height;
+            var aspectRatio = videoElement.videoWidth/videoElement.videoHeight;
+
+            // try max height
+            height = canvas.height;
+            width = Math.round(aspectRatio*height);
+            if (width < canvas.width) {
+                x = (canvas.width - width)/2;
+                y = 0;
+            } else {
+                width = canvas.width;
+                height = Math.round(aspectRatio/width);
+                x = 0;
+                y = (canvas.height - height)/2;
+            }
+            ctx.drawImage(videoElement, x, y, width, height);
+        }
+
+        // render threejs
         scope.renderer.render( scope.scene, scope.camera );
+
+        // compose video and threejs
+        ctx.drawImage(scope.renderer.domElement, 0, 0, canvas.width, canvas.height);
     }
 
 
@@ -328,6 +364,10 @@ Renderer = function ( parameters, SIOConnection, domElement ) {
     //-----------------------------------------------------------------------------------------
 	// public methods
     //
+
+    this.getCanvas = function() {
+        return this.canvas;
+    }
    
     //// leapmotion space transformation
     this.rotateCameraBody = function(alpha, beta, gamma)
@@ -425,4 +465,7 @@ Renderer = function ( parameters, SIOConnection, domElement ) {
     {
         scope.gesture = !scope.gesture;
     }
+
+    //// animate
+    animate();
 }
