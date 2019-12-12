@@ -8,7 +8,8 @@ TimeoutStartSec=0
 Restart=always
 ExecStartPre=-/usr/bin/docker stop rhelp
 ExecStartPre=-/usr/bin/docker rm rhelp
-ExecStart=/usr/bin/docker run --rm --name rhelp -p 127.0.0.1:5443:5443 dreg.fxpal.net/rhelp
+ExecStart=/usr/bin/docker run --rm --name rhelp -e HOST=0.0.0.0 -p 127.0.0.1:5443:5443 dreg.fxpal.net/rhelp
+ExecStop=-/usr/bin/docker rm -f rhelp
 
 [Install]
 WantedBy=multi-user.target
