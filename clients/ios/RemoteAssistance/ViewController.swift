@@ -89,6 +89,12 @@ extension  ViewController : UITabBarDelegate {
             view.frame = self.view.frame
             self.displayView.addSubview(view)
             break
+        case "Chat":
+            vc = self.storyboard?.instantiateViewController(identifier: "chatVC")
+            let view = vc!.view!
+            view.frame = self.view.frame
+            self.displayView.addSubview(view)
+            break
         case "Settings":
             vc = self.storyboard?.instantiateViewController(identifier: "settingsVC")
             let view = vc!.view!

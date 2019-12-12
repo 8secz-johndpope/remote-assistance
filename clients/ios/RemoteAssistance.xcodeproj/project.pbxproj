@@ -16,6 +16,7 @@
 		D7455DC42368BE7F001594FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7455DC22368BE7F001594FA /* LaunchScreen.storyboard */; };
 		D7455DCF2368BE7F001594FA /* RemoteAssistanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7455DCE2368BE7F001594FA /* RemoteAssistanceTests.swift */; };
 		D7455DDA2368BE80001594FA /* RemoteAssistanceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7455DD92368BE80001594FA /* RemoteAssistanceUITests.swift */; };
+		D795E76623A2E64800E97162 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D795E76523A2E64800E97162 /* ChatViewController.swift */; };
 		D7DA31EB239ECFCE00D1B73F /* SCNVector3+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E1239ECFCE00D1B73F /* SCNVector3+Extensions.swift */; };
 		D7DA31EC239ECFCE00D1B73F /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E2239ECFCE00D1B73F /* UIView+Extensions.swift */; };
 		D7DA31ED239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E3239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift */; };
@@ -76,6 +77,7 @@
 		D7455DD52368BE80001594FA /* RemoteAssistanceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RemoteAssistanceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7455DD92368BE80001594FA /* RemoteAssistanceUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAssistanceUITests.swift; sourceTree = "<group>"; };
 		D7455DDB2368BE80001594FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D795E76523A2E64800E97162 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		D7DA31E1239ECFCE00D1B73F /* SCNVector3+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SCNVector3+Extensions.swift"; sourceTree = "<group>"; };
 		D7DA31E2239ECFCE00D1B73F /* UIView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		D7DA31E3239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ARHitTestResult+Extensions.swift"; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 				D7455DC22368BE7F001594FA /* LaunchScreen.storyboard */,
 				D7455DBD2368BE77001594FA /* Main.storyboard */,
 				D7455DB92368BE77001594FA /* ViewController.swift */,
+				D795E76523A2E64800E97162 /* ChatViewController.swift */,
 				D7DB69F5236DE35100D7C367 /* Common */,
 				D7DA31DE239ECFCE00D1B73F /* ScreenAR */,
 				D7DB69D8236DE2D500D7C367 /* TeleSkele */,
@@ -478,6 +481,7 @@
 				D7DB6A0B236DE7C700D7C367 /* TSReducer.swift in Sources */,
 				D7DA31ED239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift in Sources */,
 				D7DA31EC239ECFCE00D1B73F /* UIView+Extensions.swift in Sources */,
+				D795E76623A2E64800E97162 /* ChatViewController.swift in Sources */,
 				D7DB6A0A236DE7C700D7C367 /* TSActions.swift in Sources */,
 				D7DB6A0E236DE91D00D7C367 /* TSSettingsViewController.swift in Sources */,
 				D7DB6A02236DE67000D7C367 /* TSLeapMotion.swift in Sources */,
