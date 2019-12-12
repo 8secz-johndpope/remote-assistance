@@ -80,6 +80,14 @@ class TSRemoteHands {
         store.ts.subscribe(self)
     }
     
+    func cleanup() {
+        store.ts.unsubscribe(self)
+        let socket = SocketIOManager.sharedInstance.lmSocket
+        socket.off("frame")
+        let rtcSocket = SocketIOManager.sharedInstance.rtcSocket
+        rtcSocket.off("camera_update")
+    }
+    
     func initSocket() {
 
         // setup socket

@@ -73,6 +73,9 @@ class TSViewController: UIViewController {
         
         // Pause the view's session
         sceneView.session.pause()
+        
+        self.wrtc.disconnect()
+        self.remoteHands.cleanup();
     }
     
     func initMediaStream() {

@@ -68,7 +68,7 @@ class TSSettingsViewController: UIViewController {
     ]
     
     override func viewDidLoad() {
-        super.viewDidLoad()
+        super.viewDidLoad()        
 
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -76,16 +76,10 @@ class TSSettingsViewController: UIViewController {
         
         store.ts.subscribe(self)
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "< Back", style: .plain, target: self, action: #selector(onBackClick))
         self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
-    
-    @objc func onBackClick() {
-        self.navigationController?.popViewController(animated: true)
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
-    }
-    
+
     func alert(type: TSSettingType) {
         let alertController = SuperAlertController.init(style: self.alertStyle, source: self.view, title: type.title, message: type.message, tintColor: azure)
 
