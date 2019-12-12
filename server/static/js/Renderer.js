@@ -6,8 +6,8 @@ Renderer = function ( parameters ) {
     this.parameters = parameters;
 
     var SIOConnection = parameters.sio_connection;
-    var domElement = parameters.domElement;
-    var videoElement = parameters.videoElement;
+    var domElement = parameters.dom_element;
+    var videoElement = parameters.video_element;
 
     this.default_distance = 500;
     this.default_height = 200;
@@ -182,6 +182,9 @@ Renderer = function ( parameters ) {
         scope.camera.updateProjectionMatrix();
 
         scope.renderer.setSize( window.innerWidth, window.innerHeight );
+
+        scope.canvas.width = window.innerWidth;
+        scope.canvas.height = window.innerHeight;
     }
 
     function animate()
