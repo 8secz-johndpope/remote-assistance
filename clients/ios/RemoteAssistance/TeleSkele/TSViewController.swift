@@ -101,7 +101,7 @@ class TSViewController: UIViewController {
     }
     
     func initGyro() {
-        motionManager.deviceMotionUpdateInterval = 0.1
+        motionManager.deviceMotionUpdateInterval = 0.016
         motionManager.startDeviceMotionUpdates(to: OperationQueue.current!) { (gyroData, error) in
             if let data = gyroData {
                 let absolute = true
