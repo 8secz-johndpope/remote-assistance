@@ -6,6 +6,9 @@ module.exports = function(io) {
         var room;
         var users = {};
         var sid = uuid.v4();
+        var fileStream;
+        var filePath;
+
         socket.on('join', function(data) {
             room = data.room;
             console.log('user', sid, 'joined room', room);
@@ -20,6 +23,17 @@ module.exports = function(io) {
                 users[sid] = socket;
                 socket.emit('users', Object.keys(users));
             });
+        });
+
+        socket.on('start_recording', function(data) {
+            console.log('creating file');
+            filePath = config.clipLoc + data.name + ".webm";
+            fileStream = fs.createWriteStream(filePath, { flags: 'w' });
+        });
+
+        socket.on('recording_blob', function(data) {
+            console.log('writing packet')
+            fileStream.write(Buffer.from(new Uint8Array(data)));
         });
 
         socket.on('leave', function(data) {
@@ -54,6 +68,8 @@ module.exports = function(io) {
             'wheel',
             'camera_update',
             'gyro',
+            'ls_url',
+            'td'
         ]
         events.forEach(function(eventName) {
             socket.on(eventName, function(data) {

@@ -7,6 +7,9 @@ var constraints = {
     audio: true
 }
 
+const SERVER_API = "/api/";
+const SERVER_CLIP_STOR = "/stor/";
+const user_uuid = "tempExpert"
 
 //// Rendering
 var renderer;
@@ -62,6 +65,7 @@ navigator.mediaDevices.getUserMedia(constraints).then(
              add_leapmotion_device: false, 
              sio_connection: SIOConnection,
              dom_element: document.getElementById('container'),
+             drawing_canvas: document.getElementById('drawingCanvas'),
              video_element: document.getElementById('video'),
             });
 
@@ -217,6 +221,10 @@ $('#qr').click(function(e) {
     $('#qrcode-modal').modal();
 });
 
+$('#ls').click(function(e) {
+    toggleSteps()
+});
+
 var lmSocket;
 $('#leapmotion').click(function(e) {
     reconnectLeapmotion();
@@ -234,6 +242,137 @@ function toggleFullScreen() {
 $('#fullscreen').click(function() {
     toggleFullScreen()
 });
+
+// ----- START: Live Steps -----
+let ls = true;
+let mediaRecorder;
+let recordingLS = false;
+let videoStack = [];
+let videoStackIndex = 0;
+let dotsInterval;
+let step = 0;
+let clearCtxInterval;
+let vidOutlineInterval;
+let recordingClipUUID;
+let processing = true;
+const LS_TIMEOUT = 3000;
+
+function registerActivityLS() {
+    if (!ls) return;
+    if (!recordingLS) {
+        recordingLS = true;
+        toggleDots(true); 
+        wrtc.emit({'td':1}); 
+        startRecording();
+    } 
+    clearTimeout(clearCtxInterval);
+    clearCtxInterval = setTimeout(stepDone,LS_TIMEOUT);
+}
+
+function startRecording() {
+  let options = {mimeType: 'video/webm;videoBitsPerSecond:2500000;ignoreMutedMedia:true'};
+  try {
+    mediaRecorder = new MediaRecorder(renderer.getCanvas(), options);
+  } catch (e0) {
+    console.log('Unable to create MediaRecorder with options Object: ', e0);
+    try {
+      options = {mimeType: 'video/webm,codecs=vp9'};
+      mediaRecorder = new MediaRecorder(renderer.getCanvas(), options);
+    } catch (e1) {
+      console.log('Unable to create MediaRecorder with options Object: ', e1);
+      try {
+        options = 'video/vp8'; // Chrome 47
+        mediaRecorder = new MediaRecorder(renderer.getCanvas(), options);
+      } catch (e2) {
+        alert('MediaRecorder is not supported by this browser.\n\n' +
+          'Try Firefox 29 or later, or Chrome 47 or later, ' +
+          'with Enable experimental Web Platform features enabled from chrome://flags.');
+        console.error('Exception while creating MediaRecorder:', e2);
+        return;
+      }
+    }
+  }
+  console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
+
+  $.getJSON(SERVER_API + "createClip/lsClip/" + user_uuid + "/" + config.roomid).then( 
+        function(data) {
+            recordingClipUUID = data.uuid;
+            wrtc.emit('start_recording', {name: clipUUID });
+            mediaRecorder.onstop = handleStop;
+            mediaRecorder.ondataavailable = handleDataAvailable;
+            mediaRecorder.start();
+            console.log('MediaRecorder started', mediaRecorder);
+        }
+    )
+}
+
+function stopRecording() {
+  mediaRecorder.stop();
+}
+
+function handleStop(event) {
+  console.log('Recorder stopped: ', event);
+  let url = SERVER_CLIP_STOR + recordingClipUUID + ".webm";
+  wrtc.emit('ls_url', {url: url});
+  addStep(url);
+  updateStepCount();
+}
+
+function handleDataAvailable(event) {
+  if (event.data && event.data.size > 0) {
+    wrtc.emit('recording_blob', event.data);
+  }
+}
+
+function stepDone() {
+  if (recording) { recording = false; stopRecording(); }
+  toggleDots(false); wrtc.emit({'td':0}); ; 
+}
+
+function toggleDots(down) {
+  if (!down) {
+    clearInterval(dotsInterval);
+    dotsInterval = null;
+  } else {
+     clearInterval(dotsInterval);
+     document.getElementById("stepsCount").innerHTML = "";
+     dotsInterval = window.setInterval( function() {
+       let s = document.getElementById("stepsCount");
+       if ( s.innerHTML.length > 3 ) {
+         s.innerHTML = "";
+       } else { s.innerHTML += "."; }
+     }, 400);
+    }
+}
+
+function updateStepCount() {
+    document.getElementById("stepsCount").innerHTML = videoStack.length;
+}
+
+function addStep(url) {
+  console.log('Adding step ' + url);
+  videoStack.unshift(url);
+}
+
+function toggleSteps(open=0) {
+  let sv = document.getElementById('stepVideo');
+  let svo = document.getElementById('stepVideoOverlay');
+
+  if ( sv.style.display == 'none' && (videoStack.length > 0) ) {
+    sv.style.display = 'inline';
+    svo.style.display = 'inline';
+    videoStackIndex = 0;
+    sv.src = videoStack[0];
+    sv.autoplay = true;
+    processing = false;
+  } else if (!open) {
+    sv.style.display = 'none';
+    svo.style.display = 'none';
+    processing = true;
+  }
+}
+
+// ----- END: Live Steps -----
 
 // ----- START: Comment this out to disable sending browser leapmotion data -----
 // connection to leapmotion
@@ -281,6 +420,7 @@ function reconnectLeapmotion() {
     frameUpdateInterval = setInterval(function() {
         // send leap motion hand data to server
         if (SIOConnection.socket && frameUpdateInterval) {
+            registerActivityLS();
             SIOConnection.socket.emit('frame', currentFrame);
         }
     }, 1000.0/30.0);

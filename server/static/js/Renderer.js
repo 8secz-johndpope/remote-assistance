@@ -220,6 +220,9 @@ Renderer = function ( parameters ) {
         // render threejs
         scope.renderer.render( scope.scene, scope.camera );
 
+        // render sketch canvas
+        ctx.drawImage(sketchCanvas,0,0);
+
         // compose video and threejs
         ctx.drawImage(scope.renderer.domElement, 0, 0, canvas.width, canvas.height);
     }
