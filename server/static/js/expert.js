@@ -213,7 +213,6 @@ $('#reset').click(function(e) {
                                 quaternion: renderer.camera.quaternion});
 });
 
-
 $('#qr').click(function(e) {
     var url = ['https://', window.location.host, '/', config.roomid  ,'/customer'].join('');
     $('#qrcode').empty().qrcode(url);
@@ -221,8 +220,15 @@ $('#qr').click(function(e) {
     $('#qrcode-modal').modal();
 });
 
-$('#ls').click(function(e) {
-    toggleSteps()
+$('#lblLsSteps').click(function(e) {
+    var checked = $('input', this).is(':checked');
+    if (checked) {
+        ls = true;
+        updateStepCount();
+    } else {
+        ls = false;
+        $('span', this).text('steps off');
+    }
 });
 
 var lmSocket;
@@ -346,7 +352,11 @@ function toggleDots(down) {
 }
 
 function updateStepCount() {
-    document.getElementById("stepsCount").innerHTML = videoStack.length;
+    let stackTxt = 'step';
+    if (videoStack.length>0) { stackTxt += "s " + videoStack.length }
+    if (ls) {
+        $('#lblLsSteps').find('span').text(stackTxt+" ");        
+    }
 }
 
 function addStep(url) {
@@ -380,12 +390,12 @@ function updateLeapmotionStatus(connected) {
     var btn = $('#leapmotion');
     if (connected) {
         btn
-            .text('Leapmotion Connected')
+            .text('leapmotion connected')
             .removeClass('btn-danger')
             .addClass('btn-success');
     } else {
         btn
-            .text('Connect to Leapmotion')
+            .text('connect to leapmotion')
             .removeClass('btn-success')
             .addClass('btn-danger');
     }
