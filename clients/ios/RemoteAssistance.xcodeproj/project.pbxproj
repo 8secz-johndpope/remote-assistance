@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -62,7 +62,9 @@
 
 /* Begin PBXFileReference section */
 		13B86974C1A2796697CDFACD /* Pods_RemoteAssistance.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RemoteAssistance.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		60AD71138BC3828FE41B6BA1 /* Pods-RemoteAssistance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.debug.xcconfig"; sourceTree = "<group>"; };
 		9AD6A81BBB56BA422FCA4EEC /* Pods-RemoteAssistance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.debug.xcconfig"; path = "Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.debug.xcconfig"; sourceTree = "<group>"; };
+		D009BE9F825C404208D2D25A /* Pods-RemoteAssistance.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.release.xcconfig"; path = "Pods/Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.release.xcconfig"; sourceTree = "<group>"; };
 		D7455DB42368BE77001594FA /* RemoteAssistance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RemoteAssistance.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7455DB72368BE77001594FA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D7455DB92368BE77001594FA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -136,6 +138,8 @@
 			children = (
 				9AD6A81BBB56BA422FCA4EEC /* Pods-RemoteAssistance.debug.xcconfig */,
 				E2F10D05D152079F7937DA3B /* Pods-RemoteAssistance.release.xcconfig */,
+				60AD71138BC3828FE41B6BA1 /* Pods-RemoteAssistance.debug.xcconfig */,
+				D009BE9F825C404208D2D25A /* Pods-RemoteAssistance.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
