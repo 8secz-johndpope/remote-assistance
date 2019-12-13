@@ -8,23 +8,27 @@
 <div id="container" class="container">
     <h1>Expert View</h2>
     <video id="video" autoplay="1"></video>
+    <canvas>
 </div>
+<video id='stepVideo' style='display:none;margin:0;position:fixed;width:100vw;height:100vh;object-fit:contain;background-color: #fff'></video>
+<div id="stepVideoOverlay" style='display:none;margin:0;position:fixed;width:100vw;height:100vh;object-fit:contain'></div>
 <div id="toolbar">
     <div class="btn-group btn-group-toggle" data-toggle="buttons">
-        <label class="btn btn-primary btn-xlg" id="zoom-small">
+        <label class="btn btn-primary btn-lg" id="zoom-small">
             <input type="radio" name="options" autocomplete="off" checked> <i class="fa fa-search-minus"></i>
         </label>
-        <label class="btn btn-primary btn-xlg active" id="zoom-medium">
+        <label class="btn btn-primary btn-lg active" id="zoom-medium">
             <input type="radio" name="options" autocomplete="off"> <i class="fa fa-search"></i>
         </label>
-        <label class="btn btn-primary btn-xlg" id="zoom-large">
+        <label class="btn btn-primary btn-lg" id="zoom-large">
             <input type="radio" name="options" autocomplete="off"> <i class="fa fa-search-plus"></i>
         </label>
     </div>
-    <button class="btn btn-primary btn-xlg" id="reset" data-trigger="hover" data-placement="top" data-content="Reset camera orientation"> Reset </button>
-    <button class="btn btn-primary btn-xlg" id="fullscreen" data-trigger="hover" data-placement="top"  data-content="Toggle fullscreen"><i class="fa fa-window-maximize"></i></button>
-    <button class="btn btn-primary btn-xlg" id="qr" data-toggle="modal" data-target="#qrcode-modal" data-trigger="hover" data-placement="top" data-content="Show QR Code"> <i class="fa fa-qrcode"></i> </button>
-    <button class="btn  btn-xlg btn-danger" id="leapmotion" data-trigger="hover" data-placement="top" data-content="Leapmotion Websocket Connection. Click to reconnect."> Connect to Leapmotion </button>
+    <button class="btn btn-primary btn-lg" id="reset" data-trigger="hover" data-placement="top" data-content="Reset camera orientation"> reset </button>
+    <button class="btn btn-primary btn-lg" id="fullscreen" data-trigger="hover" data-placement="top"  data-content="Toggle fullscreen"><i class="fa fa-window-maximize"></i></button>
+    <button class="btn btn-primary btn-lg" id="qr" data-toggle="modal" data-target="#qrcode-modal" data-trigger="hover" data-placement="top" data-content="Show QR Code"> <i class="fa fa-qrcode"></i> </button>
+    <button class="btn  btn-lg btn-danger" id="leapmotion" data-trigger="hover" data-placement="top" data-content="Leapmotion Websocket Connection. Click to reconnect."> connect to leapmotion </button>
+    <button class="btn btn-primary btn-lg" id="ls" data-trigger="hover" data-placement="top"  data-content="Live steps"><span id="stepsLabel">steps</span> &nbsp <span id="stepsCount"></span></button>
 </div>
 
 <!-- Modal -->

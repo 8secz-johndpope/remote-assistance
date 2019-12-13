@@ -33,15 +33,7 @@ parser.addArgument(
         help: 'Do not connect to the database'
     }
 );
-parser.addArgument(
-    [ '-w', '--ws_off' ],
-    {
-        action: 'storeConst',
-        constant: true,
-        defaultValue: false,
-        help: 'Do not start web socket server'
-    }
-);
+
 var args = parser.parseArgs();
 
 // Routing
@@ -52,7 +44,7 @@ app.get('/', function (req, res) {
     res.redirect('/' + roomid)
 });
 
-if (!args.no_db) {
+if (!args.db_off) {
     const db = require('./db')
 
     app.get('/chat', function (req, res) {
@@ -120,25 +112,6 @@ if (!args.no_db) {
                 res.json(out)
             }
         })
-    });
-}
-
-if (!args.no_ws) {
-    const wsServer = http.createServer(app).listen(config.wsport, () => {
-        console.log(`WS server listening on ${config.wsport}`);
-    });
-    const wss = new WebSocketServer({
-        server: wsServer
-    });
-    wss.on('connection', (ws, req) => {
-        console.log('creating file');
-        var filePath = config.clipLoc + req.params.name.webm;
-        const fileStream = fs.createWriteStream(filePath, { flags: 'w' });
-        ws.on('message', message => {
-            console.log('writing packet')
-            // Only raw blob data can be sent
-            fileStream.write(Buffer.from(new Uint8Array(message)));
-        });
     });
 }
 

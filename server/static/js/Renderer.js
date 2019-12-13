@@ -6,8 +6,8 @@ Renderer = function ( parameters ) {
     this.parameters = parameters;
 
     var SIOConnection = parameters.sio_connection;
-    var domElement = parameters.domElement;
-    var videoElement = parameters.videoElement;
+    var domElement = parameters.dom_element;
+    var videoElement = parameters.video_element;
 
     this.default_distance = 500;
     this.default_height = 200;
@@ -216,6 +216,9 @@ Renderer = function ( parameters ) {
 
         // render threejs
         scope.renderer.render( scope.scene, scope.camera );
+
+        // render sketch canvas
+        ctx.drawImage(sketchCanvas,0,0);
 
         // compose video and threejs
         ctx.drawImage(scope.renderer.domElement, 0, 0, canvas.width, canvas.height);
