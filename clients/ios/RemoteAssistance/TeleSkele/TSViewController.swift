@@ -73,6 +73,9 @@ class TSViewController: UIViewController {
         
         // Pause the view's session
         sceneView.session.pause()
+        
+        self.wrtc.disconnect()
+        self.remoteHands.cleanup();
     }
     
     func initMediaStream() {
@@ -98,7 +101,7 @@ class TSViewController: UIViewController {
     }
     
     func initGyro() {
-        motionManager.deviceMotionUpdateInterval = 0.1
+        motionManager.deviceMotionUpdateInterval = 0.016
         motionManager.startDeviceMotionUpdates(to: OperationQueue.current!) { (gyroData, error) in
             if let data = gyroData {
                 let absolute = true

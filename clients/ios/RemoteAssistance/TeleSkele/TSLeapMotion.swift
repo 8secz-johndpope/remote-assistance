@@ -62,13 +62,13 @@ struct LMPointable : Codable {
     let length: Float
     let mcpPosition: [Float]
     let pipPosition: [Float]
-    let stabilizedTipPosition: [Float]
+//    let stabilizedTipPosition: [Float]
     let timeVisible: Float
     let tipPosition: [Float]
-    let tipVelocity: [Float]
-    let tool: Bool
-    let touchDistance: Float
-    let touchZone: PointableTouchZone
+//    let tipVelocity: [Float]
+//    let tool: Bool
+//    let touchDistance: Float
+//    let touchZone: PointableTouchZone
     let type: Int
     let width: Float
 }
@@ -91,12 +91,12 @@ struct LMHand : Codable {
     let palmPosition: [Float]
     let palmVelocity: [Float]
     let pinchStrength: Float
-    let r: [[Float]]
-    let s: Float
-    let sphereCenter: [Float]
-    let sphereRadius: Float
-    let stabilizedPalmPosition: [Float]
-    let t: [Float]
+//    let r: [[Float]]
+//    let s: Float
+//    let sphereCenter: [Float]
+//    let sphereRadius: Float
+//    let stabilizedPalmPosition: [Float]
+//    let t: [Float]
     let timeVisible: Float
     let type: HandType
     let wrist: [Float]
@@ -110,13 +110,13 @@ struct LMBox : Codable {
 struct LMFrame : Codable {
     let currentFrameRate: Float
     let id: Float
-    let r: [[Float]]
-    let s: Float
-    let t: [Float]
+//    let r: [[Float]]?
+//    let s: Float?
+//    let t: [Float]?
     let timestamp: Float
-    let gestures: [LMGesture]
+//    let gestures: [LMGesture]?
     let hands: [LMHand]
-    let interactionBox: LMBox
+//    let interactionBox: LMBox?
     let pointables: [LMPointable]
 }
 

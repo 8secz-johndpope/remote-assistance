@@ -108,3 +108,4 @@ yarn.lock
 
 config/production.*
 config/development.*
+package-lock.json

@@ -182,6 +182,9 @@ Renderer = function ( parameters ) {
         scope.camera.updateProjectionMatrix();
 
         scope.renderer.setSize( window.innerWidth, window.innerHeight );
+
+        scope.canvas.width = window.innerWidth;
+        scope.canvas.height = window.innerHeight;
     }
 
     function animate()

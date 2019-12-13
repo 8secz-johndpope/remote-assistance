@@ -351,6 +351,9 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
         
         // Pause the view's session
         sceneView.session.pause()
+        
+        // disconnect webrtc
+        self.wrtc.disconnect()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

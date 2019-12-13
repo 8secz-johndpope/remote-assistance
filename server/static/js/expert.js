@@ -17,6 +17,9 @@ var renderer;
 var first = true;
 var wrtc;
 var connected = false;
+var currentFrame;
+var frameUpdateInterval;
+
 // hide the video until we have a stream
 $('#video').hide();
 
@@ -407,12 +410,20 @@ function reconnectLeapmotion() {
     });
 
     socket.addEventListener('message', function (data) {
-        // send leap motion hand data to server
-        if (SIOConnection.socket) {
-            registerActivityLS();
-            SIOConnection.socket.emit('frame', event.data);
-        }
+        // save as current frame
+        currentFrame = event.data;
     });
+
+    if (frameUpdateInterval) {
+        clearInterval(frameUpdateInterval);
+    }
+    frameUpdateInterval = setInterval(function() {
+        // send leap motion hand data to server
+        if (SIOConnection.socket && frameUpdateInterval) {
+            registerActivityLS();
+            SIOConnection.socket.emit('frame', currentFrame);
+        }
+    }, 1000.0/30.0);
 
     socket.addEventListener('close', function(code, reason) {
         console.log(code, reason);
