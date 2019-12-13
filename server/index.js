@@ -40,7 +40,7 @@ parser.addArgument(
         constant: true,
         defaultValue: false,
         help: 'Do not start web socket server'
-    }
+    }   
 );
 var args = parser.parseArgs();
 
@@ -52,7 +52,7 @@ app.get('/', function (req, res) {
     res.redirect('/' + roomid)
 });
 
-if (!args.no_db) {
+if (!args.db_off) {
     const db = require('./db')
 
     app.get('/chat', function (req, res) {
