@@ -345,10 +345,10 @@ function toggleDots(down) {
      clearInterval(dotsInterval);
      dotsInterval = window.setInterval( function() {
         let s = "steps ";
-        for (let i=0;i<dotsCount%3;i++) {
+        for (let i=0;i<dotsCount%4;i++) {
             s += ".";
         }
-        $('#lblLsSteps').find('span').text("steps "+dotsCount%3);
+        $('#lblLsSteps').find('span').text(s);
         dotsCount++;
      }, 400);
     }
@@ -433,8 +433,11 @@ function reconnectLeapmotion() {
     frameUpdateInterval = setInterval(function() {
         // send leap motion hand data to server
         if (SIOConnection.socket && frameUpdateInterval) {
-            registerActivityLS();
-            SIOConnection.socket.emit('frame', currentFrame);
+            if (currentFrame) {
+                // Inspect frame hands/velocity
+                //registerActivityLS();
+                SIOConnection.socket.emit('frame', currentFrame);
+            }
         }
     }, 1000.0/30.0);
 
