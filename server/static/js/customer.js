@@ -121,14 +121,16 @@ navigator.mediaDevices.getUserMedia(constraints).then(
 
 
         wrtc.on('camera_update', function(data) {
-            renderer.updateCameraByParameter(data.position, data.quaternion);
+            if (renderer) {
+                renderer.updateCameraByParameter(data.position, data.quaternion);
+            }
         });
 
         renderer = new Renderer(
             {add_interaction_box: false,
              add_line_object: false,
              add_leapmotion_device: false,
-             sio_connection: SIOConenction
+             sio_connection: SIOConnection
             });
     }
 )
@@ -143,7 +145,7 @@ var handleOrientation = function(event)
     var beta     = event.beta;
     var gamma    = event.gamma;
 
-    if(alpha && beta && gamma)  // check the gyro sensor data is not null
+    if(wrtc && alpha && beta && gamma)  // check the gyro sensor data is not null
     {        
         wrtc.emit('gyro', 
                   {msg: 'from customer',
