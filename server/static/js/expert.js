@@ -256,6 +256,7 @@ let recordingLS = false;
 let videoStack = [];
 let videoStackIndex = 0;
 let dotsInterval;
+let dotsCount = 0;
 let step = 0;
 let clearCtxInterval;
 let vidOutlineInterval;
@@ -338,15 +339,17 @@ function stepDone() {
 function toggleDots(down) {
   if (!down) {
     clearInterval(dotsInterval);
-    dotsInterval = null;
+    dotsInterval = null; dotsCount = 0;
+    updateStepCount();
   } else {
      clearInterval(dotsInterval);
-     document.getElementById("stepsCount").innerHTML = "";
      dotsInterval = window.setInterval( function() {
-       let s = document.getElementById("stepsCount");
-       if ( s.innerHTML.length > 3 ) {
-         s.innerHTML = "";
-       } else { s.innerHTML += "."; }
+        let s = "steps ";
+        for (let i=0;i<dotsCount%3;i++) {
+            s += ".";
+        }
+        $('#lblLsSteps').find('span').text("steps "+dotsCount%3);
+        dotsCount++;
      }, 400);
     }
 }
