@@ -8,15 +8,22 @@ const nunjucks = require('nunjucks');
 const argparse = require('argparse');
 const config = require('config');
 const WebSocketServer = require('ws').Server;
+var dateFilter = require('nunjucks-date-filter');
 
 const room = require('./room');
 const util = require('./util');
+
+// socket.io for the help room
+var roomio;
+var rooms = {};
 
 nunjucks.configure('templates', {
     autoescape: true,
     express: app,
     noCache: true
-});
+})
+// register filters
+.addFilter('date', dateFilter);
 
 // Args
 var parser = new argparse.ArgumentParser({
@@ -106,7 +113,7 @@ if (!args.db_off) {
             if (userData.length) {
                 db.createRoom(res,req.params.user_uuid, function(data) {
                     res.json(data)
-                })
+                });
             } else {
                 let out = {"error":"No user with that UUID"}
                 res.json(out)
@@ -117,6 +124,29 @@ if (!args.db_off) {
 
 app.get('/screenarexpert', function (req, res) {
     res.render('screenar-expert.html')
+});
+
+app.get('/customer', function (req, res) {
+    // redirect to new room and notify expert waiting room
+    var roomid = util.generateRandomId();
+    res.redirect(`/${roomid}/customer`);
+});
+
+app.get('/expert', function (req, res) {
+    // redirect to new room and notify expert waiting room
+    var roomArray = [];
+    Object.keys(rooms).forEach(function(id) {
+        roomArray.push({
+            id,
+            created: new Date(rooms[id].created),
+            users: Object.keys(rooms[id].users).length
+        });
+    });
+    // look for rooms with only 1 users
+    roomArray = roomArray.filter(function(room) {
+        return room.users == 1;
+    });
+    res.render('dashboard.html', { rooms: roomArray });
 });
 
 app.get('/:roomid', function (req, res) {
@@ -149,6 +179,6 @@ httpsServer.listen(config.port, config.host);
 var httpsio = io(httpsServer);
 
 roomio = httpsio.of('/room');
-room(roomio);
+rooms = room(roomio);
 
 console.log(`Listening to https on ${config.host}:${config.port}`);

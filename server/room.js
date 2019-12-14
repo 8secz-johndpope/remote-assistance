@@ -13,15 +13,21 @@ module.exports = function(io) {
             room = data.room;
             console.log('user', sid, 'joined room', room);
             if (rooms[room] == undefined) {
-                users = rooms[room] = {};
+                users = {}
+                rooms[room] = {
+                    id: room,
+                    created: Date.now(),
+                    users
+                };
             } else {
-                users = rooms[room];
+                users = rooms[room].users;
             }
 
             socket.join(data.room, function() {
                 socket.emit('sid', {sid});
                 users[sid] = socket;
                 socket.emit('users', Object.keys(users));
+                io.emit('update_dashboard', { room });
             });
         });
 
@@ -42,9 +48,10 @@ module.exports = function(io) {
 
         socket.on('disconnect', function() {
             console.log('user', sid, 'left room', room);
-            io.to(room).emit('left', {sid})
+            io.to(room).emit('left', {sid});
             socket.leave(room);
             delete users[sid];
+            io.emit('update_dashboard', { room });
         });
 
         socket.on('webrtc', function(id, data) {
@@ -78,4 +85,5 @@ module.exports = function(io) {
             });
         })
     });
+    return rooms;
 }
