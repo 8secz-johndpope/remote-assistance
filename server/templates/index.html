@@ -45,7 +45,7 @@
         <div class="form-group">
           <label>Network Interface</label>
           <select class="form-control" id="interfaces">
-            <option value="default">Default</option>
+            <option id="default-value" value="default" data-roomid="{{roomid}}">Default</option>
             {% for iface in ifaces %}
             <option value="{{ iface.address }}">{{iface.name}}</option>
             {% endfor %}
