@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -17,6 +17,11 @@
 		D7455DCF2368BE7F001594FA /* RemoteAssistanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7455DCE2368BE7F001594FA /* RemoteAssistanceTests.swift */; };
 		D7455DDA2368BE80001594FA /* RemoteAssistanceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7455DD92368BE80001594FA /* RemoteAssistanceUITests.swift */; };
 		D795E76623A2E64800E97162 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D795E76523A2E64800E97162 /* ChatViewController.swift */; };
+		D7DA20D123AAE41A005B1357 /* WakingAppViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA20D023AAE41A005B1357 /* WakingAppViewController.swift */; };
+		D7DA20D523AAE6D5005B1357 /* carter-test.wa in Resources */ = {isa = PBXBuildFile; fileRef = D7DA20D323AAE6D5005B1357 /* carter-test.wa */; };
+		D7DA20D623AAE6D5005B1357 /* test.wa in Resources */ = {isa = PBXBuildFile; fileRef = D7DA20D423AAE6D5005B1357 /* test.wa */; };
+		D7DA20D723AAE7CA005B1357 /* WA3DLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7DA20CD23AAE255005B1357 /* WA3DLib.framework */; };
+		D7DA20D823AAE7CA005B1357 /* WA3DLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D7DA20CD23AAE255005B1357 /* WA3DLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D7DA31EB239ECFCE00D1B73F /* SCNVector3+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E1239ECFCE00D1B73F /* SCNVector3+Extensions.swift */; };
 		D7DA31EC239ECFCE00D1B73F /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E2239ECFCE00D1B73F /* UIView+Extensions.swift */; };
 		D7DA31ED239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E3239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift */; };
@@ -60,6 +65,20 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		D7DA20D923AAE7CA005B1357 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				D7DA20D823AAE7CA005B1357 /* WA3DLib.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		13B86974C1A2796697CDFACD /* Pods_RemoteAssistance.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RemoteAssistance.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		60AD71138BC3828FE41B6BA1 /* Pods-RemoteAssistance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.debug.xcconfig"; sourceTree = "<group>"; };
@@ -80,6 +99,11 @@
 		D7455DD92368BE80001594FA /* RemoteAssistanceUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAssistanceUITests.swift; sourceTree = "<group>"; };
 		D7455DDB2368BE80001594FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D795E76523A2E64800E97162 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		D7DA20CD23AAE255005B1357 /* WA3DLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WA3DLib.framework; path = RemoteAssistance/Frameworks/WA3DLib.framework; sourceTree = "<group>"; };
+		D7DA20CF23AAE366005B1357 /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
+		D7DA20D023AAE41A005B1357 /* WakingAppViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WakingAppViewController.swift; sourceTree = "<group>"; };
+		D7DA20D323AAE6D5005B1357 /* carter-test.wa */ = {isa = PBXFileReference; lastKnownFileType = file; path = "carter-test.wa"; sourceTree = "<group>"; };
+		D7DA20D423AAE6D5005B1357 /* test.wa */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.wa; sourceTree = "<group>"; };
 		D7DA31E1239ECFCE00D1B73F /* SCNVector3+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SCNVector3+Extensions.swift"; sourceTree = "<group>"; };
 		D7DA31E2239ECFCE00D1B73F /* UIView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		D7DA31E3239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ARHitTestResult+Extensions.swift"; sourceTree = "<group>"; };
@@ -113,6 +137,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A539AF265FD05F5E8642A27C /* Pods_RemoteAssistance.framework in Frameworks */,
+				D7DA20D723AAE7CA005B1357 /* WA3DLib.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -169,6 +194,7 @@
 		D7455DB62368BE77001594FA /* RemoteAssistance */ = {
 			isa = PBXGroup;
 			children = (
+				D7DA20DA23AAEC00005B1357 /* WakingApp */,
 				D7DB6A0F236DF21C00D7C367 /* README.md */,
 				D7455DB72368BE77001594FA /* AppDelegate.swift */,
 				D7455DC02368BE7F001594FA /* Assets.xcassets */,
@@ -181,6 +207,7 @@
 				D7DB69F5236DE35100D7C367 /* Common */,
 				D7DA31DE239ECFCE00D1B73F /* ScreenAR */,
 				D7DB69D8236DE2D500D7C367 /* TeleSkele */,
+				D7DA20CF23AAE366005B1357 /* Bridging-Header.h */,
 			);
 			path = RemoteAssistance;
 			sourceTree = "<group>";
@@ -201,6 +228,24 @@
 				D7455DDB2368BE80001594FA /* Info.plist */,
 			);
 			path = RemoteAssistanceUITests;
+			sourceTree = "<group>";
+		};
+		D7DA20D223AAE6D5005B1357 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				D7DA20D323AAE6D5005B1357 /* carter-test.wa */,
+				D7DA20D423AAE6D5005B1357 /* test.wa */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		D7DA20DA23AAEC00005B1357 /* WakingApp */ = {
+			isa = PBXGroup;
+			children = (
+				D7DA20D023AAE41A005B1357 /* WakingAppViewController.swift */,
+				D7DA20D223AAE6D5005B1357 /* Resources */,
+			);
+			path = WakingApp;
 			sourceTree = "<group>";
 		};
 		D7DA31DE239ECFCE00D1B73F /* ScreenAR */ = {
@@ -291,6 +336,7 @@
 		EC96B5F1EDC46991221E5643 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D7DA20CD23AAE255005B1357 /* WA3DLib.framework */,
 				13B86974C1A2796697CDFACD /* Pods_RemoteAssistance.framework */,
 			);
 			name = Frameworks;
@@ -308,6 +354,7 @@
 				D7455DB12368BE77001594FA /* Frameworks */,
 				D7455DB22368BE77001594FA /* Resources */,
 				992F350A43BF95EC7DFD2CB5 /* [CP] Embed Pods Frameworks */,
+				D7DA20D923AAE7CA005B1357 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -408,7 +455,9 @@
 				D7DB6A10236DF21C00D7C367 /* README.md in Resources */,
 				D7455DC12368BE7F001594FA /* Assets.xcassets in Resources */,
 				D7455DBF2368BE77001594FA /* Main.storyboard in Resources */,
+				D7DA20D623AAE6D5005B1357 /* test.wa in Resources */,
 				D7DB69EF236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Left.dae in Resources */,
+				D7DA20D523AAE6D5005B1357 /* carter-test.wa in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,6 +532,7 @@
 				D7DA31F0239ECFCE00D1B73F /* SurfaceNode.swift in Sources */,
 				D7DA31F1239ECFCE00D1B73F /* PlaneRectangle.swift in Sources */,
 				D7DB6A0B236DE7C700D7C367 /* TSReducer.swift in Sources */,
+				D7DA20D123AAE41A005B1357 /* WakingAppViewController.swift in Sources */,
 				D7DA31ED239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift in Sources */,
 				D7DA31EC239ECFCE00D1B73F /* UIView+Extensions.swift in Sources */,
 				D795E76623A2E64800E97162 /* ChatViewController.swift in Sources */,
@@ -675,6 +725,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6FE4WE8E4U;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/RemoteAssistance/Frameworks",
+				);
 				INFOPLIST_FILE = RemoteAssistance/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -682,6 +736,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.fxpal.RemoteAssistance;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "RemoteAssistance/Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -695,6 +750,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6FE4WE8E4U;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/RemoteAssistance/Frameworks",
+				);
 				INFOPLIST_FILE = RemoteAssistance/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -702,6 +761,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.fxpal.RemoteAssistance;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "RemoteAssistance/Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

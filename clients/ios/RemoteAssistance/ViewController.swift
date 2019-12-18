@@ -81,7 +81,11 @@ extension  ViewController : UITabBarDelegate {
             view.frame = self.view.frame
             self.displayView.addSubview(view)
             break
-        case "Pencil":
+        case "WakingApp":
+            vc = self.storyboard?.instantiateViewController(identifier: "wakingAppVC")
+            let view = vc!.view!
+            view.frame = self.view.frame
+            self.displayView.addSubview(view)
             break
         case "Help":
             vc = self.storyboard?.instantiateViewController(identifier: "helpVC")

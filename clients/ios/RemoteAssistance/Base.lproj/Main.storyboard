@@ -22,7 +22,7 @@
                                 <items>
                                     <tabBarItem title="Hands" image="hand.draw.fill" catalog="system" id="bzH-l6-7PA"/>
                                     <tabBarItem title="Screen" image="perspective" catalog="system" id="Fyf-D8-kAi"/>
-                                    <tabBarItem title="Pencil" image="pencil" catalog="system" id="1qp-3A-a5N"/>
+                                    <tabBarItem title="WakingApp" image="eye" catalog="system" id="1qp-3A-a5N"/>
                                     <tabBarItem title="Help" image="questionmark" catalog="system" id="1CH-vx-229"/>
                                     <tabBarItem title="Chat" image="message" catalog="system" id="1lw-fK-v9d"/>
                                     <tabBarItem title="Settings" image="gear" catalog="system" id="UDC-4a-dbZ"/>
@@ -45,6 +45,21 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="137.94642857142856" y="133.33333333333334"/>
+        </scene>
+        <!--Waking App View Controller-->
+        <scene sceneID="glk-YJ-NJD">
+            <objects>
+                <viewController storyboardIdentifier="wakingAppVC" id="FhR-72-3AS" customClass="WakingAppViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="O0o-z5-jtj">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="GHN-ok-aXV"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ze5-RW-mPR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2400" y="133"/>
         </scene>
         <!--Help-->
         <scene sceneID="fsb-hO-TBD">
@@ -398,10 +413,10 @@
         </scene>
     </scenes>
     <resources>
+        <image name="eye" catalog="system" width="64" height="40"/>
         <image name="gear" catalog="system" width="64" height="58"/>
         <image name="hand.draw.fill" catalog="system" width="64" height="52"/>
         <image name="message" catalog="system" width="64" height="56"/>
-        <image name="pencil" catalog="system" width="64" height="56"/>
         <image name="perspective" catalog="system" width="64" height="60"/>
         <image name="questionmark" catalog="system" width="48" height="64"/>
     </resources>
