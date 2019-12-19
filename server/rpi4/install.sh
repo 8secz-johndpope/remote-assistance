@@ -10,7 +10,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable ssh
 sudo systemctl enable hostapd
 sudo systemctl enable remote-assistance
-sudo ssytemctl enable dhcpcd
+sudo systemctl enable dhcpcd
 #sudo systemctl restart ssh
 #sudo systemctl restart hostapd
 #sudo systemctl resatrt dnsmasq
