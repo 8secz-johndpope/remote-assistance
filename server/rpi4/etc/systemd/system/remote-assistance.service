@@ -1,0 +1,12 @@
+[Unit]
+Description=Remote Assistance Server
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+User=pi
+WorkingDirectory=/home/pi/Development/remote-assistance/server
+ExecStart=/home/pi/Development/remote-assistance/server/node_modules/.bin/nodemon index.js --db_off
+
+[Install]
+WantedBy=multi-user.target
