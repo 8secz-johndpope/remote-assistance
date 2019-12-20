@@ -1,0 +1,218 @@
+{
+ "scene": {
+  "ambientColor": {
+   "x": 0.5,
+   "y": 0.5,
+   "z": 0.5
+  },
+  "ambientIntensity": 1.0,
+  "assets": {
+   "10094278048748662585": {
+    "name": "targetImage.jpg",
+    "type": 4
+   },
+   "11214835890692295": {
+    "name": "New Material.wamat",
+    "type": 6
+   },
+   "351776506165682542": {
+    "name": "targetImageBk.png",
+    "type": 4
+   },
+   "6711097567415699130": {
+    "name": "New Script.js",
+    "type": 5
+   }
+  },
+  "containers": {
+   "0": {
+    "children": {
+     "0": {
+      "components": {
+       "light": {
+        "angle": 60.0,
+        "color": {
+         "x": 1.0,
+         "y": 1.0,
+         "z": 1.0
+        },
+        "intensity": 50.0,
+        "range": 5.0,
+        "type": 1
+       },
+       "modelRoot": "DefaultCube",
+       "transform": {
+        "localPosition": {
+         "x": -0.400000005960464,
+         "y": 0.100000001490116,
+         "z": -0.400000005960464
+        },
+        "localRotation": {
+         "w": 1.0,
+         "x": 0.0,
+         "y": 0.0,
+         "z": 0.0
+        },
+        "localScale": {
+         "x": 0.200000002980232,
+         "y": 0.200000002980232,
+         "z": 0.200000002980232
+        }
+       }
+      },
+      "enabled": true,
+      "name": "cube"
+     },
+     "1": {
+      "children": {
+       "0": {
+        "components": {
+         "light": {
+          "angle": 60.0,
+          "color": {
+           "x": 1.0,
+           "y": 1.0,
+           "z": 1.0
+          },
+          "intensity": 1.0,
+          "range": 5.0,
+          "type": 1
+         },
+         "transform": {
+          "localPosition": {
+           "x": -2.0,
+           "y": -0.5,
+           "z": 2.0
+          },
+          "localRotation": {
+           "w": 1.0,
+           "x": 0.0,
+           "y": 0.0,
+           "z": 0.0
+          },
+          "localScale": {
+           "x": 5.0,
+           "y": 5.0,
+           "z": 5.0
+          }
+         }
+        },
+        "enabled": true,
+        "name": "Directional Light"
+       }
+      },
+      "components": {
+       "materials": [
+        {
+         "id": "11214835890692295",
+         "name": "New Material.wamat"
+        }
+       ],
+       "modelRoot": "DefaultCube",
+       "script": [
+        {
+         "assetId": "6711097567415699130"
+        }
+       ],
+       "transform": {
+        "localPosition": {
+         "x": 0.400000005960464,
+         "y": 0.103476330637932,
+         "z": -0.400000005960464
+        },
+        "localRotation": {
+         "w": 1.0,
+         "x": 0.0,
+         "y": 0.0,
+         "z": 0.0
+        },
+        "localScale": {
+         "x": 0.200000002980232,
+         "y": 0.200000002980232,
+         "z": 0.200000002980232
+        }
+       }
+      },
+      "enabled": true,
+      "name": "cube2"
+     },
+     "2": {
+      "components": {
+       "modelRoot": "DefaultCube",
+       "transform": {
+        "localPosition": {
+         "x": 0.400000005960464,
+         "y": 0.100000001490116,
+         "z": 0.400000005960464
+        },
+        "localRotation": {
+         "w": 1.0,
+         "x": 0.0,
+         "y": 0.0,
+         "z": 0.0
+        },
+        "localScale": {
+         "x": 0.200000002980232,
+         "y": 0.200000002980232,
+         "z": 0.200000002980232
+        }
+       }
+      },
+      "enabled": true,
+      "name": "cube"
+     },
+     "3": {
+      "components": {
+       "modelRoot": "DefaultCube",
+       "transform": {
+        "localPosition": {
+         "x": -0.400000005960464,
+         "y": 0.100000001490116,
+         "z": 0.400000005960464
+        },
+        "localRotation": {
+         "w": 1.0,
+         "x": 0.0,
+         "y": 0.0,
+         "z": 0.0
+        },
+        "localScale": {
+         "x": 0.200000002980232,
+         "y": 0.200000002980232,
+         "z": 0.200000002980232
+        }
+       }
+      },
+      "enabled": true,
+      "name": "cube"
+     }
+    },
+    "components": {
+     "transform": {
+      "localPosition": {
+       "x": 0.0,
+       "y": 0.0,
+       "z": 0.0
+      },
+      "localRotation": {
+       "w": 1.0,
+       "x": 0.0,
+       "y": 0.0,
+       "z": 0.0
+      },
+      "localScale": {
+       "x": 1.0,
+       "y": 1.0,
+       "z": 1.0
+      }
+     }
+    },
+    "enabled": true,
+    "name": "Scene Root"
+   }
+  },
+  "radianceMap": "Default-Environment",
+  "targetImage": "10094278048748662585"
+ },
+ "version": "3.1.8"
+}
