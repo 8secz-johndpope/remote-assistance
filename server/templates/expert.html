@@ -10,8 +10,6 @@
     <video id="video" autoplay="1"></video>
     <canvas>
 </div>
-<video id='stepVideo' style='display:none;margin:0;position:fixed;width:100vw;height:100vh;object-fit:contain;background-color: #fff'></video>
-<div id="stepVideoOverlay" style='display:none;margin:0;position:fixed;width:100vw;height:100vh;object-fit:contain'></div>
 <div id="toolbar">
     <div class="btn-group btn-group-toggle" data-toggle="buttons">
         <label class="btn btn-primary btn-lg" id="zoom-small">
@@ -33,7 +31,7 @@
            <input type="checkbox" id="sketchO" /><i class="fa fa-pencil"></i>
         </label>
     </div>
-    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+    <div class="btn-group btn-group-toggle" data-toggle="buttons" onClick="toggleSteps(1)">
         <label id="lblLsSteps" class="btn btn-primary btn-lg">
            <input type="checkbox" id="lsStepsO" /><span>steps </span>
         </label>
@@ -66,6 +64,14 @@
         </div>
     </div>
 </div>
+
+<video id='stepVideo' style='display:none;margin:0;position:fixed;width:100vw;height:100vh;object-fit:contain;background-color: #fff'></video>
+<div id="stepVideoOverlay" style='display:none;margin:0;position:fixed;width:100vw;height:100vh;object-fit:contain'>
+    <button style="position:absolute;right:10;top:10" type="button" class="close" aria-label="Close" onclick="toggleSteps(0)">
+    <i class="fa farrow-circle-up" style="position:absolute;top:10;text-align: center;" onClick="moveVideoStack(-1)"></i>
+    <i class="fa farrow-circle-down" style="position:absolute;bottom:10;text-align: center;" onClick="moveVideoStack(1)"></i>
+</div>
+
 {% endblock %}
 
 {% block js %}

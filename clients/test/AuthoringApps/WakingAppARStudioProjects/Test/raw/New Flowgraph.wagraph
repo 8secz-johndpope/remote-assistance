@@ -1,0 +1,33 @@
+{
+ "variables": null,
+ "connections": null,
+ "nodes": {
+  "node_{f2d40ab3-1051-4fda-9833-db99e4cda60c}": {
+   "category": "Events",
+   "defId": "0",
+   "outputs": [
+	"N/A"
+   ],
+   "pos": {
+	"x": 15696.0,
+	"y": 15825.0
+   },
+   "sceneId": "{f2d40ab3-1051-4fda-9833-db99e4cda60c}",
+   "title": "Start"
+  },
+  "node_{3a98fba5-4dd0-4064-89e7-9c03a2ed765a}": {
+   "category": "Events",
+   "defId": "7",
+   "outputs": [
+	"N/A",
+	"deltaTime"
+   ],
+   "pos": {
+	"x": 15658.0,
+	"y": 16029.0
+   },
+   "sceneId": "{3a98fba5-4dd0-4064-89e7-9c03a2ed765a}",
+   "title": "On Update"
+  }
+ }
+}

@@ -11,6 +11,9 @@ SIOConnection.prototype.setupSocket = function() {
     if (SIOConnection.socket) {
         var socket = SIOConnection.socket;
         socket.on('frame', function(data) {
+            if (!data.hands) {
+                data.hands = [];
+            }
             connection.handleData(data);
         });
         return socket;

@@ -236,6 +236,19 @@ $('#leapmotion').click(function(e) {
     reconnectLeapmotion();
 });
 
+function moveVideoStack(dir) {
+    let sv = document.getElementById('stepVideo');
+    videoStackIndex += dir;
+    if (videoStackIndex < 0) { 
+        videoStackIndex = 0;
+    }
+    else if (videoStackIndex >= videoStack.length) {
+        videoStackIndex = videoStack.length-1;
+    }
+    sv.src = videoStack[videoStackIndex];
+    sv.play();
+}
+
 function toggleFullScreen() {
     if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen();
@@ -253,7 +266,7 @@ $('#fullscreen').click(function() {
 let ls = true;
 let mediaRecorder;
 let recordingLS = false;
-let videoStack = [];
+let videoStack = []; videoStack.push("http://showhow.fxpal.com/misc/test.mp4");
 let videoStackIndex = 0;
 let dotsInterval;
 let dotsCount = 0;
