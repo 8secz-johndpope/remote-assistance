@@ -220,15 +220,18 @@ $('#qr').click(function(e) {
     $('#qrcode-modal').modal();
 });
 
-$('#lblLsSteps').click(function(e) {
+$('#lblLsStepsCount').click(function(e) {
+    toggleStepsView(1);
+});
+
+$('#lblLsStepsOnOff').click(function(e) {
     var checked = $('input', this).is(':checked');
     if (checked) {
         ls = true;
-        updateStepCount();
     } else {
         ls = false;
-        $('span', this).text('steps off');
     }
+    setLSOnOff();
 });
 
 var lmSocket;
@@ -236,17 +239,31 @@ $('#leapmotion').click(function(e) {
     reconnectLeapmotion();
 });
 
-function moveVideoStack(dir) {
+function setLSOnOff() {
+    if (ls) { $('#lsStepsOnOffIcon').css('color', '#DC3545'); }
+    else { $('#lsStepsOnOffIcon').css('color', 'gray'); }
+}
+
+function updateVideoStack(dir) {
     let sv = document.getElementById('stepVideo');
     videoStackIndex += dir;
-    if (videoStackIndex < 0) { 
+    if ( (videoStackIndex < 0) || (videoStackIndex == 0) ) { 
         videoStackIndex = 0;
+        document.getElementById("lsUpIcon").style.color = "gray";
+    } else {        
+        document.getElementById("lsUpIcon").style.color = "#DC3545";
     }
-    else if (videoStackIndex >= videoStack.length) {
+    if (videoStackIndex >= videoStack.length-1) {
         videoStackIndex = videoStack.length-1;
+        document.getElementById("lsDownIcon").style.color = "gray";
+    } else {        
+        document.getElementById("lsDownIcon").style.color = "#DC3545";
     }
-    sv.src = videoStack[videoStackIndex];
-    sv.play();
+
+    if (sv.src !== videoStack[videoStackIndex]) {
+        sv.src = videoStack[videoStackIndex];
+        sv.play();        
+    }
 }
 
 function toggleFullScreen() {
@@ -263,10 +280,13 @@ $('#fullscreen').click(function() {
 });
 
 // ----- START: Live Steps -----
-let ls = true;
+let ls = false;
 let mediaRecorder;
 let recordingLS = false;
-let videoStack = []; videoStack.push("http://showhow.fxpal.com/misc/test.mp4");
+let videoStack = []; 
+videoStack.push("http://showhow.fxpal.com/misc/test.mp4"); 
+videoStack.push("http://showhow.fxpal.com/misc/wcDocHandles.mp4");
+
 let videoStackIndex = 0;
 let dotsInterval;
 let dotsCount = 0;
@@ -370,9 +390,8 @@ function toggleDots(down) {
 function updateStepCount() {
     let stackTxt = 'step';
     if (videoStack.length>0) { stackTxt += "s " + videoStack.length }
-    if (ls) {
-        $('#lblLsSteps').find('span').text(stackTxt+" ");        
-    }
+    $('#lsStepsCountSpan').text(stackTxt); 
+    console.log(stackTxt);       
 }
 
 function addStep(url) {
@@ -380,13 +399,15 @@ function addStep(url) {
   videoStack.unshift(url);
 }
 
-function toggleSteps(open=0) {
+function toggleStepsView(open=0) {
   let sv = document.getElementById('stepVideo');
   let svo = document.getElementById('stepVideoOverlay');
+  let tb = document.getElementById('toolbar');
 
   if ( sv.style.display == 'none' && (videoStack.length > 0) ) {
     sv.style.display = 'inline';
     svo.style.display = 'inline';
+    tb.style.display = 'none';
     videoStackIndex = 0;
     sv.src = videoStack[0];
     sv.autoplay = true;
@@ -394,9 +415,14 @@ function toggleSteps(open=0) {
   } else if (!open) {
     sv.style.display = 'none';
     svo.style.display = 'none';
+    tb.style.display = 'inline';
     processing = true;
   }
 }
+
+setLSOnOff();
+updateStepCount();
+updateVideoStack(0);
 
 // ----- END: Live Steps -----
 
