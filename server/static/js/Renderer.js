@@ -8,6 +8,7 @@ Renderer = function ( parameters ) {
     var SIOConnection = parameters.sio_connection;
     var domElement = parameters.dom_element;
     var videoElement = parameters.video_element;
+    var sketchCanvas = parameters.sketch_canvas;
 
     this.default_distance = 500;
     this.default_height = 200;
@@ -32,6 +33,7 @@ Renderer = function ( parameters ) {
     this.canvas.style.height = '100%';
     this.canvas.width = window.innerWidth;
     this.canvas.height = window.innerHeight;
+    this.canvas.style.zIndex = 2;
     this.domElement.appendChild(this.canvas);
 
     //// light
@@ -217,14 +219,13 @@ Renderer = function ( parameters ) {
             ctx.drawImage(videoElement, x, y, width, height);
         }
 
+        // render sketch canvas
+        if (typeof sketchCanvas !== 'undefined') {
+            ctx.drawImage(sketchCanvas,0,0);            
+        }
+
         // render threejs
         scope.renderer.render( scope.scene, scope.camera );
-
-        // render sketch canvas
-
-        //ctx.drawImage(sketchCanvas,0,0);
-        // TODO: Uncomment after sketchCanvas is checked in
-        // ctx.drawImage(sketchCanvas,0,0);
 
         // compose video and threejs
         ctx.drawImage(scope.renderer.domElement, 0, 0, canvas.width, canvas.height);

@@ -65,7 +65,7 @@ navigator.mediaDevices.getUserMedia(constraints).then(
              add_leapmotion_device: false, 
              sio_connection: SIOConnection,
              dom_element: document.getElementById('container'),
-             drawing_canvas: document.getElementById('drawingCanvas'),
+             sketch_canvas: document.getElementById('sketchCanvas'),
              video_element: document.getElementById('video'),
             });
 
@@ -214,7 +214,7 @@ $('#reset').click(function(e) {
 });
 
 $('#qr').click(function(e) {
-    var url = ['https://', window.location.host, '/', config.roomid  ,'/customer'].join('');
+    const url = ['https://', window.location.host, '/', config.roomid  ,'/customer'].join('');
     $('#qrcode').empty().qrcode(url);
     $('#url').text(url);
     $('#qrcode-modal').modal();
@@ -225,8 +225,8 @@ $('#lblLsStepsCount').click(function(e) {
 });
 
 $('#lblLsStepsOnOff').click(function(e) {
-    var checked = $('input', this).is(':checked');
-    if (checked) {
+    const checked = $('input', this).is(':checked');
+    if (!checked) {
         ls = true;
     } else {
         ls = false;
@@ -234,17 +234,56 @@ $('#lblLsStepsOnOff').click(function(e) {
     setLSOnOff();
 });
 
+$('#lblSketchOnOff').click(function(e) {
+    const checked = $('input', this).is(':checked');
+    const c = document.getElementById("sketchCanvas");
+    if (!checked) {
+        sketch = true;
+        c.style.zIndex = 3;
+        c.style.position = 'fixed';
+        c.style.top = 0;
+        c.style.left = 0;
+        c.style.width = '100%';
+        c.style.height = '100%';
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+        c.addEventListener('mousemove', drawSketch);
+        c.addEventListener('mouseup', handleMouseUp);
+        c.addEventListener('mousedown', handleMouseDown);
+        c.addEventListener('mouseout', handleMouseUp);
+        c.addEventListener('mouseenter', setPosition);
+
+        renderer.domElement.removeEventListener('click', onMouseClick, false);
+    } else {
+        sketch = false;
+        c.style.zIndex = 1;        
+        c.removeEventListener('mousemove', drawSketch);
+        c.removeEventListener('mouseup', handleMouseUp);
+        c.removeEventListener('mousedown', handleMouseDown);
+        c.removeEventListener('mouseout', handleMouseUp);
+        c.removeEventListener('mouseenter', setPosition);
+
+        renderer.domElement.addEventListener('click', onMouseClick, false);
+    }
+    setSketchOnOff();
+});
+
 var lmSocket;
 $('#leapmotion').click(function(e) {
     reconnectLeapmotion();
 });
+
+function setSketchOnOff() {
+    if (sketch) { $('#sketchOnOffIcon').css('color', '#DC3545'); }
+    else { $('#sketchOnOffIcon').css('color', 'gray'); }
+}
 
 function setLSOnOff() {
     if (ls) { $('#lsStepsOnOffIcon').css('color', '#DC3545'); }
     else { $('#lsStepsOnOffIcon').css('color', 'gray'); }
 }
 
-function updateVideoStack(dir) {
+function updateVideoStack(dir,play=true) {
     let sv = document.getElementById('stepVideo');
     videoStackIndex += dir;
     if ( (videoStackIndex < 0) || (videoStackIndex == 0) ) { 
@@ -260,7 +299,7 @@ function updateVideoStack(dir) {
         document.getElementById("lsDownIcon").style.color = "#DC3545";
     }
 
-    if (sv.src !== videoStack[videoStackIndex]) {
+    if (play && (sv.src !== videoStack[videoStackIndex])) {
         sv.src = videoStack[videoStackIndex];
         sv.play();        
     }
@@ -292,10 +331,14 @@ let dotsInterval;
 let dotsCount = 0;
 let step = 0;
 let clearCtxInterval;
+let clearSketchInterval;
 let vidOutlineInterval;
 let recordingClipUUID;
 let processing = true;
 const LS_TIMEOUT = 3000;
+const SKETCH_TIMEOUT = 3000;
+const pos = { x: 0, y: 0 };
+let sketch = false;
 
 function registerActivityLS() {
     if (!ls) return;
@@ -365,8 +408,10 @@ function handleDataAvailable(event) {
 }
 
 function stepDone() {
-  if (recording) { recording = false; stopRecording(); }
-  toggleDots(false); wrtc.emit({'td':0}); ; 
+  if (recordingLS) { 
+    recordingLS = false; stopRecording(); 
+  }
+  toggleDots(false); wrtc.emit({'td':0}); 
 }
 
 function toggleDots(down) {
@@ -391,7 +436,7 @@ function updateStepCount() {
     let stackTxt = 'step';
     if (videoStack.length>0) { stackTxt += "s " + videoStack.length }
     $('#lsStepsCountSpan').text(stackTxt); 
-    console.log(stackTxt);       
+    console.log(stackTxt);     
 }
 
 function addStep(url) {
@@ -420,9 +465,62 @@ function toggleStepsView(open=0) {
   }
 }
 
+function clearSketchCanvas() {
+  let sCanvas = document.getElementById("sketchCanvas");
+  let sCanvasCtx = sCanvas.getContext('2d');
+  sCanvasCtx.clearRect(0, 0, sCanvas.width, sCanvas.height);
+}
+
+function setPosition(e) {
+  pos.x = e.clientX;
+  pos.y = e.clientY;
+}
+
+function handleMouseUp(e) {
+  if (ls) {
+    clearCtxInterval = setTimeout(stepDone,LS_TIMEOUT);     
+  }
+  clearSketchInterval = setTimeout(clearSketchCanvas,SKETCH_TIMEOUT);  
+}
+
+function handleMouseDown(e) {
+  e.preventDefault();
+  setPosition(e);
+  if (ls && !recordingLS) {
+    recordingLS = true;
+    toggleDots(true); sendData({'td':1});
+    clearTimeout(clearCtxInterval);
+    startRecording();
+    //dCanvas.setPointerCapture(e.pointerId);
+  }
+}
+
+function drawSketch(e) {
+  // mouse left button must be pressed
+  if (e.buttons !== 1) return;
+
+  clearTimeout(clearSketchInterval);
+  if (ls) {  clearTimeout(clearCtxInterval); }
+  
+  let dCanvasCtx =  document.getElementById("sketchCanvas").getContext('2d');
+
+  dCanvasCtx.beginPath(); // begin
+
+  dCanvasCtx.lineWidth = 5;
+  dCanvasCtx.lineCap = 'round';
+  dCanvasCtx.strokeStyle = 'rgba(255, 255, 0, 1)';
+
+  dCanvasCtx.moveTo(pos.x, pos.y); // from
+  setPosition(e);
+  dCanvasCtx.lineTo(pos.x, pos.y); // to
+
+  dCanvasCtx.stroke(); // draw it!
+}
+
+setSketchOnOff();
 setLSOnOff();
 updateStepCount();
-updateVideoStack(0);
+updateVideoStack(0,false);
 
 // ----- END: Live Steps -----
 
