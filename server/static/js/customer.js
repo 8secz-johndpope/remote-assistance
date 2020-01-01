@@ -126,6 +126,14 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             }
         });
 
+        wrtc.on('sketch_draw', function(data) {
+            drawSketch(data);
+        });
+
+        wrtc.on('sketch_clear', function(data) {
+            clearSketch();
+        });
+
         renderer = new Renderer(
             {add_interaction_box: false,
              add_line_object: false,
@@ -156,6 +164,35 @@ var handleOrientation = function(event)
                   });
 
     }    
+}
+
+function configSketch() {
+    const c = document.getElementById("sketchCanvas");
+    c.style.zIndex = 3;
+    c.style.position = 'fixed';
+    c.style.top = 0;
+    c.style.left = 0;
+    c.style.width = '100%';
+    c.style.height = '100%';
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
+}
+
+function drawSketch(data) {
+  let sCanvasCtx =  document.getElementById("sketchCanvas").getContext('2d');
+  sCanvasCtx.beginPath();
+  sCanvasCtx.lineWidth = 5;
+  sCanvasCtx.lineCap = 'round';
+  sCanvasCtx.strokeStyle = 'rgba(255, 255, 0, 1)';
+  sCanvasCtx.moveTo(data.sX, data.sY); 
+  sCanvasCtx.lineTo(data.eX, data.eY); 
+  sCanvasCtx.stroke(); 
+}
+
+function clearSketch() {
+  let sCanvas = document.getElementById("sketchCanvas");
+  let sCanvasCtx = sCanvas.getContext('2d');
+  sCanvasCtx.clearRect(0, 0, sCanvas.width, sCanvas.height);
 }
 
 if (isIOS() && typeof DeviceMotionEvent.requestPermission === 'function') {
@@ -191,6 +228,9 @@ if (isIOS() && typeof DeviceMotionEvent.requestPermission === 'function') {
 } else {
     window.addEventListener("deviceorientation", handleOrientation, true);
 }
+
+configSketch();
+window.addEventListener("resize", configSketch);
 
 // How get video to opencv
 // var canvas = $('<canvas id="canvasVideo" width="640" height="480" />')[0];

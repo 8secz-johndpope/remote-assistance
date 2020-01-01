@@ -239,14 +239,6 @@ $('#lblSketchOnOff').click(function(e) {
     const c = document.getElementById("sketchCanvas");
     if (!checked) {
         sketch = true;
-        c.style.zIndex = 3;
-        c.style.position = 'fixed';
-        c.style.top = 0;
-        c.style.left = 0;
-        c.style.width = '100%';
-        c.style.height = '100%';
-        c.width = window.innerWidth;
-        c.height = window.innerHeight;
         c.addEventListener('mousemove', drawSketch);
         c.addEventListener('mouseup', handleMouseUp);
         c.addEventListener('mousedown', handleMouseDown);
@@ -340,12 +332,13 @@ const SKETCH_TIMEOUT = 3000;
 const pos = { x: 0, y: 0 };
 let sketch = false;
 
+
 function registerActivityLS() {
     if (!ls) return;
     if (!recordingLS) {
         recordingLS = true;
         toggleDots(true); 
-        wrtc.emit({'td':1}); 
+        wrtc.emit('td',{'td':1}); 
         startRecording();
     } 
     clearTimeout(clearCtxInterval);
@@ -411,7 +404,7 @@ function stepDone() {
   if (recordingLS) { 
     recordingLS = false; stopRecording(); 
   }
-  toggleDots(false); wrtc.emit({'td':0}); 
+  toggleDots(false); wrtc.emit('td',{'td':0}); 
 }
 
 function toggleDots(down) {
@@ -465,10 +458,28 @@ function toggleStepsView(open=0) {
   }
 }
 
+// ----- END: Live Steps -----
+
+// ----- START: Sketch -----
+
+// Possibly move to shared lib with customer code
+function configSketch() {
+    const c = document.getElementById("sketchCanvas");
+    c.style.zIndex = 3;
+    c.style.position = 'fixed';
+    c.style.top = 0;
+    c.style.left = 0;
+    c.style.width = '100%';
+    c.style.height = '100%';
+    c.width = window.innerWidth;
+    c.height = window.innerHeight;
+}
+
 function clearSketchCanvas() {
   let sCanvas = document.getElementById("sketchCanvas");
   let sCanvasCtx = sCanvas.getContext('2d');
   sCanvasCtx.clearRect(0, 0, sCanvas.width, sCanvas.height);
+  wrtc.emit('sketch_clear', {}); // ship it
 }
 
 function setPosition(e) {
@@ -502,27 +513,32 @@ function drawSketch(e) {
   clearTimeout(clearSketchInterval);
   if (ls) {  clearTimeout(clearCtxInterval); }
   
-  let dCanvasCtx =  document.getElementById("sketchCanvas").getContext('2d');
+  let sCanvasCtx =  document.getElementById("sketchCanvas").getContext('2d');
 
-  dCanvasCtx.beginPath(); // begin
+  sCanvasCtx.beginPath();
 
-  dCanvasCtx.lineWidth = 5;
-  dCanvasCtx.lineCap = 'round';
-  dCanvasCtx.strokeStyle = 'rgba(255, 255, 0, 1)';
+  sCanvasCtx.lineWidth = 5;
+  sCanvasCtx.lineCap = 'round';
+  sCanvasCtx.strokeStyle = 'rgba(255, 255, 0, 1)';
 
-  dCanvasCtx.moveTo(pos.x, pos.y); // from
+  let sX = pos.x, sY = pos.y;
   setPosition(e);
-  dCanvasCtx.lineTo(pos.x, pos.y); // to
+  sCanvasCtx.moveTo(sX, sY); // from
+  sCanvasCtx.lineTo(pos.x, pos.y); // to
 
-  dCanvasCtx.stroke(); // draw it!
+  sCanvasCtx.stroke(); // draw it
+
+  wrtc.emit('sketch_draw', {sX: sX, sY: sY, eX: pos.x, eY: pos.y}); // ship it
 }
 
 setSketchOnOff();
 setLSOnOff();
 updateStepCount();
 updateVideoStack(0,false);
+configSketch();
+window.addEventListener("resize", configSketch);
 
-// ----- END: Live Steps -----
+// ----- END: Sketch -----
 
 // ----- START: Comment this out to disable sending browser leapmotion data -----
 // connection to leapmotion
