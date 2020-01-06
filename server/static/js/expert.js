@@ -9,7 +9,6 @@ var constraints = {
 
 const SERVER_API = "/api/";
 const SERVER_CLIP_STOR = "/stor/";
-const user_uuid = "tempExpert"
 
 //// Rendering
 var renderer;
@@ -20,6 +19,8 @@ var connected = false;
 var currentFrame;
 var frameUpdateInterval;
 
+let user_uuid;
+
 // hide the video until we have a stream
 $('#video').hide();
 
@@ -29,6 +30,21 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             stream: stream,
             room: config.roomid
         });
+
+        user_uuid = Cookies.get('expert_uuid');
+        if (user_uuid === undefined) {
+            $.getJSON(SERVER_API + "createExpert").then( 
+                function(data) {
+                    console.log('Created expert', data);
+                    Cookies.set('expert_uuid',data.uuid);
+                    addUserToRoom(data.uuid);
+                }
+            );
+        } else {
+            console.log('Got expert', user_uuid);
+            addUserToRoom(user_uuid);
+        }  
+
         wrtc.on('stream', function(id, stream) {
             var video = $('#video').show().get(0)
             video.srcObject = stream;
@@ -310,6 +326,34 @@ $('#fullscreen').click(function() {
     toggleFullScreen()
 });
 
+function addUserToRoom(user_uuid) {
+    $.getJSON(SERVER_API + "addUserToRoom/" + config.roomid + "/" + user_uuid).then( 
+        function(data) {
+            console.log('Added user to room', data);
+        }
+    )
+}
+
+function removeUserFromRoom() {
+    $.ajax({
+      dataType: "json",
+      url: SERVER_API + "removeUserFromRoom/" + config.roomid + "/" + user_uuid,
+      async: false, 
+      success: function(data) {
+           console.log('Removed user from room', data);
+      }
+    });
+    //$.getJSON(SERVER_API + "removeUserFromRoom/" + config.roomid + "/" + user_uuid).then( 
+    //   function(data) {
+    //       console.log('Removed user from room', data);
+    //   }
+    //)
+}
+
+window.onbeforeunload = function() {
+      removeUserFromRoom();
+}
+
 // ----- START: Live Steps -----
 let ls = false;
 let mediaRecorder;
@@ -479,7 +523,7 @@ function clearSketchCanvas() {
   let sCanvas = document.getElementById("sketchCanvas");
   let sCanvasCtx = sCanvas.getContext('2d');
   sCanvasCtx.clearRect(0, 0, sCanvas.width, sCanvas.height);
-  wrtc.emit('sketch_clear', {}); // ship it
+  wrtc.emit('sketch_clear', {}); 
 }
 
 function setPosition(e) {

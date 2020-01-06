@@ -1,5 +1,7 @@
 // import { request } from "http";
 
+const SERVER_API = "/api/";
+
 function isEpson() {
   if (navigator.userAgent.match(/EMBT3C/i)) {
     return true;
@@ -85,8 +87,9 @@ $('#mute').click(function() {
 
 
 //// Rendering
-var renderer;
-var wrtc;
+let renderer;
+let wrtc;
+let user_uuid; 
 navigator.mediaDevices.getUserMedia(constraints).then(
     function(stream) {
         var video = $('#video')[0]
@@ -104,6 +107,20 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             stream: stream,
             room: config.roomid
         });
+
+        user_uuid = Cookies.get('customer_uuid');
+        if (user_uuid === undefined) {
+            $.getJSON(SERVER_API + "createCustomer").then( 
+                function(data) {
+                    console.log('Created customer', data);
+                    Cookies.set('customer_uuid', data.uuid);
+                    addUserToRoom(data.uuid);
+                }
+            );
+        } else {
+            console.log('Got customer', user_uuid);
+            addUserToRoom(user_uuid);
+        }
 
         wrtc.on('stream', function(id, stream) {
             var audio = $('<audio autoplay/>');
@@ -143,6 +160,13 @@ navigator.mediaDevices.getUserMedia(constraints).then(
     }
 )
 
+function addUserToRoom(user_uuid) {
+    $.getJSON(SERVER_API + "addUserToRoom/" + config.roomid + "/" + user_uuid).then( 
+        function(data) {
+            console.log('Added user to room', data);
+        }
+    )
+}
 
 var first = true;
 // camera transformation based on the gyro sensor data
@@ -229,8 +253,27 @@ if (isIOS() && typeof DeviceMotionEvent.requestPermission === 'function') {
     window.addEventListener("deviceorientation", handleOrientation, true);
 }
 
+function removeUserFromRoom() {
+    $.ajax({
+      dataType: "json",
+      url: SERVER_API + "removeUserFromRoom/" + config.roomid + "/" + user_uuid,
+      async: false, 
+      success: function(data) {
+           console.log('Removed user from room', data);
+      }
+    });
+    //$.getJSON(SERVER_API + "removeUserFromRoom/" + config.roomid + "/" + user_uuid).then( 
+    //   function(data) {
+    //       console.log('Removed user from room', data);
+    //   }
+    //)
+}
+
 configSketch();
-window.addEventListener("resize", configSketch);
+window.addEventListener("resize", configSketch); 
+window.onbeforeunload = function() {
+      removeUserFromRoom();
+}
 
 // How get video to opencv
 // var canvas = $('<canvas id="canvasVideo" width="640" height="480" />')[0];

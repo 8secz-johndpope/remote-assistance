@@ -64,6 +64,12 @@ if (!args.db_off) {
         })
     });
 
+    app.get('/api/getActiveRooms', function (req, res) {
+        db.getActiveRooms(res,function(data) {
+            res.json(data)
+        })
+    });
+
     app.get('/api/getUser/:uuid', function (req, res) {
         db.getUser(res,req.params.uuid,function(data) {
             res.json(data)
@@ -83,7 +89,13 @@ if (!args.db_off) {
     });
 
     app.get('/api/createCustomer', function (req, res) {
-        db.createUser(res, function(data) {
+        db.createUser(res, "customer", function(data) {
+            res.json(data)
+        })
+    });
+
+    app.get('/api/createExpert', function (req, res) {
+        db.createUser(res, "expert", function(data) {
             res.json(data)
         })
     });
@@ -108,10 +120,10 @@ if (!args.db_off) {
         })
     });
 
-    app.get('/api/createRoom/:user_uuid', function (req, res) {
+    app.get('/api/addUserToRoom/:room_uuid/:user_uuid', function (req, res) {
         db.getUser(res,req.params.user_uuid,function(userData) {
             if (userData.length) {
-                db.createRoom(res,req.params.user_uuid, function(data) {
+                db.addUserToRoom(res,req.params.room_uuid,req.params.user_uuid, function(data) {
                     res.json(data)
                 });
             } else {
@@ -120,6 +132,20 @@ if (!args.db_off) {
             }
         })
     });
+
+    app.get('/api/removeUserFromRoom/:room_uuid/:user_uuid', function (req, res) {
+        db.getUser(res,req.params.user_uuid,function(userData) {
+            if (userData.length) {
+                db.removeUserFromRoom(res,req.params.room_uuid,req.params.user_uuid, function(data) {
+                    res.json(data)
+                });
+            } else {
+                let out = {"error":"No user with that UUID"}
+                res.json(out)
+            }
+        })
+    });
+
 }
 
 app.get('/screenarexpert', function (req, res) {

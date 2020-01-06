@@ -28,6 +28,30 @@ module.exports = {
 		})		
 	},
 
+	getActiveRooms: (res,cb) => {
+		connection.query('SELECT roomUser.room_uuid,user.type FROM roomUser,user where roomUser.state = 1 and user.uuid = roomUser.user_uuid',
+			[				
+			],
+			function (err, rows, fields) {
+				if (err) throw err
+				let ret = [];
+				for (let i = 0; i < rows.length; i++) {
+					let ru = rows[i].room_uuid;
+					let t = rows[i].type;
+					let index = ret.findIndex(x => x.room_uuid === ru);
+
+					if (index < 0) {
+						let obj = { room_uuid: ru, experts: 0, customers: 0 };
+						ret.unshift(obj);
+						index = 0;
+					}
+					if (t == "expert") { ret[index].experts = ret[index].experts+1; ret.push(ret.splice(index, 1)[0]); }
+					if (t == "customer") { ret[index].customers = ret[index].customers+1; }
+				}
+				cb(ret);
+		})		
+	},
+
 	getClip: (res,uuid,cb) => {
 		connection.query('select * from clip where uuid = ?',
 			[
@@ -61,12 +85,12 @@ module.exports = {
 		})
 	},
 
-	createUser: (res,cb) => {
+	createUser: (res,type,cb) => {
 		let uuid = util.generateRandomId();
 		connection.query('insert into user(uuid,type) values(?,?)',
 			[
 				uuid,
-				"customer"
+				type
 			],
 			function (err, result) {
 				if (err) throw err
@@ -91,22 +115,61 @@ module.exports = {
 		})
 	},
 
-	createRoom: (res,user_uuid,cb) => {
-		let uuid = util.generateRandomId();
+	addUserToRoom: (res,room_uuid,user_uuid,cb) => {
 		let now = new Date() / 1000;
-		connection.query('insert into room(uuid,user_uuid,time_created) values(?,?,?)',
+		connection.query('select * from roomUser where user_uuid = ? and room_uuid = ?',
 			[
-				uuid,
 				user_uuid,
-				now
+				room_uuid
 			],
 			function (err, rows, fields) {
 				if (err) throw err
-				let obj = {'uuid': uuid }	
+				if (rows.length > 0) {
+					connection.query('update roomUser set time_ping = ?, state = ? where room_uuid = ? and user_uuid = ?',
+						[
+							now,
+							1,
+							room_uuid,
+							user_uuid
+						],
+					function (err, rows, fields) {
+						if (err) throw err
+						let obj = {'uuid_uuid': user_uuid, "room_uuid": room_uuid }	
+						cb(obj)
+					})
+				} else {
+					connection.query('insert into roomUser(room_uuid,user_uuid,time_ping,state) values(?,?,?,?) '
+						,
+						[
+							room_uuid,
+							user_uuid,
+							now,
+							1
+						],
+						function (err, rows, fields) {
+							if (err) throw err
+							let obj = {'uuid_uuid': user_uuid, "room_uuid": room_uuid }	
+							cb(obj)
+					})					
+				}
+			})
+	},
+
+	removeUserFromRoom: (res,room_uuid,user_uuid,cb) => {
+		let now = new Date() / 1000;
+		connection.query('update roomUser set time_ping = ?, state = ? where room_uuid = ? and user_uuid = ?',
+			[
+				now,
+				0,
+				room_uuid,
+				user_uuid
+			],
+			function (err, rows, fields) {
+				if (err) throw err
+				let obj = {'uuid_uuid': user_uuid, "room_uuid": room_uuid }	
 				cb(obj)
 		})
 	}
-
 
 }
 
