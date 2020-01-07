@@ -29,26 +29,30 @@ msgerForm.addEventListener("submit", event => {
 });
 
 function injectMsg(msg,msgLabel) {
+  console.log(msg,msgLabel);
   appendMessage(PERSON_NAME, PERSON_IMG, "right", msgLabel,[]);
   botResponse(msg,msgLabel);
 }
 
 function launchRA() {
   $.getJSON(SERVER_API + "createCustomer").then(
-      function(customerData) {
-        $.getJSON(SERVER_API + "createRoom/"+customerData.uuid).then( 
-          function(data) {
-              let roomID = data.uuid;
+    function(customerData) {
+      $.getJSON(SERVER_API + "createRoom").then( 
+        function(roomData) {
+          $.getJSON(SERVER_API + "addUserToRoom/"+roomData.room_uuid+"/"+customerData.uuid).then( 
+            function(data) {
+              console.log("Connecting user",customerData.uuid,"to room", roomData.room_uuid);
               // Connect to iOS
           })
       })
+  })
 }
 
 function launchEmail(msg) { 
   let body = "\n\nConversation archive copied below.\n\n---\n\n"
   body += JSON.stringify(convArchive);
   body = encodeURIComponent(body);
-  window.location.href = "mailto:" + msg + "?subject=Device+issue&body="+body;
+  window.location.href = "mailto:" + msg + "?subject=Device%20issue&body="+body;
 }
 
 function launchPhoneCall(msg) {
@@ -65,16 +69,16 @@ function getButtonHTML(botResponseArr) {
        html += `<button class="btn btn-primary" style="margin-top: 10px" onclick='injectMsg(${action},\"${actionLabel}\")'>${actionLabel}</button> `;
        break;
       case "barcode":
-       html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchQRScanner()'><span class="fa fa-qrcode fa-2x"></span></button> `;
+       html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchQRScanner(${action})'><span class="fa fa-qrcode fa-2x"></span></button> `;
        break;
       case "ra":
        html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchRA()'><span class="fa fa-user fa-2x"></span></button> `;
        break;
       case "email":
-       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchEmail(${action})'><span class="fa fa-envelope fa-2x"></span></button> `;
+       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchEmail(\"${action}\")'><span class="fa fa-envelope fa-2x"></span></button> `;
        break;
       case "phone":
-       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchPhoneCall(${action})'><span class="fa fa-phone-alt fa-2x"></span></button> `;
+       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchPhoneCall(\"${action}\")'><span class="fa fa-phone fa-2x"></span></button> `;
        break;
      }
   }
@@ -124,7 +128,7 @@ function botResponse(msgText,msgLabel="") {
   } else {
     for (let i = 0; i < CHAT_TREE.responses[currentIndex-1].next.length; i++) {
      if ((CHAT_TREE.responses[currentIndex-1].next.length == 1) || (msgTextInt == CHAT_TREE.responses[currentIndex-1].next[i])) {
-      console.log(msgTextInt);
+      //console.log(msgTextInt);
       saveResponse(CHAT_TREE.responses[currentIndex-1].q,msgText,msgLabel);
       currentIndex = CHAT_TREE.responses[currentIndex-1].next[i];
      }
@@ -136,29 +140,25 @@ function botResponse(msgText,msgLabel="") {
   for (let i = 0; i < CHAT_TREE.responses[currentIndex-1].next.length; i++) {
     let pReg = /\+[0-9]+/;
     let eReg = /.+?@.+?\..+/;
-    let t = CHAT_TREE.responses[currentIndex-1].next[i];
-    let tInt = parseInt(t);
+    let t = CHAT_TREE.responses[currentIndex-1].next[i].toString();
     let nextBtn = new Object();
-    if (isNaN(tInt)) {
-      if (t == "barcode") {
-        nextBtn.type = "barcode"; nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
+    if (t == "barcode") {
+        nextBtn.type = "barcode"; 
+        nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
         botResponseArr.push(nextBtn);
         break;
-      } else {
-        if (t == "ra") {
+    } else if (t == "ra") {
           nextBtn.type = "ra"; nextBtn.action = "";
-        } else if (t.match(eReg)) {
+    } else if (t.match(eReg)) {
           nextBtn.type = "email"; nextBtn.action = t;
-        } else if (t.match(pReg)) {
+    } else if (t.match(pReg)) {
+          console.log("Phone");
           nextBtn.type = "phone"; nextBtn.action = t;
-        }
-        botResponseArr.push(nextBtn);
-      }
     } else {
-      let tL = CHAT_TREE.responses[currentIndex-1].nextLabels[i];
+      let tL = CHAT_TREE.responses[currentIndex-1].nextLabels ? CHAT_TREE.responses[currentIndex-1].nextLabels[i] : t;
       nextBtn.type = "response"; nextBtn.action = t; nextBtn.actionLabel = tL;
-      botResponseArr.push(nextBtn);
     }
+    botResponseArr.push(nextBtn);
   }
 
   setTimeout(() => {
@@ -184,12 +184,11 @@ function random(min, max) {
 
 function onQRCodeScanned(scannedText)
 {
-  console.log(scannedText);
+  let scannerParentElement = document.getElementById("scanner");
   $('#myModal').modal('hide');
   jbScanner.stopScanning();
-  //jbScanner.removeFrom( htmlElement )
-  appendMessage(PERSON_NAME, PERSON_IMG, "right", msg);
-  botResponse(msg);
+  jbScanner.removeFrom( scannerParentElement )
+  injectMsg(jbScanner.action,scannedText);
 }
 
 //this function will be called when JsQRScanner is ready to use
@@ -197,13 +196,15 @@ function JsQRScannerReady()
 {
     jbScanner = new JsQRScanner(onQRCodeScanned);
     jbScanner.setSnapImageMaxSize(300);
-    scannerParentElement = document.getElementById("scanner");
-    //jbScanner.appendTo(scannerParentElement);
+    console.log("QR scanner ready");
     //console.log(jbScanner);
     //launchQRScanner();
 }
 
-function launchQRScanner() {
+function launchQRScanner(action) {
+  let scannerParentElement = document.getElementById("scanner");
+  jbScanner.appendTo(scannerParentElement);
+  jbScanner.action = action;
   $('#myModal').modal('show');
 }
 

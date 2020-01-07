@@ -64,6 +64,12 @@ if (!args.db_off) {
         })
     });
 
+    app.get('/api/createRoom', function(req, res) { 
+        let room_uuid = util.generateRandomId();
+        let out = {"room_uuid":room_uuid};
+        res.json(out)
+    })
+
     app.get('/api/getActiveRooms', function (req, res) {
         db.getActiveRooms(res,function(data) {
             res.json(data)
