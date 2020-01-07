@@ -13,7 +13,7 @@ const SERVER_API = "/api/";
 const CHAT_TREE = JSON.parse(CHAT_TREE_JSON);
 
 let convArchive = []; 
-let currentIndex = 0;
+let currentIndex = 1;
 let jbScanner;
 
 msgerForm.addEventListener("submit", event => {
@@ -28,9 +28,9 @@ msgerForm.addEventListener("submit", event => {
   botResponse(msgText);
 });
 
-function injectMsg(msg) {
-  appendMessage(PERSON_NAME, PERSON_IMG, "right", msg,[]);
-  botResponse(msg);
+function injectMsg(msg,msgLabel) {
+  appendMessage(PERSON_NAME, PERSON_IMG, "right", msgLabel,[]);
+  botResponse(msg,msgLabel);
 }
 
 function launchRA() {
@@ -56,24 +56,25 @@ function launchPhoneCall(msg) {
 }
 
 function getButtonHTML(botResponseArr) {
-  const html = "";
+  let html = "";
   for (let i = 0; i < botResponseArr.length; i++) {
     let action = botResponseArr[i].action;
     switch (botResponseArr[i].type) {
       case "response":
-       html += `<button onclick='injectMsg(${action})'>${action}</button>`;
+       let actionLabel = botResponseArr[i].actionLabel;
+       html += `<button class="btn btn-primary" style="margin-top: 10px" onclick='injectMsg(${action},\"${actionLabel}\")'>${actionLabel}</button> `;
        break;
       case "barcode":
-       html += `<button onclick='launchQRScanner()'><span class="glyphicon glyphicon-qrcode"></span></button>`;
+       html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchQRScanner()'><span class="fa fa-qrcode fa-2x"></span></button> `;
        break;
       case "ra":
-       html += `<button onclick='launchRA()'><span class="glyphicon glyphicon-user"></span></button>`;
+       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchRA()'><span class="fa fa-user fa-2x"></span></button> `;
        break;
       case "email":
-       html += `<button onclick='launchEmail(${action})'><span class="glyphicon glyphicon-envelope"></span></button>`;
+       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchEmail(${action})'><span class="fa fa-envelope fa-2x"></span></button> `;
        break;
       case "phone":
-       html += `<button onclick='launchPhoneCall(${action})'><span class="glyphicon glyphicon-earphone"></span></button>`;
+       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchPhoneCall(${action})'><span class="fa fa-phone-alt fa-2x"></span></button> `;
        break;
      }
   }
@@ -103,39 +104,45 @@ function appendMessage(name, img, side, text, botResponseArr) {
   msgerChat.scrollTop += 500;
 }
 
-function saveResponse(q,r) {
+function saveResponse(q,r,rl) {
   let res = new Object();
-  res.question = q; res.response = r;
+  res.question = q; res.response = r; res.responseLabel = rl;
   convArchive.push(res);
 }
 
-function botResponse(msgText) {
+function botResponse(msgText,msgLabel="") {
   //const r = random(0, BOT_MSGS.length - 1);
   let botMsgText = BOT_MSG_UNKNOWN;
   let botResponseArr = [];
 
   let msgTextInt = parseInt(msgText);
   if (isNaN(msgTextInt)) {
-    saveResponse(CHAT_TREE.responses[currentIndex].question,msgText);
-    currentIndex = CHAT_TREE.responses[currentIndex].next[1];
+    saveResponse(CHAT_TREE.responses[currentIndex-1].q,msgText,msgLabel);
+    currentIndex = CHAT_TREE.responses[currentIndex-1].next[1];
+  } else if (msgText == 0) { 
+      currentIndex = 1;
   } else {
-    for (let i = 0; i < CHAT_TREE.responses[currentIndex].length; i++) {
-     if (msgTextInt == CHAT_TREE.responses[currentIndex].next[i]) {
-      saveResponse(CHAT_TREE.responses[currentIndex].question,i+1);
-      currentIndex = CHAT_TREE.responses[currentIndex].next[i];
+    for (let i = 0; i < CHAT_TREE.responses[currentIndex-1].next.length; i++) {
+     if ((CHAT_TREE.responses[currentIndex-1].next.length == 1) || (msgTextInt == CHAT_TREE.responses[currentIndex-1].next[i])) {
+      console.log(msgTextInt);
+      saveResponse(CHAT_TREE.responses[currentIndex-1].q,msgText,msgLabel);
+      currentIndex = CHAT_TREE.responses[currentIndex-1].next[i];
      }
     }
   }  
 
-  for (let i = 0; i < CHAT_TREE.responses[currentIndex].next; i++) {
+  botMsgText = CHAT_TREE.responses[currentIndex-1].q;
+
+  for (let i = 0; i < CHAT_TREE.responses[currentIndex-1].next.length; i++) {
     let pReg = /\+[0-9]+/;
     let eReg = /.+?@.+?\..+/;
-    let t = CHAT_TREE.responses[currentIndex].next[i];
+    let t = CHAT_TREE.responses[currentIndex-1].next[i];
+    let tInt = parseInt(t);
     let nextBtn = new Object();
-    if (isNaN(msgTextInt)) {
+    if (isNaN(tInt)) {
       if (t == "barcode") {
-        nextBtn.type = "barcode"; nextBtn.action = CHAT_TREE.responses[currentIndex].next[i+1];
-        botResponseArr.append(nextBtn);
+        nextBtn.type = "barcode"; nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
+        botResponseArr.push(nextBtn);
         break;
       } else {
         if (t == "ra") {
@@ -145,11 +152,12 @@ function botResponse(msgText) {
         } else if (t.match(pReg)) {
           nextBtn.type = "phone"; nextBtn.action = t;
         }
-        botResponseArr.append(nextBtn);
+        botResponseArr.push(nextBtn);
       }
     } else {
-      nextBtn.type = "response"; nextBtn.action = t;
-      botResponseArr.append(nextBtn);
+      let tL = CHAT_TREE.responses[currentIndex-1].nextLabels[i];
+      nextBtn.type = "response"; nextBtn.action = t; nextBtn.actionLabel = tL;
+      botResponseArr.push(nextBtn);
     }
   }
 
@@ -199,4 +207,5 @@ function launchQRScanner() {
   $('#myModal').modal('show');
 }
 
-appendMessage(BOT_NAME, BOT_IMG, "left", "Hello, how may I help you today?", []);
+botResponse(0);
+//appendMessage(BOT_NAME, BOT_IMG, "left", "Hello, how may I help you today?", []);
