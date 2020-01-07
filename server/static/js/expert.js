@@ -64,9 +64,7 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             //document.getElementById("info").innerHTML = data.alpha.toFixed(2)+" "+data.beta.toFixed(2)+" "+data.gamma.toFixed(2)+" "+data.absolute;
             
             renderer.rotateCameraBody(data.alpha, data.beta, data.gamma);
-            
             renderer.alignLeapmotionSpace();
-
             renderer.updateCamera();
             wrtc.emit('camera_update', {msg: 'from_expert', 
                                 position: renderer.camera.position, 
@@ -392,17 +390,17 @@ function registerActivityLS() {
 function startRecording() {
   let options = {mimeType: 'video/webm;videoBitsPerSecond:2500000;ignoreMutedMedia:true'};
   try {
-    mediaRecorder = new MediaRecorder(renderer.getCanvas(), options);
+    mediaRecorder = new MediaRecorder(renderer.getCanvas().captureStream(), options);
   } catch (e0) {
     console.log('Unable to create MediaRecorder with options Object: ', e0);
     try {
       options = {mimeType: 'video/webm,codecs=vp9'};
-      mediaRecorder = new MediaRecorder(renderer.getCanvas(), options);
+      mediaRecorder = new MediaRecorder(renderer.getCanvas().captureStream(), options);
     } catch (e1) {
       console.log('Unable to create MediaRecorder with options Object: ', e1);
       try {
         options = 'video/vp8'; // Chrome 47
-        mediaRecorder = new MediaRecorder(renderer.getCanvas(), options);
+        mediaRecorder = new MediaRecorder(renderer.getCanvas().captureStream(), options);
       } catch (e2) {
         alert('MediaRecorder is not supported by this browser.\n\n' +
           'Try Firefox 29 or later, or Chrome 47 or later, ' +
@@ -414,10 +412,12 @@ function startRecording() {
   }
   console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
 
-  $.getJSON(SERVER_API + "createClip/lsClip/" + user_uuid + "/" + config.roomid).then( 
+  let url = SERVER_API + "createClip/lsClip/" + user_uuid + "/" + config.roomid;
+  console.log(url);
+  $.getJSON(url).then( 
         function(data) {
             recordingClipUUID = data.uuid;
-            wrtc.emit('start_recording', {name: clipUUID });
+            wrtc.emit('start_recording', {name: recordingClipUUID });
             mediaRecorder.onstop = handleStop;
             mediaRecorder.ondataavailable = handleDataAvailable;
             mediaRecorder.start();
@@ -440,6 +440,7 @@ function handleStop(event) {
 
 function handleDataAvailable(event) {
   if (event.data && event.data.size > 0) {
+    console.log("writing recording data");
     wrtc.emit('recording_blob', event.data);
   }
 }
@@ -543,7 +544,8 @@ function handleMouseDown(e) {
   setPosition(e);
   if (ls && !recordingLS) {
     recordingLS = true;
-    toggleDots(true); sendData({'td':1});
+    toggleDots(true);
+    wrtc.emit('td',{'td':1}); 
     clearTimeout(clearCtxInterval);
     startRecording();
     //dCanvas.setPointerCapture(e.pointerId);

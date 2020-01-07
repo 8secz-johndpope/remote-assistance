@@ -1,4 +1,6 @@
 const uuid = require('uuid');
+const config = require('config');
+const fs = require('fs');
 
 module.exports = function(io) {
     var rooms = {};

@@ -109,16 +109,9 @@ if (!args.db_off) {
     app.get('/api/createClip/:name/:user_uuid/:room_uuid', function (req, res) {
         db.getUser(res,req.params.user_uuid,function(userData) {
             if (userData.length) {
-                db.getRoom(res,req.params.room_uuid,function(roomData) {
-                    if (roomData.length) {
-                        db.createClip(res, req.params.name, req.params.user_uuid, req.params.room_uuid, function(data) {
-                         res.json(data)
-                        })
-                    } else {
-                        let out = {"error":"No room with that UUID"}
-                        res.json(out)                        
-                    }
-                })
+                db.createClip(res, req.params.name, req.params.user_uuid, req.params.room_uuid, function(data) {
+                    res.json(data)
+                 })
             } else {
                 let out = {"error":"No user with that UUID"}
                 res.json(out)
