@@ -14,6 +14,7 @@ Renderer = function ( parameters ) {
     this.default_height = 200;
 
     this.domElement = ( domElement !== undefined ) ? domElement : document.body;
+    this.connected = false;
 
     //// scene
     this.scene = new THREE.Scene();
@@ -226,7 +227,9 @@ Renderer = function ( parameters ) {
         }
 
         // render threejs
-        scope.renderer.render( scope.scene, scope.camera );
+        if (lmConnected) {
+            scope.renderer.render( scope.scene, scope.camera );
+        } 
 
         // compose video and threejs
         ctx.drawImage(scope.renderer.domElement, 0, 0, canvas.width, canvas.height);

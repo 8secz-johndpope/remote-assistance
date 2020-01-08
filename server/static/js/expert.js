@@ -16,6 +16,7 @@ var renderer;
 var first = true;
 var wrtc;
 var connected = false;
+var lmConnected = false;
 var currentFrame;
 var frameUpdateInterval;
 
@@ -50,11 +51,11 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             video.srcObject = stream;
             video.autoplay = true;
             $('#qrcode-modal').modal('hide');
-            connected = true;
+            connected = true; 
             stream.getVideoTracks().forEach(function(t) {
                 t.addEventListener('ended', function() {
                     $('#video').hide();
-                    connected = false;
+                    connected = false; 
                     onReset();
                 });
             })
@@ -599,9 +600,10 @@ window.addEventListener("resize", configSketch);
 
 // ----- START: Comment this out to disable sending browser leapmotion data -----
 // connection to leapmotion
-function updateLeapmotionStatus(connected) {
+function updateLeapmotionStatus(lmc) {
     var btn = $('#leapmotion');
-    if (connected) {
+    lmConnected = lmc
+    if (lmConnected) {
         btn
             .text('leapmotion connected')
             .removeClass('btn-danger')
