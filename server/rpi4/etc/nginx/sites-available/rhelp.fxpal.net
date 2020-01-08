@@ -1,0 +1,26 @@
+server {
+  listen 80;
+  server_name rhelp.fxpal.net;
+
+  return 302 https://$server_name$request_uri;
+}
+
+server {
+  listen      443;
+  server_name rhelp.fxpal.net;
+
+  ssl on;
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+  ssl_certificate /home/pi/Development/remote-assistance/server/ssl/wild.fxpal.net.bundle.crt;
+  ssl_certificate_key /home/pi/Development/remote-assistance/server/ssl/wild.fxpal.net.key;
+  ssl_prefer_server_ciphers on;
+
+  location / {
+    proxy_pass https://localhost:5443;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_cache_bypass $http_upgrade;
+  }
+}
