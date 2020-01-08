@@ -380,7 +380,7 @@ function registerActivityLS() {
     if (!recordingLS) {
         recordingLS = true;
         toggleDots(true); 
-        wrtc.emit('td',{'td':1}); 
+        wrtc.emit('recording_started',{'recording_started':1}); 
         startRecording();
     } 
     clearTimeout(clearCtxInterval);
@@ -447,9 +447,11 @@ function handleDataAvailable(event) {
 
 function stepDone() {
   if (recordingLS) { 
-    recordingLS = false; stopRecording(); 
+    recordingLS = false; 
+    stopRecording(); 
   }
-  toggleDots(false); wrtc.emit('td',{'td':0}); 
+  toggleDots(false); 
+  wrtc.emit('recording_stopped',{}); 
 }
 
 function toggleDots(down) {
@@ -545,7 +547,7 @@ function handleMouseDown(e) {
   if (ls && !recordingLS) {
     recordingLS = true;
     toggleDots(true);
-    wrtc.emit('td',{'td':1}); 
+    wrtc.emit('recording_started',{}); 
     clearTimeout(clearCtxInterval);
     startRecording();
     //dCanvas.setPointerCapture(e.pointerId);

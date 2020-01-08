@@ -78,9 +78,11 @@ module.exports = function(io) {
             'camera_update',
             'gyro',
             'ls_url',
-            'td',
+            'recording_started',
+            'recording_stopped',
             'sketch_draw',
-            'sketch_clear'
+            'sketch_clear',
+            '',
         ]
         events.forEach(function(eventName) {
             socket.on(eventName, function(data) {
