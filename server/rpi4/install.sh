@@ -4,7 +4,7 @@ sudo apt update -y
 sudo apt ugprade -y
 sudo apt install -y nginx hostapd dnsmasq dhcpcd openssh-server
 
-sudo cp -vr ./etc /etc
+sudo cp -vr ./etc /
 
 sudo systemctl daemon-reload
 sudo systemctl enable ssh
