@@ -151,6 +151,14 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             clearSketch();
         });
 
+        wrtc.on('recording_started', function(data) {
+            console.log("got recording started event");
+            wrtc.emit('clip_marker', 
+                      {marker_uuid: 'test_marker',
+                       position: '{}'
+                      });            
+        });
+
         renderer = new Renderer(
             {add_interaction_box: false,
              add_line_object: false,
@@ -186,7 +194,6 @@ var handleOrientation = function(event)
                    gamma: gamma,
                    absolute: absolute
                   });
-
     }    
 }
 

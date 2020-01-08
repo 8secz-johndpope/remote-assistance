@@ -63,11 +63,15 @@ module.exports = {
 		})		
 	},
 
-	getClips: (res,marker_uuid,cb) => {
-		connection.query('select clip.* from clip join clipMarker on clipMarker.clip_uuid=clip.uuid where clipMarker.marker_uuid = ?',
-			[
-				marker_uuid
-			],
+	getClips: (res,marker_uuid,room_uuid,cb) => {
+		let q = 'select clip.user_uuid,clip.room_uuid,clip.uuid,clipMarker.id,clipMarker.marker_uuid,clipMarker.position_blob from clip,clipMarker where clipMarker.clip_uuid=clip.uuid and clipMarker.marker_uuid = ?'
+		let arr = [marker_uuid]; 
+		if (room_uuid) {
+			q += ' and clip.room_uuid = ?'
+			arr.push(room_uuid)
+		}
+		connection.query(q,
+			arr,
 			function (err, rows, fields) {
 				if (err) throw err
 				cb(rows)
@@ -111,6 +115,21 @@ module.exports = {
 			function (err, result) {
 				if (err) throw err
 				let obj = {'uuid': uuid }	
+				cb(obj)
+		})
+	},
+
+	addClipMarker: (res,marker_uuid,clip_uuid,position_blob,cb) => {
+		let uuid = util.generateRandomId();
+		connection.query('insert into clipMarker(marker_uuid,clip_uuid,position_blob) values(?,?,?)',
+			[
+				marker_uuid,
+				clip_uuid,
+				position_blob
+			],
+			function (err, result) {
+				if (err) throw err
+				let obj = {'marker_uuid': marker_uuid, 'clip_uuid': clip_uuid}	
 				cb(obj)
 		})
 	},

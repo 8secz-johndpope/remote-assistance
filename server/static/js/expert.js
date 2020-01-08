@@ -71,6 +71,14 @@ navigator.mediaDevices.getUserMedia(constraints).then(
                                 quaternion: renderer.camera.quaternion});
                                 
         });
+        wrtc.on('clip_marker', function(clipData) {
+            let url = SERVER_API + "addClipMarker/"+clipData.marker_uuid+"/"+recordingClipUUID+"/"+clipData.position;
+            console.log('got clip marker event',url);
+            $.getJSON(url).then( 
+                function(data) {
+                    console.log('Added clip marker',data);
+            })
+        });        
 
         // Create renderer after wrtc because it shares the same socket
         renderer = new Renderer( 
@@ -253,6 +261,7 @@ $('#lblSketchOnOff').click(function(e) {
     const c = document.getElementById("sketchCanvas");
     if (!checked) {
         sketch = true;
+        c.style.zIndex = 3;        
         c.addEventListener('mousemove', drawSketch);
         c.addEventListener('mouseup', handleMouseUp);
         c.addEventListener('mousedown', handleMouseDown);
@@ -357,8 +366,8 @@ let ls = false;
 let mediaRecorder;
 let recordingLS = false;
 let videoStack = []; 
-videoStack.push("http://showhow.fxpal.com/misc/test.mp4"); 
-videoStack.push("http://showhow.fxpal.com/misc/wcDocHandles.mp4");
+//videoStack.push("http://showhow.fxpal.com/misc/test.mp4"); 
+//videoStack.push("http://showhow.fxpal.com/misc/wcDocHandles.mp4");
 
 let videoStackIndex = 0;
 let dotsInterval;
@@ -380,7 +389,7 @@ function registerActivityLS() {
     if (!recordingLS) {
         recordingLS = true;
         toggleDots(true); 
-        wrtc.emit('recording_started',{'recording_started':1}); 
+        wrtc.emit('recording_started',{"name":recordingClipUUID}); 
         startRecording();
     } 
     clearTimeout(clearCtxInterval);
@@ -417,7 +426,7 @@ function startRecording() {
   $.getJSON(url).then( 
         function(data) {
             recordingClipUUID = data.uuid;
-            wrtc.emit('start_recording', {name: recordingClipUUID });
+            wrtc.emit('recording_started', {"name":recordingClipUUID});
             mediaRecorder.onstop = handleStop;
             mediaRecorder.ondataavailable = handleDataAvailable;
             mediaRecorder.start();
@@ -428,6 +437,7 @@ function startRecording() {
 
 function stopRecording() {
   mediaRecorder.stop();
+  mediaRecorder = [];
 }
 
 function handleStop(event) {
@@ -466,7 +476,7 @@ function toggleDots(down) {
         for (let i=0;i<dotsCount%4;i++) {
             s += ".";
         }
-        $('#lblLsSteps').find('span').text(s);
+        $('#lsStepsCountSpan').text(s);
         dotsCount++;
      }, 400);
     }
@@ -512,7 +522,7 @@ function toggleStepsView(open=0) {
 // Possibly move to shared lib with customer code
 function configSketch() {
     const c = document.getElementById("sketchCanvas");
-    c.style.zIndex = 3;
+    //c.style.zIndex = 3;
     c.style.position = 'fixed';
     c.style.top = 0;
     c.style.left = 0;
@@ -547,7 +557,6 @@ function handleMouseDown(e) {
   if (ls && !recordingLS) {
     recordingLS = true;
     toggleDots(true);
-    wrtc.emit('recording_started',{}); 
     clearTimeout(clearCtxInterval);
     startRecording();
     //dCanvas.setPointerCapture(e.pointerId);

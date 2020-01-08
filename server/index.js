@@ -88,9 +88,22 @@ if (!args.db_off) {
         })
     });
 
-    app.get('/api/getClips/:marker_uuid', function (req, res) {
-        db.getClips(res,req.params.marker_uuid,function(data) {
+    app.get('/api/getClips/:marker_uuid/:room_uuid?', function (req, res) {
+        db.getClips(res,req.params.marker_uuid,req.params.room_uuid,function(data) {
             res.json(data)
+        })
+    });
+
+    app.get('/api/addClipMarker/:marker_uuid/:clip_uuid/:position_blob', function (req,res) {
+        db.getClip(res,req.params.clip_uuid,function(clipData) {
+            if (clipData.length) {
+                db.addClipMarker(res,req.params.marker_uuid,req.params.clip_uuid,req.params.position_blob,function(data) {
+                    res.json(data)
+                })
+            } else {
+                let out = {"error":"No clip with that UUID"}
+                res.json(out)
+            }
         })
     });
 

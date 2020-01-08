@@ -33,14 +33,14 @@ module.exports = function(io) {
             });
         });
 
-        socket.on('start_recording', function(data) {
+        socket.on('recording_started', function(data) {
             console.log('creating file');
             filePath = config.clipLoc + data.name + ".webm";
             fileStream = fs.createWriteStream(filePath, { flags: 'w' });
         });
 
         socket.on('recording_blob', function(data) {
-            console.log('writing packet')
+            console.log('writing packet',data.length)
             fileStream.write(Buffer.from(new Uint8Array(data)));
         });
 
@@ -82,7 +82,7 @@ module.exports = function(io) {
             'recording_stopped',
             'sketch_draw',
             'sketch_clear',
-            '',
+            'clip_marker'
         ]
         events.forEach(function(eventName) {
             socket.on(eventName, function(data) {
