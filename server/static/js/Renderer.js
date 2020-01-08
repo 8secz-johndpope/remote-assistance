@@ -14,6 +14,7 @@ Renderer = function ( parameters ) {
     this.default_height = 200;
 
     this.domElement = ( domElement !== undefined ) ? domElement : document.body;
+    this.connected = false;
 
     //// scene
     this.scene = new THREE.Scene();
@@ -44,7 +45,6 @@ Renderer = function ( parameters ) {
     this.light2 = new THREE.DirectionalLight(0xffffff, 1);
     this.light2.position.set(0, -500, 100);
     this.scene.add(this.light2);
-    
 
     //// camera
     var aspect = window.innerWidth / window.innerHeight;
@@ -200,9 +200,9 @@ Renderer = function ( parameters ) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // render video if exists
-        if (videoElement && videoElement.videoWidth && videoElement.videoHeight) {
+        if (scope.parameters.video_element && scope.parameters.video_element.videoWidth && scope.parameters.video_element.videoHeight) {
             var x,y,width,height;
-            var aspectRatio = videoElement.videoWidth/videoElement.videoHeight;
+            var aspectRatio = scope.parameters.video_element.videoWidth/scope.parameters.video_element.videoHeight;
 
             // try max height
             height = canvas.height;
@@ -212,20 +212,24 @@ Renderer = function ( parameters ) {
                 y = 0;
             } else {
                 width = canvas.width;
-                height = Math.round(aspectRatio/width);
+                height = Math.round(width/aspectRatio);
                 x = 0;
                 y = (canvas.height - height)/2;
             }
-            ctx.drawImage(videoElement, x, y, width, height);
+
+            //console.log(x,y,width,height)
+            ctx.drawImage(scope.parameters.video_element, x, y, width, height);
         }
 
         // render sketch canvas
         if (typeof sketchCanvas !== 'undefined') {
-            ctx.drawImage(sketchCanvas,0,0);            
+           ctx.drawImage(sketchCanvas,0,0);            
         }
 
         // render threejs
-        scope.renderer.render( scope.scene, scope.camera );
+        if (lmConnected) {
+            scope.renderer.render( scope.scene, scope.camera );
+        } 
 
         // compose video and threejs
         ctx.drawImage(scope.renderer.domElement, 0, 0, canvas.width, canvas.height);

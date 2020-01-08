@@ -16,6 +16,7 @@ var renderer;
 var first = true;
 var wrtc;
 var connected = false;
+var lmConnected = false;
 var currentFrame;
 var frameUpdateInterval;
 
@@ -50,11 +51,11 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             video.srcObject = stream;
             video.autoplay = true;
             $('#qrcode-modal').modal('hide');
-            connected = true;
+            connected = true; 
             stream.getVideoTracks().forEach(function(t) {
                 t.addEventListener('ended', function() {
                     $('#video').hide();
-                    connected = false;
+                    connected = false; 
                     onReset();
                 });
             })
@@ -64,15 +65,21 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             //document.getElementById("info").innerHTML = data.alpha.toFixed(2)+" "+data.beta.toFixed(2)+" "+data.gamma.toFixed(2)+" "+data.absolute;
             
             renderer.rotateCameraBody(data.alpha, data.beta, data.gamma);
-            
             renderer.alignLeapmotionSpace();
-
             renderer.updateCamera();
             wrtc.emit('camera_update', {msg: 'from_expert', 
                                 position: renderer.camera.position, 
                                 quaternion: renderer.camera.quaternion});
                                 
         });
+        wrtc.on('clip_marker', function(clipData) {
+            let url = SERVER_API + "addClipMarker/"+clipData.marker_uuid+"/"+recordingClipUUID+"/"+clipData.position;
+            console.log('got clip marker event',url);
+            $.getJSON(url).then( 
+                function(data) {
+                    console.log('Added clip marker',data);
+            })
+        });        
 
         // Create renderer after wrtc because it shares the same socket
         renderer = new Renderer( 
@@ -255,6 +262,7 @@ $('#lblSketchOnOff').click(function(e) {
     const c = document.getElementById("sketchCanvas");
     if (!checked) {
         sketch = true;
+        c.style.zIndex = 3;        
         c.addEventListener('mousemove', drawSketch);
         c.addEventListener('mouseup', handleMouseUp);
         c.addEventListener('mousedown', handleMouseDown);
@@ -359,8 +367,8 @@ let ls = false;
 let mediaRecorder;
 let recordingLS = false;
 let videoStack = []; 
-videoStack.push("http://showhow.fxpal.com/misc/test.mp4"); 
-videoStack.push("http://showhow.fxpal.com/misc/wcDocHandles.mp4");
+//videoStack.push("http://showhow.fxpal.com/misc/test.mp4"); 
+//videoStack.push("http://showhow.fxpal.com/misc/wcDocHandles.mp4");
 
 let videoStackIndex = 0;
 let dotsInterval;
@@ -382,7 +390,7 @@ function registerActivityLS() {
     if (!recordingLS) {
         recordingLS = true;
         toggleDots(true); 
-        wrtc.emit('td',{'td':1}); 
+        wrtc.emit('recording_started',{"name":recordingClipUUID}); 
         startRecording();
     } 
     clearTimeout(clearCtxInterval);
@@ -392,17 +400,17 @@ function registerActivityLS() {
 function startRecording() {
   let options = {mimeType: 'video/webm;videoBitsPerSecond:2500000;ignoreMutedMedia:true'};
   try {
-    mediaRecorder = new MediaRecorder(renderer.getCanvas(), options);
+    mediaRecorder = new MediaRecorder(renderer.getCanvas().captureStream(), options);
   } catch (e0) {
     console.log('Unable to create MediaRecorder with options Object: ', e0);
     try {
       options = {mimeType: 'video/webm,codecs=vp9'};
-      mediaRecorder = new MediaRecorder(renderer.getCanvas(), options);
+      mediaRecorder = new MediaRecorder(renderer.getCanvas().captureStream(), options);
     } catch (e1) {
       console.log('Unable to create MediaRecorder with options Object: ', e1);
       try {
         options = 'video/vp8'; // Chrome 47
-        mediaRecorder = new MediaRecorder(renderer.getCanvas(), options);
+        mediaRecorder = new MediaRecorder(renderer.getCanvas().captureStream(), options);
       } catch (e2) {
         alert('MediaRecorder is not supported by this browser.\n\n' +
           'Try Firefox 29 or later, or Chrome 47 or later, ' +
@@ -414,10 +422,12 @@ function startRecording() {
   }
   console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
 
-  $.getJSON(SERVER_API + "createClip/lsClip/" + user_uuid + "/" + config.roomid).then( 
+  let url = SERVER_API + "createClip/lsClip/" + user_uuid + "/" + config.roomid;
+  console.log(url);
+  $.getJSON(url).then( 
         function(data) {
             recordingClipUUID = data.uuid;
-            wrtc.emit('start_recording', {name: clipUUID });
+            wrtc.emit('recording_started', {"name":recordingClipUUID});
             mediaRecorder.onstop = handleStop;
             mediaRecorder.ondataavailable = handleDataAvailable;
             mediaRecorder.start();
@@ -428,6 +438,7 @@ function startRecording() {
 
 function stopRecording() {
   mediaRecorder.stop();
+  mediaRecorder = [];
 }
 
 function handleStop(event) {
@@ -440,15 +451,18 @@ function handleStop(event) {
 
 function handleDataAvailable(event) {
   if (event.data && event.data.size > 0) {
+    console.log("writing recording data");
     wrtc.emit('recording_blob', event.data);
   }
 }
 
 function stepDone() {
   if (recordingLS) { 
-    recordingLS = false; stopRecording(); 
+    recordingLS = false; 
+    stopRecording(); 
   }
-  toggleDots(false); wrtc.emit('td',{'td':0}); 
+  toggleDots(false); 
+  wrtc.emit('recording_stopped',{}); 
 }
 
 function toggleDots(down) {
@@ -463,7 +477,7 @@ function toggleDots(down) {
         for (let i=0;i<dotsCount%4;i++) {
             s += ".";
         }
-        $('#lblLsSteps').find('span').text(s);
+        $('#lsStepsCountSpan').text(s);
         dotsCount++;
      }, 400);
     }
@@ -509,7 +523,7 @@ function toggleStepsView(open=0) {
 // Possibly move to shared lib with customer code
 function configSketch() {
     const c = document.getElementById("sketchCanvas");
-    c.style.zIndex = 3;
+    //c.style.zIndex = 3;
     c.style.position = 'fixed';
     c.style.top = 0;
     c.style.left = 0;
@@ -543,7 +557,7 @@ function handleMouseDown(e) {
   setPosition(e);
   if (ls && !recordingLS) {
     recordingLS = true;
-    toggleDots(true); sendData({'td':1});
+    toggleDots(true);
     clearTimeout(clearCtxInterval);
     startRecording();
     //dCanvas.setPointerCapture(e.pointerId);
@@ -586,9 +600,10 @@ window.addEventListener("resize", configSketch);
 
 // ----- START: Comment this out to disable sending browser leapmotion data -----
 // connection to leapmotion
-function updateLeapmotionStatus(connected) {
+function updateLeapmotionStatus(lmc) {
     var btn = $('#leapmotion');
-    if (connected) {
+    lmConnected = lmc
+    if (lmConnected) {
         btn
             .text('leapmotion connected')
             .removeClass('btn-danger')

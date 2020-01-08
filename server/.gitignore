@@ -110,3 +110,6 @@ config/production.*
 config/development.*
 package-lock.json
 config/development.js
+
+stor/*
+!stor/.gitkeep
