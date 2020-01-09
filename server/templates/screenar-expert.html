@@ -42,8 +42,9 @@ var constraints = {
 }
 
 var dataChannelCallback = function(data) {
-  console.log('dataChannelCallback data=',data);
-  corners = JSON.parse(data);
+  //console.log('dataChannelCallback data=',data);
+  corners = [];data.split(',').forEach(i => corners.push(parseInt(i)));
+  //console.log('received corners',corners);
 }
 
 var wrtc;
@@ -86,8 +87,8 @@ function drawVideo()
     canvas.width = canvasw;
     canvas.height = canvash;
 
-    //correctedcanvas.width = canvasw;
-    //correctedcanvas.height = canvash;
+    correctedcanvas.width = canvasw;
+    correctedcanvas.height = canvash;
 
     fxcanvas.width = canvasw;
     fxcanvas.height = canvash;
@@ -97,10 +98,26 @@ function drawVideo()
   ctx.drawImage(video,0,0,canvasw,canvash);
   if (corners !== null)
   {
-    var texture = fxcanvas.texture(canvas);
-    fxcanvas.draw(texture).perspective( corners, [0,0,canvasw,0,0,canvash,canvasw,canvash] ).update();
-    //fxcanvas.draw(texture).perspective( corners, [canvasw,0,0,canvash,canvasw,canvash,0,0] ).update();
-    correctedctx.drawImage(fxcanvas,0,0,correctedcanvas.width,correctedcanvas.height);
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = 'red';
+    ctx.beginPath();
+    let sx = canvasw / 1024;
+    let sy = canvash / 1024;
+    let scaledcorners = [];
+    for (let i=0;i<4;i++)
+    {
+      scaledcorners.push(corners[2*i] * sx);
+      scaledcorners.push(corners[2*i+1] * sy);
+    }
+    ctx.moveTo(scaledcorners[0],scaledcorners[1]);
+    ctx.lineTo(scaledcorners[2],scaledcorners[3]);
+    ctx.lineTo(scaledcorners[6],scaledcorners[7]);
+    ctx.lineTo(scaledcorners[4],scaledcorners[5]);
+    ctx.lineTo(scaledcorners[0],scaledcorners[1]);
+    ctx.stroke();
+    //var texture = fxcanvas.texture(canvas);
+    //fxcanvas.draw(texture).perspective( corners, [0,0,canvasw,0,0,canvash,canvasw,canvash] ).update();
+    //correctedctx.drawImage(fxcanvas,0,0,correctedcanvas.width,correctedcanvas.height);
   }
   window.requestAnimationFrame(drawVideo);
 }
