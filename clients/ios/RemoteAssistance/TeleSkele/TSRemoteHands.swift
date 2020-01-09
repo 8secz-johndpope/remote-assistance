@@ -100,7 +100,7 @@ class TSRemoteHands {
                     let frame = try self.decoder.decode(LMFrame.self, from:data)
                     self.updateFrame(frame)
                 } catch {
-                    print(error)
+                    //print(error)
                 }
             }
         }

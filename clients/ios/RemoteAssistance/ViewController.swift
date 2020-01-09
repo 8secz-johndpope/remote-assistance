@@ -34,6 +34,11 @@ class ViewController: UIViewController {
         self.tabBar(self.tabBar, didSelect: tabBar.selectedItem!)
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        tabBar.invalidateIntrinsicContentSize()
+    }
+    
     func showTabBar(duration : Double = 0.2) {
         UIView.animate(withDuration: duration, animations: {
             self.isHidden = false
@@ -81,8 +86,8 @@ extension  ViewController : UITabBarDelegate {
             view.frame = self.view.frame
             self.displayView.addSubview(view)
             break
-        case "WakingApp":
-            vc = self.storyboard?.instantiateViewController(identifier: "wakingAppVC")
+        case "Object":
+            vc = self.storyboard?.instantiateViewController(identifier: "objectAnnotationVC")
             let view = vc!.view!
             view.frame = self.view.frame
             self.displayView.addSubview(view)

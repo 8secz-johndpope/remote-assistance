@@ -32,7 +32,7 @@ class SocketIOManager {
     }
     
     func connect() {
-        self.rtcSocket.connect()
+//        self.rtcSocket.connect()
         self.lmSocket.connect()
     }
 }
