@@ -56,30 +56,47 @@ public enum TSSettingType {
 
 
 
-class TSSettingsViewController: UIViewController {
+class TSSettingsViewController: UIViewController,QRCodeScannerDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     
     var alertStyle: UIAlertController.Style = .alert
 
-
     let dataSource: [TSSettingType] = [
         .serverUrl
     ]
     
+    func qrCodeScannerResponse(code: String) {
+        let url = URL(string: code)
+        let domain = (url?.host)!
+        let port = (url?.port)!
+        let action = TSSetServerURL(serverUrl: "https://"+domain+":"+String(port))
+        store.ts.dispatch(action)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()        
 
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.tableFooterView = UIView.init()
+        //self.tableView.sizeToFit()
         
         store.ts.subscribe(self)
         
-        self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+    self.navigationController?.setNavigationBarHidden(false, animated: true)
+
+        
     }
 
+    @IBAction func scanUrlButtonClick(_ sender: Any) {
+        let nvc = QRCodeSCanner()
+        nvc.delegate = self
+        self.navigationController?.pushViewController(nvc, animated: true)
+    }
+    
+    
     func alert(type: TSSettingType) {
         let alertController = SuperAlertController.init(style: self.alertStyle, source: self.view, title: type.title, message: type.message, tintColor: azure)
 
@@ -116,7 +133,6 @@ class TSSettingsViewController: UIViewController {
             }
         }
      }
-    
 }
 
 extension TSSettingsViewController : UITableViewDelegate, UITableViewDataSource {
@@ -147,5 +163,7 @@ extension TSSettingsViewController : UITableViewDelegate, UITableViewDataSource 
 extension TSSettingsViewController : StoreSubscriber {
     func newState(state: TSState) {
         tableView.reloadData()
+        //tableView.invalidateIntrinsicContentSize()
+        //tableView.layoutIfNeeded()
     }
 }

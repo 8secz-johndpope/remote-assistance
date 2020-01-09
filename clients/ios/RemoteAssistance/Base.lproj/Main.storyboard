@@ -171,13 +171,35 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Asd-xH-EDc">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="bqX-Qg-A9M">
+                                <rect key="frame" x="0.0" y="739" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <color key="tintColor" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="Scan server url"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="scanUrlButtonClick:" destination="eo0-vv-RPq" eventType="touchUpInside" id="ksn-kS-Fek"/>
+                                </connections>
+                            </button>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="414" placeholderIntrinsicHeight="643" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Asd-xH-EDc">
+                                <rect key="frame" x="0.0" y="88" width="414" height="643"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="Asd-xH-EDc" firstAttribute="top" secondItem="Oow-Cu-wuh" secondAttribute="top" id="D0w-bZ-Kmz"/>
+                            <constraint firstItem="Asd-xH-EDc" firstAttribute="trailing" secondItem="bqX-Qg-A9M" secondAttribute="trailing" id="PSa-2r-tnN"/>
+                            <constraint firstItem="Asd-xH-EDc" firstAttribute="leading" secondItem="bqX-Qg-A9M" secondAttribute="leading" id="vcE-te-s5D"/>
+                            <constraint firstItem="bqX-Qg-A9M" firstAttribute="top" secondItem="Asd-xH-EDc" secondAttribute="bottom" constant="8" id="zvP-3p-sDr"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="Oow-Cu-wuh"/>
                     </view>
                     <navigationItem key="navigationItem" title="Settings" id="X2e-GV-xVZ"/>
@@ -187,7 +209,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vEo-hm-U7X" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1497" y="1578"/>
+            <point key="canvasLocation" x="1495.6521739130435" y="1577.6785714285713"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="nb1-OH-cCL">
