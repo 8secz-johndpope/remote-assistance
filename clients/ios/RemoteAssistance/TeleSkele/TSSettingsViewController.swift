@@ -68,10 +68,12 @@ class TSSettingsViewController: UIViewController,QRCodeScannerDelegate {
     
     func qrCodeScannerResponse(code: String) {
         let url = URL(string: code)
-        let domain = (url?.host)!
-        let port = (url?.port)!
-        let action = TSSetServerURL(serverUrl: "https://"+domain+":"+String(port))
-        store.ts.dispatch(action)
+        let domain = (url?.host)
+        let port = (url?.port)
+        if (domain != nil && port != nil) {
+            let action = TSSetServerURL(serverUrl: "https://"+domain!+":"+String(port!))
+            store.ts.dispatch(action)
+        }
     }
 
     override func viewDidLoad() {
