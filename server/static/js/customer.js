@@ -1,6 +1,7 @@
 // import { request } from "http";
 
 const SERVER_API = "/api/";
+const lmConnected = true;
 
 function isEpson() {
   if (navigator.userAgent.match(/EMBT3C/i)) {
