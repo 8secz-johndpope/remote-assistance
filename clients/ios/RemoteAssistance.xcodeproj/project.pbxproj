@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2959E0DF23C660BB00D0F98E /* ARSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2959E0DE23C660BB00D0F98E /* ARSceneViewController.swift */; };
+		2959E0E123C6911D00D0F98E /* AVPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2959E0E023C6911D00D0F98E /* AVPlayerViewController.swift */; };
 		A539AF265FD05F5E8642A27C /* Pods_RemoteAssistance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13B86974C1A2796697CDFACD /* Pods_RemoteAssistance.framework */; };
 		AD43D0CE23C68E5500AA4D24 /* QRCodeScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD43D0CD23C68E5500AA4D24 /* QRCodeScanner.swift */; };
 		D7455DB82368BE77001594FA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7455DB72368BE77001594FA /* AppDelegate.swift */; };
@@ -82,6 +84,8 @@
 
 /* Begin PBXFileReference section */
 		13B86974C1A2796697CDFACD /* Pods_RemoteAssistance.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RemoteAssistance.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2959E0DE23C660BB00D0F98E /* ARSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSceneViewController.swift; sourceTree = "<group>"; };
+		2959E0E023C6911D00D0F98E /* AVPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVPlayerViewController.swift; sourceTree = "<group>"; };
 		60AD71138BC3828FE41B6BA1 /* Pods-RemoteAssistance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.debug.xcconfig"; sourceTree = "<group>"; };
 		9AD6A81BBB56BA422FCA4EEC /* Pods-RemoteAssistance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.debug.xcconfig"; path = "Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.debug.xcconfig"; sourceTree = "<group>"; };
 		AD43D0CD23C68E5500AA4D24 /* QRCodeScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeScanner.swift; sourceTree = "<group>"; };
@@ -160,6 +164,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2959E0DD23C65B6300D0F98E /* ObjectAnnotation */ = {
+			isa = PBXGroup;
+			children = (
+				2959E0DE23C660BB00D0F98E /* ARSceneViewController.swift */,
+				2959E0E023C6911D00D0F98E /* AVPlayerViewController.swift */,
+			);
+			path = ObjectAnnotation;
+			sourceTree = "<group>";
+		};
 		2C3A091D90FD40735D9A68FB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -207,6 +220,7 @@
 				D7455DB92368BE77001594FA /* ViewController.swift */,
 				D795E76523A2E64800E97162 /* ChatViewController.swift */,
 				AD43D0CD23C68E5500AA4D24 /* QRCodeScanner.swift */,
+				2959E0DD23C65B6300D0F98E /* ObjectAnnotation */,
 				D7DB69F5236DE35100D7C367 /* Common */,
 				D7DA31DE239ECFCE00D1B73F /* ScreenAR */,
 				D7DB69D8236DE2D500D7C367 /* TeleSkele */,
@@ -535,11 +549,13 @@
 				D7DA31F0239ECFCE00D1B73F /* SurfaceNode.swift in Sources */,
 				D7DA31F1239ECFCE00D1B73F /* PlaneRectangle.swift in Sources */,
 				D7DB6A0B236DE7C700D7C367 /* TSReducer.swift in Sources */,
+				2959E0DF23C660BB00D0F98E /* ARSceneViewController.swift in Sources */,
 				D7DA20D123AAE41A005B1357 /* WakingAppViewController.swift in Sources */,
 				D7DA31ED239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift in Sources */,
 				AD43D0CE23C68E5500AA4D24 /* QRCodeScanner.swift in Sources */,
 				D7DA31EC239ECFCE00D1B73F /* UIView+Extensions.swift in Sources */,
 				D795E76623A2E64800E97162 /* ChatViewController.swift in Sources */,
+				2959E0E123C6911D00D0F98E /* AVPlayerViewController.swift in Sources */,
 				D7DB6A0A236DE7C700D7C367 /* TSActions.swift in Sources */,
 				D7DB6A0E236DE91D00D7C367 /* TSSettingsViewController.swift in Sources */,
 				D7DB6A02236DE67000D7C367 /* TSLeapMotion.swift in Sources */,
