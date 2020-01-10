@@ -8,6 +8,8 @@
 
 import UIKit
 import ARKit
+import AVKit
+import AVFoundation
 
 class ARSceneViewController: UIViewController, ARSCNViewDelegate {
 
@@ -26,15 +28,22 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
     }
     
     @IBAction func detectObjectsButtonTUI(_ sender: Any) {
-        guard let referenceObjects = ARReferenceObject.referenceObjects(inGroupNamed: "LaserJet400", bundle: nil) else {
-            fatalError("Missing expected asset catalog resources.")
-        }
-        self.configuration.detectionObjects = referenceObjects
-        sceneView.session.run(self.configuration)
+//        guard let referenceObjects = ARReferenceObject.referenceObjects(inGroupNamed: "LaserJet400", bundle: nil) else {
+//            fatalError("Missing expected asset catalog resources.")
+//        }
+//        self.configuration.detectionObjects = referenceObjects
+//        sceneView.session.run(self.configuration)
+        self.performSegue(withIdentifier: "showVideoClip", sender: self)
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         if let objectAnchor = anchor as? ARObjectAnchor {
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "showVideoClip" {
+            let avPlayerViewController = segue.destination as! AVPlayerViewController
         }
     }
     

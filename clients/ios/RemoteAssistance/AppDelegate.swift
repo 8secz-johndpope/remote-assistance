@@ -30,6 +30,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // set logging
         RTCSetMinDebugLogLevel(.info)
 
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            try audioSession.setCategory(.playback, mode: .moviePlayback)
+        }
+        catch {
+            print("Setting category to AVAudioSessionCategoryPlayback failed.")
+        }
+        
         return true
     }
 

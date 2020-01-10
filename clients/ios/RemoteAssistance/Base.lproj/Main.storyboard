@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="GlK-ev-vYM">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
@@ -458,11 +458,28 @@
         <!--Player View Controller-->
         <scene sceneID="aq1-vj-dfN">
             <objects>
-                <viewController id="vQI-uw-SfN" customClass="AVPlayerViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="vQI-uw-SfN" customClass="AVPlayerViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Uu7-2E-NPb">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6H1-A2-iwo">
+                                <rect key="frame" x="157" y="822" width="100" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="5E9-xj-evg"/>
+                                    <constraint firstAttribute="height" constant="40" id="dQ6-8i-Ojn"/>
+                                </constraints>
+                                <state key="normal" title="Done"/>
+                                <connections>
+                                    <action selector="doneButtonTUI:" destination="vQI-uw-SfN" eventType="touchUpInside" id="xdI-C3-faQ"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="6H1-A2-iwo" firstAttribute="bottom" secondItem="wTd-yo-KUC" secondAttribute="bottom" id="EFf-PK-pU8"/>
+                            <constraint firstItem="6H1-A2-iwo" firstAttribute="centerX" secondItem="Uu7-2E-NPb" secondAttribute="centerX" id="QMY-Oe-EwG"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="wTd-yo-KUC"/>
                     </view>
                     <navigationItem key="navigationItem" id="9DA-jW-hy1"/>
