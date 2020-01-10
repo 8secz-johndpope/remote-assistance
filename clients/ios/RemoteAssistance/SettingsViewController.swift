@@ -13,13 +13,16 @@ import IconFontKit
 
 let azure = #colorLiteral(red: 0.05, green:0.49, blue:0.98, alpha:1.00)
 
-public enum TSSettingType {
+public enum SettingType {
     case serverUrl
+    case help
     
     var description: String {
         switch self {
         case .serverUrl:
             return "Server URL"
+        case .help:
+            return "Help"
         }
     }
     
@@ -29,6 +32,8 @@ public enum TSSettingType {
         switch self {
         case .serverUrl:
             return IFMaterialDesignIcons.image(withType: IFMaterialDesignIconsType.IFMDIPen.rawValue, color: azure, fontSize: size)
+        case .help:
+            return IFMaterialDesignIcons.image(withType: IFMaterialDesignIconsType.IFMDIHelp.rawValue, color: azure, fontSize: size)
         }
     }
     
@@ -36,6 +41,8 @@ public enum TSSettingType {
         switch self {
         case .serverUrl:
             return "Server URL"
+        case .help:
+            return "Help"
         }
     }
     
@@ -43,6 +50,8 @@ public enum TSSettingType {
         switch self {
         case .serverUrl:
             return "Server url to connect to expert"
+        case .help:
+            return "Show help"
         }
     }
     
@@ -50,20 +59,23 @@ public enum TSSettingType {
         switch self {
         case .serverUrl:
             return store.ts.state.serverUrl
+        case .help:
+            return "Remote assistance help"
         }
     }
 }
 
 
 
-class TSSettingsViewController: UIViewController,QRCodeScannerDelegate {
+class SettingsViewController: UIViewController,QRCodeScannerDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     
     var alertStyle: UIAlertController.Style = .alert
 
-    let dataSource: [TSSettingType] = [
-        .serverUrl
+    let dataSource: [SettingType] = [
+        .serverUrl,
+        .help,
     ]
     
     func qrCodeScannerResponse(code: String) {
@@ -85,11 +97,9 @@ class TSSettingsViewController: UIViewController,QRCodeScannerDelegate {
         //self.tableView.sizeToFit()
         
         store.ts.subscribe(self)
-        
-    self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-    self.navigationController?.setNavigationBarHidden(false, animated: true)
-
-        
+            
+        self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
 
     @IBAction func scanUrlButtonClick(_ sender: Any) {
@@ -99,7 +109,7 @@ class TSSettingsViewController: UIViewController,QRCodeScannerDelegate {
     }
     
     
-    func alert(type: TSSettingType) {
+    func alert(type: SettingType) {
         let alertController = SuperAlertController.init(style: self.alertStyle, source: self.view, title: type.title, message: type.message, tintColor: azure)
 
         switch type {
@@ -111,6 +121,7 @@ class TSSettingsViewController: UIViewController,QRCodeScannerDelegate {
                 textField.text = type.detail
                 textField.clearButtonMode = .whileEditing
             })
+        default:
             break
         }
         
@@ -119,25 +130,27 @@ class TSSettingsViewController: UIViewController,QRCodeScannerDelegate {
         alertController.show(animated: true, vibrate: false, completion: nil)
     }
     
-    func addActions(for type: TSSettingType, to alertController: SuperAlertController) {
+    func addActions(for type: SettingType, to alertController: SuperAlertController) {
         alertController.addAction(image: nil, title: "Done", color: azure, style: .default, isEnabled: true, handler: {(action:UIAlertAction!) in
             self.updateSetting(type: type, alertController: alertController)
         })
         alertController.addAction(image: nil, title: "Cancel", color: azure, style: .cancel, isEnabled: true, handler: nil)
     }
     
-    func updateSetting(type: TSSettingType, alertController: SuperAlertController) {
+    func updateSetting(type: SettingType, alertController: SuperAlertController) {
         switch type {
         case .serverUrl:
             if let textController = alertController.contentViewController as? OneTextFieldViewController {
                 let action = TSSetServerURL(serverUrl: textController.textField.text!)
                 store.ts.dispatch(action)
             }
+        default:
+            break
         }
      }
 }
 
-extension TSSettingsViewController : UITableViewDelegate, UITableViewDataSource {
+extension SettingsViewController : UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell") ??
@@ -157,12 +170,20 @@ extension TSSettingsViewController : UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let type = dataSource[indexPath.row]
-        alert(type: type)
+        switch (type) {
+        case .help:
+            print("help")
+            if let url = URL(string: "\(store.ts.state.serverUrl)/help") {
+                UIApplication.shared.openURL(url)
+            }
+        default:
+            alert(type: type)
+        }
     }
 
 }
 
-extension TSSettingsViewController : StoreSubscriber {
+extension SettingsViewController : StoreSubscriber {
     func newState(state: TSState) {
         tableView.reloadData()
         //tableView.invalidateIntrinsicContentSize()

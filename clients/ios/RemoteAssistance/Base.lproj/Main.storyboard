@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="giu-C5-QdP">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
@@ -7,61 +7,28 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--ARView-->
-        <scene sceneID="tne-QT-ifu">
+        <!--View Controller-->
+        <scene sceneID="t8j-Qp-20y">
             <objects>
-                <viewController id="BYZ-38-t0r" userLabel="ARView" customClass="ViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="5Jn-Dl-0h7">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="voU-wP-uPw">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="813"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                            </view>
-                            <tabBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="awQ-iT-cBM">
-                                <rect key="frame" x="0.0" y="813" width="414" height="49"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <items>
-                                    <tabBarItem title="Hands" image="hand.draw.fill" catalog="system" id="bzH-l6-7PA"/>
-                                    <tabBarItem title="Screen" image="perspective" catalog="system" id="Fyf-D8-kAi"/>
-                                    <tabBarItem title="Object" image="cube" catalog="system" id="1qp-3A-a5N"/>
-                                    <tabBarItem title="Help" image="questionmark" catalog="system" id="1CH-vx-229"/>
-                                    <tabBarItem title="Chat" image="message" catalog="system" id="1lw-fK-v9d"/>
-                                    <tabBarItem title="Settings" image="gear" catalog="system" id="UDC-4a-dbZ"/>
-                                </items>
-                            </tabBar>
-                        </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <viewLayoutGuide key="safeArea" id="D1g-Ue-MRb"/>
-                    </view>
+                <tabBarController id="giu-C5-QdP" customClass="ViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" itemPositioning="fill" id="aBu-8k-xOo">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
                     <connections>
-                        <outlet property="displayView" destination="voU-wP-uPw" id="owF-zy-DsD"/>
-                        <outlet property="tabBar" destination="awQ-iT-cBM" id="jlj-dw-DGs"/>
+                        <segue destination="FQY-R0-ZYw" kind="relationship" relationship="viewControllers" id="Jfu-0v-w5Z"/>
+                        <segue destination="7rk-Js-EZa" kind="relationship" relationship="viewControllers" id="787-cA-r1R"/>
+                        <segue destination="GlK-ev-vYM" kind="relationship" relationship="viewControllers" id="z6l-d2-nXA"/>
+                        <segue destination="gm8-dW-RVL" kind="relationship" relationship="viewControllers" id="j0a-Hw-12b"/>
+                        <segue destination="EGO-GX-8UF" kind="relationship" relationship="viewControllers" id="pBh-yx-oUe"/>
                     </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BbL-sm-mCp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="137.68115942028987" y="133.25892857142856"/>
+            <point key="canvasLocation" x="651" y="-83"/>
         </scene>
-        <!--Waking App View Controller-->
-        <scene sceneID="glk-YJ-NJD">
-            <objects>
-                <viewController storyboardIdentifier="wakingAppVC" id="FhR-72-3AS" customClass="WakingAppViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="O0o-z5-jtj">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <viewLayoutGuide key="safeArea" id="GHN-ok-aXV"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ze5-RW-mPR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2322" y="133"/>
-        </scene>
-        <!--Scene View Controller-->
+        <!--Object-->
         <scene sceneID="GVe-eZ-ePb">
             <objects>
                 <viewController storyboardIdentifier="objectAnnotationVC" id="GlK-ev-vYM" customClass="ARSceneViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
@@ -73,7 +40,7 @@
                                 <rect key="frame" x="0.0" y="20" width="414" height="856"/>
                             </arscnView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cze-Et-3aG">
-                                <rect key="frame" x="132" y="822" width="150" height="40"/>
+                                <rect key="frame" x="132" y="773" width="150" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="150" id="T4B-MP-QpZ"/>
                                     <constraint firstAttribute="height" constant="40" id="jpB-FJ-eth"/>
@@ -95,6 +62,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="oGF-rY-scQ"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Object" image="cube" catalog="system" id="7PA-w3-Kw1"/>
                     <connections>
                         <outlet property="detectObjectsButton" destination="cze-Et-3aG" id="PAq-Su-26s"/>
                         <outlet property="sceneView" destination="pAh-hd-LJ2" id="QWG-Gp-cqJ"/>
@@ -103,79 +71,9 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CS5-vf-eIv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3818.8405797101454" y="132.58928571428572"/>
+            <point key="canvasLocation" x="709" y="838"/>
         </scene>
-        <!--Help-->
-        <scene sceneID="fsb-hO-TBD">
-            <objects>
-                <viewController title="Help" id="KnD-ZR-WGK" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="guD-wS-svj">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wM9-iP-2QJ">
-                                <rect key="frame" x="20" y="103" width="243" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <attributedString key="attributedText">
-                                    <fragment content=" Select the different tools below">
-                                        <attributes>
-                                            <font key="NSFont" metaFont="system" size="17"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                        </attributes>
-                                    </fragment>
-                                </attributedString>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="866-pe-DkA">
-                                <rect key="frame" x="20" y="147" width="176" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <attributedString key="attributedText">
-                                    <fragment content="Hands - Remote hands">
-                                        <attributes>
-                                            <font key="NSFont" metaFont="system" size="17"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                        </attributes>
-                                    </fragment>
-                                </attributedString>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kAS-aE-nrR">
-                                <rect key="frame" x="20" y="188" width="146" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <attributedString key="attributedText">
-                                    <fragment content="Screen - ScreenAR">
-                                        <attributes>
-                                            <font key="NSFont" metaFont="system" size="17"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                        </attributes>
-                                    </fragment>
-                                </attributedString>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KLq-0N-Prx">
-                                <rect key="frame" x="20" y="228" width="244" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <attributedString key="attributedText">
-                                    <fragment content="Settings - Configure server URL">
-                                        <attributes>
-                                            <font key="NSFont" metaFont="system" size="17"/>
-                                            <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
-                                        </attributes>
-                                    </fragment>
-                                </attributedString>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <viewLayoutGuide key="safeArea" id="l5D-73-nan"/>
-                    </view>
-                    <navigationItem key="navigationItem" title="Help" id="2x9-NT-fcE"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="1no-2r-g8B" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="724.63768115942037" y="1577.6785714285713"/>
-        </scene>
-        <!--View Controller-->
+        <!--Hands-->
         <scene sceneID="1sv-g4-gON">
             <objects>
                 <viewController storyboardIdentifier="handsVC" id="FQY-R0-ZYw" customClass="TSViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
@@ -197,6 +95,7 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="yKr-8p-O5K"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Hands" image="hand.draw.fill" catalog="system" id="ZSG-hz-qRG"/>
                     <navigationItem key="navigationItem" id="DQH-lV-6t9"/>
                     <connections>
                         <outlet property="handView" destination="171-28-8TV" id="zkJ-EU-F9j"/>
@@ -210,7 +109,7 @@
         <!--Settings-->
         <scene sceneID="EuE-9T-HXe">
             <objects>
-                <viewController id="eo0-vv-RPq" customClass="TSSettingsViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="eo0-vv-RPq" customClass="SettingsViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Msz-mJ-jJP">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -255,10 +154,11 @@
             </objects>
             <point key="canvasLocation" x="1495.6521739130435" y="1577.6785714285713"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Settings-->
         <scene sceneID="nb1-OH-cCL">
             <objects>
                 <navigationController storyboardIdentifier="settingsVC" automaticallyAdjustsScrollViewInsets="NO" id="EGO-GX-8UF" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Settings" image="gear" catalog="system" id="gYM-4w-ifl"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="KwM-pU-wmK">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
@@ -313,7 +213,7 @@
             </objects>
             <point key="canvasLocation" x="2321.739130434783" y="1577.6785714285713"/>
         </scene>
-        <!--View Controller-->
+        <!--Screen-->
         <scene sceneID="OWe-1c-zRd">
             <objects>
                 <viewController storyboardIdentifier="screenVC" id="7rk-Js-EZa" customClass="SARViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
@@ -326,7 +226,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </arscnView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bg3-gV-iCh">
-                                <rect key="frame" x="0.0" y="809" width="414" height="53"/>
+                                <rect key="frame" x="0.0" y="760" width="414" height="53"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This is a message." textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xfs-GZ-YaJ">
                                         <rect key="frame" x="16" y="16" width="382" height="21"/>
@@ -406,6 +306,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="hdd-yb-fqN"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Screen" image="perspective" catalog="system" id="lAe-vp-4dt"/>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
                         <outlet property="clearButton" destination="Eis-4e-C8v" id="LM7-3M-Sau"/>
@@ -421,38 +322,11 @@
             </objects>
             <point key="canvasLocation" x="-139" y="838"/>
         </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="dht-Mm-i1z">
-            <objects>
-                <navigationController storyboardIdentifier="helpVC" automaticallyAdjustsScrollViewInsets="NO" id="7ja-R7-XYH" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="sqk-xa-ryA">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="barTintColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <textAttributes key="titleTextAttributes">
-                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </textAttributes>
-                        <textAttributes key="largeTitleTextAttributes">
-                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </textAttributes>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="3Vr-2C-ROB">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </toolbar>
-                    <connections>
-                        <segue destination="KnD-ZR-WGK" kind="relationship" relationship="rootViewController" id="16i-7l-447"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="0m5-BC-qum" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="726" y="838"/>
-        </scene>
-        <!--Navigation Controller-->
+        <!--Chat-->
         <scene sceneID="Izt-pA-TmW">
             <objects>
                 <navigationController storyboardIdentifier="chatVC" automaticallyAdjustsScrollViewInsets="NO" id="gm8-dW-RVL" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Chat" image="message" catalog="system" id="CIL-eX-hWP"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="z9l-qz-O2i">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
@@ -491,7 +365,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R5K-e5-agg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3807" y="879"/>
+            <point key="canvasLocation" x="709" y="1578"/>
         </scene>
     </scenes>
     <resources>
@@ -500,6 +374,5 @@
         <image name="hand.draw.fill" catalog="system" width="64" height="52"/>
         <image name="message" catalog="system" width="64" height="56"/>
         <image name="perspective" catalog="system" width="64" height="60"/>
-        <image name="questionmark" catalog="system" width="48" height="64"/>
     </resources>
 </document>

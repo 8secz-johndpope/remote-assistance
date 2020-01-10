@@ -74,6 +74,10 @@ class TSRemoteHands {
             }
         }
 
+        // hide hands
+        self.leftHandInfo.model.isHidden = true
+        self.rightHandInfo.model.isHidden = true
+
         self.initSocket()
         self.initScene(scene)
         

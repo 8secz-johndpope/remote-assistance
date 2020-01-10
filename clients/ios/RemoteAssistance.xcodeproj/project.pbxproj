@@ -44,7 +44,7 @@
 		D7DB6A0A236DE7C700D7C367 /* TSActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DB6A07236DE7C700D7C367 /* TSActions.swift */; };
 		D7DB6A0B236DE7C700D7C367 /* TSReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DB6A08236DE7C700D7C367 /* TSReducer.swift */; };
 		D7DB6A0C236DE7C700D7C367 /* TSSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DB6A09236DE7C700D7C367 /* TSSwift.swift */; };
-		D7DB6A0E236DE91D00D7C367 /* TSSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DB6A0D236DE91D00D7C367 /* TSSettingsViewController.swift */; };
+		D7DB6A0E236DE91D00D7C367 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DB6A0D236DE91D00D7C367 /* SettingsViewController.swift */; };
 		D7DB6A10236DF21C00D7C367 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D7DB6A0F236DF21C00D7C367 /* README.md */; };
 /* End PBXBuildFile section */
 
@@ -126,7 +126,7 @@
 		D7DB6A07236DE7C700D7C367 /* TSActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSActions.swift; sourceTree = "<group>"; };
 		D7DB6A08236DE7C700D7C367 /* TSReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSReducer.swift; sourceTree = "<group>"; };
 		D7DB6A09236DE7C700D7C367 /* TSSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSSwift.swift; sourceTree = "<group>"; };
-		D7DB6A0D236DE91D00D7C367 /* TSSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSSettingsViewController.swift; sourceTree = "<group>"; };
+		D7DB6A0D236DE91D00D7C367 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		D7DB6A0F236DF21C00D7C367 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E2F10D05D152079F7937DA3B /* Pods-RemoteAssistance.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.release.xcconfig"; path = "Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -213,6 +213,7 @@
 				D7455DB92368BE77001594FA /* ViewController.swift */,
 				D795E76523A2E64800E97162 /* ChatViewController.swift */,
 				AD43D0CD23C68E5500AA4D24 /* QRCodeScanner.swift */,
+				D7DB6A0D236DE91D00D7C367 /* SettingsViewController.swift */,
 				2959E0DD23C65B6300D0F98E /* ObjectAnnotation */,
 				D7DB69F5236DE35100D7C367 /* Common */,
 				D7DA31DE239ECFCE00D1B73F /* ScreenAR */,
@@ -277,7 +278,6 @@
 			children = (
 				D7DB6A00236DE67000D7C367 /* TSLeapMotion.swift */,
 				D7DB6A05236DE6CB00D7C367 /* TSRemoteHands.swift */,
-				D7DB6A0D236DE91D00D7C367 /* TSSettingsViewController.swift */,
 				D7DB69FF236DE67000D7C367 /* TSViewController.swift */,
 				D7DB69FA236DE49A00D7C367 /* Nodes */,
 				D7DB69DB236DE2D500D7C367 /* Resources */,
@@ -529,7 +529,7 @@
 				D795E76623A2E64800E97162 /* ChatViewController.swift in Sources */,
 				2959E0E123C6911D00D0F98E /* AVPlayerViewController.swift in Sources */,
 				D7DB6A0A236DE7C700D7C367 /* TSActions.swift in Sources */,
-				D7DB6A0E236DE91D00D7C367 /* TSSettingsViewController.swift in Sources */,
+				D7DB6A0E236DE91D00D7C367 /* SettingsViewController.swift in Sources */,
 				D7DB6A02236DE67000D7C367 /* TSLeapMotion.swift in Sources */,
 				D7DA31EE239ECFCE00D1B73F /* Collection+Extensions.swift in Sources */,
 				D7455DBC2368BE77001594FA /* Experience.rcproject in Sources */,
