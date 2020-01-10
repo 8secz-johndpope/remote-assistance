@@ -7,6 +7,7 @@
 {% block header %}{% endblock %}
 {% block content %}
 ScreenAR
+<canvas id='correctedcanvas'></canvas>
 <video id='video'></video>
 <div id='screenarcontainer'>
   <canvas id='sourcecanvas'></canvas>
@@ -15,10 +16,13 @@ ScreenAR
 {% endblock %}
 {% block js %}
 <script src="/static/ext/socket.io/2.2.0/socket.io.js"></script>
+<script src="/static/ext/glfx/glfx.js"></script>
 <script src="/static/js/webrtc.js"></script>
 <script>
 window.config = { room: 'fxpal' }
 
+var corners = null;
+var fxcanvas = fx.canvas();
 var canvas = document.getElementById('sourcecanvas');
 var canvasw = 480;
 var canvash = 320;
@@ -26,16 +30,27 @@ canvas.width = canvasw;
 canvas.height = canvash;
 var ctx = canvas.getContext('2d');
 
+var correctedcanvas = document.getElementById('correctedcanvas');
+correctedcanvas.width = canvasw;
+correctedcanvas.height = canvash;
+var correctedctx = correctedcanvas.getContext('2d');
+
 // setup sample video
 var constraints = {
     video: false,
     audio: true
 }
 
+var dataChannelCallback = function(data) {
+  //console.log('dataChannelCallback data=',data);
+  corners = [];data.split(',').forEach(i => corners.push(parseInt(i)));
+  //console.log('received corners',corners);
+}
+
 var wrtc;
 navigator.mediaDevices.getUserMedia(constraints).then(
     function(stream) {
-        wrtc = new WebRTCClient({ stream: stream, dataChannel:'ScreenAR', room: config.room });
+        wrtc = new WebRTCClient({ stream: stream, dataChannel:'ScreenAR', dataChannelCallback: dataChannelCallback, room: config.room });
         wrtc.on('stream', function(id, stream) {
             var video = $('#video')[0]
             video.srcObject = stream;
@@ -67,17 +82,43 @@ function drawVideo()
     canvasw = video.videoWidth;
     canvash = video.videoHeight;
 
-    //screenarcontainer.style.width = canvasw + 'px';
-    //screenarcontainer.style.height = canvash + 'px';
+    console.log('new video width/height=',canvasw,canvash)
 
     canvas.width = canvasw;
     canvas.height = canvash;
-    //overlay.style.width = canvasw + 'px';
-    //overlay.style.height = canvash + 'px';
-    //console.log('set width,height',canvasw,canvash);
+
+    correctedcanvas.width = canvasw;
+    correctedcanvas.height = canvash;
+
+    fxcanvas.width = canvasw;
+    fxcanvas.height = canvash;
+
   }
   //console.log('drawVideo');
   ctx.drawImage(video,0,0,canvasw,canvash);
+  if (corners !== null)
+  {
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = 'red';
+    ctx.beginPath();
+    let sx = canvasw / 1024;
+    let sy = canvash / 1024;
+    let scaledcorners = [];
+    for (let i=0;i<4;i++)
+    {
+      scaledcorners.push(corners[2*i] * sx);
+      scaledcorners.push(corners[2*i+1] * sy);
+    }
+    ctx.moveTo(scaledcorners[0],scaledcorners[1]);
+    ctx.lineTo(scaledcorners[2],scaledcorners[3]);
+    ctx.lineTo(scaledcorners[6],scaledcorners[7]);
+    ctx.lineTo(scaledcorners[4],scaledcorners[5]);
+    ctx.lineTo(scaledcorners[0],scaledcorners[1]);
+    ctx.stroke();
+    //var texture = fxcanvas.texture(canvas);
+    //fxcanvas.draw(texture).perspective( corners, [0,0,canvasw,0,0,canvash,canvasw,canvash] ).update();
+    //correctedctx.drawImage(fxcanvas,0,0,correctedcanvas.width,correctedcanvas.height);
+  }
   window.requestAnimationFrame(drawVideo);
 }
 

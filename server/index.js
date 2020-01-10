@@ -160,6 +160,10 @@ if (!args.db_off) {
 
 }
 
+app.get('/help', function (req, res) {
+    res.render('help.html')
+});
+
 app.get('/screenarexpert', function (req, res) {
     res.render('screenar-expert.html')
 });

@@ -74,6 +74,10 @@ class TSRemoteHands {
             }
         }
 
+        // hide hands
+        self.leftHandInfo.model.isHidden = true
+        self.rightHandInfo.model.isHidden = true
+
         self.initSocket()
         self.initScene(scene)
         
@@ -100,7 +104,7 @@ class TSRemoteHands {
                     let frame = try self.decoder.decode(LMFrame.self, from:data)
                     self.updateFrame(frame)
                 } catch {
-                    print(error)
+                    //print(error)
                 }
             }
         }

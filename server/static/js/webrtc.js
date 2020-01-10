@@ -17,6 +17,7 @@ function WebRTCClient(options) {
         SIOConnection.socket = socket;
     }
     var dataChannelName = this.options.dataChannel;
+    var onDataChannelCallback = this.options.dataChannelCallback;
 
     this.createDataChannel = function(name,pc)
     {
@@ -25,7 +26,8 @@ function WebRTCClient(options) {
       this.sendChannel.onopen = function (event) { console.log('channel onopen',event);};
       this.sendChannel.onclose = function (event) { console.log('channel onclose',event);};
       this.sendChannel.onmessage = function (event) {
-          console.log('channel onmessage',event.data);
+          if (onDataChannelCallback)
+            onDataChannelCallback(event.data);
       };
     }
     function getPC(id) {

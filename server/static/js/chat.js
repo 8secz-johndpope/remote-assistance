@@ -9,12 +9,14 @@ const PERSON_NAME = " ";
 const BOT_DELAY = 500;
 const BOT_MSG_UNKNOWN = "I'm sorry, I didn't understand your response.";
 const SERVER_API = "/api/";
+const NATIVE_UA = "ace";
 
 const CHAT_TREE = JSON.parse(CHAT_TREE_JSON);
 
 let convArchive = []; 
 let currentIndex = 1;
 let jbScanner;
+let qrScannerAction;
 
 msgerForm.addEventListener("submit", event => {
   event.preventDefault();
@@ -43,11 +45,13 @@ function launchRA() {
             function(data) {
               console.log("Connecting user",customerData.uuid,"to room", roomData.room_uuid);
               // Connect to iOS
-              webkit.messageHandlers.connectCustomer.postMessage(
-                { 
-                  user_uuid: customerData.uuid,
-                  room_uuid: roomData.room_uuid,
-                });
+              if (runningNative()) {
+                window.webkit.messageHandlers.launchRA.postMessage(
+                  { 
+                    user_uuid: customerData.uuid,
+                    room_uuid: roomData.room_uuid,
+                  });                
+              }
           })
       })
   })
@@ -189,11 +193,17 @@ function random(min, max) {
 
 function onQRCodeScanned(scannedText)
 {
-  let scannerParentElement = document.getElementById("scanner");
-  $('#myModal').modal('hide');
-  jbScanner.stopScanning();
-  jbScanner.removeFrom( scannerParentElement )
-  injectMsg(jbScanner.action,scannedText);
+  if (!runningNative()) {
+    closeJSQRScanner();
+  }
+  injectMsg(qrScannerAction,scannedText);
+}
+
+function closeJSQRScanner() {
+    let scannerParentElement = document.getElementById("scanner");
+    $('#myModal').modal('hide');
+    jbScanner.stopScanning();
+    jbScanner.removeFrom( scannerParentElement )      
 }
 
 //this function will be called when JsQRScanner is ready to use
@@ -201,16 +211,30 @@ function JsQRScannerReady()
 {
     jbScanner = new JsQRScanner(onQRCodeScanned);
     jbScanner.setSnapImageMaxSize(300);
-    console.log("QR scanner ready");
+    //console.log("QR scanner ready");
     //console.log(jbScanner);
     //launchQRScanner();
 }
 
 function launchQRScanner(action) {
-  let scannerParentElement = document.getElementById("scanner");
-  jbScanner.appendTo(scannerParentElement);
-  jbScanner.action = action;
-  $('#myModal').modal('show');
+    qrScannerAction = action;
+    if (runningNative()) {
+      window.webkit.messageHandlers.launchQRScanner.postMessage(
+      { 
+      });                
+    } else {
+      let scannerParentElement = document.getElementById("scanner");
+      jbScanner.appendTo(scannerParentElement);
+      $('#myModal').modal('show');
+    }
+}
+
+function runningNative() {
+  if (window.webkit && window.webkit.messageHandlers) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 botResponse(0);

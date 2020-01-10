@@ -6,8 +6,10 @@ body{font-family:Arial}
 /*background-image:url(wood.jpg)*/
 
 }
-canvas,img{background-color:gray;vertical-align:top;border:1px solid blue;background-color:#ccc}
-#sourcecanvas,#overlay{position:absolute;width:100%;height:100%;overflow:hidden}
+canvas,img{object-fit:contain;background-color:gray;vertical-align:top;border:1px solid blue;background-color:#ccc}
+#overlay{position:absolute;width:100%;height:100%;overflow:hidden}
+#sourcecanvas{position:absolute;object-fit:contain;width:100%;height:100%;overflow:hidden}
+#correctedcanvas{float:right;margin:16px;background-color:red}
 #screenarcontainer
 {
   background-color:#ccc;
@@ -42,7 +44,7 @@ margin:2px;
 #dashboard td { border:2px solid white;text-align:center;width:32px;height:32px;}
 #dashboard input { outline:none;color:black}
 
-#canvas2,#canvas3,#overlay{pointer-events:all;position:absolute;background-color:transparent}
+#overlay{pointer-events:all;position:absolute;background-color:transparent}
 
 .mark{
 padding:0.3%;

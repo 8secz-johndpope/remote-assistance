@@ -8,13 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-    
-    @IBOutlet weak var tabBar: UITabBar!
-    @IBOutlet weak var displayView: UIView!
-    
-    var isHidden = false
-    var vc:UIViewController?
+class ViewController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,90 +20,29 @@ class ViewController: UIViewController {
         let down = UISwipeGestureRecognizer(target: self, action: #selector(onSwipeDown))
         down.direction = .down
         self.view.addGestureRecognizer(down)
-        
-        
-        // 3rd item is help
-        tabBar.selectedItem = tabBar.items![3]
-        tabBar.delegate = self
-        self.tabBar(self.tabBar, didSelect: tabBar.selectedItem!)
     }
     
-    func showTabBar(duration : Double = 0.2) {
+    func changeTabBar(hidden:Bool, animated: Bool){
+        if tabBar.isHidden == hidden {
+            return
+        }
+        let frame = tabBar.frame
+        let offset = hidden ? frame.size.height : -frame.size.height
+        let duration:TimeInterval = (animated ? 0.2 : 0.0)
+        tabBar.isHidden = false
+
         UIView.animate(withDuration: duration, animations: {
-            self.isHidden = false
-            self.tabBar.transform = CGAffineTransform.identity
-        })
-    }
-    
-    func hideTabBar(duration : Double = 0.2) {
-        UIView.animate(withDuration: duration, animations: {
-            self.isHidden = true
-            self.tabBar.transform = CGAffineTransform(translationX: 0, y: 150)
+            self.tabBar.frame = frame.offsetBy(dx: 0, dy: offset)
+        }, completion: { (true) in
+            self.tabBar.isHidden = hidden
         })
     }
     
     @objc func onSwipeUp(recognizer: UITapGestureRecognizer) {
-        self.showTabBar()
+        changeTabBar(hidden:false, animated:true)
     }
 
     @objc func onSwipeDown(recognizer: UITapGestureRecognizer) {
-        self.hideTabBar()
+        changeTabBar(hidden:true, animated:true)
     }
-}
-
-
-extension  ViewController : UITabBarDelegate {
-    func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
-//        print("\(item.title!) clicked")
-
-        // remove previous view controller
-        if let currentVC = self.vc {
-            currentVC.removeFromParent()
-            self.displayView.removeSubviews()
-        }
-        
-        switch (item.title) {
-        case "Hands":
-            vc = self.storyboard?.instantiateViewController(identifier: "handsVC")
-            let view = vc!.view!
-            view.frame = self.view.frame
-            self.displayView.addSubview(view)
-            break
-        case "Screen":
-            vc = self.storyboard?.instantiateViewController(identifier: "screenVC")
-            let view = vc!.view!
-            view.frame = self.view.frame
-            self.displayView.addSubview(view)
-            break
-        case "WakingApp":
-            vc = self.storyboard?.instantiateViewController(identifier: "wakingAppVC")
-            let view = vc!.view!
-            view.frame = self.view.frame
-            self.displayView.addSubview(view)
-            break
-        case "Help":
-            vc = self.storyboard?.instantiateViewController(identifier: "helpVC")
-            let view = vc!.view!
-            view.frame = self.view.frame
-            self.displayView.addSubview(view)
-            break
-        case "Chat":
-            vc = self.storyboard?.instantiateViewController(identifier: "chatVC")
-            let view = vc!.view!
-            view.frame = self.view.frame
-            self.displayView.addSubview(view)
-            break
-        case "Settings":
-            vc = self.storyboard?.instantiateViewController(identifier: "settingsVC")
-            let view = vc!.view!
-            view.frame = self.view.frame
-            self.displayView.addSubview(view)
-            break
-        default:
-            break
-        }
-        
-        self.view.bringSubviewToFront(self.tabBar)
-    }
-
 }

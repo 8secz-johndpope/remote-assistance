@@ -20,9 +20,6 @@
 		D7455DCF2368BE7F001594FA /* RemoteAssistanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7455DCE2368BE7F001594FA /* RemoteAssistanceTests.swift */; };
 		D7455DDA2368BE80001594FA /* RemoteAssistanceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7455DD92368BE80001594FA /* RemoteAssistanceUITests.swift */; };
 		D795E76623A2E64800E97162 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D795E76523A2E64800E97162 /* ChatViewController.swift */; };
-		D7DA20D123AAE41A005B1357 /* WakingAppViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA20D023AAE41A005B1357 /* WakingAppViewController.swift */; };
-		D7DA20D523AAE6D5005B1357 /* carter-test.wa in Resources */ = {isa = PBXBuildFile; fileRef = D7DA20D323AAE6D5005B1357 /* carter-test.wa */; };
-		D7DA20D623AAE6D5005B1357 /* test.wa in Resources */ = {isa = PBXBuildFile; fileRef = D7DA20D423AAE6D5005B1357 /* test.wa */; };
 		D7DA20D723AAE7CA005B1357 /* WA3DLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7DA20CD23AAE255005B1357 /* WA3DLib.framework */; };
 		D7DA20D823AAE7CA005B1357 /* WA3DLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D7DA20CD23AAE255005B1357 /* WA3DLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D7DA31EB239ECFCE00D1B73F /* SCNVector3+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E1239ECFCE00D1B73F /* SCNVector3+Extensions.swift */; };
@@ -47,7 +44,7 @@
 		D7DB6A0A236DE7C700D7C367 /* TSActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DB6A07236DE7C700D7C367 /* TSActions.swift */; };
 		D7DB6A0B236DE7C700D7C367 /* TSReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DB6A08236DE7C700D7C367 /* TSReducer.swift */; };
 		D7DB6A0C236DE7C700D7C367 /* TSSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DB6A09236DE7C700D7C367 /* TSSwift.swift */; };
-		D7DB6A0E236DE91D00D7C367 /* TSSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DB6A0D236DE91D00D7C367 /* TSSettingsViewController.swift */; };
+		D7DB6A0E236DE91D00D7C367 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DB6A0D236DE91D00D7C367 /* SettingsViewController.swift */; };
 		D7DB6A10236DF21C00D7C367 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D7DB6A0F236DF21C00D7C367 /* README.md */; };
 /* End PBXBuildFile section */
 
@@ -107,9 +104,6 @@
 		D795E76523A2E64800E97162 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		D7DA20CD23AAE255005B1357 /* WA3DLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WA3DLib.framework; path = RemoteAssistance/Frameworks/WA3DLib.framework; sourceTree = "<group>"; };
 		D7DA20CF23AAE366005B1357 /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
-		D7DA20D023AAE41A005B1357 /* WakingAppViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WakingAppViewController.swift; sourceTree = "<group>"; };
-		D7DA20D323AAE6D5005B1357 /* carter-test.wa */ = {isa = PBXFileReference; lastKnownFileType = file; path = "carter-test.wa"; sourceTree = "<group>"; };
-		D7DA20D423AAE6D5005B1357 /* test.wa */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.wa; sourceTree = "<group>"; };
 		D7DA31E1239ECFCE00D1B73F /* SCNVector3+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SCNVector3+Extensions.swift"; sourceTree = "<group>"; };
 		D7DA31E2239ECFCE00D1B73F /* UIView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		D7DA31E3239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ARHitTestResult+Extensions.swift"; sourceTree = "<group>"; };
@@ -132,7 +126,7 @@
 		D7DB6A07236DE7C700D7C367 /* TSActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSActions.swift; sourceTree = "<group>"; };
 		D7DB6A08236DE7C700D7C367 /* TSReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSReducer.swift; sourceTree = "<group>"; };
 		D7DB6A09236DE7C700D7C367 /* TSSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSSwift.swift; sourceTree = "<group>"; };
-		D7DB6A0D236DE91D00D7C367 /* TSSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSSettingsViewController.swift; sourceTree = "<group>"; };
+		D7DB6A0D236DE91D00D7C367 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		D7DB6A0F236DF21C00D7C367 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E2F10D05D152079F7937DA3B /* Pods-RemoteAssistance.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.release.xcconfig"; path = "Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -209,7 +203,6 @@
 		D7455DB62368BE77001594FA /* RemoteAssistance */ = {
 			isa = PBXGroup;
 			children = (
-				D7DA20DA23AAEC00005B1357 /* WakingApp */,
 				D7DB6A0F236DF21C00D7C367 /* README.md */,
 				D7455DB72368BE77001594FA /* AppDelegate.swift */,
 				D7455DC02368BE7F001594FA /* Assets.xcassets */,
@@ -220,6 +213,7 @@
 				D7455DB92368BE77001594FA /* ViewController.swift */,
 				D795E76523A2E64800E97162 /* ChatViewController.swift */,
 				AD43D0CD23C68E5500AA4D24 /* QRCodeScanner.swift */,
+				D7DB6A0D236DE91D00D7C367 /* SettingsViewController.swift */,
 				2959E0DD23C65B6300D0F98E /* ObjectAnnotation */,
 				D7DB69F5236DE35100D7C367 /* Common */,
 				D7DA31DE239ECFCE00D1B73F /* ScreenAR */,
@@ -245,24 +239,6 @@
 				D7455DDB2368BE80001594FA /* Info.plist */,
 			);
 			path = RemoteAssistanceUITests;
-			sourceTree = "<group>";
-		};
-		D7DA20D223AAE6D5005B1357 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				D7DA20D323AAE6D5005B1357 /* carter-test.wa */,
-				D7DA20D423AAE6D5005B1357 /* test.wa */,
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		D7DA20DA23AAEC00005B1357 /* WakingApp */ = {
-			isa = PBXGroup;
-			children = (
-				D7DA20D023AAE41A005B1357 /* WakingAppViewController.swift */,
-				D7DA20D223AAE6D5005B1357 /* Resources */,
-			);
-			path = WakingApp;
 			sourceTree = "<group>";
 		};
 		D7DA31DE239ECFCE00D1B73F /* ScreenAR */ = {
@@ -302,7 +278,6 @@
 			children = (
 				D7DB6A00236DE67000D7C367 /* TSLeapMotion.swift */,
 				D7DB6A05236DE6CB00D7C367 /* TSRemoteHands.swift */,
-				D7DB6A0D236DE91D00D7C367 /* TSSettingsViewController.swift */,
 				D7DB69FF236DE67000D7C367 /* TSViewController.swift */,
 				D7DB69FA236DE49A00D7C367 /* Nodes */,
 				D7DB69DB236DE2D500D7C367 /* Resources */,
@@ -472,9 +447,7 @@
 				D7DB6A10236DF21C00D7C367 /* README.md in Resources */,
 				D7455DC12368BE7F001594FA /* Assets.xcassets in Resources */,
 				D7455DBF2368BE77001594FA /* Main.storyboard in Resources */,
-				D7DA20D623AAE6D5005B1357 /* test.wa in Resources */,
 				D7DB69EF236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Left.dae in Resources */,
-				D7DA20D523AAE6D5005B1357 /* carter-test.wa in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -550,14 +523,13 @@
 				D7DA31F1239ECFCE00D1B73F /* PlaneRectangle.swift in Sources */,
 				D7DB6A0B236DE7C700D7C367 /* TSReducer.swift in Sources */,
 				2959E0DF23C660BB00D0F98E /* ARSceneViewController.swift in Sources */,
-				D7DA20D123AAE41A005B1357 /* WakingAppViewController.swift in Sources */,
 				D7DA31ED239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift in Sources */,
 				AD43D0CE23C68E5500AA4D24 /* QRCodeScanner.swift in Sources */,
 				D7DA31EC239ECFCE00D1B73F /* UIView+Extensions.swift in Sources */,
 				D795E76623A2E64800E97162 /* ChatViewController.swift in Sources */,
 				2959E0E123C6911D00D0F98E /* AVPlayerViewController.swift in Sources */,
 				D7DB6A0A236DE7C700D7C367 /* TSActions.swift in Sources */,
-				D7DB6A0E236DE91D00D7C367 /* TSSettingsViewController.swift in Sources */,
+				D7DB6A0E236DE91D00D7C367 /* SettingsViewController.swift in Sources */,
 				D7DB6A02236DE67000D7C367 /* TSLeapMotion.swift in Sources */,
 				D7DA31EE239ECFCE00D1B73F /* Collection+Extensions.swift in Sources */,
 				D7455DBC2368BE77001594FA /* Experience.rcproject in Sources */,
