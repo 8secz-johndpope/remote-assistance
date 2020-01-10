@@ -430,7 +430,7 @@ function startRecording() {
             wrtc.emit('recording_started', {"name":recordingClipUUID});
             mediaRecorder.onstop = handleStop;
             mediaRecorder.ondataavailable = handleDataAvailable;
-            mediaRecorder.start(1000);
+            mediaRecorder.start(100);
             console.log('MediaRecorder started', mediaRecorder);
         }
     )
@@ -460,9 +460,10 @@ function stepDone() {
   if (recordingLS) { 
     recordingLS = false; 
     stopRecording(); 
+    wrtc.emit('recording_stopped',{"name":recordingClipUUID}); 
   }
+  clearTimeout(clearCtxInterval);
   toggleDots(false); 
-  wrtc.emit('recording_stopped',{}); 
 }
 
 function toggleDots(down) {
