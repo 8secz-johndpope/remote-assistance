@@ -43,6 +43,11 @@ function launchRA() {
             function(data) {
               console.log("Connecting user",customerData.uuid,"to room", roomData.room_uuid);
               // Connect to iOS
+              webkit.messageHandlers.connectCustomer.postMessage(
+                { 
+                  user_uuid: customerData.uuid,
+                  room_uuid: roomData.room_uuid,
+                });
           })
       })
   })

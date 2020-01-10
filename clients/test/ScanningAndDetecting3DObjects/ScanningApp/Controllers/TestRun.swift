@@ -96,7 +96,7 @@ class TestRun {
         // Immediately remove the anchor from the session again to force a re-detection.
         self.lastDetectionStartTime = Date()
         self.sceneView.session.remove(anchor: objectAnchor)
-        
+        print("Detected object: " + (objectAnchor.referenceObject.name ?? ""))
         //self.detectedObject = DetectedObject(referenceObject: objectAnchor.referenceObject)
         if let currentPointCloud = self.sceneView.session.currentFrame?.rawFeaturePoints {
             self.detectedObject?.updateVisualization(newTransform: objectAnchor.transform,
