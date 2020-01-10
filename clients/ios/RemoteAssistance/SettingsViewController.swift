@@ -82,8 +82,12 @@ class SettingsViewController: UIViewController,QRCodeScannerDelegate {
         let url = URL(string: code)
         let domain = (url?.host)
         let port = (url?.port)
-        if (domain != nil && port != nil) {
-            let action = TSSetServerURL(serverUrl: "https://"+domain!+":"+String(port!))
+        if let domain = domain {
+            var portStr = ""
+            if let port = port {
+                portStr = ":\(String(port))"
+            }
+            let action = TSSetServerURL(serverUrl: "https://\(domain)\(portStr)")
             store.ts.dispatch(action)
         }
     }
@@ -172,7 +176,6 @@ extension SettingsViewController : UITableViewDelegate, UITableViewDataSource {
         let type = dataSource[indexPath.row]
         switch (type) {
         case .help:
-            print("help")
             if let url = URL(string: "\(store.ts.state.serverUrl)/help") {
                 UIApplication.shared.openURL(url)
             }

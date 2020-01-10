@@ -22,6 +22,8 @@ class QRCodeSCanner: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.title = "QR Code Scanner"
 
         view.backgroundColor = UIColor.black
         captureSession = AVCaptureSession()

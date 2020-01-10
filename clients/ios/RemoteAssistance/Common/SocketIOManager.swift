@@ -21,7 +21,8 @@ class SocketIOManager {
     
     private init() {
         
-        self.url = URL(string: store.ts.state.serverUrl)!
+        self.url = URL(string: store.ts.state.serverUrl) ??
+            URL(string: "https://remote-assistance.paldeploy.com")!
         self.manager = SocketManager(socketURL: self.url,
                                      config: [.log(enableLogging), .selfSigned(true),
                                               .forceNew(true), .forceWebsockets(true)])
