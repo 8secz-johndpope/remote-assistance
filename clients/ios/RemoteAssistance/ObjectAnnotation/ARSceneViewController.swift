@@ -36,7 +36,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         if let objectAnchor = anchor as? ARObjectAnchor {
         }
-    }
+    }   
     
     /*
     // MARK: - Navigation

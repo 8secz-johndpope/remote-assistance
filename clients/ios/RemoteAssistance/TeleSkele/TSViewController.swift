@@ -10,6 +10,7 @@ import UIKit
 import WebRTC
 import CoreMotion
 import ARKit
+import Vision
 
 let mediaContraints = RTCMediaConstraints(mandatoryConstraints: [
     "OfferToReceiveAudio": "true",
@@ -35,6 +36,17 @@ class TSViewController: UIViewController {
     var motionManager = CMMotionManager()
     var remoteHands:TSRemoteHands!
     var lastTimeStamp:TimeInterval = 0
+    
+    lazy var detectBarcodeRequest: VNDetectBarcodesRequest = {
+        return VNDetectBarcodesRequest(completionHandler: { (request, error) in
+            guard error == nil else {
+                print("Barcode Error: \(error!.localizedDescription)")
+                return
+            }
+
+            self.processClassification(for: request)
+        })
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -134,6 +146,14 @@ class TSViewController: UIViewController {
         self.handView.scene = scene
         self.remoteHands = TSRemoteHands(scene)
     }
+    
+    // MARK: - Vision
+    func processClassification(for request: VNRequest) {
+        if let bestResult = request.results?.first as? VNBarcodeObservation,
+            let payload = bestResult.payloadStringValue {
+            print("QR Code: \(payload)")
+        }
+    }
 }
 
 extension TSViewController: WRTCClientDelegate {
@@ -157,6 +177,18 @@ extension TSViewController: ARSessionDelegate {
             let image = self.sceneView.snapshot()
             self.capturer.captureFrame(image)
             self.lastTimeStamp = now
+            
+            // process image for qr code
+            DispatchQueue.global(qos: .background).async {
+                let ciImage = CIImage.init(cgImage: image.cgImage!)
+                let handler = VNImageRequestHandler(ciImage: ciImage, orientation: CGImagePropertyOrientation.up, options: [:])
+
+                do {
+                    try handler.perform([self.detectBarcodeRequest])
+                } catch {
+                    print("Error Decoding Barcode: \(error.localizedDescription)")
+                }
+            }
         }
     }
 }
