@@ -75,7 +75,7 @@ function getButtonHTML(botResponseArr) {
     switch (botResponseArr[i].type) {
       case "response":
        let actionLabel = botResponseArr[i].actionLabel;
-       html += `<button class="btn btn-primary" style="margin-top: 10px" onclick='injectMsg(${action},\"${actionLabel}\")'>${actionLabel}</button> `;
+       html += `<button class="btn btn-primary" style="margin-top: 10px; margin-right: 25px" onclick='injectMsg(${action},\"${actionLabel}\")'>${actionLabel}</button> `;
        break;
       case "barcode":
        html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchQRScanner(${action})'><span class="fa fa-qrcode fa-2x"></span></button> `;
@@ -144,7 +144,8 @@ function botResponse(msgText,msgLabel="") {
     }
   }  
 
-  botMsgText = CHAT_TREE.responses[currentIndex-1].q;
+  botMsgText = CHAT_TREE.responses[currentIndex-1].q; 
+  // + " " + runningNative();
 
   for (let i = 0; i < CHAT_TREE.responses[currentIndex-1].next.length; i++) {
     let pReg = /\+[0-9]+/;
@@ -230,12 +231,13 @@ function launchQRScanner(action) {
 }
 
 function runningNative() {
+  let n = false;
   if (window.webkit && window.webkit.messageHandlers) {
-    return true;
-  } else {
-    return false;
-  }
+    n = true;
+  } 
+  return n;
 }
 
 botResponse(0);
+
 //appendMessage(BOT_NAME, BOT_IMG, "left", "Hello, how may I help you today?", []);
