@@ -9,7 +9,7 @@ body{font-family:Arial}
 canvas,img{object-fit:contain;background-color:gray;vertical-align:top;border:1px solid blue;background-color:#ccc}
 #overlay{position:absolute;width:100%;height:100%;overflow:hidden}
 #sourcecanvas{position:absolute;object-fit:contain;width:100%;height:100%;overflow:hidden}
-#correctedcanvas{float:right;margin:16px;background-color:red}
+#correctedcanvas{float:right;margin-right:16px;background-color:#ccc;width:400px;height:300px;object-fit:contain}
 #screenarcontainer
 {
   background-color:#ccc;

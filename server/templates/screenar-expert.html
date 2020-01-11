@@ -6,7 +6,7 @@
 {% endblock %}
 {% block header %}{% endblock %}
 {% block content %}
-ScreenAR
+<div style="margin:16px">ScreenAR</div>
 <canvas id='correctedcanvas'></canvas>
 <video id='video'></video>
 <div id='screenarcontainer'>
@@ -41,10 +41,25 @@ var constraints = {
     audio: true
 }
 
+/*function ab2str(buf) {
+  return String.fromCharCode.apply(null, new Uint8Array(buf));
+}*/
+
 var dataChannelCallback = function(data) {
+  //data = ab2str(data);
   //console.log('dataChannelCallback data=',data);
-  corners = [];data.split(',').forEach(i => corners.push(parseInt(i)));
-  //console.log('received corners',corners);
+  corners = [];
+  data.split(',').forEach(i => corners.push(parseInt(i)));
+  let anchorWidth = corners[8];
+  let anchorHeight = corners[9];
+  let newWidth = 640;
+  let newHeight = ((640 * anchorHeight) / anchorWidth) | 0;
+  if (correctedcanvas.width !== newWidth || correctedcanvas.height !== newHeight)
+  {
+    correctedcanvas.width = newWidth;
+    correctedcanvas.height = newHeight;
+    console.log('correctedcanvas width/height=',correctedcanvas.width,correctedcanvas.height);
+  }
 }
 
 var wrtc;
@@ -87,25 +102,21 @@ function drawVideo()
     canvas.width = canvasw;
     canvas.height = canvash;
 
-    //correctedcanvas.width = canvasw;
-    //correctedcanvas.height = canvash;
-
     fxcanvas = fx.canvas();
     fxcanvas.width = canvasw;
     fxcanvas.height = canvash;
 
   }
-  //console.log('drawVideo');
   ctx.drawImage(video,0,0,canvasw,canvash);
   if (corners !== null)
   {
-    /*ctx.lineWidth = 3;
+    ctx.lineWidth = 3;
     ctx.font = '32px Arial';
     ctx.fillStyle = 'blue';
     ctx.strokeStyle = 'red';
-    ctx.beginPath();*/
-    let sx = canvasw / 1024;
-    let sy = canvash / 1024;
+    ctx.beginPath();
+    let sx = canvasw / 2048;
+    let sy = canvash / 2048;
     let scaledcorners = [];
     // corners are bl,br,tl,tr
     for (let i=0;i<4;i++)
@@ -113,18 +124,18 @@ function drawVideo()
       scaledcorners.push(corners[2*i] * sx);
       scaledcorners.push(corners[2*i+1] * sy);
     }
-    /*ctx.moveTo(scaledcorners[0],scaledcorners[1]);
+    ctx.moveTo(scaledcorners[0],scaledcorners[1]);
     ctx.lineTo(scaledcorners[2],scaledcorners[3]);
     ctx.lineTo(scaledcorners[6],scaledcorners[7]);
     ctx.lineTo(scaledcorners[4],scaledcorners[5]);
     ctx.lineTo(scaledcorners[0],scaledcorners[1]);
-    ctx.stroke();*/
+    ctx.stroke();
 
-    /*ctx.fillText('tl',scaledcorners[0],scaledcorners[1]);
-    ctx.fillText('tr',scaledcorners[2],scaledcorners[3]);
-    ctx.fillText('br',scaledcorners[6],scaledcorners[7]);
-    ctx.fillText('bl',scaledcorners[4],scaledcorners[5]);*/
-    //detectRedDots(ctx);
+    ctx.fillText('bl',scaledcorners[0],scaledcorners[1]);
+    ctx.fillText('br',scaledcorners[2],scaledcorners[3]);
+    ctx.fillText('tl',scaledcorners[4],scaledcorners[5]);
+    ctx.fillText('tr',scaledcorners[6],scaledcorners[7]);
+    //detectBlue(ctx);
     var texture = fxcanvas.texture(canvas);
     let perspectivecorners = [
       scaledcorners[4],scaledcorners[5],
@@ -138,17 +149,56 @@ function drawVideo()
   window.requestAnimationFrame(drawVideo);
 }
 
-/*function detectRedDots(ctx)
+let maxr = 129;
+let maxg = 129;
+let minb = 129;
+function detectBlue(ctx)
 {
+  if (canvasw === 0 || canvash === 0)
+    return;
   let imgData = ctx.getImageData(0,0,canvasw,canvash);
   let data = imgData.data;
+  let tl = {x:3000,y:3000};
+  let tr = {x:0,y:3000};
+  let bl = {x:3000,y:0};
+  let br = {x:0,y:0};
+  let x = 0;
+  let y = 0;
   for (let i=0;i<data.length;i+=4)
   {
-    if (data[i] >= 200 && data[i+1] < 32 && data[i+2] < 32)
+    // detect blue dots
+    if (data[i] < maxr && data[i+1] < maxg && data[i+2] > minb)
     {
       data[i] = 0xff;
       data[i+1] = 0xff;
       data[i+2] = 0xff;
+      if (x < bl.x)
+      {
+        bl.x = x;
+        bl.y = y;
+      }
+      if (x > br.x)
+      {
+        br.x = x;
+        br.y = y;
+      }
+    }
+    // detect green dots
+    if (data[i] < maxr && data[i+1] > minb && data[i+2] < maxr)
+    {
+      data[i] = 0xff;
+      data[i+1] = 0xff;
+      data[i+2] = 0xff;
+      if (x < tl.x)
+      {
+        tl.x = x;
+        tl.y = y;
+      }
+      if (x > tr.x)
+      {
+        tr.x = x;
+        tr.y = y;
+      }
     }
     else
     {
@@ -156,9 +206,23 @@ function drawVideo()
       data[i+1] = 0x00;
       data[i+2] = 0x00;
     }
+    x += 1;
+    if (x > canvasw)
+    {
+      x = 0;
+      y += 1;
+    }
   }
   ctx.putImageData(imgData,0,0);
-}*/
+  ctx.fillStyle = 'red';
+  ctx.fillRect(tl.x,tl.y,20,20);
+  ctx.fillStyle = 'blue';
+  ctx.fillRect(tr.x,tr.y,20,20);
+  ctx.fillStyle = 'green';
+  ctx.fillRect(bl.x,bl.y,20,20);
+  ctx.fillStyle = 'orange';
+  ctx.fillRect(br.x,br.y,20,20);
+}
 
 function sendClick(x,y,text)
 {
