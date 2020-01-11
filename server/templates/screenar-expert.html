@@ -31,8 +31,8 @@ canvas.height = canvash;
 var ctx = canvas.getContext('2d');
 
 var correctedcanvas = document.getElementById('correctedcanvas');
-correctedcanvas.width = canvasw;
-correctedcanvas.height = canvash;
+correctedcanvas.width = 640;//canvasw;
+correctedcanvas.height = 360;//canvash;
 var correctedctx = correctedcanvas.getContext('2d');
 
 // setup sample video
@@ -87,9 +87,10 @@ function drawVideo()
     canvas.width = canvasw;
     canvas.height = canvash;
 
-    correctedcanvas.width = canvasw;
-    correctedcanvas.height = canvash;
+    //correctedcanvas.width = canvasw;
+    //correctedcanvas.height = canvash;
 
+    fxcanvas = fx.canvas();
     fxcanvas.width = canvasw;
     fxcanvas.height = canvash;
 
@@ -98,29 +99,66 @@ function drawVideo()
   ctx.drawImage(video,0,0,canvasw,canvash);
   if (corners !== null)
   {
-    ctx.lineWidth = 3;
+    /*ctx.lineWidth = 3;
+    ctx.font = '32px Arial';
+    ctx.fillStyle = 'blue';
     ctx.strokeStyle = 'red';
-    ctx.beginPath();
+    ctx.beginPath();*/
     let sx = canvasw / 1024;
     let sy = canvash / 1024;
     let scaledcorners = [];
+    // corners are bl,br,tl,tr
     for (let i=0;i<4;i++)
     {
       scaledcorners.push(corners[2*i] * sx);
       scaledcorners.push(corners[2*i+1] * sy);
     }
-    ctx.moveTo(scaledcorners[0],scaledcorners[1]);
+    /*ctx.moveTo(scaledcorners[0],scaledcorners[1]);
     ctx.lineTo(scaledcorners[2],scaledcorners[3]);
     ctx.lineTo(scaledcorners[6],scaledcorners[7]);
     ctx.lineTo(scaledcorners[4],scaledcorners[5]);
     ctx.lineTo(scaledcorners[0],scaledcorners[1]);
-    ctx.stroke();
-    //var texture = fxcanvas.texture(canvas);
-    //fxcanvas.draw(texture).perspective( corners, [0,0,canvasw,0,0,canvash,canvasw,canvash] ).update();
-    //correctedctx.drawImage(fxcanvas,0,0,correctedcanvas.width,correctedcanvas.height);
+    ctx.stroke();*/
+
+    /*ctx.fillText('tl',scaledcorners[0],scaledcorners[1]);
+    ctx.fillText('tr',scaledcorners[2],scaledcorners[3]);
+    ctx.fillText('br',scaledcorners[6],scaledcorners[7]);
+    ctx.fillText('bl',scaledcorners[4],scaledcorners[5]);*/
+    //detectRedDots(ctx);
+    var texture = fxcanvas.texture(canvas);
+    let perspectivecorners = [
+      scaledcorners[4],scaledcorners[5],
+      scaledcorners[6],scaledcorners[7],
+      scaledcorners[2],scaledcorners[3],
+      scaledcorners[0],scaledcorners[1]];
+    fxcanvas.draw(texture).perspective( perspectivecorners, [0,0,canvasw,0,canvasw,canvash,0,canvash] ).update();
+    //fxcanvas.draw(texture).perspective( [0,canvash,canvasw,canvash,0,0,canvasw,0], [0,canvash,canvasw,canvash,0,0,canvasw,0] ).update();
+    correctedctx.drawImage(fxcanvas,0,0,correctedcanvas.width,correctedcanvas.height);
   }
   window.requestAnimationFrame(drawVideo);
 }
+
+/*function detectRedDots(ctx)
+{
+  let imgData = ctx.getImageData(0,0,canvasw,canvash);
+  let data = imgData.data;
+  for (let i=0;i<data.length;i+=4)
+  {
+    if (data[i] >= 200 && data[i+1] < 32 && data[i+2] < 32)
+    {
+      data[i] = 0xff;
+      data[i+1] = 0xff;
+      data[i+2] = 0xff;
+    }
+    else
+    {
+      data[i] = 0x00;
+      data[i+1] = 0x00;
+      data[i+2] = 0x00;
+    }
+  }
+  ctx.putImageData(imgData,0,0);
+}*/
 
 function sendClick(x,y,text)
 {
@@ -133,17 +171,17 @@ video.addEventListener('loadedmetadata',function (evt) {
   drawVideo();
 },false);
 
-overlay.addEventListener('click',function (evt) {
+correctedcanvas.addEventListener('click',function (evt) {
     evt.preventDefault();
     evt.stopPropagation();
     let x = evt.pageX;
     let y = evt.pageY;
-    x -= overlay.parentElement.offsetLeft;
-    y -= overlay.parentElement.offsetTop;
-    x = (x * 100 / overlay.offsetWidth) | 0;
-    y = (y * 100 / overlay.offsetHeight) | 0;
+    x -= correctedcanvas.offsetLeft;
+    y -= correctedcanvas.offsetTop;
+    x = (x * 100 / correctedcanvas.offsetWidth) | 0;
+    y = (y * 100 / correctedcanvas.offsetHeight) | 0;
     console.log(x,y);
-    showMark(x,y,'Tap');
+    //showMark(x,y,'Tap');
     sendClick(x,y,'Tap');
 });
 </script>
