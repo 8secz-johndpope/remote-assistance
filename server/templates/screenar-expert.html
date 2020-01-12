@@ -21,7 +21,7 @@
 <script>
 window.config = { room: 'fxpal' }
 
-var corners = null;
+//var corners = null;
 var fxcanvas = fx.canvas();
 var canvas = document.getElementById('sourcecanvas');
 var canvasw = 480;
@@ -41,17 +41,12 @@ var constraints = {
     audio: true
 }
 
-/*function ab2str(buf) {
-  return String.fromCharCode.apply(null, new Uint8Array(buf));
-}*/
-
 var dataChannelCallback = function(data) {
-  //data = ab2str(data);
-  //console.log('dataChannelCallback data=',data);
-  corners = [];
-  data.split(',').forEach(i => corners.push(parseInt(i)));
-  let anchorWidth = corners[8];
-  let anchorHeight = corners[9];
+  console.log('dataChannelCallback data=',data);
+  let anchorSize = [];
+  data.split(',').forEach(i => anchorSize.push(parseInt(i)));
+  let anchorWidth = anchorSize[0];
+  let anchorHeight = anchorSize[1];
   let newWidth = 640;
   let newHeight = ((640 * anchorHeight) / anchorWidth) | 0;
   if (correctedcanvas.width !== newWidth || correctedcanvas.height !== newHeight)
@@ -108,7 +103,38 @@ function drawVideo()
 
   }
   ctx.drawImage(video,0,0,canvasw,canvash);
+  let corners = detectCorners(ctx);
   if (corners !== null)
+  {
+    ctx.lineWidth = 3;
+    ctx.font = '32px Arial';
+    ctx.fillStyle = 'blue';
+    ctx.strokeStyle = 'red';
+    ctx.beginPath();
+    ctx.moveTo(corners.tl.x,corners.tl.y);
+    ctx.lineTo(corners.tr.x,corners.tr.y);
+    ctx.lineTo(corners.br.x,corners.br.y);
+    ctx.lineTo(corners.bl.x,corners.bl.y);
+    ctx.lineTo(corners.tl.x,corners.tl.y);
+    ctx.stroke();
+
+    let texture = fxcanvas.texture(canvas);
+    fxcanvas.draw(texture).perspective(
+      [
+        corners.tl.x,corners.tl.y,
+        corners.tr.x,corners.tr.y,
+        corners.br.x,corners.br.y,
+        corners.bl.x,corners.bl.y],
+      [
+        0,0,
+        canvasw,0,
+        canvasw,canvash,
+        0,canvash]).update();
+    //fxcanvas.draw(texture).perspective( [0,canvash,canvasw,canvash,0,0,canvasw,0], [0,canvash,canvasw,canvash,0,0,canvasw,0] ).update();
+    correctedctx.drawImage(fxcanvas,0,0,correctedcanvas.width,correctedcanvas.height);
+
+  }
+  /*if (corners !== null)
   {
     ctx.lineWidth = 3;
     ctx.font = '32px Arial';
@@ -136,6 +162,7 @@ function drawVideo()
     ctx.fillText('tl',scaledcorners[4],scaledcorners[5]);
     ctx.fillText('tr',scaledcorners[6],scaledcorners[7]);
     //detectBlue(ctx);
+    detectCorners(ctx);
     var texture = fxcanvas.texture(canvas);
     let perspectivecorners = [
       scaledcorners[4],scaledcorners[5],
@@ -145,11 +172,120 @@ function drawVideo()
     fxcanvas.draw(texture).perspective( perspectivecorners, [0,0,canvasw,0,canvasw,canvash,0,canvash] ).update();
     //fxcanvas.draw(texture).perspective( [0,canvash,canvasw,canvash,0,0,canvasw,0], [0,canvash,canvasw,canvash,0,0,canvasw,0] ).update();
     correctedctx.drawImage(fxcanvas,0,0,correctedcanvas.width,correctedcanvas.height);
-  }
+  }*/
   window.requestAnimationFrame(drawVideo);
 }
 
-let maxr = 129;
+function detectCorners(ctx)
+{
+  if (canvasw === 0 || canvash === 0)
+  {
+    console.error('detectCorners fails because canvasw/canvash=0',canvasw,canvash);
+    return null;
+  }
+  let imgData = ctx.getImageData(0,0,canvasw,canvash);
+  let data = imgData.data;
+  let idx = 0;
+  
+  // top gives x positions of tl and tr corners
+  let tl = {x:-1,y:0};
+  for (let i=0;i<canvasw;i++)
+  {
+    if (data[idx] >= 250 && data[idx+1] >= 250 && data[idx+2] >= 250)
+    {
+      tl.x = i;
+      break;
+    }
+    idx += 4;
+  }
+
+  let tr = {x:-1,y:0};
+  idx = 4 * canvasw - 4;
+  for (let i=canvasw;i>=0;i--)
+  {
+    if (data[idx] >= 250 && data[idx+1] >= 250 && data[idx+2] >= 250)
+    {
+      tr.x = i;
+      break;
+    }
+    idx -= 4;
+  }
+
+  // bottom gives x positions of bl and br corners
+  let bl = {x:-1,y:0};
+  idx = ((canvash - 1) * canvasw * 4);
+  for (let i=0;i<canvasw;i++)
+  {
+    if (data[idx] >= 250 && data[idx+1] >= 250 && data[idx+2] >= 250)
+    {
+      bl.x = i;
+      break;
+    }
+    idx += 4;
+  }
+
+  let br = {x:-1,y:0};
+  idx = (canvash * canvasw * 4) - 4;
+  for (let i=canvasw;i>=0;i--)
+  {
+    if (data[idx] >= 250 && data[idx+1] >= 250 && data[idx+2] >= 250)
+    {
+      br.x = i;
+      break;
+    }
+    idx -= 4;
+  }
+  
+  // left gives y positions of tl and bl corners
+  idx = 0;
+  for (let i=0;i<canvash;i++)
+  {
+    if (data[idx] >= 250 && data[idx+1] >= 250 && data[idx+2] >= 250)
+    {
+      tl.y = i;
+      break;
+    }
+    idx += canvasw * 4;
+  }
+
+  idx = ((canvash - 1) * canvasw * 4);
+  for (let i=canvash;i>=0;i--)
+  {
+    if (data[idx] >= 250 && data[idx+1] >= 250 && data[idx+2] >= 250)
+    {
+      bl.y = i;
+      break;
+    }
+    idx -= canvasw * 4;
+  }
+
+  // right gives y positions of tr and br corners
+  idx = canvasw * 4 - 4;
+  for (let i=0;i<canvash;i++)
+  {
+    if (data[idx] >= 250 && data[idx+1] >= 250 && data[idx+2] >= 250)
+    {
+      tr.y = i;
+      break;
+    }
+    idx += canvasw * 4;
+  }
+
+  idx = (canvash * canvasw * 4) - 4;
+  for (let i=canvash;i>=0;i--)
+  {
+    if (data[idx] >= 250 && data[idx+1] >= 250 && data[idx+2] >= 250)
+    {
+      br.y = i;
+      break;
+    }
+    idx -= canvasw * 4;
+  }
+
+  return {tl:tl,tr:tr,bl:bl,br:br};
+}
+
+/*let maxr = 129;
 let maxg = 129;
 let minb = 129;
 function detectBlue(ctx)
@@ -222,7 +358,7 @@ function detectBlue(ctx)
   ctx.fillRect(bl.x,bl.y,20,20);
   ctx.fillStyle = 'orange';
   ctx.fillRect(br.x,br.y,20,20);
-}
+}*/
 
 function sendClick(x,y,text)
 {
