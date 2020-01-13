@@ -111,10 +111,10 @@ config/development.*
 package-lock.json
 config/development.js
 
-clipStor/*
-!clipStor/demo*
-!clipStor/.gitkeep
+static/clipStor/*
+!static/clipStor/demo*
+!static/clipStor/.gitkeep
 
-anchorStor/*
-!anchorStor/demo*
-!anchorStor/.gitkeep
+static/anchorStor/*
+!static/anchorStor/demo*
+!static/anchorStor/.gitkeep
