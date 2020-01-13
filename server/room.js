@@ -13,7 +13,7 @@ module.exports = function(io) {
     }
 
     async function execCmd(cmd) {
-        await sleep(10000); // wait to gather data from client
+        await sleep(5000); // wait to gather data from client
         console.log(cmd);
         exec(cmd, (error, stdout, stderr) => {
             if (error) {
