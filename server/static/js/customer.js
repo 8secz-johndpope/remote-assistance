@@ -211,7 +211,45 @@ function configSketch() {
 }
 
 function drawSketch(data) {
-  let sCanvasCtx =  document.getElementById("sketchCanvas").getContext('2d');
+  let sCanvas = document.getElementById("sketchCanvas");
+  let sCanvasCtx =  sCanvas.getContext('2d');
+
+  // transform line draw data to current canvas frame
+  let aspectRatio = sCanvas.width/sCanvas.height;
+
+  // true if video spans the width
+  var spanWidth = false;
+  if (data.cW > data.cH) {
+    if (sCanvas.width > sCanvas.height) {
+        spanWidth = true;
+    } else {
+        spanWidth = false;
+    }
+  } else {
+    if (sCanvas.width > sCanvas.height) {
+        spanWidth = false;
+    } else {
+        spanWidth = true;
+    }
+  }
+
+  var scale = 1;
+  var offset = {x: 0, y: 0};
+  if (spanWidth) {
+    scale = sCanvas.width/data.cW;
+    offset.x = 0;
+    offset.y = -(data.cH - data.cW/aspectRatio)/2;
+  } else {
+    scale = sCanvas.height/data.cH;
+    offset.x = -(data.cW - data.cH*aspectRatio)/2;
+    offset.y = 0;
+  }
+  data.sX = (offset.x + data.sX)*scale;
+  data.sY = (offset.y + data.sY)*scale;
+  data.eX = (offset.x + data.eX)*scale;
+  data.eY = (offset.y + data.eY)*scale;
+
+  // draw line
   sCanvasCtx.beginPath();
   sCanvasCtx.lineWidth = 5;
   sCanvasCtx.lineCap = 'round';
