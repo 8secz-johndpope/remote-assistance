@@ -19,6 +19,9 @@ func TSReducer(action: Action, state: TSState?) -> TSState {
     case let action as TSSetServerURL:
         state.serverUrl = action.serverUrl
         UserDefaults.standard.set(state.serverUrl, forKey: "serverUrl")
+    case let action as TSSetRoomName:
+        state.roomName = action.roomName
+        UserDefaults.standard.set(state.roomName, forKey: "roomName")
     default:
         break
     }

@@ -91,7 +91,7 @@ class AceSketchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let socket = SocketIOManager.sharedInstance.rtcSocket
+        let socket = SocketIOManager.sharedInstance
         socket.on("sketch_draw") { data, ack in
             for line in data {
                 let msg = AceMessageSketchDraw()

@@ -15,12 +15,16 @@ let azure = #colorLiteral(red: 0.05, green:0.49, blue:0.98, alpha:1.00)
 
 public enum SettingType {
     case serverUrl
+    case roomName
     case help
+    
     
     var description: String {
         switch self {
         case .serverUrl:
             return "Server URL"
+        case .roomName:
+            return "Room Name"
         case .help:
             return "Help"
         }
@@ -32,6 +36,8 @@ public enum SettingType {
         switch self {
         case .serverUrl:
             return IFMaterialDesignIcons.image(withType: IFMaterialDesignIconsType.IFMDIPen.rawValue, color: azure, fontSize: size)
+        case .roomName:
+            return IFMaterialDesignIcons.image(withType: IFMaterialDesignIconsType.IFMDIGroup.rawValue, color: azure, fontSize: size)
         case .help:
             return IFMaterialDesignIcons.image(withType: IFMaterialDesignIconsType.IFMDIHelp.rawValue, color: azure, fontSize: size)
         }
@@ -41,6 +47,8 @@ public enum SettingType {
         switch self {
         case .serverUrl:
             return "Server URL"
+        case .roomName:
+            return "Room Name"
         case .help:
             return "Help"
         }
@@ -50,6 +58,8 @@ public enum SettingType {
         switch self {
         case .serverUrl:
             return "Server url to connect to expert"
+        case .roomName:
+            return "Room name to join"
         case .help:
             return "Show help"
         }
@@ -59,6 +69,8 @@ public enum SettingType {
         switch self {
         case .serverUrl:
             return store.ts.state.serverUrl
+        case .roomName:
+            return store.ts.state.roomName
         case .help:
             return "Remote assistance help"
         }
@@ -75,6 +87,7 @@ class SettingsViewController: UIViewController,QRCodeScannerDelegate {
 
     let dataSource: [SettingType] = [
         .serverUrl,
+        .roomName,
         .help,
     ]
     
@@ -117,7 +130,7 @@ class SettingsViewController: UIViewController,QRCodeScannerDelegate {
         let alertController = SuperAlertController.init(style: self.alertStyle, source: self.view, title: type.title, message: type.message, tintColor: azure)
 
         switch type {
-        case .serverUrl:
+        case .serverUrl, .roomName:
             alertController.addOneTextField(configuration: { (textField) in
                 textField.borderStyle = .roundedRect
                 textField.keyboardType = .default
@@ -146,6 +159,11 @@ class SettingsViewController: UIViewController,QRCodeScannerDelegate {
         case .serverUrl:
             if let textController = alertController.contentViewController as? OneTextFieldViewController {
                 let action = TSSetServerURL(serverUrl: textController.textField.text!)
+                store.ts.dispatch(action)
+            }
+        case .roomName:
+            if let textController = alertController.contentViewController as? OneTextFieldViewController {
+                let action = TSSetRoomName(roomName: textController.textField.text!)
                 store.ts.dispatch(action)
             }
         default:

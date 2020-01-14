@@ -78,24 +78,27 @@ class TSRemoteHands {
         self.leftHandInfo.model.isHidden = true
         self.rightHandInfo.model.isHidden = true
 
-        self.initSocket()
+//        self.initSocket()
         self.initScene(scene)
         
         store.ts.subscribe(self)
     }
     
-    func cleanup() {
+    func connect() {
+        self.initSocket()
+    }
+    
+    func disconnect() {
         store.ts.unsubscribe(self)
-        let socket = SocketIOManager.sharedInstance.lmSocket
+        let socket = SocketIOManager.sharedInstance
         socket.off("frame")
-        let rtcSocket = SocketIOManager.sharedInstance.rtcSocket
-        rtcSocket.off("camera_update")
+        socket.off("camera_update")
     }
     
     func initSocket() {
 
         // setup socket
-        let socket = SocketIOManager.sharedInstance.lmSocket
+        let socket = SocketIOManager.sharedInstance
         socket.on("frame") { data, ack in
             if let frameJson = data[0] as? String,
                 let data = frameJson.data(using: .utf8)
@@ -110,8 +113,7 @@ class TSRemoteHands {
         }
 
         // get udpate to the camera
-        let rtcSocket = SocketIOManager.sharedInstance.rtcSocket
-        rtcSocket.on("camera_update") { data, ack in
+        socket.on("camera_update") { data, ack in
             
             if
                 let msg = data[0] as? [String:Any],

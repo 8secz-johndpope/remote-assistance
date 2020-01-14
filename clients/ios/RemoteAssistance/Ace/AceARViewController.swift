@@ -23,7 +23,7 @@ class AceARViewController : UIViewController {
     var iceCandidates:[String:[RTCIceCandidate]] = [String:[RTCIceCandidate]]()
     var sid:String = ""
     var stream:RTCMediaStream!
-    var wrtc:WRTCClient!
+    var wrtc:WRTCClient = WRTCClient()
     var motionManager = CMMotionManager()
     var remoteHands:TSRemoteHands!
     var lastTimeStamp:TimeInterval = 0
@@ -120,7 +120,6 @@ class AceARViewController : UIViewController {
     }
     
     func initWebRTCClient() {
-        self.wrtc = WRTCClient()
         self.wrtc.delegate = self
     }
     
@@ -133,7 +132,7 @@ class AceARViewController : UIViewController {
                 let beta = -data.attitude.pitch * 180 / Double.pi
                 let gamma = -data.attitude.roll * 180 / Double.pi
                 
-                let socket = SocketIOManager.sharedInstance.rtcSocket
+                let socket = SocketIOManager.sharedInstance
                 socket.emit("gyro", [
                     "msg": "from customer",
                     "alpha": alpha,

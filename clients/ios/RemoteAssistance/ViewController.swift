@@ -14,8 +14,8 @@ class ViewController: UITabBarController {
         super.viewDidLoad()
   
         // uncomment to show the unified view ace view controller
-//        let vc = AceViewController.instantiate(fromAppStoryboard: .Ace)
-//        self.viewControllers?.prepend(vc)
+        let vc = AceViewController.instantiate(fromAppStoryboard: .Ace)
+        self.viewControllers?.prepend(vc)
         
         let up = UISwipeGestureRecognizer(target: self, action: #selector(onSwipeUp))
         up.direction = .up

@@ -11,4 +11,5 @@ import ReSwift
 
 struct TSState: StateType {
     var serverUrl: String = UserDefaults.standard.string(forKey: "serverUrl") ?? "http://yulius.fxpal.net:3000"
+    var roomName: String = UserDefaults.standard.string(forKey: "roomName") ?? "fxpal"
 }

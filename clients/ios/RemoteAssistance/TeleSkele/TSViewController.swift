@@ -75,6 +75,7 @@ class TSViewController: UIViewController {
         }
         configuration.planeDetection = [.horizontal, .vertical]
     
+        self.remoteHands.connect();
         
         // Run the view's session
         sceneView.session.run(configuration)
@@ -87,7 +88,7 @@ class TSViewController: UIViewController {
         sceneView.session.pause()
         
         self.wrtc.disconnect()
-        self.remoteHands.cleanup();
+        self.remoteHands.disconnect();
     }
     
     func initMediaStream() {
@@ -121,14 +122,14 @@ class TSViewController: UIViewController {
                 let beta = -data.attitude.pitch * 180 / Double.pi
                 let gamma = -data.attitude.roll * 180 / Double.pi
                 
-                let socket = SocketIOManager.sharedInstance.rtcSocket
-                socket.emit("gyro", [
-                    "msg": "from customer",
-                    "alpha": alpha,
-                    "beta": beta,
-                    "gamma": gamma,
-                    "absolute": absolute
-                ])
+                let socket = SocketIOManager.sharedInstance
+                    socket.emit("gyro", [
+                        "msg": "from customer",
+                        "alpha": alpha,
+                        "beta": beta,
+                        "gamma": gamma,
+                        "absolute": absolute
+                    ])
             }
         }
     }

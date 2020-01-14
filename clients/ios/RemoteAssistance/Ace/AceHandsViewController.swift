@@ -22,14 +22,14 @@ class AceHandsViewController: UIViewController {
 
     static let offerAnswerContraints = RTCMediaConstraints(mandatoryConstraints: [String:String](), optionalConstraints: nil)
     
-    var capturer:WRTCCustomCapturer!
-    var videoSource:RTCVideoSource!
+//    var capturer:WRTCCustomCapturer!
+//    var videoSource:RTCVideoSource!
     var socketManager:SocketIOManager = SocketIOManager.sharedInstance
-    var pcs:[String:RTCPeerConnection] = [String:RTCPeerConnection]()
-    var iceCandidates:[String:[RTCIceCandidate]] = [String:[RTCIceCandidate]]()
+//    var pcs:[String:RTCPeerConnection] = [String:RTCPeerConnection]()
+//    var iceCandidates:[String:[RTCIceCandidate]] = [String:[RTCIceCandidate]]()
     var sid:String = ""
-    var stream:RTCMediaStream!
-    var wrtc:WRTCClient!
+//    var stream:RTCMediaStream!
+//    var wrtc:WRTCClient!
     var motionManager = CMMotionManager()
     var remoteHands:TSRemoteHands!
     var lastTimeStamp:TimeInterval = 0
@@ -46,14 +46,15 @@ class AceHandsViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)        
+        super.viewWillAppear(animated)
+        self.remoteHands.connect()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        self.wrtc.disconnect()
-        self.remoteHands.cleanup();
+//        self.wrtc.disconnect()
+        self.remoteHands.disconnect()
     }
         
     func initGyro() {
@@ -65,7 +66,7 @@ class AceHandsViewController: UIViewController {
                 let beta = -data.attitude.pitch * 180 / Double.pi
                 let gamma = -data.attitude.roll * 180 / Double.pi
                 
-                let socket = SocketIOManager.sharedInstance.rtcSocket
+                let socket = SocketIOManager.sharedInstance
                 socket.emit("gyro", [
                     "msg": "from customer",
                     "alpha": alpha,
@@ -84,15 +85,15 @@ class AceHandsViewController: UIViewController {
     }
 }
 
-extension AceHandsViewController: WRTCClientDelegate {
-    func wrtc(_ wrtc:WRTCClient, didAdd stream:RTCMediaStream) {
-        print("wrtc: \(stream) add stream")
-    }
-
-    func wrtc(_ wrtc:WRTCClient, didRemove stream:RTCMediaStream) {
-        print("wrtc: \(stream) remove stream")
-    }
-}
+//extension AceHandsViewController: WRTCClientDelegate {
+//    func wrtc(_ wrtc:WRTCClient, didAdd stream:RTCMediaStream) {
+//        print("wrtc: \(stream) add stream")
+//    }
+//
+//    func wrtc(_ wrtc:WRTCClient, didRemove stream:RTCMediaStream) {
+//        print("wrtc: \(stream) remove stream")
+//    }
+//}
 
 //extension AceHandsViewController: ARSessionDelegate {
 //    func session(_ session: ARSession, didUpdate frame: ARFrame) {

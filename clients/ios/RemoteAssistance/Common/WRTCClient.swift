@@ -50,11 +50,11 @@ class WRTCClient : NSObject {
     }
 
     func initSocket() {
-        let socket = SocketIOManager.sharedInstance.rtcSocket
+        let socket = SocketIOManager.sharedInstance
         
         
         socket.on("connect") { data, ack in
-            socket.emit("join", ["room": "fxpal"])
+            socket.emit("join", ["room": store.ts.state.roomName ])
         }
         
         socket.on("left") { [weak self] data, ack in
@@ -275,7 +275,7 @@ extension WRTCClient : RTCPeerConnectionDelegate {
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
         DispatchQueue.main.async(execute: { () -> Void in
-            let socket =  SocketIOManager.sharedInstance.rtcSocket
+            let socket =  SocketIOManager.sharedInstance
 
             // find the correct session id
             var sid = ""
