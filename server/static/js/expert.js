@@ -571,8 +571,9 @@ function drawSketch(e) {
 
   clearTimeout(clearSketchInterval);
   if (ls) {  clearTimeout(clearCtxInterval); }
-  
-  let sCanvasCtx =  document.getElementById("sketchCanvas").getContext('2d');
+
+  let sCanvas = document.getElementById("sketchCanvas");
+  let sCanvasCtx =  sCanvas.getContext('2d');
 
   sCanvasCtx.beginPath();
 
@@ -587,7 +588,8 @@ function drawSketch(e) {
 
   sCanvasCtx.stroke(); // draw it
 
-  wrtc.emit('sketch_draw', {sX: sX, sY: sY, eX: pos.x, eY: pos.y}); // ship it
+  wrtc.emit('sketch_draw', {sX: sX, sY: sY, eX: pos.x, eY: pos.y,
+    cW: sCanvas.width, cH: sCanvas.height}); // ship it
 }
 
 setSketchOnOff();
