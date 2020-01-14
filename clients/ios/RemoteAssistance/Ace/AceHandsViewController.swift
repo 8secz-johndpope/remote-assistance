@@ -39,8 +39,6 @@ class AceHandsViewController: UIViewController {
         
         self.navigationController?.setNavigationBarHidden(true, animated: true)
         
-        initWebRTCClient()
-        initMediaStream()
         initRemoteHands()
         initGyro()
         
@@ -57,29 +55,7 @@ class AceHandsViewController: UIViewController {
         self.wrtc.disconnect()
         self.remoteHands.cleanup();
     }
-    
-    func initMediaStream() {
-        let factory = self.wrtc.factory
-        self.videoSource = self.wrtc.factory.videoSource()
-        let capturer = WRTCCustomCapturer(delegate: self.videoSource)
-        self.capturer = capturer
-
-
-        self.stream = factory.mediaStream(withStreamId: "fxpal_stream_\(self.sid)")
-        let audioSource = factory.audioSource(with: AceHandsViewController.mediaContraints)
-        let audioTrack = factory.audioTrack(with: audioSource, trackId: "fxpal_audio0")
-        let videoTrack = factory.videoTrack(with: self.videoSource, trackId: "fxpal_video0")
-        self.stream.addVideoTrack(videoTrack)
-        self.stream.addAudioTrack(audioTrack)
         
-        self.wrtc.stream = self.stream
-    }
-    
-    func initWebRTCClient() {
-        self.wrtc = WRTCClient()
-        self.wrtc.delegate = self
-    }
-    
     func initGyro() {
         motionManager.deviceMotionUpdateInterval = 0.016
         motionManager.startDeviceMotionUpdates(to: OperationQueue.current!) { (gyroData, error) in

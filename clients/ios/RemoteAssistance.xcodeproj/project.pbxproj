@@ -26,6 +26,7 @@
 		D7AF6A0423C8FD8D005B67D8 /* AceUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AF6A0323C8FD8D005B67D8 /* AceUIViewController.swift */; };
 		D7AF6A0623C90F91005B67D8 /* AceHandsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AF6A0523C90F91005B67D8 /* AceHandsViewController.swift */; };
 		D7AF6A0823C9151C005B67D8 /* AceARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AF6A0723C9151C005B67D8 /* AceARViewController.swift */; };
+		D7AF6A0A23C936DE005B67D8 /* AceSketchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AF6A0923C936DE005B67D8 /* AceSketchViewController.swift */; };
 		D7DA20D723AAE7CA005B1357 /* WA3DLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7DA20CD23AAE255005B1357 /* WA3DLib.framework */; };
 		D7DA20D823AAE7CA005B1357 /* WA3DLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D7DA20CD23AAE255005B1357 /* WA3DLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D7DA31EB239ECFCE00D1B73F /* SCNVector3+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E1239ECFCE00D1B73F /* SCNVector3+Extensions.swift */; };
@@ -114,6 +115,7 @@
 		D7AF6A0323C8FD8D005B67D8 /* AceUIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceUIViewController.swift; sourceTree = "<group>"; };
 		D7AF6A0523C90F91005B67D8 /* AceHandsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceHandsViewController.swift; sourceTree = "<group>"; };
 		D7AF6A0723C9151C005B67D8 /* AceARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceARViewController.swift; sourceTree = "<group>"; };
+		D7AF6A0923C936DE005B67D8 /* AceSketchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceSketchViewController.swift; sourceTree = "<group>"; };
 		D7DA20CD23AAE255005B1357 /* WA3DLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WA3DLib.framework; path = RemoteAssistance/Frameworks/WA3DLib.framework; sourceTree = "<group>"; };
 		D7DA20CF23AAE366005B1357 /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		D7DA31E1239ECFCE00D1B73F /* SCNVector3+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SCNVector3+Extensions.swift"; sourceTree = "<group>"; };
@@ -263,6 +265,7 @@
 				D7AF6A0723C9151C005B67D8 /* AceARViewController.swift */,
 				D7AF6A0323C8FD8D005B67D8 /* AceUIViewController.swift */,
 				D7AF6A0523C90F91005B67D8 /* AceHandsViewController.swift */,
+				D7AF6A0923C936DE005B67D8 /* AceSketchViewController.swift */,
 			);
 			path = Ace;
 			sourceTree = "<group>";
@@ -568,6 +571,7 @@
 				D7DA31EB239ECFCE00D1B73F /* SCNVector3+Extensions.swift in Sources */,
 				D7DA31F2239ECFCE00D1B73F /* Message.swift in Sources */,
 				D7DB69F8236DE35100D7C367 /* MathExtension.swift in Sources */,
+				D7AF6A0A23C936DE005B67D8 /* AceSketchViewController.swift in Sources */,
 				D7DB6A04236DE6AA00D7C367 /* SocketIOManager.swift in Sources */,
 				D7AF6A0123C8F4FD005B67D8 /* AceViewController.swift in Sources */,
 				D7DA31EF239ECFCE00D1B73F /* RectangleNode.swift in Sources */,
