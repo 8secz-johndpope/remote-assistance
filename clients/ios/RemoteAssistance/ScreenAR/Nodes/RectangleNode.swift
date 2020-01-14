@@ -66,16 +66,16 @@ class RectangleNode: SCNNode {
             corners.removeFromParentNode()
         }
 
-        addCornerBox(position: corners.topLeft.position, node: rootNode, name:"tl")
-        addCornerBox(position: corners.topRight.position, node: rootNode, name:"tr")
-        addCornerBox(position: corners.bottomLeft.position, node: rootNode, name:"bl")
-        addCornerBox(position: corners.bottomRight.position, node: rootNode, name:"br")
+        addCornerBox(position: corners.topLeft.position, node: rootNode, name:"tl", color: UIColor.blue)
+        addCornerBox(position: corners.topRight.position, node: rootNode, name:"tr", color: UIColor.blue)
+        addCornerBox(position: corners.bottomLeft.position, node: rootNode, name:"bl", color: UIColor.green)
+        addCornerBox(position: corners.bottomRight.position, node: rootNode, name:"br", color: UIColor.green)
     }
 
     private func createBox(width: CGFloat, height: CGFloat, color: UIColor) -> SCNNode {
-        //let box = SCNBox(width: 0.15, height: 0.20, length: 0.00, chamferRadius: 0.02)
-        let box = SCNBox(width: width, height: height, length: 0.00, chamferRadius: 0.02)
-        //let box = SCNPlane(width:width,height:height)
+        //let box = SCNBox(width: width, height: height, length: 0.00, chamferRadius: 0.02)
+        let box = SCNBox(width: width, height: height, length: 0.0, chamferRadius: 0)
+        //let box = SCNCylinder(radius: 0.003, height: 0.0)
         let green = SCNMaterial()
         green.diffuse.contents = color
         box.materials = [green]
@@ -85,9 +85,9 @@ class RectangleNode: SCNNode {
         return boxNode
     }
 
-    func addCornerBox(position: SCNVector3, node: SCNNode, name: String)
+    func addCornerBox(position: SCNVector3, node: SCNNode, name: String, color: UIColor)
     {
-        let box = createBox(width: 0.0, height: 0.0, color: UIColor.red)
+        let box = createBox(width: 0.0, height: 0.0, color: color)
         box.position = position
         node.addChildNode(box)
         //sceneView.scene.rootNode.addChildNode(box)

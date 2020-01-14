@@ -10,6 +10,7 @@ import WebRTC
 //let use_fritz = false
 //let use_coreml_handdetector = false
 let use_people_occlusion = true
+let show_grid = false
 
 class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
 
@@ -19,11 +20,7 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
         "OfferToReceiveVideo": "true",
     ], optionalConstraints: nil)
 
-    let offerAnswerContraints = RTCMediaConstraints(mandatoryConstraints: [String:String](), optionalConstraints: nil)
-
-
     // MARK: - IBOutlets
-    
     
     @IBOutlet var sceneView: ARSCNView!
     @IBOutlet weak var messageLabel: UILabel!
@@ -33,6 +30,8 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
     @IBOutlet weak var restartButton: UIButton!
     @IBOutlet weak var debugButton: UIButton!
 
+    //var anchorSize: CGSize = CGSize(width: 10, height: 10)
+    var buttons: [UIButton]!
     var currentTransform: CGAffineTransform = CGAffineTransform.identity
     var capturer:WRTCCustomCapturer!
 //    var factory:RTCPeerConnectionFactory!
@@ -53,11 +52,6 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
     // MARK: - Internal properties used to identify the rectangle the user is selecting
 
 //    let handDetector = HandDetector()
-    //var currentBuffer: CVPixelBuffer?
-    //private var visionModel: FritzVisionPeopleSegmentationModelFast!
-    //private var nRemoteCorners: Int = 0
-    //private var remoteCorners = [CGPoint(x:0,y:0),CGPoint(x:0,y:0),CGPoint(x:0,y:0),CGPoint(x:0,y:0)]
-    //private var points2d: [CGPoint]?
     // Displayed rectangle outline
     private var selectedRectangleOutlineLayer: CAShapeLayer?
     private var projectedRectangleOutlineLayer: CAShapeLayer?
@@ -249,7 +243,7 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
         self.webView = UIWebView(frame:CGRect(x:0,y:0,width: 640, height:480))
         //self.webView = WKWebView(frame:CGRect(x:0,y:0,width: 640, height:480))
         self.webView?.isOpaque = false
-        self.webView?.backgroundColor = UIColor.red
+        self.webView?.backgroundColor = UIColor.clear
         self.webView?.scrollView.backgroundColor = UIColor.clear
         self.webView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.webView?.loadHTMLString(overlayContent, baseURL: nil)
@@ -449,21 +443,6 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
     
     // Update selected rectangle if it's been more than 1 second and the screen is still being touched
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        
-        /*// We return early if currentBuffer is not nil or the tracking state of camera is not normal
-        guard currentBuffer == nil, case .normal = frame.camera.trackingState else {
-            return
-        }
-
-        if use_fritz {
-            currentBuffer = frame.capturedImage
-            startDetection()
-        }
-        else if use_coreml_handdetector {
-            // Retain the image buffer for Vision processing.
-            currentBuffer = frame.capturedImage
-            startHandDetection()
-        }*/
 
         if searchingForRectangles {
             return
@@ -484,65 +463,112 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
     // MARK: - ARSCNViewDelegate
     
     private var lastTimeUpdate: TimeInterval = 0
-    
+
+    func sendAnchorSize(size: CGSize)
+    {
+//        let anchorString = "\(Int(size.width * 2048)),\(Int(size.height*2048))"
+//        if let anchorData = anchorString.data(using: .utf8) {
+//            self.wrtc.sendData(anchorData)
+//        }
+    }
+
     func renderer(_ renderer: SCNSceneRenderer,
                   updateAtTime time: TimeInterval)
     {
-        // fps=25 => 1/25=0.04
-        //if time - lastTimeUpdate > 0.04 {
-        if time - lastTimeUpdate > 0.1 {
-
-            lastTimeUpdate = time
-            guard let frame = sceneView.session.currentFrame else {return}
-
-            if let image = self.remotePerspective(frame: frame) {
-                /*if image.cgImage == nil {
-                    guard let ciImage = image.ciImage, let cgImage = CIContext(options: nil).createCGImage(ciImage, from: ciImage.extent) else { return }
-                    image = UIImage(cgImage: cgImage)
-                }*/
-                //print("perspective image size=",image.size.width,image.size.height)
-                //image = image.resize(to: CGSize(width: 640, height: 480))!
-                if let resized = image.resize(toWidth: 640) {
-                    self.capturer.captureFrame(resized)
+        if time - lastTimeUpdate > 0.1
+        {
+            lastTimeUpdate = time;
+            let image = self.sceneView.snapshot()
+            if let coords = self.getPoints2D(imageSize: image.size) {
+                if let borderedImage = self.imageWithBorderPoints(image: image, points: coords) {
+                    self.capturer.captureFrame(borderedImage)
+                }
+            }
+            else
+            {
+                self.capturer.captureFrame(image)
+            }
+            /*lastTimeUpdate = time
+            if let pointsString = self.getPoints2D() {
+                if let pointsData = pointsString.data(using: .utf8) {
+                    self.wrtc.sendData(pointsData)
+                    let image = self.sceneView.snapshot()
+                    self.capturer.captureFrame(image)
                 }
             }
             else
             {
                 let image = self.sceneView.snapshot()
-                //print("sceneView snapshot image size=",image.size.width,image.size.height)
-                //image = image.resize(to: CGSize(width: 640, height: 480))!
-                if let resized = image.resize(toWidth: 640) {
-                    self.capturer.captureFrame(resized)
-                }
-            }
+                self.capturer.captureFrame(image)
+            }*/
         }
     }
 
+    func imageWithBorderPoints(image: UIImage, points: [CGPoint]) -> UIImage?
+    {
+        let size = CGSize(width: image.size.width, height: image.size.height)
+        UIGraphicsBeginImageContext(size)
+        let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+        image.draw(in: rect, blendMode: .normal, alpha: 1.0)
+        let context = UIGraphicsGetCurrentContext()
+        context?.setStrokeColor(red: 0, green: 0, blue: 0, alpha: 1)
+        //context?.setLineWidth(8)
+        context?.stroke(rect, width: 8)
+        context?.setFillColor(red: 255, green: 255, blue: 255, alpha: 1)
+
+        /*let tl = points[0]
+        let tr = points[1]
+        let bl = points[2]
+        let br = points[3]*/
+
+        let tl = points[2]
+        let tr = points[3]
+        let bl = points[0]
+        let br = points[1]
+
+        let barheight: CGFloat = 16
+        // encode x positions of tl and tr on the top border
+        context?.fill(CGRect(x: tl.x-4, y: 0, width: 8, height: barheight))
+        context?.fill(CGRect(x: tr.x-4, y: 0, width: 8, height: barheight))
+        // encode x positions of bl and br on the bottom border
+        context?.fill(CGRect(x: bl.x-4, y: size.height, width: 8, height: -barheight))
+        context?.fill(CGRect(x: br.x-4, y: size.height, width: 8, height: -barheight))
+        // encode y positions of tl and bl on the left border
+        context?.fill(CGRect(x: 0, y: tl.y-4, width: barheight, height: 8))
+        context?.fill(CGRect(x: 0, y: bl.y-4, width: barheight, height: 8))
+        // encode y positions of tr and br on the right border
+        context?.fill(CGRect(x: size.width, y: tr.y-4, width: -barheight, height: 8))
+        context?.fill(CGRect(x: size.width, y: br.y-4, width: -barheight, height: 8))
+
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage
+    }
+    
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         if let imageAnchor = anchor as? ARImageAnchor {
             print("found imageAnchor!")
             DispatchQueue.main.async {
                 print("adding rectanglenode for imageanchor")
-                /*if let n = self.sceneView.node(for: anchor) {
-                    let _ = RectangleNode(imageAnchor: imageAnchor, rootNode: n, view: self.webView!, sceneView: self.sceneView)
-                }*/
-                print("removing existing rectanglenodes")
-                //self.rectangleNodes.forEach({ $1.removeFromParentNode() })
-                //self.rectangleNodes.removeAll()
-                print("removing corner boxes")
                 self.removeCornerBoxes()
+                let anchorSize = imageAnchor.referenceImage.physicalSize
+                self.sendAnchorSize(size: anchorSize)
                 let rectangleNode = RectangleNode(imageAnchor: imageAnchor, rootNode: node, view: self.webView!)
                 self.rectangleNodes[node] = rectangleNode
             }
         }
+
         guard let anchor = anchor as? ARPlaneAnchor else {
             return
         }
         
-        let surface = SurfaceNode(anchor: anchor)
-        surfaceNodes[anchor] = surface
-        node.addChildNode(surface)
-        
+        if (show_grid)
+        {
+            let surface = SurfaceNode(anchor: anchor)
+            surfaceNodes[anchor] = surface
+            node.addChildNode(surface)
+        }
+
         if message == .helpFindSurface {
             message = .helpTapHoldRect
         }
@@ -550,16 +576,7 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
     
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
         if let _ = anchor as? ARImageAnchor {
-            /*print("node updated for ARImageAnchor")
-            if let existingRectangleNode = rectangleNodes[node] {
-                print("found existing rectangleNode")
-                existingRectangleNode.updateARImageAnchor(imageAnchor)
-            }
-            else {
-                //print("strange, did not find an existing node for this node")
-            }*/
-
-            // in ScreenAR, users might overlap the image anchor with their hands
+            // users might overlap the image anchor with their hands
             // so we don't hide the node even when the image anchor is not tracked
             /*if imageAnchor.isTracked {
                 node.isHidden = false
@@ -570,24 +587,28 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
                 node.isHidden = true;
             }*/
         }
-        // See if this is a plane we are currently rendering
-        guard let anchor = anchor as? ARPlaneAnchor,
-            let surface = surfaceNodes[anchor] else {
-                return
+
+        if (show_grid)
+        {
+            // See if this is a plane we are currently rendering
+            guard let anchor = anchor as? ARPlaneAnchor,
+                let surface = surfaceNodes[anchor] else {
+                    return
+            }
+            surface.update(anchor)
         }
-        
-        surface.update(anchor)
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
-        guard let anchor = anchor as? ARPlaneAnchor,
-            let surface = surfaceNodes[anchor] else {
-                return
+        if (show_grid)
+        {
+            guard let anchor = anchor as? ARPlaneAnchor,
+                let surface = surfaceNodes[anchor] else {
+                    return
+            }
+            surface.removeFromParentNode()
+            surfaceNodes.removeValue(forKey: anchor)
         }
-
-        surface.removeFromParentNode()
-        
-        surfaceNodes.removeValue(forKey: anchor)
     }
     
     // MARK: - Helper Methods
@@ -610,23 +631,6 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
         return transform.concatenating(scale).concatenating(t)
     }
 
-    func visionTransformNormalized(frame: ARFrame, viewport: CGRect, orientation: UIInterfaceOrientation) -> CGAffineTransform {
-        let transform = frame.displayTransform(for: orientation,
-                                               viewportSize: viewport.size)
-        //let scale = CGAffineTransform(scaleX: viewport.width,
-        //                              y: viewport.height)
-
-        var t = CGAffineTransform()
-        if orientation.isPortrait {
-            t = CGAffineTransform(scaleX: -1, y: 1)
-            t = t.translatedBy(x: -1, y: 0)
-        } else if orientation.isLandscape {
-            t = CGAffineTransform(scaleX: 1, y: -1)
-            t = t.translatedBy(x: 0, y: -1)
-        }
-        return transform.concatenating(t)
-        //return transform
-    }
     // Updates selectedRectangleObservation with the the rectangle found in the given ARFrame at the given location
     private func findRectangle(locationInScene location: CGPoint, frame currentFrame: ARFrame) {
         // Note that we're actively searching for rectangles
@@ -634,17 +638,7 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
         selectedRectangleObservation = nil
         
         let capturedImage = currentFrame.capturedImage
-        //let width = CGFloat(CVPixelBufferGetWidth(capturedImage))
-        //let height = CGFloat(CVPixelBufferGetHeight(capturedImage))
-        //let vw: CGFloat = self.viewportSize.width
-        //let vh: CGFloat = self.viewportSize.height
-
-        //let dx: CGFloat = (vw - (height * vh) / width) / 2
-        //print("dx=",dx)
-        //let t = currentFrame.displayTransform(for: .portrait, viewportSize: self.viewportSize)
-        //print(t)
         self.currentTransform = visionTransform(frame: currentFrame, viewport: self.sceneView.frame, orientation: self.orientation)
-        //let normalizedTransform = visionTransformNormalized(frame: currentFrame, viewport: self.sceneView.frame, orientation: self.orientation)
 
         // Perform request on background thread
         DispatchQueue.global(qos: .background).async {
@@ -671,24 +665,9 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
                         layer.removeFromSuperlayer()
                         self.selectedRectangleOutlineLayer = nil
                     }
-                    
-                    /*guard let selectedRect = observations.first else {
-                        return
-                    }
-                    
-                    //print("captureImage size=",width,height)
-                    //print(rectangle.topLeft,rectangle.topRight,rectangle.bottomLeft,rectangle.bottomRight)
-                    let topLeft = CGPoint(x: selectedRect.topLeft.x , y: selectedRect.topLeft.y )
-                    let topRight = CGPoint(x: selectedRect.topRight.x , y: selectedRect.topRight.y )
-                    let bottomLeft = CGPoint(x: selectedRect.bottomLeft.x , y: selectedRect.bottomLeft.y )
-                    let bottomRight = CGPoint(x: selectedRect.bottomRight.x , y: selectedRect.bottomRight.y )
-
-                    let points = [topLeft,topRight,bottomRight,bottomLeft]
-                    let convertedPoints = points.map { $0.applying(transform) }*/
 
                     // Find the rect that overlaps with the given location in sceneView
                     guard let selectedRect = observations.filter({ (result) -> Bool in
-                        //let convertedRect = self.sceneView.convertFromCamera(result.boundingBox)
                         let convertedRect = result.boundingBox.applying(self.currentTransform)
                         return convertedRect.contains(location)
                     }).first else {
@@ -699,7 +678,6 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
                     
                     // Outline selected rectangle
                     let points = [selectedRect.topLeft, selectedRect.topRight, selectedRect.bottomRight, selectedRect.bottomLeft]
-                    //print(selectedRect.topLeft)
                     let convertedPoints = points.map { $0.applying(self.currentTransform) }
 
                     self.selectedRectangleOutlineLayer = self.drawPolygon(convertedPoints, color: UIColor.red)
@@ -722,140 +700,11 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
             
             // Don't limit resulting number of observations
             request.maximumObservations = 0
-            
-            // Perform request
-            /*var imageOrientation = CGImagePropertyOrientation.up
-            if (self.orientation == UIInterfaceOrientation.landscapeLeft) {
-                imageOrientation = CGImagePropertyOrientation.left
-            }
-            let handler = VNImageRequestHandler(cvPixelBuffer: currentFrame.capturedImage, orientation: imageOrientation)*/
-            //let img = currentFrame.getCapturedImage(orientation: self.orientation, viewportSize: self.viewportSize)
-            //let coreImage = CIImage(image: img!)
-            //let handler = VNImageRequestHandler(ciImage: coreImage!, options: [:])
-            //let handler = VNImageRequestHandler(cvPixelBuffer: currentFrame.capturedImage, options: [:])
-            //let handler = VNImageRequestHandler(cvPixelBuffer: currentFrame.capturedImage, orientation: .up)
-            
             // Note that the pixel buffer's orientation doesn't change even when the device rotates.
             let handler = VNImageRequestHandler(cvPixelBuffer: capturedImage, orientation: .up)
-            //let handler = VNImageRequestHandler(ciImage: ciImage, orientation: .up)
             try? handler.perform([request])
         }
     }
-    
-    // from https://stackoverflow.com/questions/40939075/unable-to-convert-ciimage-to-uiimage-in-swift-3-0
-    /*func convertToUIImage(cmage:CIImage) -> UIImage?
-    {
-        let context:CIContext = CIContext.init(options: nil)
-        guard let cgImage:CGImage = context.createCGImage(cmage, from: cmage.extent) else {
-            return nil
-        }
-        let image:UIImage = UIImage.init(cgImage: cgImage)
-        return image
-    }*/
-
-    // from https://developer.apple.com/documentation/arkit/tracking_and_altering_images
-    /*private func perspectiveCorrectRectangle(rectangle: VNRectangleObservation, frame: ARFrame) -> CIImage? {
-        guard let filter = CIFilter(name: "CIPerspectiveCorrection") else {
-            print("Error: Rectangle detection failed - Could not create perspective correction filter.")
-            return nil
-        }
-
-        let width = CGFloat(CVPixelBufferGetWidth(frame.capturedImage))
-        let height = CGFloat(CVPixelBufferGetHeight(frame.capturedImage))
-        //print("captureImage size=",width,height)
-        //print(rectangle.topLeft,rectangle.topRight,rectangle.bottomLeft,rectangle.bottomRight)
-        let topLeft = CGPoint(x: rectangle.topLeft.x * width, y: rectangle.topLeft.y * height)
-        let topRight = CGPoint(x: rectangle.topRight.x * width, y: rectangle.topRight.y * height)
-        let bottomLeft = CGPoint(x: rectangle.bottomLeft.x * width, y: rectangle.bottomLeft.y * height)
-        let bottomRight = CGPoint(x: rectangle.bottomRight.x * width, y: rectangle.bottomRight.y * height)
-        //print(topLeft,topRight,bottomLeft,bottomRight)
-        filter.setValue(CIVector(cgPoint: topLeft), forKey: "inputTopLeft")
-        filter.setValue(CIVector(cgPoint: topRight), forKey: "inputTopRight")
-        filter.setValue(CIVector(cgPoint: bottomLeft), forKey: "inputBottomLeft")
-        filter.setValue(CIVector(cgPoint: bottomRight), forKey: "inputBottomRight")
-        
-        let ciImage = CIImage(cvPixelBuffer: frame.capturedImage).oriented(.up)
-        //print("extend=",ciImage.extent)
-        filter.setValue(ciImage, forKey: kCIInputImageKey)
-        
-        guard let perspectiveImage: CIImage = filter.value(forKey: kCIOutputImageKey) as? CIImage else {
-            print("Error: Rectangle detection failed - perspective correction filter has no output image.")
-            return nil
-        }
-        return perspectiveImage
-    }*/
-
-    /*// Laurent: for portrait
-    private func convertPoint(point: CGPoint) -> CGPoint {
-        return CGPoint(x: point.y * sceneView.frame.width, y: point.x * sceneView.frame.height)
-    }*/
-
-    func upsideDown(image: UIImage) -> UIImage? {
-        var rotationRadians: Float = 0
-        switch orientation {
-        case .portrait,.unknown:
-            rotationRadians = .pi / 2
-        case .portraitUpsideDown:
-            rotationRadians = -.pi / 2
-        case .landscapeLeft:
-            rotationRadians = .pi
-        case .landscapeRight:
-            break
-        }
-        print("rotationRadians=",rotationRadians)
-        return image.rotate(radians: rotationRadians)
-    }
-
-    func convertToCamera(_ point: CGPoint, width: CGFloat, height: CGFloat) -> CGPoint {
-        //let orientation = UIApplication.shared.statusBarOrientation
-        
-        switch orientation {
-        case .portrait, .unknown:
-            return CGPoint(x: point.y / width, y: point.x / height)
-        case .landscapeLeft:
-            return CGPoint(x: (height - point.x) / height, y: point.y / width)
-        case .landscapeRight:
-            return CGPoint(x: point.x / height, y: (width - point.y) / width)
-        case .portraitUpsideDown:
-            return CGPoint(x: (height - point.y) / height, y: (width - point.x) / width)
-        }
-    }
-    /*private func livePerspectiveCorrect(points: [CGPoint], frame: ARFrame) -> UIImage? {
-        guard let filter = CIFilter(name: "CIPerspectiveCorrection") else {
-            print("Error: Rectangle detection failed - Could not create perspective correction filter.")
-            return nil
-        }
-        let width = CGFloat(CVPixelBufferGetWidth(frame.capturedImage))
-        let height = CGFloat(CVPixelBufferGetHeight(frame.capturedImage))
-        let topLeft = CGPoint(x: points[0].x * width, y: points[0].y * height)
-        let topRight = CGPoint(x: points[1].x * width, y: points[1].y * height)
-        let bottomLeft = CGPoint(x: points[3].x * width, y: points[3].y * height)
-        let bottomRight = CGPoint(x: points[2].x * width, y: points[2].y * height)
-        //print(topLeft,topRight,bottomLeft,bottomRight)
-        /*filter.setValue(CIVector(cgPoint: topRight), forKey: "inputTopLeft")
-        filter.setValue(CIVector(cgPoint: bottomRight), forKey: "inputTopRight")
-        filter.setValue(CIVector(cgPoint: topLeft), forKey: "inputBottomLeft")
-        filter.setValue(CIVector(cgPoint: bottomLeft), forKey: "inputBottomRight")*/
-
-        filter.setValue(CIVector(cgPoint: topLeft), forKey: "inputTopLeft")
-        filter.setValue(CIVector(cgPoint: topRight), forKey: "inputTopRight")
-        filter.setValue(CIVector(cgPoint: bottomLeft), forKey: "inputBottomLeft")
-        filter.setValue(CIVector(cgPoint: bottomRight), forKey: "inputBottomRight")
-
-        let ciImage = CIImage(cvPixelBuffer: frame.capturedImage).oriented(.up)
-        filter.setValue(ciImage, forKey: kCIInputImageKey)
-
-        guard let perspectiveImage: CIImage = filter.value(forKey: kCIOutputImageKey) as? CIImage else {
-            print("Error: Rectangle detection failed - perspective correction filter has no output image.")
-            return nil
-        }
-        //print(perspectiveImage.extent)
-        if (perspectiveImage.extent.width == 0) {
-            return nil
-        }
-        let uiImage = self.convertToUIImage(cmage: perspectiveImage)
-        return uiImage
-    }*/
 
     private func addPlaneRect(for observedRect: VNRectangleObservation, transform: CGAffineTransform) {
         // Remove old outline of selected rectangle
@@ -880,8 +729,6 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
         let rectangleNode = RectangleNode(planeRectangle, view: self.webView!)
         //rectangleNodes[observedRect] = rectangleNode
         rectangleNodes[rectangleNode] = rectangleNode
-        
-
         sceneView.scene.rootNode.addChildNode(rectangleNode)
         print("added rectangle node")
     }
@@ -897,7 +744,72 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
         }
     }
 
-    func remotePerspective(frame: ARFrame) -> UIImage?
+    func getPoints2D(imageSize: CGSize) -> [CGPoint]?
+    {
+       guard let tl = sceneView.scene.rootNode.childNode(withName: "tl", recursively: true) else { return nil}
+       guard let tr = sceneView.scene.rootNode.childNode(withName: "tr", recursively: true)  else { return nil}
+       guard let bl = sceneView.scene.rootNode.childNode(withName: "bl", recursively: true)  else { return nil}
+       guard let br = sceneView.scene.rootNode.childNode(withName: "br", recursively: true)  else { return nil}
+
+       let worldTopLeft = tl.worldPosition;
+       let worldTopRight = tr.worldPosition;
+       let worldBottomLeft = bl.worldPosition
+       let worldBottomRight = br.worldPosition;
+
+       let points = [
+        self.sceneView.projectPoint(worldTopLeft),
+        self.sceneView.projectPoint(worldTopRight),
+        self.sceneView.projectPoint(worldBottomLeft),
+        self.sceneView.projectPoint(worldBottomRight)
+        ]
+        
+        let scalex = imageSize.width / self.viewportSize.width
+        let scaley = imageSize.height / self.viewportSize.height
+        let cgPoints: [CGPoint] = points.map {
+            return CGPoint(x:scalex*CGFloat($0.x),y:scaley*CGFloat($0.y))
+        }
+        return cgPoints;
+    }
+
+    /*func getPoints2D() -> String?
+    {
+        //let startTime = CFAbsoluteTimeGetCurrent()
+        guard let tl = sceneView.scene.rootNode.childNode(withName: "tl", recursively: true) else { return nil}
+        guard let tr = sceneView.scene.rootNode.childNode(withName: "tr", recursively: true)  else { return nil}
+        guard let bl = sceneView.scene.rootNode.childNode(withName: "bl", recursively: true)  else { return nil}
+        guard let br = sceneView.scene.rootNode.childNode(withName: "br", recursively: true)  else { return nil}
+
+        let worldTopLeft = tl.worldPosition;
+        let worldTopRight = tr.worldPosition;
+        let worldBottomLeft = bl.worldPosition
+        let worldBottomRight = br.worldPosition;
+
+        // self.sceneView.projectPoint returns CGPoints in the self.sceneView.frame.size
+        // we scale them because the webrtc stack might encode the images at different width/height
+        // the web client will unscale properly using the received video frame size (/1024)
+        let scalex = 2048 / Float(self.viewportSize.width)
+        let scaley = 2048 / Float(self.viewportSize.height)
+
+        let pos1 = self.sceneView.projectPoint(worldTopLeft);
+        let pos2 = self.sceneView.projectPoint(worldTopRight);
+        let pos3 = self.sceneView.projectPoint(worldBottomLeft);
+        let pos4 = self.sceneView.projectPoint(worldBottomRight);
+
+        /*DispatchQueue.main.async {
+            self.buttons[0].frame = CGRect(x:CGFloat(pos1.x-10),y:CGFloat(pos1.y-10),width:20,height:20)
+            self.buttons[1].frame = CGRect(x:CGFloat(pos2.x-10),y:CGFloat(pos2.y-10),width:20,height:20)
+            self.buttons[2].frame = CGRect(x:CGFloat(pos3.x-10),y:CGFloat(pos3.y-10),width:20,height:20)
+            self.buttons[3].frame = CGRect(x:CGFloat(pos4.x-10),y:CGFloat(pos4.y-10),width:20,height:20)
+            
+        }*/
+ 
+        let str = "\(Int(pos1.x * scalex)),\(Int(pos1.y * scaley)),\(Int(pos2.x * scalex)),\(Int(pos2.y * scaley)),\(Int(pos3.x * scalex)),\(Int(pos3.y * scaley)),\(Int(pos4.x * scalex)),\(Int(pos4.y * scaley)),\(Int(self.anchorSize.width*2048)),\(Int(self.anchorSize.height*2048))"
+        //let timeElapsed = CFAbsoluteTimeGetCurrent() - startTime
+        //print("\(title):: Time: \(timeElapsed)")
+        return str
+    }*/
+   
+    /*func remotePerspective(frame: ARFrame) -> UIImage?
     {
         func cartesianForPoint(point: CGPoint, extent: CGRect) -> CGPoint {
             //print(point.x,point.y)
@@ -941,40 +853,9 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
         )
         return UIImage(ciImage: deskewed)
         
-    }
-
-    /*func old_remotePerspective(frame: ARFrame) -> UIImage?
-    {
-        var worldBottomLeft: SCNVector3
-        var worldTopRight: SCNVector3
-        var worldTopLeft: SCNVector3
-        var worldBottomRight: SCNVector3
-        
-        guard let tl = sceneView.scene.rootNode.childNode(withName: "tl", recursively: true) else { return nil}
-        worldTopLeft = tl.worldPosition;
-        guard let tr = sceneView.scene.rootNode.childNode(withName: "tr", recursively: true)  else { return nil}
-        worldTopRight = tr.worldPosition;
-        guard let bl = sceneView.scene.rootNode.childNode(withName: "bl", recursively: true)  else { return nil}
-        worldBottomLeft = bl.worldPosition;
-        guard let br = sceneView.scene.rootNode.childNode(withName: "br", recursively: true)  else { return nil}
-        worldBottomRight = br.worldPosition;
-
-        let pos1 = self.sceneView.projectPoint(worldTopLeft);
-        let pos2 = self.sceneView.projectPoint(worldTopRight);
-        let pos3 = self.sceneView.projectPoint(worldBottomRight);
-        let pos4 = self.sceneView.projectPoint(worldBottomLeft);
-        
-        //let viewportSize = self.sceneView.frame.size
-        let scenewidth = viewportSize.height
-        let sceneheight = viewportSize.width
-        let cg0 = self.convertToCamera(CGPoint(x:CGFloat(pos1.x), y:CGFloat(pos1.y)), width: scenewidth, height: sceneheight)
-        let cg1 = self.convertToCamera(CGPoint(x:CGFloat(pos2.x), y:CGFloat(pos2.y)), width: scenewidth, height: sceneheight)
-        let cg2 = self.convertToCamera(CGPoint(x:CGFloat(pos3.x), y:CGFloat(pos3.y)), width: scenewidth, height: sceneheight)
-        let cg3 = self.convertToCamera(CGPoint(x:CGFloat(pos4.x), y:CGFloat(pos4.y)), width: scenewidth, height: sceneheight)
-        //let points = [cg2,cg3,cg0,cg1]
-        let points = [cg0,cg1,cg2,cg3]
-        return self.livePerspectiveCorrect(points:points,frame:frame)
     }*/
+
+    
 
     // we fixed the app to always be in landscape mode
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
