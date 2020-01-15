@@ -9,9 +9,6 @@ How to build client
 
 > TODO
 
-How to run server
------------------
 
-> TODO
-
+[How to run server](server/README.md)
 
