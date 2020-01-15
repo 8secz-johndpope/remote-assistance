@@ -52,11 +52,6 @@ class WRTCClient : NSObject {
     func initSocket() {
         let socket = SocketIOManager.sharedInstance
         
-        
-        socket.on("connect") { data, ack in
-            socket.emit("join", ["room": store.ts.state.roomName ])
-        }
-        
         socket.on("left") { [weak self] data, ack in
             if let object = data[0] as? [String:Any],
                 let sid = object["sid"] as? String,

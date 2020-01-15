@@ -25,9 +25,14 @@ class ChatViewController: UIViewController,QRCodeScannerDelegate {
 
     func launchRA(dict: NSDictionary) {
         // let user_uuid = dict["user_uuid"] as? String ?? ""
-        // let room_uuid = dict["room_uuid"] as? String ?? ""
+         let room_uuid = dict["room_uuid"] as? String ?? ""
 
         // TODO: Launch remote assist view controller with room uuid: room_uuid
+        let action = TSSetRoomName(roomName: room_uuid)
+        store.ts.dispatch(action)
+
+        let vc = AceViewController.instantiate(fromAppStoryboard: .Ace)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     func launchQRScanner(dict: NSDictionary) {

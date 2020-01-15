@@ -14,22 +14,6 @@ import SceneKit
 class AceHandsViewController: UIViewController {
 
     @IBOutlet var handView: SCNView!
-    
-    static let mediaContraints = RTCMediaConstraints(mandatoryConstraints: [
-        "OfferToReceiveAudio": "true",
-        "OfferToReceiveVideo": "true",
-    ], optionalConstraints: nil)
-
-    static let offerAnswerContraints = RTCMediaConstraints(mandatoryConstraints: [String:String](), optionalConstraints: nil)
-    
-//    var capturer:WRTCCustomCapturer!
-//    var videoSource:RTCVideoSource!
-    var socketManager:SocketIOManager = SocketIOManager.sharedInstance
-//    var pcs:[String:RTCPeerConnection] = [String:RTCPeerConnection]()
-//    var iceCandidates:[String:[RTCIceCandidate]] = [String:[RTCIceCandidate]]()
-    var sid:String = ""
-//    var stream:RTCMediaStream!
-//    var wrtc:WRTCClient!
     var motionManager = CMMotionManager()
     var remoteHands:TSRemoteHands!
     var lastTimeStamp:TimeInterval = 0
@@ -53,7 +37,6 @@ class AceHandsViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-//        self.wrtc.disconnect()
         self.remoteHands.disconnect()
     }
         
@@ -84,40 +67,3 @@ class AceHandsViewController: UIViewController {
         self.remoteHands = TSRemoteHands(scene)
     }
 }
-
-//extension AceHandsViewController: WRTCClientDelegate {
-//    func wrtc(_ wrtc:WRTCClient, didAdd stream:RTCMediaStream) {
-//        print("wrtc: \(stream) add stream")
-//    }
-//
-//    func wrtc(_ wrtc:WRTCClient, didRemove stream:RTCMediaStream) {
-//        print("wrtc: \(stream) remove stream")
-//    }
-//}
-
-//extension AceHandsViewController: ARSessionDelegate {
-//    func session(_ session: ARSession, didUpdate frame: ARFrame) {
-//        // If you want to render raw camera frame.
-//        // self.capturer.captureFrame(frame.capturedImage)
-//
-//        let now = Date().timeIntervalSince1970
-//
-//        if now - self.lastTimeStamp > 0.040 {
-//            let image = self.sceneView.snapshot()
-//            self.capturer.captureFrame(image)
-//            self.lastTimeStamp = now
-//
-//            // process image for qr code
-//            DispatchQueue.global(qos: .background).async {
-//                let ciImage = CIImage.init(cgImage: image.cgImage!)
-//                let handler = VNImageRequestHandler(ciImage: ciImage, orientation: CGImagePropertyOrientation.up, options: [:])
-//
-//                do {
-//                    try handler.perform([self.detectBarcodeRequest])
-//                } catch {
-//                    print("Error Decoding Barcode: \(error.localizedDescription)")
-//                }
-//            }
-//        }
-//    }
-//}

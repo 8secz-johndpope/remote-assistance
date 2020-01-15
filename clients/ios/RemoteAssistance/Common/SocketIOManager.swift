@@ -15,8 +15,7 @@ class SocketIOManager {
     
     var manager:SocketManager
     var socket:SocketIOClient
-//    var rtcSocket:SocketIOClient
-//    var lmSocket:SocketIOClient
+    var roomName:String
     var url:URL
     var enableLogging = false
     
@@ -24,12 +23,18 @@ class SocketIOManager {
     
     private init() {
         
-        self.url = URL(string: store.ts.state.serverUrl) ??
-            URL(string: "https://remote-assistance.paldeploy.com")!
+        self.roomName = store.ts.state.roomName
+        self.url = URL(string: store.ts.state.serverUrl) ?? URL(string: "https://remote-assistance.paldeploy.com")!
+
         self.manager = SocketManager(socketURL: self.url,
                                      config: [.log(enableLogging), .selfSigned(true),
                                               .forceNew(true), .forceWebsockets(true)])
         self.socket = self.manager.socket(forNamespace: "/room")
+        
+        self.socket.on("connect") { data, ack in
+            self.socket.emit("join", ["room": self.roomName ])
+        }
+        
         store.ts.subscribe(self)
     }
 
@@ -59,7 +64,12 @@ class SocketIOManager {
 extension SocketIOManager : StoreSubscriber {
     
     func newState(state: TSState) {
-        if store.ts.state.serverUrl != self.url.absoluteString {
+        if store.ts.state.serverUrl != self.url.absoluteString ||
+            store.ts.state.roomName != self.roomName
+           {
+            self.roomName = store.ts.state.roomName
+            self.url = URL(string: store.ts.state.serverUrl) ?? URL(string: "https://remote-assistance.paldeploy.com")!
+
             self.manager.disconnect()
             
             self.manager = SocketManager(socketURL: self.url,
@@ -67,6 +77,10 @@ extension SocketIOManager : StoreSubscriber {
                                                   .forceNew(true), .forceWebsockets(true)])
 
             self.socket = self.manager.socket(forNamespace: "/room")
+            
+            self.socket.on("connect") { data, ack in
+                self.socket.emit("join", ["room": self.roomName ])
+            }
             
             for (event, cb) in callbacks {
                 socket.on(event, callback:cb)
