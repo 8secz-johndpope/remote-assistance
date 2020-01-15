@@ -1,7 +1,7 @@
-Leap Motion Tele Skele
+Remote Assistance server
 ======================
 
-How to setup
+Setup and run
 ------------
 
 Install yarn
@@ -24,3 +24,11 @@ Install node packages
 ``` bash
 $ yarn install
 ```
+
+Run
+``` bash
+$ yarn start
+```
+
+API
+------------
