@@ -41,8 +41,19 @@ var constraints = {
     audio: true
 }
 
+let skinDetected = false;
+let skinTimeout = null;
+
 var dataChannelCallback = function(data) {
-  console.log('dataChannelCallback data=',data);
+  //console.log('dataChannelCallback data=',data);
+  if (data === 'skin')
+  {
+    clearTimeout(skinTimeout);
+    skinDetected = true;
+    console.error('skin detected');
+    skinTimeout = setTimeout(function () { skinDetected = false; },30);
+    return;
+  }
   let anchorSize = [];
   data.split(',').forEach(i => anchorSize.push(parseInt(i)));
   let anchorWidth = anchorSize[0];
@@ -132,6 +143,12 @@ function drawVideo()
         0,canvash]).update();
     //fxcanvas.draw(texture).perspective( [0,canvash,canvasw,canvash,0,0,canvasw,0], [0,canvash,canvasw,canvash,0,0,canvasw,0] ).update();
     correctedctx.drawImage(fxcanvas,0,0,correctedcanvas.width,correctedcanvas.height);
+    if (skinDetected)
+    {
+      correctedctx.fillStyle = 'yellow';
+      correctedctx.font = '24px Arial';
+      correctedctx.fillText('HAND',40,40);
+    }
 
   }
   const border = 16;
