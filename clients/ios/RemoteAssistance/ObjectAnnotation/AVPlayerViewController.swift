@@ -20,7 +20,9 @@ class AVPlayerViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.navigationItem.title = "Play Video"
+        let doneBarButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(AVPlayerViewController.dismissView))
+        self.navigationItem.rightBarButtonItems = [doneBarButton]
         // Do any additional setup after loading the view.
         self.playVideo()
     }
@@ -30,12 +32,8 @@ class AVPlayerViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        self.endVideo()
         NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
-    }
-    
-    @IBAction func doneButtonTUI(_ sender: Any) {
-        self.player.pause()
-        self.dismiss(animated: true, completion: nil)
     }
     
     @objc func orientationChanged() {
@@ -47,14 +45,20 @@ class AVPlayerViewController: UIViewController {
         self.playerLayer.frame = self.view.bounds //bounds of the view in which AVPlayer should be displayed
     }
     
+    @objc func dismissView() {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    func endVideo() {
+        self.player.pause()
+        self.playerLayer.removeFromSuperlayer()
+    }
+    
     func playVideo() {
-        let video = Bundle.main.path(forResource: "clip3", ofType: "mp4")
-        self.url = URL(fileURLWithPath: video!)
-        //self.url = URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_adv_example_hevc/master.m3u8")
-        self.asset = AVAsset(url: url)
-        self.playerItem = AVPlayerItem(asset: asset)
-        self.player = AVPlayer(playerItem: playerItem)
-        self.playerLayer = AVPlayerLayer(player: player)
+        self.asset = AVAsset(url: self.url)
+        self.playerItem = AVPlayerItem(asset: self.asset)
+        self.player = AVPlayer(playerItem: self.playerItem)
+        self.playerLayer = AVPlayerLayer(player: self.player)
         self.playerLayer.frame = self.view.bounds //bounds of the view in which AVPlayer should be displayed
         self.playerLayer.videoGravity = .resizeAspect
         self.view.layer.addSublayer(playerLayer)
