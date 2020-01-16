@@ -35,12 +35,12 @@ class AceARViewController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
+    self.navigationController?.setNavigationBarHidden(true, animated: true)
 
         initWebRTCClient()
         initMediaStream()
-        initGyro()
         initARKit()
+        initScreenAR()
         
         SocketIOManager.sharedInstance.connect()
     }
@@ -122,32 +122,12 @@ class AceARViewController : UIViewController {
     func initWebRTCClient() {
         self.wrtc.delegate = self
     }
-    
-    func initGyro() {
-        motionManager.deviceMotionUpdateInterval = 0.016
-        motionManager.startDeviceMotionUpdates(to: OperationQueue.current!) { (gyroData, error) in
-            if let data = gyroData {
-                let absolute = true
-                let alpha = -data.attitude.yaw * 180 / Double.pi
-                let beta = -data.attitude.pitch * 180 / Double.pi
-                let gamma = -data.attitude.roll * 180 / Double.pi
-                
-                let socket = SocketIOManager.sharedInstance
-                socket.emit("gyro", [
-                    "msg": "from customer",
-                    "alpha": alpha,
-                    "beta": beta,
-                    "gamma": gamma,
-                    "absolute": absolute
-                ])
-            }
-        }
-    }
-    
+        
     func initARKit() {
         self.arView.debugOptions = [.showFeaturePoints, .showWorldOrigin]
         self.arView.scene = SCNScene()
         self.arView.autoenablesDefaultLighting = true;
+        self.arView.delegate = self
         self.arView.session.delegate = self
     }
 
@@ -174,7 +154,6 @@ extension AceARViewController: ARSCNViewDelegate {
             print("found imageAnchor!")
             DispatchQueue.main.async {
                 print("adding rectanglenode for imageanchor")
-//                let anchorSize = imageAnchor.referenceImage.physicalSize
                 let rectangleNode = RectangleNode(imageAnchor: imageAnchor, rootNode: node, view: self.webView!)
                 self.rectangleNodes[node] = rectangleNode
             }
