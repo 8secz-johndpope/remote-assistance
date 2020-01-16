@@ -42,12 +42,12 @@ class AceARViewController : UIViewController {
         initARKit()
         initScreenAR()
         
-        SocketIOManager.sharedInstance.connect()
+//        SocketIOManager.sharedInstance.connect()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         guard let refImages = ARReferenceImage.referenceImages(inGroupNamed: "AR Resources", bundle: Bundle.main) else {
                 fatalError("Missing expected asset catalog resources.")
         }
@@ -83,6 +83,8 @@ class AceARViewController : UIViewController {
 
         // Run the view's session
         self.arView.session.run(configuration)
+        
+        self.wrtc.connect()
     }
     
     override func viewWillDisappear(_ animated: Bool) {

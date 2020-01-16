@@ -17,12 +17,11 @@ class SocketIOManager {
     var socket:SocketIOClient
     var roomName:String
     var url:URL
-    var enableLogging = false
+    var enableLogging = true
     
     var callbacks:[String:NormalCallback] = [String:NormalCallback]()
     
     private init() {
-        
         self.roomName = store.ts.state.roomName
         self.url = URL(string: store.ts.state.serverUrl) ?? URL(string: "https://remote-assistance.paldeploy.com")!
 
@@ -30,20 +29,37 @@ class SocketIOManager {
                                      config: [.log(enableLogging), .selfSigned(true),
                                               .forceNew(true), .forceWebsockets(true)])
         self.socket = self.manager.socket(forNamespace: "/room")
-        
+
         self.socket.on("connect") { data, ack in
-            self.socket.emit("join", ["room": self.roomName ])
+            self.socket.emit("join", ["room": self.roomName])
         }
         
         store.ts.subscribe(self)
     }
 
     func connect() {
-        self.socket.connect()
+        if self.socket.status == .connected {
+            self.socket.disconnect()
+            self.socket.removeAllHandlers()
+            self.socket = self.manager.socket(forNamespace: "/room")
+            
+            for (event, cb) in callbacks {
+                self.socket.on(event, callback:cb)
+            }
+
+            self.socket.on("connect") { data, ack in
+                self.socket.emit("join", ["room": self.roomName])
+            }
+            
+            self.socket.connect()
+        } else {
+            self.socket.connect()
+        }
     }
 
     func disconnect() {
         self.socket.disconnect()
+        self.manager.disconnect()
     }
 
     func on(_ event: String, callback: @escaping NormalCallback) {
@@ -81,11 +97,11 @@ extension SocketIOManager : StoreSubscriber {
             self.socket.on("connect") { data, ack in
                 self.socket.emit("join", ["room": self.roomName ])
             }
-            
+
             for (event, cb) in callbacks {
                 socket.on(event, callback:cb)
             }
-            
+
             self.connect()
         }
     }

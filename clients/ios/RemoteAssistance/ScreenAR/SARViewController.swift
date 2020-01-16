@@ -288,11 +288,13 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
         initWebRTCClient()
         initMediaStream()
         
-        SocketIOManager.sharedInstance.connect()
+//        SocketIOManager.sharedInstance.connect()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        self.wrtc.connect()
         
         guard let refImages = ARReferenceImage.referenceImages(inGroupNamed: "AR Resources", bundle: Bundle.main) else {
                 fatalError("Missing expected asset catalog resources.")

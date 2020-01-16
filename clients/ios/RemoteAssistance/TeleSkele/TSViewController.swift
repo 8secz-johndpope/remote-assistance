@@ -56,10 +56,7 @@ class TSViewController: UIViewController {
         initWebRTCClient()
         initMediaStream()
         initRemoteHands()
-        initGyro()
         initARKit()
-        
-        SocketIOManager.sharedInstance.connect()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -75,10 +72,13 @@ class TSViewController: UIViewController {
         }
         configuration.planeDetection = [.horizontal, .vertical]
     
-        self.remoteHands.connect();
+        self.wrtc.connect()
+        self.remoteHands.connect()
         
         // Run the view's session
         sceneView.session.run(configuration)
+        
+        initGyro()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -89,6 +89,8 @@ class TSViewController: UIViewController {
         
         self.wrtc.disconnect()
         self.remoteHands.disconnect();
+        
+        motionManager.stopGyroUpdates()
     }
     
     func initMediaStream() {

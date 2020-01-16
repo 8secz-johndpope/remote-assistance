@@ -24,19 +24,17 @@ class AceHandsViewController: UIViewController {
         self.navigationController?.setNavigationBarHidden(true, animated: true)
         
         initRemoteHands()
-        initGyro()
-        
-        SocketIOManager.sharedInstance.connect()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        initGyro()
         self.remoteHands.connect()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
+        motionManager.stopGyroUpdates()
         self.remoteHands.disconnect()
     }
         
@@ -48,7 +46,7 @@ class AceHandsViewController: UIViewController {
                 let alpha = -data.attitude.yaw * 180 / Double.pi
                 let beta = -data.attitude.pitch * 180 / Double.pi
                 let gamma = -data.attitude.roll * 180 / Double.pi
-                
+
                 let socket = SocketIOManager.sharedInstance
                 socket.emit("gyro", [
                     "msg": "from customer",

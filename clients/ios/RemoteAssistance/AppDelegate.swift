@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         RTCInitializeSSL()
         
         // set logging
-        RTCSetMinDebugLogLevel(.info)
+//        RTCSetMinDebugLogLevel(.info)
 
         return true
     }

@@ -44,6 +44,11 @@ class WRTCClient : NSObject {
         store.ts.subscribe(self)                
     }
     
+    func connect() {
+        initSocket()
+        SocketIOManager.sharedInstance.connect()
+    }
+    
     func disconnect() {
         store.ts.unsubscribe(self)
         self.delegate = nil
