@@ -466,10 +466,10 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
 
     func sendAnchorSize(size: CGSize)
     {
-//        let anchorString = "\(Int(size.width * 2048)),\(Int(size.height*2048))"
-//        if let anchorData = anchorString.data(using: .utf8) {
-//            self.wrtc.sendData(anchorData)
-//        }
+        let anchorString = "\(Int(size.width * 2048)),\(Int(size.height*2048))"
+        if let anchorData = anchorString.data(using: .utf8) {
+            self.wrtc.sendData(anchorData)
+        }
     }
 
     func renderer(_ renderer: SCNSceneRenderer,
@@ -488,19 +488,6 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
             {
                 self.capturer.captureFrame(image)
             }
-            /*lastTimeUpdate = time
-            if let pointsString = self.getPoints2D() {
-                if let pointsData = pointsString.data(using: .utf8) {
-                    self.wrtc.sendData(pointsData)
-                    let image = self.sceneView.snapshot()
-                    self.capturer.captureFrame(image)
-                }
-            }
-            else
-            {
-                let image = self.sceneView.snapshot()
-                self.capturer.captureFrame(image)
-            }*/
         }
     }
 
@@ -512,14 +499,8 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
         image.draw(in: rect, blendMode: .normal, alpha: 1.0)
         let context = UIGraphicsGetCurrentContext()
         context?.setStrokeColor(red: 0, green: 0, blue: 0, alpha: 1)
-        //context?.setLineWidth(8)
-        context?.stroke(rect, width: 8)
+        context?.stroke(rect, width: 32)
         context?.setFillColor(red: 255, green: 255, blue: 255, alpha: 1)
-
-        /*let tl = points[0]
-        let tr = points[1]
-        let bl = points[2]
-        let br = points[3]*/
 
         let tl = points[2]
         let tr = points[3]
@@ -751,10 +732,10 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
        guard let bl = sceneView.scene.rootNode.childNode(withName: "bl", recursively: true)  else { return nil}
        guard let br = sceneView.scene.rootNode.childNode(withName: "br", recursively: true)  else { return nil}
 
-       let worldTopLeft = tl.worldPosition;
-       let worldTopRight = tr.worldPosition;
+       let worldTopLeft = tl.worldPosition
+       let worldTopRight = tr.worldPosition
        let worldBottomLeft = bl.worldPosition
-       let worldBottomRight = br.worldPosition;
+       let worldBottomRight = br.worldPosition
 
        let points = [
         self.sceneView.projectPoint(worldTopLeft),
@@ -763,12 +744,22 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
         self.sceneView.projectPoint(worldBottomRight)
         ]
         
+        for pt in points {
+            if (pt.x < 0 || pt.y < 0) {
+                return nil
+            }
+            if (CGFloat(pt.x) >= self.viewportSize.width || CGFloat(pt.y) >= self.viewportSize.height) {
+                return nil
+            }
+        }
+        
         let scalex = imageSize.width / self.viewportSize.width
         let scaley = imageSize.height / self.viewportSize.height
         let cgPoints: [CGPoint] = points.map {
             return CGPoint(x:scalex*CGFloat($0.x),y:scaley*CGFloat($0.y))
         }
-        return cgPoints;
+        
+        return cgPoints
     }
 
     /*func getPoints2D() -> String?

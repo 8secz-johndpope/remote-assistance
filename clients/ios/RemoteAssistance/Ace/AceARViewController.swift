@@ -154,6 +154,11 @@ class AceARViewController : UIViewController {
 }
 
 extension AceARViewController: WRTCClientDelegate {
+    func wrtc(_ wrtc: WRTCClient, didReceiveData data: Data) {
+        let text = String(data: data, encoding: .utf8) ?? "(Binary: \(data.count) bytes)"
+        print("wrtc: received datachannel message \(text)")
+    }
+
     func wrtc(_ wrtc:WRTCClient, didAdd stream:RTCMediaStream) {
         print("wrtc: \(stream) add stream")
     }

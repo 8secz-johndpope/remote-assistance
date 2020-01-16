@@ -17,7 +17,8 @@ class WRTCClient : NSObject {
     public var factory:RTCPeerConnectionFactory
     public var stream:RTCMediaStream?
     public var delegate:WRTCClientDelegate?
-    
+    private var remoteDataChannel: RTCDataChannel?
+
     static private var offerAnswerContraints = RTCMediaConstraints(mandatoryConstraints: [String:String](), optionalConstraints: nil)
     static private var mediaContraints = RTCMediaConstraints(mandatoryConstraints: [
         "OfferToReceiveAudio": "true",
@@ -230,9 +231,21 @@ class WRTCClient : NSObject {
         }
     }
 
-
+    func sendData(_ data: Data) {
+        let buffer = RTCDataBuffer(data: data, isBinary: false)
+        self.remoteDataChannel?.sendData(buffer)
+    }
 }
 
+extension WRTCClient: RTCDataChannelDelegate {
+    func dataChannelDidChangeState(_ dataChannel: RTCDataChannel) {
+        print("dataChannel did change state: \(dataChannel.readyState)")
+    }
+    
+    func dataChannel(_ dataChannel: RTCDataChannel, didReceiveMessageWith buffer: RTCDataBuffer) {
+        self.delegate?.wrtc(self, didReceiveData: buffer.data)
+    }
+}
 
 extension WRTCClient : RTCPeerConnectionDelegate {
     
@@ -297,7 +310,9 @@ extension WRTCClient : RTCPeerConnectionDelegate {
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didOpen dataChannel: RTCDataChannel) {
-    
+        print("data channel didOpen",dataChannel)
+        self.remoteDataChannel = dataChannel
+        self.remoteDataChannel?.delegate = self
     }
 }
 
@@ -315,6 +330,7 @@ extension WRTCClient : StoreSubscriber {
 protocol WRTCClientDelegate {
     func wrtc(_ wrtc:WRTCClient, didAdd stream:RTCMediaStream)
     func wrtc(_ wrtc:WRTCClient, didRemove stream:RTCMediaStream)
+    func wrtc(_ wrtc:WRTCClient, didReceiveData data: Data)
 }
 
 class WRTCCustomCapturer : RTCVideoCapturer {

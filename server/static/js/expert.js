@@ -29,7 +29,9 @@ navigator.mediaDevices.getUserMedia(constraints).then(
     function(stream) {
         wrtc = new WebRTCClient({
             stream: stream,
-            room: config.roomid
+            room: config.roomid,
+            dataChannel: 'ScreenAR',
+            dataChannelCallback: dataChannelCallback
         });
 
         user_uuid = Cookies.get('expert_uuid');
