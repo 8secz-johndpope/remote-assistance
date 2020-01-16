@@ -88,8 +88,8 @@ if (!args.db_off) {
         })
     });
 
-    app.get('/api/getAnchors/:name', function (req, res) {
-        db.getAnchors(res,req.params.name,function(data) {
+    app.get('/api/getAnchors/:text', function (req, res) {
+        db.getAnchors(res,req.params.text,function(data) {
             res.json(data)
         })
     });

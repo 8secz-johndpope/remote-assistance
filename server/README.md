@@ -32,3 +32,74 @@ $ yarn start
 
 API
 ------------
+
+Create a customer and return UUID
+```
+/api/createCustomer
+```
+
+Create an expert and return UUID
+```
+/api/createExpert
+```
+
+Get user details
+```
+/api/getUser/:uuid
+```
+
+Create a room and return a UUID
+```
+/api/createRoom
+```
+
+Get room details
+```
+/api/getRoom/:uuid
+```
+
+Get rooms with at least one participant. Returns count of customers and experts in each room.
+```
+/api/getActiveRooms
+```
+
+Associate user and room
+```
+/api/addUserToRoom/:room_uuid/:user_uuid
+```
+
+Disassociate user and room
+```
+/api/removeUserFromRoom/:room_uuid/:user_uuid
+```
+
+Get anchor details
+```
+/api/getAnchor/:uuid
+```
+
+Get details of all anchors whose name includes given text 
+```
+/api/getAnchors/:text
+```
+
+Get clip details
+```
+/api/getClip/:uuid
+```
+
+Get clip details for given anchor (optionally also select by room)
+```
+/api/getClips/:anchor_uuid/:room_uuid?
+```
+
+Associate clip and anchor
+```
+/api/addClipAnchor/:anchor_uuid/:clip_uuid/:position_blob
+```
+
+Create an entry for a clip and return UUID
+```
+/api/createClip/:name/:user_uuid/:room_uuid
+```
+

@@ -64,10 +64,10 @@ module.exports = {
 		})		
 	},
 
-	getAnchors: (res,name,cb) => {
+	getAnchors: (res,text,cb) => {
 		connection.query('select * from anchor where name like ?',
 			[
-				'%'+name+'%'
+				'%'+text+'%'
 			],
 			function (err, rows, fields) {
 				if (err) throw err
