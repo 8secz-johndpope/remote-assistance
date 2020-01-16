@@ -151,48 +151,10 @@ function drawVideo()
     }
 
   }
-  const border = 16;
-  ctx.drawImage(video,border,border,canvasw-2*border,canvash-2*border,0,0,canvasw,canvash); // remove white dots from view
 
-  /*if (corners !== null)
-  {
-    ctx.lineWidth = 3;
-    ctx.font = '32px Arial';
-    ctx.fillStyle = 'blue';
-    ctx.strokeStyle = 'red';
-    ctx.beginPath();
-    let sx = canvasw / 2048;
-    let sy = canvash / 2048;
-    let scaledcorners = [];
-    // corners are bl,br,tl,tr
-    for (let i=0;i<4;i++)
-    {
-      scaledcorners.push(corners[2*i] * sx);
-      scaledcorners.push(corners[2*i+1] * sy);
-    }
-    ctx.moveTo(scaledcorners[0],scaledcorners[1]);
-    ctx.lineTo(scaledcorners[2],scaledcorners[3]);
-    ctx.lineTo(scaledcorners[6],scaledcorners[7]);
-    ctx.lineTo(scaledcorners[4],scaledcorners[5]);
-    ctx.lineTo(scaledcorners[0],scaledcorners[1]);
-    ctx.stroke();
+  //const border = 16;
+  //ctx.drawImage(video,border,border,canvasw-2*border,canvash-2*border,0,0,canvasw,canvash); // remove white dots from view
 
-    ctx.fillText('bl',scaledcorners[0],scaledcorners[1]);
-    ctx.fillText('br',scaledcorners[2],scaledcorners[3]);
-    ctx.fillText('tl',scaledcorners[4],scaledcorners[5]);
-    ctx.fillText('tr',scaledcorners[6],scaledcorners[7]);
-    //detectBlue(ctx);
-    detectCorners(ctx);
-    var texture = fxcanvas.texture(canvas);
-    let perspectivecorners = [
-      scaledcorners[4],scaledcorners[5],
-      scaledcorners[6],scaledcorners[7],
-      scaledcorners[2],scaledcorners[3],
-      scaledcorners[0],scaledcorners[1]];
-    fxcanvas.draw(texture).perspective( perspectivecorners, [0,0,canvasw,0,canvasw,canvash,0,canvash] ).update();
-    //fxcanvas.draw(texture).perspective( [0,canvash,canvasw,canvash,0,0,canvasw,0], [0,canvash,canvasw,canvash,0,0,canvasw,0] ).update();
-    correctedctx.drawImage(fxcanvas,0,0,correctedcanvas.width,correctedcanvas.height);
-  }*/
   window.requestAnimationFrame(drawVideo);
 }
 
