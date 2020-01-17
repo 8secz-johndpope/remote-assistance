@@ -117,6 +117,7 @@ function drawVideo()
   let corners = detectCorners(ctx);
   if (corners !== null)
   {
+    correctedcanvas.style.opacity = 1;
     /*ctx.lineWidth = 3;
     ctx.font = '32px Arial';
     ctx.fillStyle = 'blue';
@@ -149,8 +150,9 @@ function drawVideo()
       correctedctx.font = '24px Arial';
       correctedctx.fillText('HAND',40,40);
     }
-
   }
+  else
+    correctedcanvas.style.opacity = 0.1;
 
   //const border = 16;
   //ctx.drawImage(video,border,border,canvasw-2*border,canvash-2*border,0,0,canvasw,canvash); // remove white dots from view
@@ -170,19 +172,32 @@ function detectCorners(ctx)
   let idx = 0;
   
   // top gives x positions of tl and tr corners
-  let tl = {x:-1,y:-1};
   const th = 200;
+  const blackth = 20;
+
+  let nblack = 0;
+  let tl = {x:-1,y:-1};
+  let tr = {x:-1,y:-1};
+
   for (let i=0;i<canvasw;i++)
   {
     if (data[idx] >= th && data[idx+1] >= th && data[idx+2] >= th)
     {
-      tl.x = i;
-      break;
+      if (tl.x !== -1)
+        tr.x = i;
+      else
+        tl.x = i;
+      //break;
     }
+    else if (data[idx] <= blackth && data[idx+1] <= blackth && data[idx+2] <= blackth)
+      nblack++;
     idx += 4;
   }
 
-  let tr = {x:-1,y:-1};
+  // don't count this frame is less than 94 percent of the pixels were not black
+  if (nblack * 100 / canvasw < 94)
+    return null;
+  /*let tr = {x:-1,y:-1};
   idx = 4 * canvasw - 4;
   for (let i=canvasw;i>=0;i--)
   {
@@ -192,7 +207,7 @@ function detectCorners(ctx)
       break;
     }
     idx -= 4;
-  }
+  }*/
 
   // bottom gives x positions of bl and br corners
   let bl = {x:-1,y:-1};
