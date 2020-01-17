@@ -18,6 +18,8 @@ class WRTCClient : NSObject {
     public var stream:RTCMediaStream?
     public var delegate:WRTCClientDelegate?
     private var remoteDataChannel: RTCDataChannel?
+    private let rtcAudioSession =  RTCAudioSession.sharedInstance()
+    private let audioQueue = DispatchQueue(label: "audio")
 
     static private var offerAnswerContraints = RTCMediaConstraints(mandatoryConstraints: [String:String](), optionalConstraints: nil)
     static private var mediaContraints = RTCMediaConstraints(mandatoryConstraints: [
@@ -40,6 +42,22 @@ class WRTCClient : NSObject {
         self.factory = RTCPeerConnectionFactory(encoderFactory: encoderFactory, decoderFactory: decoderFactory)
         super.init()
 
+
+        // configure audio
+        rtcAudioSession.lockForConfiguration()
+        do {
+            rtcAudioSession.useManualAudio = false
+            rtcAudioSession.isAudioEnabled = true
+            try rtcAudioSession.setCategory(AVAudioSession.Category.playAndRecord.rawValue, with: .defaultToSpeaker)
+            try rtcAudioSession.setMode(AVAudioSession.Mode.default.rawValue)
+            try rtcAudioSession.overrideOutputAudioPort(.speaker)
+            try rtcAudioSession.setActive(true)
+        } catch let error {
+            debugPrint("Error changeing AVAudioSession category: \(error)")
+        }
+        rtcAudioSession.unlockForConfiguration()
+        
+        
         initSocket()
         store.ts.subscribe(self)                
     }
@@ -239,6 +257,28 @@ class WRTCClient : NSObject {
     func sendData(_ data: Data) {
         let buffer = RTCDataBuffer(data: data, isBinary: false)
         self.remoteDataChannel?.sendData(buffer)
+    }
+    
+    func enableSpeaker(_ enable:Bool) {
+        self.audioQueue.async { [weak self] in
+            guard let self = self else {
+                return
+            }
+            
+            self.rtcAudioSession.lockForConfiguration()
+            do {
+                try self.rtcAudioSession.overrideOutputAudioPort(enable ? .speaker : .none)
+            } catch let error {
+                debugPrint("Error setting AVAudioSession category: \(error)")
+            }
+            self.rtcAudioSession.unlockForConfiguration()
+        }
+    }
+    
+    func setAudioEnabled(_ enable:Bool) {
+        if let audioTracks = stream?.audioTracks {
+            audioTracks.forEach { $0.isEnabled = enable }
+        }
     }
 }
 
