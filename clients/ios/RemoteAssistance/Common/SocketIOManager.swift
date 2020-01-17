@@ -17,7 +17,7 @@ class SocketIOManager {
     var socket:SocketIOClient
     var roomName:String
     var url:URL
-    var enableLogging = true
+    var enableLogging = false
     
     var callbacks:[String:NormalCallback] = [String:NormalCallback]()
     
