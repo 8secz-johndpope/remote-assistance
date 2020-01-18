@@ -31,7 +31,7 @@
             </objects>
             <point key="canvasLocation" x="-128.98550724637681" y="1619.8660714285713"/>
         </scene>
-        <!--Ace Assistant-->
+        <!--Ace View Controller-->
         <scene sceneID="dA8-Kf-a6N">
             <objects>
                 <viewController storyboardIdentifier="AceViewController" id="96G-Gz-sJS" customClass="AceViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
@@ -43,28 +43,28 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <connections>
-                                    <segue destination="WXV-xm-4eV" kind="embed" id="Agw-GF-VPQ"/>
+                                    <segue destination="WXV-xm-4eV" kind="embed" identifier="arVC" id="Agw-GF-VPQ"/>
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wpF-dn-FdL" userLabel="AceHands">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <connections>
-                                    <segue destination="bSB-dY-1aA" kind="embed" id="SId-3N-VTO"/>
+                                    <segue destination="bSB-dY-1aA" kind="embed" identifier="handsVC" id="SId-3N-VTO"/>
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6IJ-w3-Dg8" userLabel="AceSketch">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <connections>
-                                    <segue destination="UAg-02-o9t" kind="embed" id="SXU-zh-zyY"/>
+                                    <segue destination="UAg-02-o9t" kind="embed" identifier="sketchVC" id="SXU-zh-zyY"/>
                                 </connections>
                             </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c14-GB-vMn" userLabel="AceUI">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <connections>
-                                    <segue destination="mJH-bg-Yn9" kind="embed" id="dbA-5b-QKT"/>
+                                    <segue destination="mJH-bg-Yn9" kind="embed" identifier="uiVC" id="dbA-5b-QKT"/>
                                 </connections>
                             </containerView>
                         </subviews>
@@ -76,7 +76,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LqY-YW-1DF" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-764" y="830"/>
+            <point key="canvasLocation" x="-507" y="840"/>
         </scene>
         <!--AceUI View Controller-->
         <scene sceneID="1g0-0L-Udg">
@@ -89,10 +89,19 @@
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4a8-yx-Puf" userLabel="TopView">
                                 <rect key="frame" x="0.0" y="44" width="414" height="128"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Information" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="9" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aCa-Py-AFi">
+                                        <rect key="frame" x="0.0" y="8" width="414" height="112"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
                             </view>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AEG-Lt-a6v" userLabel="BottomView">
                                 <rect key="frame" x="0.0" y="734" width="414" height="128"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GMe-w6-Sue" userLabel="Hangup">
                                         <rect key="frame" x="167" y="24" width="80" height="80"/>
@@ -120,9 +129,9 @@
                                     <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y7c-Fv-39a" userLabel="MuteMic">
                                         <rect key="frame" x="48" y="24" width="80" height="80"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <inset key="imageEdgeInsets" minX="20" minY="20" maxX="20" maxY="20"/>
                                         <state key="normal" image="mic.slash" catalog="system"/>
                                         <userDefinedRuntimeAttributes>
@@ -135,9 +144,14 @@
                                             <userDefinedRuntimeAttribute type="color" keyPath="titleColorForSelected">
                                                 <color key="value" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="image" keyPath="imageForNormal" value="mic" catalog="system"/>
+                                            <userDefinedRuntimeAttribute type="image" keyPath="imageForSelected" value="mic.slash" catalog="system"/>
                                         </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="onMuteMic:" destination="mJH-bg-Yn9" eventType="touchUpInside" id="OuD-EC-lIA"/>
+                                        </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aTQ-eR-vPS" userLabel="MuteMic">
+                                    <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aTQ-eR-vPS" userLabel="Menu">
                                         <rect key="frame" x="287" y="24" width="80" height="80"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -156,20 +170,139 @@
                                                 <color key="value" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="onMenu:" destination="mJH-bg-Yn9" eventType="touchUpInside" id="Gx4-Zh-pt4"/>
+                                        </connections>
                                     </button>
                                 </subviews>
+                            </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZmT-XV-IL7" userLabel="MenuView" customClass="UIScrollView">
+                                <rect key="frame" x="20" y="180" width="374" height="546"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E3n-G4-5av" userLabel="MuteSpeaker">
+                                        <rect key="frame" x="25" y="46" width="80" height="80"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <inset key="imageEdgeInsets" minX="20" minY="25" maxX="20" maxY="25"/>
+                                        <state key="normal" image="speaker" catalog="system"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="40"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="titleColorForNormal">
+                                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="titleColorForSelected">
+                                                <color key="value" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="image" keyPath="imageForNormal" value="speaker" catalog="system"/>
+                                            <userDefinedRuntimeAttribute type="image" keyPath="imageForSelected" value="speaker.slash" catalog="system"/>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="onMuteSpeaker:" destination="mJH-bg-Yn9" eventType="touchUpInside" id="xN1-VI-Jqg"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GFk-b0-rDI" userLabel="MuteSpeaker">
+                                        <rect key="frame" x="147" y="46" width="80" height="80"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <inset key="imageEdgeInsets" minX="20" minY="20" maxX="20" maxY="20"/>
+                                        <state key="normal" image="perspective" catalog="system"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="40"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="titleColorForNormal">
+                                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="titleColorForSelected">
+                                                <color key="value" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="onResetScreenAR:" destination="mJH-bg-Yn9" eventType="touchUpInside" id="6fv-8F-zwx"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lZu-S1-WGQ" userLabel="MuteSpeaker">
+                                        <rect key="frame" x="260" y="46" width="80" height="80"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <inset key="imageEdgeInsets" minX="20" minY="20" maxX="20" maxY="20"/>
+                                        <state key="normal" image="gear" catalog="system"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="40"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="titleColorForNormal">
+                                                <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="titleColorForSelected">
+                                                <color key="value" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="onSettings:" destination="mJH-bg-Yn9" eventType="touchUpInside" id="hSX-zK-w4e"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Toggle Audio" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="J11-F8-69H">
+                                        <rect key="frame" x="31" y="134" width="74" height="15"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Reset ScreenAR" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XBz-vM-jp0">
+                                        <rect key="frame" x="142" y="134" width="91" height="15"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1LJ-Gl-sga" userLabel="CloseButton">
+                                        <rect key="frame" x="337" y="13" width="25" height="25"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" image="xmark.circle.fill" catalog="system">
+                                            <color key="titleColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onCloseMenu:" destination="mJH-bg-Yn9" eventType="touchUpInside" id="TNb-di-cjI"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Settings" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xmS-r7-y4f">
+                                        <rect key="frame" x="277" y="134" width="47" height="15"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="7Yz-Hp-zXw"/>
                     </view>
                     <connections>
                         <outlet property="bottomView" destination="AEG-Lt-a6v" id="FrA-1D-bwT"/>
+                        <outlet property="infoLabel" destination="aCa-Py-AFi" id="ifK-MV-eQm"/>
+                        <outlet property="menuView" destination="ZmT-XV-IL7" id="fWP-rq-gkx"/>
                         <outlet property="topView" destination="4a8-yx-Puf" id="qB0-6j-RTJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="z6J-wX-sR8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-761" y="1619"/>
+            <point key="canvasLocation" x="-762.31884057971024" y="1618.5267857142856"/>
         </scene>
         <!--Ace Hands View Controller-->
         <scene sceneID="BQN-F1-gEb">
@@ -221,9 +354,14 @@
         </scene>
     </scenes>
     <resources>
+        <image name="gear" catalog="system" width="64" height="58"/>
         <image name="list.dash" catalog="system" width="64" height="42"/>
+        <image name="mic" catalog="system" width="54" height="64"/>
         <image name="mic.slash" catalog="system" width="56" height="64"/>
-        <image name="person.crop.rectangle" catalog="system" width="64" height="46"/>
+        <image name="perspective" catalog="system" width="64" height="60"/>
         <image name="phone.down.fill" catalog="system" width="64" height="26"/>
+        <image name="speaker" catalog="system" width="64" height="60"/>
+        <image name="speaker.slash" catalog="system" width="64" height="62"/>
+        <image name="xmark.circle.fill" catalog="system" width="64" height="60"/>
     </resources>
 </document>

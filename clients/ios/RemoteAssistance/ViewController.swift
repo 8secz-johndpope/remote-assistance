@@ -15,7 +15,10 @@ class ViewController: UITabBarController {
   
         // uncomment to show the unified view ace view controller
         let vc = AceViewController.instantiate(fromAppStoryboard: .Ace)
-        self.viewControllers?.prepend(vc)
+        let navVC = UINavigationController()
+        navVC.tabBarItem = vc.tabBarItem
+        navVC.pushViewController(vc)
+        self.viewControllers?.prepend(navVC)
         
         let up = UISwipeGestureRecognizer(target: self, action: #selector(onSwipeUp))
         up.direction = .up
@@ -24,22 +27,17 @@ class ViewController: UITabBarController {
         let down = UISwipeGestureRecognizer(target: self, action: #selector(onSwipeDown))
         down.direction = .down
         self.view.addGestureRecognizer(down)
+        
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        // hide the bar for now
+        self.changeTabBar(hidden:true, animated:true)
     }
     
     func changeTabBar(hidden:Bool, animated: Bool){
-        if tabBar.isHidden == hidden {
-            return
-        }
-        let frame = tabBar.frame
-        let offset = hidden ? frame.size.height : -frame.size.height
-        let duration:TimeInterval = (animated ? 0.2 : 0.0)
-        tabBar.isHidden = false
-
-        UIView.animate(withDuration: duration, animations: {
-            self.tabBar.frame = frame.offsetBy(dx: 0, dy: offset)
-        }, completion: { (true) in
-            self.tabBar.isHidden = hidden
-        })
+        // remove animation.  causes bad layout issues
+        self.tabBar.isHidden = hidden
     }
     
     @objc func onSwipeUp(recognizer: UITapGestureRecognizer) {

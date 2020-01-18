@@ -12,14 +12,51 @@ import SceneKit
 
 class AceViewController : UIViewController {
     
-//    @IBOutlet var arView: ARSCNView!
-//    
-//    public static var roomName: String = ""
-
+    var arVC: AceARViewController?
+    var handsVC: AceHandsViewController?
+    var uiVC: AceUIViewController?
+    var sketchVC: AceSketchViewController?
+    
+    var wrtc:WRTCClient = WRTCClient()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationController?.setNavigationBarHidden(true, animated: true)
+        self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0.4784313725, blue: 1, alpha: 1)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        switch (segue.identifier) {
+        case "arVC":
+            if let vc = segue.destination as? AceARViewController {
+                vc.wrtc = self.wrtc
+                arVC = vc
+            }
+            break
+        case "handsVC":
+            if let vc = segue.destination as? AceHandsViewController {
+                handsVC = vc
+            }
+            break
+        case "sketchVC":
+            if let vc = segue.destination as? AceSketchViewController {
+                sketchVC = vc
+            }
+            break
+        case "uiVC":
+            if let vc = segue.destination as? AceUIViewController {
+                vc.wrtc = self.wrtc
+                uiVC = vc
+                uiVC?.delegate = self
+            }
+            break
+        default:
+            break
+        }
     }
 }
 
@@ -36,5 +73,17 @@ extension AceViewController: ARSessionDelegate {
 //            self.capturer.captureFrame(image)
 //            self.lastTimeStamp = now
 //        }
+    }
+}
+
+extension AceViewController : AceUIViewDelegate {
+    func onResetScreenAR(_ btn: UIButton) {
+        arVC?.onResetScreenAR(btn)
+    }
+    
+    func onSettings(_ btn:UIButton) {
+        // uncomment to show the unified view ace view controller
+        let vc = SettingsViewController.instantiate(fromAppStoryboard: .Main)
+        self.navigationController?.pushViewController(vc)
     }
 }

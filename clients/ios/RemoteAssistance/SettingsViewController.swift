@@ -112,10 +112,12 @@ class SettingsViewController: UIViewController,QRCodeScannerDelegate {
         self.tableView.dataSource = self
         self.tableView.tableFooterView = UIView.init()
         //self.tableView.sizeToFit()
-        
+
         store.ts.subscribe(self)
             
-        self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        self.navigationController?.navigationBar.tintColor = UIColor.white
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.barTintColor = azure
         self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
 

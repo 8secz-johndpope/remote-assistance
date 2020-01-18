@@ -109,7 +109,7 @@
         <!--Settings-->
         <scene sceneID="EuE-9T-HXe">
             <objects>
-                <viewController id="eo0-vv-RPq" customClass="SettingsViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SettingsViewController" id="eo0-vv-RPq" customClass="SettingsViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Msz-mJ-jJP">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

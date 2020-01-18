@@ -23,10 +23,11 @@ class AceARViewController : UIViewController {
     var iceCandidates:[String:[RTCIceCandidate]] = [String:[RTCIceCandidate]]()
     var sid:String = ""
     var stream:RTCMediaStream!
-    var wrtc:WRTCClient = WRTCClient()
+    weak var wrtc:WRTCClient?
     var motionManager = CMMotionManager()
     var remoteHands:TSRemoteHands!
     var lastTimeStamp:TimeInterval = 0
+    var configuration = ARWorldTrackingConfiguration()
 
     // ScreenAR
     var webView:UIWebView?
@@ -47,13 +48,16 @@ class AceARViewController : UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
+        self.setupAR()
+        self.wrtc?.connect()
+    }
+    
+    func setupAR() {
         guard let refImages = ARReferenceImage.referenceImages(inGroupNamed: "AR Resources", bundle: Bundle.main) else {
                 fatalError("Missing expected asset catalog resources.")
         }
 
         // Create a session configuration
-        let configuration = ARWorldTrackingConfiguration()
       
         //print(ARWorldTrackingConfiguration.supportedVideoFormats)
         //configuration.videoFormat = ARWorldTrackingConfiguration.supportedVideoFormats[1]
@@ -82,9 +86,7 @@ class AceARViewController : UIViewController {
         configuration.maximumNumberOfTrackedImages = 1
 
         // Run the view's session
-        self.arView.session.run(configuration)
-        
-        self.wrtc.connect()
+        self.arView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -96,12 +98,11 @@ class AceARViewController : UIViewController {
         // Pause the view's session
         self.arView.session.pause()
         
-        self.wrtc.disconnect()
+        self.wrtc?.disconnect()
     }
     
     func initMediaStream() {
-        let factory = self.wrtc.factory
-        self.videoSource = self.wrtc.factory.videoSource()
+        self.videoSource = self.wrtc?.factory.videoSource()
         let capturer = WRTCCustomCapturer(delegate: self.videoSource)
         self.capturer = capturer
 
@@ -111,18 +112,20 @@ class AceARViewController : UIViewController {
             "OfferToReceiveVideo": "true",
         ], optionalConstraints: nil)
 
-        self.stream = factory.mediaStream(withStreamId: "fxpal_stream_\(self.sid)")
-        let audioSource = factory.audioSource(with: mediaContraints)
-        let audioTrack = factory.audioTrack(with: audioSource, trackId: "fxpal_audio0")
-        let videoTrack = factory.videoTrack(with: self.videoSource, trackId: "fxpal_video0")
-        self.stream.addVideoTrack(videoTrack)
-        self.stream.addAudioTrack(audioTrack)
-        
-        self.wrtc.stream = self.stream
+        if let factory = self.wrtc?.factory {
+            self.stream = factory.mediaStream(withStreamId: "fxpal_stream_\(self.sid)")
+            let audioSource = factory.audioSource(with: mediaContraints)
+            let audioTrack = factory.audioTrack(with: audioSource, trackId: "fxpal_audio0")
+            let videoTrack = factory.videoTrack(with: self.videoSource, trackId: "fxpal_video0")
+            self.stream.addVideoTrack(videoTrack)
+            self.stream.addAudioTrack(audioTrack)
+            
+            self.wrtc?.stream = self.stream
+        }
     }
     
     func initWebRTCClient() {
-        self.wrtc.delegate = self
+        self.wrtc?.delegate = self
     }
         
     func initARKit() {
@@ -281,5 +284,16 @@ extension AceARViewController {
         UIGraphicsEndImageContext()
         return newImage
     }
-
+    
+    @IBAction func onResetScreenAR(_ sender: Any) {
+        DispatchQueue.main.async {
+            self.arView.session.pause()
+            self.rectangleNodes.forEach({ $1.removeFromParentNode() })
+            self.rectangleNodes.removeAll()
+            self.arView.scene.rootNode.enumerateChildNodes { (node, stop) in
+                node.removeFromParentNode()
+            }
+            self.arView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
+        }
+    }
 }
