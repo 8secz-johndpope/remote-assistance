@@ -60,22 +60,6 @@ class AceViewController : UIViewController {
     }
 }
 
-
-extension AceViewController: ARSessionDelegate {
-    func session(_ session: ARSession, didUpdate frame: ARFrame) {
-        // If you want to render raw camera frame.
-        // self.capturer.captureFrame(frame.capturedImage)
-
-//        let now = Date().timeIntervalSince1970
-//
-//        if now - self.lastTimeStamp > 0.040 {
-//            let image = self.sceneView.snapshot()
-//            self.capturer.captureFrame(image)
-//            self.lastTimeStamp = now
-//        }
-    }
-}
-
 extension AceViewController : AceUIViewDelegate {
     func onResetScreenAR(_ btn: UIButton) {
         arVC?.onResetScreenAR(btn)

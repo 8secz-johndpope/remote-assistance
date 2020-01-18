@@ -20,6 +20,7 @@ class WRTCClient : NSObject {
     private var remoteDataChannel: RTCDataChannel?
     private let rtcAudioSession =  RTCAudioSession.sharedInstance()
     private let audioQueue = DispatchQueue(label: "audio")
+    private var useSpeaker = true
 
     static private var offerAnswerContraints = RTCMediaConstraints(mandatoryConstraints: [String:String](), optionalConstraints: nil)
     static private var mediaContraints = RTCMediaConstraints(mandatoryConstraints: [
@@ -48,9 +49,9 @@ class WRTCClient : NSObject {
         do {
             rtcAudioSession.useManualAudio = false
             rtcAudioSession.isAudioEnabled = true
-            try rtcAudioSession.setCategory(AVAudioSession.Category.playAndRecord.rawValue, with: .defaultToSpeaker)
+            try rtcAudioSession.setCategory(AVAudioSession.Category.playAndRecord.rawValue, with: .mixWithOthers)
             try rtcAudioSession.setMode(AVAudioSession.Mode.default.rawValue)
-            try rtcAudioSession.overrideOutputAudioPort(.speaker)
+            try rtcAudioSession.overrideOutputAudioPort(.none)
             try rtcAudioSession.setActive(true)
         } catch let error {
             debugPrint("Error changeing AVAudioSession category: \(error)")
@@ -265,6 +266,8 @@ class WRTCClient : NSObject {
                 return
             }
             
+            self.useSpeaker = enable
+            
             self.rtcAudioSession.lockForConfiguration()
             do {
                 try self.rtcAudioSession.overrideOutputAudioPort(enable ? .speaker : .none)
@@ -307,6 +310,10 @@ extension WRTCClient : RTCPeerConnectionDelegate {
         print("peerConnection: \(peerConnection) add stream")
 //        stream.videoTracks[0].add(self.remoteView)
         self.delegate?.wrtc(self, didAdd:stream)
+
+        // set speaker because we have to wait until a stream
+        // is added before the audio subsystem is initialized
+        self.enableSpeaker(self.useSpeaker)
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove stream: RTCMediaStream) {

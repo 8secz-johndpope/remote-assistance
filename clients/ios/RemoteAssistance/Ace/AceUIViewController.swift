@@ -102,14 +102,14 @@ class AceUIViewController : UIViewController {
         
     }
     
-    @IBAction func onMuteSpeaker(_ sender: UIButton) {
+    @IBAction func onToggleSpeaker(_ sender: UIButton) {
         sender.isSelected = !sender.isSelected
         
         if (sender.isSelected) {
-            // unmuted
+            // headset
             wrtc?.enableSpeaker(false)
         } else {
-            // mute
+            // use loud speakers
             wrtc?.enableSpeaker(true)
         }
         
