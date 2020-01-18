@@ -285,7 +285,7 @@ extension AceARViewController {
         return newImage
     }
     
-    @IBAction func onResetScreenAR(_ sender: Any) {
+    @IBAction func onResetScreenAR(_ sender: UIButton) {
         DispatchQueue.main.async {
             self.arView.session.pause()
             self.rectangleNodes.forEach({ $1.removeFromParentNode() })
@@ -295,5 +295,9 @@ extension AceARViewController {
             }
             self.arView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
         }
+    }
+    
+    @IBAction func onToggleVR(_ sender: Any) {
+        // TODO: Toggle VR view
     }
 }

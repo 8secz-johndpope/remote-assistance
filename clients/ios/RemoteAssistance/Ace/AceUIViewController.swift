@@ -34,15 +34,6 @@ class AceUIViewController : UIViewController {
         
     }
 
-    @IBAction func onHangupClick(_ sender: Any) {
-        self.navigationController?.popViewController()
-    }
-
-    @objc func onTap(recognizer: UITapGestureRecognizer) {
-        showUI(true)
-        resetTimer()
-    }
-    
     func resetTimer() {
         timer?.invalidate()
         timer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(onHide(_:)), userInfo: nil, repeats: false)
@@ -83,6 +74,16 @@ class AceUIViewController : UIViewController {
         })
         resetTimer()
 
+    }
+    
+    // callbacks
+    @IBAction func onHangupClick(_ sender: Any) {
+        self.navigationController?.popViewController()
+    }
+
+    @objc func onTap(recognizer: UITapGestureRecognizer) {
+        showUI(true)
+        resetTimer()
     }
     
     @objc func onHide(_ timer: Timer) {
@@ -136,9 +137,15 @@ class AceUIViewController : UIViewController {
         showMenu(false)
         resetTimer()
     }
+    
+    @IBAction func onToggleVR(_ sender:UIButton) {
+        delegate?.onToggleVR(sender)
+    }
+
 }
 
 protocol AceUIViewDelegate {
     func onResetScreenAR(_ btn:UIButton)
     func onSettings(_ btn:UIButton)
+    func onToggleVR(_ btn:UIButton)
 }

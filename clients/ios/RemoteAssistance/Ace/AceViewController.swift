@@ -70,4 +70,8 @@ extension AceViewController : AceUIViewDelegate {
         let vc = SettingsViewController.instantiate(fromAppStoryboard: .Main)
         self.navigationController?.pushViewController(vc)
     }
+    
+    func onToggleVR(_ btn: UIButton) {
+        arVC?.onToggleVR(btn)
+    }
 }
