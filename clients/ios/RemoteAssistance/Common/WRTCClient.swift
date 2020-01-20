@@ -49,8 +49,8 @@ class WRTCClient : NSObject {
         do {
             rtcAudioSession.useManualAudio = false
             rtcAudioSession.isAudioEnabled = true
-            try rtcAudioSession.setCategory(AVAudioSession.Category.playAndRecord.rawValue, with: .mixWithOthers)
-            try rtcAudioSession.setMode(AVAudioSession.Mode.default.rawValue)
+            try rtcAudioSession.setCategory(AVAudioSession.Category.playAndRecord.rawValue, with: [.mixWithOthers, .allowBluetooth])
+            try rtcAudioSession.setMode(AVAudioSession.Mode.videoChat.rawValue)
             try rtcAudioSession.overrideOutputAudioPort(.none)
             try rtcAudioSession.setActive(true)
         } catch let error {
