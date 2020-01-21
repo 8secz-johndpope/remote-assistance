@@ -12,6 +12,13 @@ class ViewController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Prevent Auto-Lock
+        UIApplication.shared.isIdleTimerDisabled = true
+        
+        // Prevent Screen Dimming
+        let currentScreenBrightness = UIScreen.main.brightness
+        UIScreen.main.brightness = currentScreenBrightness
   
         // uncomment to show the unified view ace view controller
         let vc = AceViewController.instantiate(fromAppStoryboard: .Ace)

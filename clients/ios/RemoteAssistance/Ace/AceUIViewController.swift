@@ -140,6 +140,7 @@ class AceUIViewController : UIViewController {
     
     @IBAction func onToggleVR(_ sender:UIButton) {
         delegate?.onToggleVR(sender)
+        onCloseMenu(sender)
     }
 
 }

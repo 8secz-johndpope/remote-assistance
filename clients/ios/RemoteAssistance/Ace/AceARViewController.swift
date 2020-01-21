@@ -36,6 +36,9 @@ class AceARViewController : UIViewController {
     
     // AR Pointer
     var arrowObject:AceVirtualObject?
+    
+    // VR
+    var vrVC:AceVRViewController?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -199,10 +202,16 @@ extension AceARViewController: ARSessionDelegate {
         }
         return cgPoints;
     }
-    
+        
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
         // If you want to render raw camera frame.
         // self.capturer.captureFrame(frame.capturedImage)
+        
+        // update vr view controller w/ new frame
+        if let vrVC = self.vrVC {
+            vrVC.lastFrame = frame
+            vrVC.updateFrame()
+        }
 
         let now = Date().timeIntervalSince1970
 
@@ -303,7 +312,22 @@ extension AceARViewController {
     }
     
     @IBAction func onToggleVR(_ sender: Any) {
-        // TODO: Toggle VR view
+        // Toggle VR view
+        if let vrVC = self.vrVC {
+            self.arView.isHidden = false
+            vrVC.view.removeFromSuperview()
+            vrVC.removeFromParent()
+            self.vrVC = nil
+        } else {
+            self.arView.isHidden = true
+            let vc = AceVRViewController.instantiate(fromAppStoryboard: .Ace)
+            vc.sceneView = self.arView
+            vc.view.frame = self.view.frame
+            vc.viewDidLoad()
+            self.view.addSubview(vc.view)
+            self.addChild(vc)
+            self.vrVC = vc
+        }
     }
 }
 
