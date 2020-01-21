@@ -705,12 +705,8 @@ $('#pointerSet').click(function(e) {
         c.style.zIndex = 1;
         c.removeEventListener('click', handlePointerClick);
         renderer.domElement.addEventListener('click', onMouseClick, false);
+        wrtc.emit('pointer_clear', {});
     }
-});
-
-$('#pointerClear').click(function(e) {
-    console.log('pointer_clear');
-    wrtc.emit('pointer_clear', {});
 });
 
 // ----- EBD: AR Pointer
