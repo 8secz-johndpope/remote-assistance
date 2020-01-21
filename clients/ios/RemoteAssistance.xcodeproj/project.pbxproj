@@ -53,6 +53,8 @@
 		D7DB6A0C236DE7C700D7C367 /* TSSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DB6A09236DE7C700D7C367 /* TSSwift.swift */; };
 		D7DB6A0E236DE91D00D7C367 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DB6A0D236DE91D00D7C367 /* SettingsViewController.swift */; };
 		D7DB6A10236DF21C00D7C367 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D7DB6A0F236DF21C00D7C367 /* README.md */; };
+		D7EAD85923D6684800EE1A56 /* AceVirtualObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7EAD85823D6684800EE1A56 /* AceVirtualObject.swift */; };
+		D7EAD85B23D66ABC00EE1A56 /* Models.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = D7EAD85A23D66ABC00EE1A56 /* Models.scnassets */; };
 		F9A7B77B23D0F39300F518C0 /* overlay.html in Resources */ = {isa = PBXBuildFile; fileRef = F9A7B77A23D0F39300F518C0 /* overlay.html */; };
 /* End PBXBuildFile section */
 
@@ -143,6 +145,8 @@
 		D7DB6A09236DE7C700D7C367 /* TSSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSSwift.swift; sourceTree = "<group>"; };
 		D7DB6A0D236DE91D00D7C367 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		D7DB6A0F236DF21C00D7C367 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		D7EAD85823D6684800EE1A56 /* AceVirtualObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceVirtualObject.swift; sourceTree = "<group>"; };
+		D7EAD85A23D66ABC00EE1A56 /* Models.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Models.scnassets; sourceTree = "<group>"; };
 		E2F10D05D152079F7937DA3B /* Pods-RemoteAssistance.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.release.xcconfig"; path = "Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.release.xcconfig"; sourceTree = "<group>"; };
 		F9A7B77A23D0F39300F518C0 /* overlay.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = overlay.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -222,6 +226,7 @@
 				D7DB6A0F236DF21C00D7C367 /* README.md */,
 				D7455DB72368BE77001594FA /* AppDelegate.swift */,
 				D7455DC02368BE7F001594FA /* Assets.xcassets */,
+				D7EAD85A23D66ABC00EE1A56 /* Models.scnassets */,
 				D7455DBB2368BE77001594FA /* Experience.rcproject */,
 				D7455DC52368BE7F001594FA /* Info.plist */,
 				D7455DC22368BE7F001594FA /* LaunchScreen.storyboard */,
@@ -268,6 +273,7 @@
 				D7AF6A0323C8FD8D005B67D8 /* AceUIViewController.swift */,
 				D7AF6A0523C90F91005B67D8 /* AceHandsViewController.swift */,
 				D7AF6A0923C936DE005B67D8 /* AceSketchViewController.swift */,
+				D7EAD85823D6684800EE1A56 /* AceVirtualObject.swift */,
 			);
 			path = Ace;
 			sourceTree = "<group>";
@@ -476,6 +482,7 @@
 				D7DB69F0236DE2D500D7C367 /* materialdesignicons-webfont.ttf in Resources */,
 				D7AF69FD23C8F097005B67D8 /* Ace.storyboard in Resources */,
 				D7455DC42368BE7F001594FA /* LaunchScreen.storyboard in Resources */,
+				D7EAD85B23D66ABC00EE1A56 /* Models.scnassets in Resources */,
 				D7DB69EB236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Right.dae in Resources */,
 				F9A7B77B23D0F39300F518C0 /* overlay.html in Resources */,
 				D7DB6A10236DF21C00D7C367 /* README.md in Resources */,
@@ -548,6 +555,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D7EAD85923D6684800EE1A56 /* AceVirtualObject.swift in Sources */,
 				D7455DBA2368BE77001594FA /* ViewController.swift in Sources */,
 				D7DA31F4239ED04600D1B73F /* SARViewController.swift in Sources */,
 				D7DB6A0C236DE7C700D7C367 /* TSSwift.swift in Sources */,
