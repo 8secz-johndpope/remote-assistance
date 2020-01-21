@@ -4,12 +4,29 @@ const parseDbUrl = require("parse-database-url");
 const databaseConfig = parseDbUrl(config.databaseUrl);
 const util = require('./util');
 
-// load the database info from config/...
-const connection = mysql.createConnection(databaseConfig);
-connection.connect(function(err) {
-	if (err) throw err
-	console.log(`Connected to mysql: ${databaseConfig.host}/${databaseConfig.database}`);
-});
+// handle disconnect
+var connection;
+function handleDisconnect() {
+    connection = mysql.createConnection(databaseConfig);  // Recreate the connection, since the old one cannot be reused.
+    connection.connect( function onConnect(err) {   // The server is either down
+        if (err) {                                  // or restarting (takes a while sometimes).
+            console.log('Error when connecting to db:', err);
+			setTimeout(handleDisconnect, 10000);    // We introduce a delay before attempting to reconnect,
+			return;
+		}                                           // to avoid a hot loop, and to allow our node script to
+		console.log(`Connected to mysql: ${databaseConfig.host}/${databaseConfig.database}`);
+    });                                             // process asynchronous requests in the meantime.
+                                                    // If you're also serving http, display a 503 error.
+    connection.on('error', function onError(err) {
+        console.log('DB Error:', err);
+        if (err.code == 'PROTOCOL_CONNECTION_LOST') {   // Connection to the MySQL server is usually
+            handleDisconnect();                         // lost due to either server restart, or a
+        } else {                                        // connnection idle timeout (the wait_timeout
+            throw err;                                  // server variable configures this)
+        }
+    });
+}
+handleDisconnect();
 
 module.exports = {
 	
