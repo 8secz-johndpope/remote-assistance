@@ -115,7 +115,9 @@ module.exports = function(io) {
             'recording_stopped',
             'sketch_draw',
             'sketch_clear',
-            'clip_marker'
+            'clip_marker',
+            'pointer_set',
+            'pointer_clear',
         ]
         events.forEach(function(eventName) {
             socket.on(eventName, function(data) {

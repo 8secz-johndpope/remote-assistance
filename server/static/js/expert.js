@@ -671,3 +671,46 @@ function reconnectLeapmotion() {
 }
 reconnectLeapmotion();
 // ----- END: Comment this out to disable sending browser leapmotion data -----
+
+// ----- START: AR Pointer
+var enablePointer = false;
+
+function handlePointerClick(e) {
+    console.log('pointer_set', e.clientX, e.clientY);
+    let canvas = document.getElementById("sketchCanvas");
+    wrtc.emit('pointer_set', {
+        x: e.clientX,
+        y: e.clientY,
+        w: canvas.width,
+        h: canvas.height
+    });
+    return false;
+}
+
+$('#pointerSet').click(function(e) {
+    e.preventDefault();
+    const input = $(this).children('input');
+    const checked = !input.is(':checked');
+    const c = document.getElementById("sketchCanvas");
+    input.prop('checked', !checked);
+    if (checked) {
+        enablePointer = true;
+        $(this).addClass('btn-success');
+        c.style.zIndex = 3;
+        c.addEventListener('click', handlePointerClick);
+        renderer.domElement.removeEventListener('click', onMouseClick, false);
+    } else {
+        enablePointer = false;
+        $(this).removeClass('btn-success');
+        c.style.zIndex = 1;
+        c.removeEventListener('click', handlePointerClick);
+        renderer.domElement.addEventListener('click', onMouseClick, false);
+    }
+});
+
+$('#pointerClear').click(function(e) {
+    console.log('pointer_clear');
+    wrtc.emit('pointer_clear', {});
+});
+
+// ----- EBD: AR Pointer
