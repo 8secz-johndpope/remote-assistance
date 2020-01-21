@@ -12,8 +12,8 @@ module.exports = function(io) {
       });
     }
 
-    async function execCmd(cmd) {
-        await sleep(5000); // wait to gather data from client
+    async function execCmd(cmd,waitTime) {
+        await sleep(waitTime); // wait to gather data from client
         console.log(cmd);
         exec(cmd, (error, stdout, stderr) => {
             if (error) {
@@ -64,13 +64,17 @@ module.exports = function(io) {
 
         socket.on('recording_stopped', function(data) {
             console.log('creating mp4 file');
+            let filePathThumb = config.clipLoc + data.name + ".jpg";
             let filePathMp4 = config.clipLoc + data.name + ".mp4";
             let filePathWebm = config.clipLoc + data.name + ".webm";
-            let cmd = "ffmpeg -i "+ filePathWebm + 
+            let cmdTranscode = "ffmpeg -i " + filePathWebm + 
                       " -y -vcodec libx264 -qp 0 -pix_fmt yuv420p -acodec libfdk_aac " +
                       filePathMp4;
-            execCmd(cmd);
-        });
+            execCmd(cmdTranscode,5000);
+            let cmdCreateThumb = "ffmpeg -i " + filePathWebm + 
+                      " -ss 00:00:01.000 -vframes 1 " + filePathThumb;
+            execCmd(cmdCreateThumb,5500);
+         });
 
         socket.on('recording_blob', function(data) {
             console.log('writing packet',data.length)
