@@ -145,6 +145,9 @@ class AceUIViewController : UIViewController {
         onCloseMenu(sender)
     }
 
+    @IBAction func onObjectDetect(_ sender:UIButton) {
+        delegate?.onObjectDetect(sender)
+    }
 }
 
 protocol AceUIViewDelegate {
@@ -152,4 +155,5 @@ protocol AceUIViewDelegate {
     func onSettings(_ btn:UIButton)
     func onToggleVR(_ btn:UIButton)
     func onHangup(_ btn:UIButton)
+    func onObjectDetect(_ btn:UIButton)
 }

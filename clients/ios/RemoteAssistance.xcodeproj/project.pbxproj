@@ -24,6 +24,7 @@
 		D7455DC42368BE7F001594FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7455DC22368BE7F001594FA /* LaunchScreen.storyboard */; };
 		D7455DCF2368BE7F001594FA /* RemoteAssistanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7455DCE2368BE7F001594FA /* RemoteAssistanceTests.swift */; };
 		D7455DDA2368BE80001594FA /* RemoteAssistanceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7455DD92368BE80001594FA /* RemoteAssistanceUITests.swift */; };
+		D753162823D911AC00D686EC /* AceARViewController+ObjectAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D753162723D911AC00D686EC /* AceARViewController+ObjectAnnotation.swift */; };
 		D76C1CCC23D78BD600208511 /* AceVRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76C1CCB23D78BD600208511 /* AceVRViewController.swift */; };
 		D795E76623A2E64800E97162 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D795E76523A2E64800E97162 /* ChatViewController.swift */; };
 		D7AF69FD23C8F097005B67D8 /* Ace.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7AF69FC23C8F097005B67D8 /* Ace.storyboard */; };
@@ -122,6 +123,7 @@
 		D7455DD52368BE80001594FA /* RemoteAssistanceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RemoteAssistanceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7455DD92368BE80001594FA /* RemoteAssistanceUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAssistanceUITests.swift; sourceTree = "<group>"; };
 		D7455DDB2368BE80001594FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D753162723D911AC00D686EC /* AceARViewController+ObjectAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AceARViewController+ObjectAnnotation.swift"; sourceTree = "<group>"; };
 		D76C1CCB23D78BD600208511 /* AceVRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceVRViewController.swift; sourceTree = "<group>"; };
 		D795E76523A2E64800E97162 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		D7AF69FC23C8F097005B67D8 /* Ace.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Ace.storyboard; sourceTree = "<group>"; };
@@ -300,6 +302,7 @@
 				D7EAD85823D6684800EE1A56 /* AceVirtualObject.swift */,
 				D76C1CCB23D78BD600208511 /* AceVRViewController.swift */,
 				D7167ED223D8CDA900655A42 /* AceLandingViewController.swift */,
+				D753162723D911AC00D686EC /* AceARViewController+ObjectAnnotation.swift */,
 			);
 			path = Ace;
 			sourceTree = "<group>";
@@ -619,6 +622,7 @@
 				D7DB6A04236DE6AA00D7C367 /* SocketIOManager.swift in Sources */,
 				D7AF6A0123C8F4FD005B67D8 /* AceViewController.swift in Sources */,
 				D7DA31EF239ECFCE00D1B73F /* RectangleNode.swift in Sources */,
+				D753162823D911AC00D686EC /* AceARViewController+ObjectAnnotation.swift in Sources */,
 				D7DB69F9236DE35100D7C367 /* WRTCClient.swift in Sources */,
 				D7DB69FC236DE49A00D7C367 /* ArrowNode.swift in Sources */,
 			);

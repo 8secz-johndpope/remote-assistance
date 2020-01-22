@@ -39,6 +39,13 @@ class AceARViewController : UIViewController {
     
     // VR
     var vrVC:AceVRViewController?
+    
+    // Object Annotation
+    var objectGroupName:String!
+    var videoTag:Int = -1
+    var clickableImages:[UIImage]!
+    var imagePositions:[SCNVector3]!
+    var videoURLs:[URL]!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,8 +57,7 @@ class AceARViewController : UIViewController {
         initARKit()
         initScreenAR()
         initARPointer()
-        
-//        SocketIOManager.sharedInstance.connect()
+        initObjectDetection()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -171,6 +177,7 @@ extension AceARViewController: ARSCNViewDelegate {
                 self.rectangleNodes[node] = rectangleNode
             }
         }
+        objectAnnotation(renderer, didAdd:node, for:anchor)
     }
 }
 
