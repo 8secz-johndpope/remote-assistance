@@ -33,7 +33,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, ClickableObjec
         //self.sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin]
         self.sceneView.delegate = self
         // TODO: Load the reference objects we are going to scan for
-        self.objectGroupName = "LaserJet400"
+        self.objectGroupName = "VariousPrinters"
     }
     
     @objc func searchForObjects() {
