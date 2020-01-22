@@ -48,6 +48,11 @@ Get user details
 /api/getUser/:uuid
 ```
 
+Get all user UUIDs
+```
+/api/getAllUsers/
+```
+
 Create a room and return a UUID
 ```
 /api/createRoom
@@ -61,6 +66,11 @@ Get room details
 Get rooms with at least one participant. Returns count of customers and experts in each room.
 ```
 /api/getActiveRooms
+```
+
+Get all room UUIDs
+```
+/api/getAllRoom/
 ```
 
 Associate user and room
@@ -83,6 +93,11 @@ Get details of all anchors whose name includes given text
 /api/getAnchors/:text
 ```
 
+Get all anchor UUIDs
+```
+/api/getAllAnchors/
+```
+
 Get clip details
 ```
 /api/getClip/:uuid
@@ -101,5 +116,10 @@ Associate clip and anchor
 Create an entry for a clip and return UUID
 ```
 /api/createClip/:name/:user_uuid/:room_uuid
+```
+
+Get all clip UUIDs
+```
+/api/getAllClips/
 ```
 
