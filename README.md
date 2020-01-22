@@ -1,4 +1,4 @@
-Remote Assistance
+ACE remote assistance framework
 =================
 
 The unified Remote Assistance project respository.
