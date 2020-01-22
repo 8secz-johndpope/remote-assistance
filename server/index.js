@@ -76,12 +76,23 @@ if (!args.db_off) {
         })
     });
 
+    app.get('/api/getAllRooms', function (req, res) {
+        db.getAllRooms(res,function(data) {
+            res.json(data)
+        })
+    });
+
     app.get('/api/getUser/:uuid', function (req, res) {
         db.getUser(res,req.params.uuid,function(data) {
             res.json(data)
         })
     });
 
+    app.get('/api/getAllUsers', function (req, res) {
+        db.getAllUsers(res,function(data) {
+            res.json(data)
+        })
+    });
     app.get('/api/getAnchor/:uuid', function (req, res) {
         db.getAnchor(res,req.params.uuid,function(data) {
             res.json(data)
@@ -94,6 +105,12 @@ if (!args.db_off) {
         })
     });
 
+    app.get('/api/getAllAnchors/', function (req, res) {
+        db.getAllAnchors(res,function(data) {
+            res.json(data)
+        })
+    });
+
     app.get('/api/getClip/:uuid', function (req, res) {
         db.getClip(res,req.params.uuid,function(data) {
             res.json(data)
@@ -102,6 +119,12 @@ if (!args.db_off) {
 
     app.get('/api/getClips/:anchor_uuid/:room_uuid?', function (req, res) {
         db.getClips(res,req.params.anchor_uuid,req.params.room_uuid,function(data) {
+            res.json(data)
+        })
+    });
+
+    app.get('/api/getAllClips/', function (req, res) {
+        db.getAllClips(res,function(data) {
             res.json(data)
         })
     });

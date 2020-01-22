@@ -69,6 +69,16 @@ module.exports = {
 		})		
 	},
 
+	getAllRooms: (res,cb) => {
+		connection.query('select uuid from room',
+			[
+			],
+			function (err, rows, fields) {
+				if (err) throw err
+				cb(rows)
+		})		
+	},
+
 	getAnchor: (res,uuid,cb) => {
 		console.log(uuid)
 		connection.query('select * from anchor where uuid = ?',
@@ -85,6 +95,16 @@ module.exports = {
 		connection.query('select * from anchor where name like ?',
 			[
 				'%'+text+'%'
+			],
+			function (err, rows, fields) {
+				if (err) throw err
+				cb(rows)
+		})		
+	},
+
+	getAllAnchors: (res,cb) => {
+		connection.query('select uuid from anchor ',
+			[
 			],
 			function (err, rows, fields) {
 				if (err) throw err
@@ -112,6 +132,16 @@ module.exports = {
 		}
 		connection.query(q,
 			arr,
+			function (err, rows, fields) {
+				if (err) throw err
+				cb(rows)
+		})		
+	},
+
+	getAllClips: (res,cb) => {
+		connection.query('select uuid from clip ',
+			[
+			],
 			function (err, rows, fields) {
 				if (err) throw err
 				cb(rows)
@@ -159,6 +189,16 @@ module.exports = {
 		})
 	},
 
+	getAllUsers: (res,cb) => {
+		connection.query('select uuid from user ',
+			[
+			],
+			function (err, rows, fields) {
+				if (err) throw err
+				cb(rows)
+		})		
+	},
+	
 	addClipAnchor: (res,anchor_uuid,clip_uuid,position_blob,cb) => {
 		let uuid = util.generateRandomId();
 		connection.query('insert into clipAnchor(anchor_uuid,clip_uuid,position_blob) values(?,?,?)',
