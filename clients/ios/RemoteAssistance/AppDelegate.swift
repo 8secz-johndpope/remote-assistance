@@ -24,6 +24,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // set logging
+        RTCSetMinDebugLogLevel(.error)
+
         // Override point for customization after application launch.
         RTCInitializeSSL()
         

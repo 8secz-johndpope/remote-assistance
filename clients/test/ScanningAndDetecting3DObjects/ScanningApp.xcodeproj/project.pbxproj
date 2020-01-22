@@ -115,7 +115,7 @@
 				3947D3FF2076927E00BDBE95 /* Wireframe.swift */,
 			);
 			name = "3D UI and Visualizations ";
-			path = "ScanningApp/3D UI and Visualizations ";
+			path = ScanningApp/3DUIandVisualizations;
 			sourceTree = "<group>";
 		};
 		11D4F6C220A1973300892189 /* Gesture Recognizers */ = {
@@ -126,7 +126,7 @@
 				C49D033F20A086D2003D21D7 /* ThresholdRotationGestureRecognizer.swift */,
 			);
 			name = "Gesture Recognizers";
-			path = "ScanningApp/Gesture Recognizers";
+			path = ScanningApp/GestureRecognizers;
 			sourceTree = "<group>";
 		};
 		11D4F6C320A19AF200892189 /* Utility Extensions */ = {

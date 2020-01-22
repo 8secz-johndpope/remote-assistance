@@ -10,6 +10,7 @@ import UIKit
 import WebRTC
 import CoreMotion
 import ARKit
+import Vision
 
 let mediaContraints = RTCMediaConstraints(mandatoryConstraints: [
     "OfferToReceiveAudio": "true",
@@ -36,6 +37,17 @@ class TSViewController: UIViewController {
     var remoteHands:TSRemoteHands!
     var lastTimeStamp:TimeInterval = 0
     
+    lazy var detectBarcodeRequest: VNDetectBarcodesRequest = {
+        return VNDetectBarcodesRequest(completionHandler: { (request, error) in
+            guard error == nil else {
+                print("Barcode Error: \(error!.localizedDescription)")
+                return
+            }
+
+            self.processClassification(for: request)
+        })
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -44,10 +56,7 @@ class TSViewController: UIViewController {
         initWebRTCClient()
         initMediaStream()
         initRemoteHands()
-        initGyro()
         initARKit()
-        
-        SocketIOManager.sharedInstance.connect()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -63,9 +72,13 @@ class TSViewController: UIViewController {
         }
         configuration.planeDetection = [.horizontal, .vertical]
     
+        self.wrtc.connect()
+        self.remoteHands.connect()
         
         // Run the view's session
         sceneView.session.run(configuration)
+        
+        initGyro()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -75,7 +88,9 @@ class TSViewController: UIViewController {
         sceneView.session.pause()
         
         self.wrtc.disconnect()
-        self.remoteHands.cleanup();
+        self.remoteHands.disconnect();
+        
+        motionManager.stopGyroUpdates()
     }
     
     func initMediaStream() {
@@ -109,14 +124,14 @@ class TSViewController: UIViewController {
                 let beta = -data.attitude.pitch * 180 / Double.pi
                 let gamma = -data.attitude.roll * 180 / Double.pi
                 
-                let socket = SocketIOManager.sharedInstance.rtcSocket
-                socket.emit("gyro", [
-                    "msg": "from customer",
-                    "alpha": alpha,
-                    "beta": beta,
-                    "gamma": gamma,
-                    "absolute": absolute
-                ])
+                let socket = SocketIOManager.sharedInstance
+                    socket.emit("gyro", [
+                        "msg": "from customer",
+                        "alpha": alpha,
+                        "beta": beta,
+                        "gamma": gamma,
+                        "absolute": absolute
+                    ])
             }
         }
     }
@@ -134,9 +149,22 @@ class TSViewController: UIViewController {
         self.handView.scene = scene
         self.remoteHands = TSRemoteHands(scene)
     }
+    
+    // MARK: - Vision
+    func processClassification(for request: VNRequest) {
+        if let bestResult = request.results?.first as? VNBarcodeObservation,
+            let payload = bestResult.payloadStringValue {
+            print("QR Code: \(payload)")
+        }
+    }
 }
 
 extension TSViewController: WRTCClientDelegate {
+    func wrtc(_ wrtc: WRTCClient, didReceiveData data: Data) {
+        let text = String(data: data, encoding: .utf8) ?? "(Binary: \(data.count) bytes)"
+        print("wrtc: received datachannel message \(text)")
+    }
+    
     func wrtc(_ wrtc:WRTCClient, didAdd stream:RTCMediaStream) {
         print("wrtc: \(stream) add stream")
     }
@@ -157,6 +185,18 @@ extension TSViewController: ARSessionDelegate {
             let image = self.sceneView.snapshot()
             self.capturer.captureFrame(image)
             self.lastTimeStamp = now
+            
+            // process image for qr code
+            DispatchQueue.global(qos: .background).async {
+                let ciImage = CIImage.init(cgImage: image.cgImage!)
+                let handler = VNImageRequestHandler(ciImage: ciImage, orientation: CGImagePropertyOrientation.up, options: [:])
+
+                do {
+                    try handler.perform([self.detectBarcodeRequest])
+                } catch {
+                    print("Error Decoding Barcode: \(error.localizedDescription)")
+                }
+            }
         }
     }
 }

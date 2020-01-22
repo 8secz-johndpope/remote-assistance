@@ -1688,6 +1688,10 @@ Frame.prototype.postprocessData = function(data){
     data = this.data;
   }
 
+  if (!data.hands) {
+    data.hands = [];
+  }
+
   for (var handIdx = 0, handCount = data.hands.length; handIdx != handCount; handIdx++) {
     var hand = new Hand(data.hands[handIdx]);
     hand.frame = this;

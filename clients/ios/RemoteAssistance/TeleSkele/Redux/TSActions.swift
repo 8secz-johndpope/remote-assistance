@@ -13,3 +13,7 @@ import ReSwift
 struct TSSetServerURL: Action {
     let serverUrl:String
 }
+
+struct TSSetRoomName: Action {
+    let roomName:String
+}

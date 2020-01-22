@@ -6,7 +6,8 @@
 {% endblock %}
 {% block header %}{% endblock %}
 {% block content %}
-ScreenAR
+<div style="margin:16px;font-size:16px;line-height:32px"><img style="vertical-align:bottom;height:32px;" src='https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/apple/237/teacher_1f9d1-200d-1f3eb.png'/> ARTutor</div>
+<canvas id='correctedcanvas'></canvas>
 <video id='video'></video>
 <div id='screenarcontainer'>
   <canvas id='sourcecanvas'></canvas>
@@ -15,10 +16,13 @@ ScreenAR
 {% endblock %}
 {% block js %}
 <script src="/static/ext/socket.io/2.2.0/socket.io.js"></script>
+<script src="/static/ext/glfx/glfx.js"></script>
 <script src="/static/js/webrtc.js"></script>
 <script>
 window.config = { room: 'fxpal' }
 
+//var corners = null;
+var fxcanvas = fx.canvas();
 var canvas = document.getElementById('sourcecanvas');
 var canvasw = 480;
 var canvash = 320;
@@ -26,16 +30,48 @@ canvas.width = canvasw;
 canvas.height = canvash;
 var ctx = canvas.getContext('2d');
 
+var correctedcanvas = document.getElementById('correctedcanvas');
+correctedcanvas.width = 640;//canvasw;
+correctedcanvas.height = 360;//canvash;
+var correctedctx = correctedcanvas.getContext('2d');
+
 // setup sample video
 var constraints = {
     video: false,
     audio: true
 }
 
+let skinDetected = false;
+let skinTimeout = null;
+
+var dataChannelCallback = function(data) {
+  //console.log('dataChannelCallback data=',data);
+  if (data === 'skin')
+  {
+    clearTimeout(skinTimeout);
+    skinDetected = true;
+    console.error('skin detected');
+    skinTimeout = setTimeout(function () { skinDetected = false; },30);
+    return;
+  }
+  let anchorSize = [];
+  data.split(',').forEach(i => anchorSize.push(parseInt(i)));
+  let anchorWidth = anchorSize[0];
+  let anchorHeight = anchorSize[1];
+  let newWidth = 640;
+  let newHeight = ((640 * anchorHeight) / anchorWidth) | 0;
+  if (correctedcanvas.width !== newWidth || correctedcanvas.height !== newHeight)
+  {
+    correctedcanvas.width = newWidth;
+    correctedcanvas.height = newHeight;
+    console.log('correctedcanvas width/height=',correctedcanvas.width,correctedcanvas.height);
+  }
+}
+
 var wrtc;
 navigator.mediaDevices.getUserMedia(constraints).then(
     function(stream) {
-        wrtc = new WebRTCClient({ stream: stream, dataChannel:'ScreenAR', room: config.room });
+        wrtc = new WebRTCClient({ stream: stream, dataChannel:'ScreenAR', dataChannelCallback: dataChannelCallback, room: config.room });
         wrtc.on('stream', function(id, stream) {
             var video = $('#video')[0]
             video.srcObject = stream;
@@ -67,19 +103,269 @@ function drawVideo()
     canvasw = video.videoWidth;
     canvash = video.videoHeight;
 
-    //screenarcontainer.style.width = canvasw + 'px';
-    //screenarcontainer.style.height = canvash + 'px';
+    console.log('new video width/height=',canvasw,canvash)
 
     canvas.width = canvasw;
     canvas.height = canvash;
-    //overlay.style.width = canvasw + 'px';
-    //overlay.style.height = canvash + 'px';
-    //console.log('set width,height',canvasw,canvash);
+
+    fxcanvas = fx.canvas();
+    fxcanvas.width = canvasw;
+    fxcanvas.height = canvash;
+
   }
-  //console.log('drawVideo');
   ctx.drawImage(video,0,0,canvasw,canvash);
+  let corners = detectCorners(ctx);
+  if (corners !== null)
+  {
+    correctedcanvas.style.opacity = 1;
+    /*ctx.lineWidth = 3;
+    ctx.font = '32px Arial';
+    ctx.fillStyle = 'blue';
+    ctx.strokeStyle = 'red';
+    ctx.beginPath();
+    ctx.moveTo(corners.tl.x,corners.tl.y);
+    ctx.lineTo(corners.tr.x,corners.tr.y);
+    ctx.lineTo(corners.br.x,corners.br.y);
+    ctx.lineTo(corners.bl.x,corners.bl.y);
+    ctx.lineTo(corners.tl.x,corners.tl.y);
+    ctx.stroke();*/
+
+    let texture = fxcanvas.texture(canvas);
+    fxcanvas.draw(texture).perspective(
+      [
+        corners.tl.x,corners.tl.y,
+        corners.tr.x,corners.tr.y,
+        corners.br.x,corners.br.y,
+        corners.bl.x,corners.bl.y],
+      [
+        0,0,
+        canvasw,0,
+        canvasw,canvash,
+        0,canvash]).update();
+    //fxcanvas.draw(texture).perspective( [0,canvash,canvasw,canvash,0,0,canvasw,0], [0,canvash,canvasw,canvash,0,0,canvasw,0] ).update();
+    correctedctx.drawImage(fxcanvas,0,0,correctedcanvas.width,correctedcanvas.height);
+    if (skinDetected)
+    {
+      correctedctx.fillStyle = 'yellow';
+      correctedctx.font = '24px Arial';
+      correctedctx.fillText('HAND',40,40);
+    }
+  }
+  else
+    correctedcanvas.style.opacity = 0.1;
+
+  //const border = 16;
+  //ctx.drawImage(video,border,border,canvasw-2*border,canvash-2*border,0,0,canvasw,canvash); // remove white dots from view
+
   window.requestAnimationFrame(drawVideo);
 }
+
+function detectCorners(ctx)
+{
+  if (canvasw === 0 || canvash === 0)
+  {
+    //console.error('detectCorners fails because canvasw/canvash=0',canvasw,canvash);
+    return null;
+  }
+  let imgData = ctx.getImageData(0,0,canvasw,canvash);
+  let data = imgData.data;
+  let idx = 0;
+  
+  // top gives x positions of tl and tr corners
+  const th = 200;
+  const blackth = 20;
+
+  let nblack = 0;
+  let tl = {x:-1,y:-1};
+  let tr = {x:-1,y:-1};
+
+  for (let i=0;i<canvasw;i++)
+  {
+    if (data[idx] >= th && data[idx+1] >= th && data[idx+2] >= th)
+    {
+      if (tl.x !== -1)
+        tr.x = i;
+      else
+        tl.x = i;
+      //break;
+    }
+    else if (data[idx] <= blackth && data[idx+1] <= blackth && data[idx+2] <= blackth)
+      nblack++;
+    idx += 4;
+  }
+
+  // don't count this frame is less than 94 percent of the pixels were not black
+  if (nblack * 100 / canvasw < 94)
+    return null;
+  /*let tr = {x:-1,y:-1};
+  idx = 4 * canvasw - 4;
+  for (let i=canvasw;i>=0;i--)
+  {
+    if (data[idx] >= th && data[idx+1] >= th && data[idx+2] >= th)
+    {
+      tr.x = i;
+      break;
+    }
+    idx -= 4;
+  }*/
+
+  // bottom gives x positions of bl and br corners
+  let bl = {x:-1,y:-1};
+  idx = ((canvash - 1) * canvasw * 4);
+  for (let i=0;i<canvasw;i++)
+  {
+    if (data[idx] >= th && data[idx+1] >= th && data[idx+2] >= th)
+    {
+      bl.x = i;
+      break;
+    }
+    idx += 4;
+  }
+
+  let br = {x:-1,y:-1};
+  idx = (canvash * canvasw * 4) - 4;
+  for (let i=canvasw;i>=0;i--)
+  {
+    if (data[idx] >= th && data[idx+1] >= th && data[idx+2] >= th)
+    {
+      br.x = i;
+      break;
+    }
+    idx -= 4;
+  }
+  
+  // left gives y positions of tl and bl corners
+  idx = 0;
+  for (let i=0;i<canvash;i++)
+  {
+    if (data[idx] >= th && data[idx+1] >= th && data[idx+2] >= th)
+    {
+      tl.y = i;
+      break;
+    }
+    idx += canvasw * 4;
+  }
+
+  idx = ((canvash - 1) * canvasw * 4);
+  for (let i=canvash;i>=0;i--)
+  {
+    if (data[idx] >= th && data[idx+1] >= th && data[idx+2] >= th)
+    {
+      bl.y = i;
+      break;
+    }
+    idx -= canvasw * 4;
+  }
+
+  // right gives y positions of tr and br corners
+  idx = canvasw * 4 - 4;
+  for (let i=0;i<canvash;i++)
+  {
+    if (data[idx] >= th && data[idx+1] >= th && data[idx+2] >= th)
+    {
+      tr.y = i;
+      break;
+    }
+    idx += canvasw * 4;
+  }
+
+  idx = (canvash * canvasw * 4) - 4;
+  for (let i=canvash;i>=0;i--)
+  {
+    if (data[idx] >= th && data[idx+1] >= th && data[idx+2] >= th)
+    {
+      br.y = i;
+      break;
+    }
+    idx -= canvasw * 4;
+  }
+
+  let ok = true;
+  [tl,tr,bl,br].forEach(pt => ok &= goodPoint(pt));
+  if (ok)
+    return {tl:tl,tr:tr,bl:bl,br:br};
+  else
+    return null;
+}
+
+function goodPoint(pt)
+{
+  return pt.x !== -1 && pt.y !== -1;
+}
+/*let maxr = 129;
+let maxg = 129;
+let minb = 129;
+function detectBlue(ctx)
+{
+  if (canvasw === 0 || canvash === 0)
+    return;
+  let imgData = ctx.getImageData(0,0,canvasw,canvash);
+  let data = imgData.data;
+  let tl = {x:3000,y:3000};
+  let tr = {x:0,y:3000};
+  let bl = {x:3000,y:0};
+  let br = {x:0,y:0};
+  let x = 0;
+  let y = 0;
+  for (let i=0;i<data.length;i+=4)
+  {
+    // detect blue dots
+    if (data[i] < maxr && data[i+1] < maxg && data[i+2] > minb)
+    {
+      data[i] = 0xff;
+      data[i+1] = 0xff;
+      data[i+2] = 0xff;
+      if (x < bl.x)
+      {
+        bl.x = x;
+        bl.y = y;
+      }
+      if (x > br.x)
+      {
+        br.x = x;
+        br.y = y;
+      }
+    }
+    // detect green dots
+    if (data[i] < maxr && data[i+1] > minb && data[i+2] < maxr)
+    {
+      data[i] = 0xff;
+      data[i+1] = 0xff;
+      data[i+2] = 0xff;
+      if (x < tl.x)
+      {
+        tl.x = x;
+        tl.y = y;
+      }
+      if (x > tr.x)
+      {
+        tr.x = x;
+        tr.y = y;
+      }
+    }
+    else
+    {
+      data[i] = 0x00;
+      data[i+1] = 0x00;
+      data[i+2] = 0x00;
+    }
+    x += 1;
+    if (x > canvasw)
+    {
+      x = 0;
+      y += 1;
+    }
+  }
+  ctx.putImageData(imgData,0,0);
+  ctx.fillStyle = 'red';
+  ctx.fillRect(tl.x,tl.y,20,20);
+  ctx.fillStyle = 'blue';
+  ctx.fillRect(tr.x,tr.y,20,20);
+  ctx.fillStyle = 'green';
+  ctx.fillRect(bl.x,bl.y,20,20);
+  ctx.fillStyle = 'orange';
+  ctx.fillRect(br.x,br.y,20,20);
+}*/
 
 function sendClick(x,y,text)
 {
@@ -92,17 +378,17 @@ video.addEventListener('loadedmetadata',function (evt) {
   drawVideo();
 },false);
 
-overlay.addEventListener('click',function (evt) {
+correctedcanvas.addEventListener('click',function (evt) {
     evt.preventDefault();
     evt.stopPropagation();
     let x = evt.pageX;
     let y = evt.pageY;
-    x -= overlay.parentElement.offsetLeft;
-    y -= overlay.parentElement.offsetTop;
-    x = (x * 100 / overlay.offsetWidth) | 0;
-    y = (y * 100 / overlay.offsetHeight) | 0;
+    x -= correctedcanvas.offsetLeft;
+    y -= correctedcanvas.offsetTop;
+    x = (x * 100 / correctedcanvas.offsetWidth) | 0;
+    y = (y * 100 / correctedcanvas.offsetHeight) | 0;
     console.log(x,y);
-    showMark(x,y,'Tap');
+    //showMark(x,y,'Tap');
     sendClick(x,y,'Tap');
 });
 </script>

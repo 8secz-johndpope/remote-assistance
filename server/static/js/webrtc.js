@@ -17,15 +17,22 @@ function WebRTCClient(options) {
         SIOConnection.socket = socket;
     }
     var dataChannelName = this.options.dataChannel;
+    var onDataChannelCallback = this.options.dataChannelCallback;
 
     this.createDataChannel = function(name,pc)
     {
       console.log('creating data channel=',name);
-      this.sendChannel = pc.createDataChannel(name, null);
+      const dataChannelOptions = {
+        ordered: false, // do not guarantee order
+        //maxPacketLifeTime: 1000/25, // in milliseconds
+        maxRetransmits: 0
+      };
+      this.sendChannel = pc.createDataChannel(name, dataChannelOptions);
       this.sendChannel.onopen = function (event) { console.log('channel onopen',event);};
       this.sendChannel.onclose = function (event) { console.log('channel onclose',event);};
       this.sendChannel.onmessage = function (event) {
-          console.log('channel onmessage',event.data);
+          if (onDataChannelCallback)
+            onDataChannelCallback(event.data);
       };
     }
     function getPC(id) {
@@ -37,6 +44,7 @@ function WebRTCClient(options) {
         var config = {
             "iceServers": [{ "urls": [
                 "stun:stun.l.google.com:19302",
+                "stun:rhelp.fxpal.net",
             ] }]
         };
 

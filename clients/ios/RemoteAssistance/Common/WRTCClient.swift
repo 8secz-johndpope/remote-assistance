@@ -17,7 +17,11 @@ class WRTCClient : NSObject {
     public var factory:RTCPeerConnectionFactory
     public var stream:RTCMediaStream?
     public var delegate:WRTCClientDelegate?
-    
+    private var remoteDataChannel: RTCDataChannel?
+    private let rtcAudioSession =  RTCAudioSession.sharedInstance()
+    private let audioQueue = DispatchQueue(label: "audio")
+    private var useSpeaker = true
+
     static private var offerAnswerContraints = RTCMediaConstraints(mandatoryConstraints: [String:String](), optionalConstraints: nil)
     static private var mediaContraints = RTCMediaConstraints(mandatoryConstraints: [
         "OfferToReceiveAudio": "true",
@@ -39,8 +43,29 @@ class WRTCClient : NSObject {
         self.factory = RTCPeerConnectionFactory(encoderFactory: encoderFactory, decoderFactory: decoderFactory)
         super.init()
 
+
+        // configure audio
+        rtcAudioSession.lockForConfiguration()
+        do {
+            rtcAudioSession.useManualAudio = false
+            rtcAudioSession.isAudioEnabled = true
+            try rtcAudioSession.setCategory(AVAudioSession.Category.playAndRecord.rawValue, with: [.mixWithOthers, .allowBluetooth])
+            try rtcAudioSession.setMode(AVAudioSession.Mode.videoChat.rawValue)
+            try rtcAudioSession.overrideOutputAudioPort(.none)
+            try rtcAudioSession.setActive(true)
+        } catch let error {
+            debugPrint("Error changeing AVAudioSession category: \(error)")
+        }
+        rtcAudioSession.unlockForConfiguration()
+        
+        
         initSocket()
         store.ts.subscribe(self)                
+    }
+    
+    func connect() {
+        initSocket()
+        SocketIOManager.sharedInstance.connect()
     }
     
     func disconnect() {
@@ -50,12 +75,7 @@ class WRTCClient : NSObject {
     }
 
     func initSocket() {
-        let socket = SocketIOManager.sharedInstance.rtcSocket
-        
-        
-        socket.on("connect") { data, ack in
-            socket.emit("join", ["room": "fxpal"])
-        }
+        let socket = SocketIOManager.sharedInstance
         
         socket.on("left") { [weak self] data, ack in
             if let object = data[0] as? [String:Any],
@@ -198,7 +218,10 @@ class WRTCClient : NSObject {
             return pc
         } else {
             let config = RTCConfiguration()
-            config.iceServers = [RTCIceServer(urlStrings: ["stun:stun.l.google.com:19302"])]
+            config.iceServers = [
+                RTCIceServer(urlStrings: ["stun:stun.l.google.com:19302"]),
+                RTCIceServer(urlStrings: ["stun:rhelp.fxpal.net"]),
+                ]
             config.sdpSemantics = .unifiedPlan
             config.certificate = RTCCertificate.generate(withParams: ["expires": 100000, "name": "RSASSA-PKCS1-v1_5"])
             
@@ -235,9 +258,45 @@ class WRTCClient : NSObject {
         }
     }
 
-
+    func sendData(_ data: Data) {
+        let buffer = RTCDataBuffer(data: data, isBinary: false)
+        self.remoteDataChannel?.sendData(buffer)
+    }
+    
+    func enableSpeaker(_ enable:Bool) {
+        self.audioQueue.async { [weak self] in
+            guard let self = self else {
+                return
+            }
+            
+            self.useSpeaker = enable
+            
+            self.rtcAudioSession.lockForConfiguration()
+            do {
+                try self.rtcAudioSession.overrideOutputAudioPort(enable ? .speaker : .none)
+            } catch let error {
+                debugPrint("Error setting AVAudioSession category: \(error)")
+            }
+            self.rtcAudioSession.unlockForConfiguration()
+        }
+    }
+    
+    func setAudioEnabled(_ enable:Bool) {
+        if let audioTracks = stream?.audioTracks {
+            audioTracks.forEach { $0.isEnabled = enable }
+        }
+    }
 }
 
+extension WRTCClient: RTCDataChannelDelegate {
+    func dataChannelDidChangeState(_ dataChannel: RTCDataChannel) {
+        print("dataChannel did change state: \(dataChannel.readyState)")
+    }
+    
+    func dataChannel(_ dataChannel: RTCDataChannel, didReceiveMessageWith buffer: RTCDataBuffer) {
+        self.delegate?.wrtc(self, didReceiveData: buffer.data)
+    }
+}
 
 extension WRTCClient : RTCPeerConnectionDelegate {
     
@@ -254,6 +313,10 @@ extension WRTCClient : RTCPeerConnectionDelegate {
         print("peerConnection: \(peerConnection) add stream")
 //        stream.videoTracks[0].add(self.remoteView)
         self.delegate?.wrtc(self, didAdd:stream)
+
+        // set speaker because we have to wait until a stream
+        // is added before the audio subsystem is initialized
+        self.enableSpeaker(self.useSpeaker)
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove stream: RTCMediaStream) {
@@ -275,7 +338,7 @@ extension WRTCClient : RTCPeerConnectionDelegate {
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didGenerate candidate: RTCIceCandidate) {
         DispatchQueue.main.async(execute: { () -> Void in
-            let socket =  SocketIOManager.sharedInstance.rtcSocket
+            let socket =  SocketIOManager.sharedInstance
 
             // find the correct session id
             var sid = ""
@@ -302,7 +365,9 @@ extension WRTCClient : RTCPeerConnectionDelegate {
     }
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didOpen dataChannel: RTCDataChannel) {
-    
+        print("data channel didOpen",dataChannel)
+        self.remoteDataChannel = dataChannel
+        self.remoteDataChannel?.delegate = self
     }
 }
 
@@ -320,6 +385,7 @@ extension WRTCClient : StoreSubscriber {
 protocol WRTCClientDelegate {
     func wrtc(_ wrtc:WRTCClient, didAdd stream:RTCMediaStream)
     func wrtc(_ wrtc:WRTCClient, didRemove stream:RTCMediaStream)
+    func wrtc(_ wrtc:WRTCClient, didReceiveData data: Data)
 }
 
 class WRTCCustomCapturer : RTCVideoCapturer {

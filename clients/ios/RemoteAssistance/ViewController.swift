@@ -8,16 +8,24 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-    
-    @IBOutlet weak var tabBar: UITabBar!
-    @IBOutlet weak var displayView: UIView!
-    
-    var isHidden = false
-    var vc:UIViewController?
+class ViewController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Prevent Auto-Lock
+        UIApplication.shared.isIdleTimerDisabled = true
+        
+        // Prevent Screen Dimming
+        let currentScreenBrightness = UIScreen.main.brightness
+        UIScreen.main.brightness = currentScreenBrightness
+  
+        // uncomment to show the unified view ace view controller
+        let vc = AceViewController.instantiate(fromAppStoryboard: .Ace)
+        let navVC = UINavigationController()
+        navVC.tabBarItem = vc.tabBarItem
+        navVC.pushViewController(vc)
+        self.viewControllers?.prepend(navVC)
         
         let up = UISwipeGestureRecognizer(target: self, action: #selector(onSwipeUp))
         up.direction = .up
@@ -27,89 +35,23 @@ class ViewController: UIViewController {
         down.direction = .down
         self.view.addGestureRecognizer(down)
         
-        
-        // 3rd item is help
-        tabBar.selectedItem = tabBar.items![3]
-        tabBar.delegate = self
-        self.tabBar(self.tabBar, didSelect: tabBar.selectedItem!)
     }
     
-    func showTabBar(duration : Double = 0.2) {
-        UIView.animate(withDuration: duration, animations: {
-            self.isHidden = false
-            self.tabBar.transform = CGAffineTransform.identity
-        })
+    override func viewDidAppear(_ animated: Bool) {
+        // hide the bar for now
+        self.changeTabBar(hidden:true, animated:true)
     }
     
-    func hideTabBar(duration : Double = 0.2) {
-        UIView.animate(withDuration: duration, animations: {
-            self.isHidden = true
-            self.tabBar.transform = CGAffineTransform(translationX: 0, y: 150)
-        })
+    func changeTabBar(hidden:Bool, animated: Bool){
+        // remove animation.  causes bad layout issues
+        self.tabBar.isHidden = hidden
     }
     
     @objc func onSwipeUp(recognizer: UITapGestureRecognizer) {
-        self.showTabBar()
+        changeTabBar(hidden:false, animated:true)
     }
 
     @objc func onSwipeDown(recognizer: UITapGestureRecognizer) {
-        self.hideTabBar()
+        changeTabBar(hidden:true, animated:true)
     }
-}
-
-
-extension  ViewController : UITabBarDelegate {
-    func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
-//        print("\(item.title!) clicked")
-
-        // remove previous view controller
-        if let currentVC = self.vc {
-            currentVC.removeFromParent()
-            self.displayView.removeSubviews()
-        }
-        
-        switch (item.title) {
-        case "Hands":
-            vc = self.storyboard?.instantiateViewController(identifier: "handsVC")
-            let view = vc!.view!
-            view.frame = self.view.frame
-            self.displayView.addSubview(view)
-            break
-        case "Screen":
-            vc = self.storyboard?.instantiateViewController(identifier: "screenVC")
-            let view = vc!.view!
-            view.frame = self.view.frame
-            self.displayView.addSubview(view)
-            break
-        case "WakingApp":
-            vc = self.storyboard?.instantiateViewController(identifier: "wakingAppVC")
-            let view = vc!.view!
-            view.frame = self.view.frame
-            self.displayView.addSubview(view)
-            break
-        case "Help":
-            vc = self.storyboard?.instantiateViewController(identifier: "helpVC")
-            let view = vc!.view!
-            view.frame = self.view.frame
-            self.displayView.addSubview(view)
-            break
-        case "Chat":
-            vc = self.storyboard?.instantiateViewController(identifier: "chatVC")
-            let view = vc!.view!
-            view.frame = self.view.frame
-            self.displayView.addSubview(view)
-            break
-        case "Settings":
-            vc = self.storyboard?.instantiateViewController(identifier: "settingsVC")
-            let view = vc!.view!
-            view.frame = self.view.frame
-            self.displayView.addSubview(view)
-            break
-        default:
-            break
-        }
-        
-        self.view.bringSubviewToFront(self.tabBar)
-    }
-
 }

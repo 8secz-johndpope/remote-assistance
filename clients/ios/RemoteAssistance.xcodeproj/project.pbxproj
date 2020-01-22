@@ -14,6 +14,7 @@
 		2959E0E123C6911D00D0F98E /* AVPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2959E0E023C6911D00D0F98E /* AVPlayerViewController.swift */; };
 		29EDBF6D23CE47D000146707 /* ClickableObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EDBF6C23CE47D000146707 /* ClickableObject.swift */; };
 		A539AF265FD05F5E8642A27C /* Pods_RemoteAssistance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13B86974C1A2796697CDFACD /* Pods_RemoteAssistance.framework */; };
+		AD43D0CE23C68E5500AA4D24 /* QRCodeScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD43D0CD23C68E5500AA4D24 /* QRCodeScanner.swift */; };
 		D7455DB82368BE77001594FA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7455DB72368BE77001594FA /* AppDelegate.swift */; };
 		D7455DBA2368BE77001594FA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7455DB92368BE77001594FA /* ViewController.swift */; };
 		D7455DBC2368BE77001594FA /* Experience.rcproject in Sources */ = {isa = PBXBuildFile; fileRef = D7455DBB2368BE77001594FA /* Experience.rcproject */; };
@@ -22,10 +23,15 @@
 		D7455DC42368BE7F001594FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7455DC22368BE7F001594FA /* LaunchScreen.storyboard */; };
 		D7455DCF2368BE7F001594FA /* RemoteAssistanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7455DCE2368BE7F001594FA /* RemoteAssistanceTests.swift */; };
 		D7455DDA2368BE80001594FA /* RemoteAssistanceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7455DD92368BE80001594FA /* RemoteAssistanceUITests.swift */; };
+		D76C1CCC23D78BD600208511 /* AceVRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76C1CCB23D78BD600208511 /* AceVRViewController.swift */; };
 		D795E76623A2E64800E97162 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D795E76523A2E64800E97162 /* ChatViewController.swift */; };
-		D7DA20D123AAE41A005B1357 /* WakingAppViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA20D023AAE41A005B1357 /* WakingAppViewController.swift */; };
-		D7DA20D523AAE6D5005B1357 /* carter-test.wa in Resources */ = {isa = PBXBuildFile; fileRef = D7DA20D323AAE6D5005B1357 /* carter-test.wa */; };
-		D7DA20D623AAE6D5005B1357 /* test.wa in Resources */ = {isa = PBXBuildFile; fileRef = D7DA20D423AAE6D5005B1357 /* test.wa */; };
+		D7AF69FD23C8F097005B67D8 /* Ace.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7AF69FC23C8F097005B67D8 /* Ace.storyboard */; };
+		D7AF69FF23C8F0D0005B67D8 /* AppStoryboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AF69FE23C8F0D0005B67D8 /* AppStoryboard.swift */; };
+		D7AF6A0123C8F4FD005B67D8 /* AceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AF6A0023C8F4FD005B67D8 /* AceViewController.swift */; };
+		D7AF6A0423C8FD8D005B67D8 /* AceUIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AF6A0323C8FD8D005B67D8 /* AceUIViewController.swift */; };
+		D7AF6A0623C90F91005B67D8 /* AceHandsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AF6A0523C90F91005B67D8 /* AceHandsViewController.swift */; };
+		D7AF6A0823C9151C005B67D8 /* AceARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AF6A0723C9151C005B67D8 /* AceARViewController.swift */; };
+		D7AF6A0A23C936DE005B67D8 /* AceSketchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AF6A0923C936DE005B67D8 /* AceSketchViewController.swift */; };
 		D7DA20D723AAE7CA005B1357 /* WA3DLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7DA20CD23AAE255005B1357 /* WA3DLib.framework */; };
 		D7DA20D823AAE7CA005B1357 /* WA3DLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D7DA20CD23AAE255005B1357 /* WA3DLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D7DA31EB239ECFCE00D1B73F /* SCNVector3+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E1239ECFCE00D1B73F /* SCNVector3+Extensions.swift */; };
@@ -50,8 +56,11 @@
 		D7DB6A0A236DE7C700D7C367 /* TSActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DB6A07236DE7C700D7C367 /* TSActions.swift */; };
 		D7DB6A0B236DE7C700D7C367 /* TSReducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DB6A08236DE7C700D7C367 /* TSReducer.swift */; };
 		D7DB6A0C236DE7C700D7C367 /* TSSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DB6A09236DE7C700D7C367 /* TSSwift.swift */; };
-		D7DB6A0E236DE91D00D7C367 /* TSSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DB6A0D236DE91D00D7C367 /* TSSettingsViewController.swift */; };
+		D7DB6A0E236DE91D00D7C367 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DB6A0D236DE91D00D7C367 /* SettingsViewController.swift */; };
 		D7DB6A10236DF21C00D7C367 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = D7DB6A0F236DF21C00D7C367 /* README.md */; };
+		D7EAD85923D6684800EE1A56 /* AceVirtualObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7EAD85823D6684800EE1A56 /* AceVirtualObject.swift */; };
+		D7EAD85B23D66ABC00EE1A56 /* Models.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = D7EAD85A23D66ABC00EE1A56 /* Models.scnassets */; };
+		F9A7B77B23D0F39300F518C0 /* overlay.html in Resources */ = {isa = PBXBuildFile; fileRef = F9A7B77A23D0F39300F518C0 /* overlay.html */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -95,6 +104,7 @@
 		29EDBF6C23CE47D000146707 /* ClickableObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickableObject.swift; sourceTree = "<group>"; };
 		60AD71138BC3828FE41B6BA1 /* Pods-RemoteAssistance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.debug.xcconfig"; sourceTree = "<group>"; };
 		9AD6A81BBB56BA422FCA4EEC /* Pods-RemoteAssistance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.debug.xcconfig"; path = "Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.debug.xcconfig"; sourceTree = "<group>"; };
+		AD43D0CD23C68E5500AA4D24 /* QRCodeScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeScanner.swift; sourceTree = "<group>"; };
 		D009BE9F825C404208D2D25A /* Pods-RemoteAssistance.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.release.xcconfig"; path = "Pods/Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.release.xcconfig"; sourceTree = "<group>"; };
 		D7455DB42368BE77001594FA /* RemoteAssistance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RemoteAssistance.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7455DB72368BE77001594FA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -110,12 +120,17 @@
 		D7455DD52368BE80001594FA /* RemoteAssistanceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RemoteAssistanceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7455DD92368BE80001594FA /* RemoteAssistanceUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteAssistanceUITests.swift; sourceTree = "<group>"; };
 		D7455DDB2368BE80001594FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D76C1CCB23D78BD600208511 /* AceVRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceVRViewController.swift; sourceTree = "<group>"; };
 		D795E76523A2E64800E97162 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		D7AF69FC23C8F097005B67D8 /* Ace.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Ace.storyboard; sourceTree = "<group>"; };
+		D7AF69FE23C8F0D0005B67D8 /* AppStoryboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoryboard.swift; sourceTree = "<group>"; };
+		D7AF6A0023C8F4FD005B67D8 /* AceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceViewController.swift; sourceTree = "<group>"; };
+		D7AF6A0323C8FD8D005B67D8 /* AceUIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceUIViewController.swift; sourceTree = "<group>"; };
+		D7AF6A0523C90F91005B67D8 /* AceHandsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceHandsViewController.swift; sourceTree = "<group>"; };
+		D7AF6A0723C9151C005B67D8 /* AceARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceARViewController.swift; sourceTree = "<group>"; };
+		D7AF6A0923C936DE005B67D8 /* AceSketchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceSketchViewController.swift; sourceTree = "<group>"; };
 		D7DA20CD23AAE255005B1357 /* WA3DLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WA3DLib.framework; path = RemoteAssistance/Frameworks/WA3DLib.framework; sourceTree = "<group>"; };
 		D7DA20CF23AAE366005B1357 /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
-		D7DA20D023AAE41A005B1357 /* WakingAppViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WakingAppViewController.swift; sourceTree = "<group>"; };
-		D7DA20D323AAE6D5005B1357 /* carter-test.wa */ = {isa = PBXFileReference; lastKnownFileType = file; path = "carter-test.wa"; sourceTree = "<group>"; };
-		D7DA20D423AAE6D5005B1357 /* test.wa */ = {isa = PBXFileReference; lastKnownFileType = file; path = test.wa; sourceTree = "<group>"; };
 		D7DA31E1239ECFCE00D1B73F /* SCNVector3+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SCNVector3+Extensions.swift"; sourceTree = "<group>"; };
 		D7DA31E2239ECFCE00D1B73F /* UIView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Extensions.swift"; sourceTree = "<group>"; };
 		D7DA31E3239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ARHitTestResult+Extensions.swift"; sourceTree = "<group>"; };
@@ -138,9 +153,12 @@
 		D7DB6A07236DE7C700D7C367 /* TSActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSActions.swift; sourceTree = "<group>"; };
 		D7DB6A08236DE7C700D7C367 /* TSReducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSReducer.swift; sourceTree = "<group>"; };
 		D7DB6A09236DE7C700D7C367 /* TSSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSSwift.swift; sourceTree = "<group>"; };
-		D7DB6A0D236DE91D00D7C367 /* TSSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSSettingsViewController.swift; sourceTree = "<group>"; };
+		D7DB6A0D236DE91D00D7C367 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		D7DB6A0F236DF21C00D7C367 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		D7EAD85823D6684800EE1A56 /* AceVirtualObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceVirtualObject.swift; sourceTree = "<group>"; };
+		D7EAD85A23D66ABC00EE1A56 /* Models.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Models.scnassets; sourceTree = "<group>"; };
 		E2F10D05D152079F7937DA3B /* Pods-RemoteAssistance.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.release.xcconfig"; path = "Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.release.xcconfig"; sourceTree = "<group>"; };
+		F9A7B77A23D0F39300F518C0 /* overlay.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = overlay.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -227,16 +245,20 @@
 		D7455DB62368BE77001594FA /* RemoteAssistance */ = {
 			isa = PBXGroup;
 			children = (
-				D7DA20DA23AAEC00005B1357 /* WakingApp */,
 				D7DB6A0F236DF21C00D7C367 /* README.md */,
 				D7455DB72368BE77001594FA /* AppDelegate.swift */,
 				D7455DC02368BE7F001594FA /* Assets.xcassets */,
+				D7EAD85A23D66ABC00EE1A56 /* Models.scnassets */,
 				D7455DBB2368BE77001594FA /* Experience.rcproject */,
 				D7455DC52368BE7F001594FA /* Info.plist */,
 				D7455DC22368BE7F001594FA /* LaunchScreen.storyboard */,
 				D7455DBD2368BE77001594FA /* Main.storyboard */,
 				D7455DB92368BE77001594FA /* ViewController.swift */,
 				D795E76523A2E64800E97162 /* ChatViewController.swift */,
+				AD43D0CD23C68E5500AA4D24 /* QRCodeScanner.swift */,
+				D7DB6A0D236DE91D00D7C367 /* SettingsViewController.swift */,
+				D7AF69FE23C8F0D0005B67D8 /* AppStoryboard.swift */,
+				D7AF6A0223C8FCDB005B67D8 /* Ace */,
 				2959E0DD23C65B6300D0F98E /* ObjectAnnotation */,
 				D7DB69F5236DE35100D7C367 /* Common */,
 				D7DA31DE239ECFCE00D1B73F /* ScreenAR */,
@@ -264,27 +286,25 @@
 			path = RemoteAssistanceUITests;
 			sourceTree = "<group>";
 		};
-		D7DA20D223AAE6D5005B1357 /* Resources */ = {
+		D7AF6A0223C8FCDB005B67D8 /* Ace */ = {
 			isa = PBXGroup;
 			children = (
-				D7DA20D323AAE6D5005B1357 /* carter-test.wa */,
-				D7DA20D423AAE6D5005B1357 /* test.wa */,
+				D7AF69FC23C8F097005B67D8 /* Ace.storyboard */,
+				D7AF6A0723C9151C005B67D8 /* AceARViewController.swift */,
+				D7AF6A0523C90F91005B67D8 /* AceHandsViewController.swift */,
+				D7AF6A0923C936DE005B67D8 /* AceSketchViewController.swift */,
+				D7AF6A0323C8FD8D005B67D8 /* AceUIViewController.swift */,
+				D7AF6A0023C8F4FD005B67D8 /* AceViewController.swift */,
+				D7EAD85823D6684800EE1A56 /* AceVirtualObject.swift */,
+				D76C1CCB23D78BD600208511 /* AceVRViewController.swift */,
 			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		D7DA20DA23AAEC00005B1357 /* WakingApp */ = {
-			isa = PBXGroup;
-			children = (
-				D7DA20D023AAE41A005B1357 /* WakingAppViewController.swift */,
-				D7DA20D223AAE6D5005B1357 /* Resources */,
-			);
-			path = WakingApp;
+			path = Ace;
 			sourceTree = "<group>";
 		};
 		D7DA31DE239ECFCE00D1B73F /* ScreenAR */ = {
 			isa = PBXGroup;
 			children = (
+				F9A7B77A23D0F39300F518C0 /* overlay.html */,
 				D7DA31E0239ECFCE00D1B73F /* Extensions + Utilities */,
 				D7DA31E5239ECFCE00D1B73F /* Nodes */,
 				D7DA31E8239ECFCE00D1B73F /* PlaneRectangle.swift */,
@@ -319,7 +339,6 @@
 			children = (
 				D7DB6A00236DE67000D7C367 /* TSLeapMotion.swift */,
 				D7DB6A05236DE6CB00D7C367 /* TSRemoteHands.swift */,
-				D7DB6A0D236DE91D00D7C367 /* TSSettingsViewController.swift */,
 				D7DB69FF236DE67000D7C367 /* TSViewController.swift */,
 				D7DB69FA236DE49A00D7C367 /* Nodes */,
 				D7DB69DB236DE2D500D7C367 /* Resources */,
@@ -486,15 +505,16 @@
 				2941BECC23C9165F00AE3A4F /* clip1.mp4 in Resources */,
 				D7DB69F0236DE2D500D7C367 /* materialdesignicons-webfont.ttf in Resources */,
 				2941BECB23C9165F00AE3A4F /* clip3.mp4 in Resources */,
+				D7AF69FD23C8F097005B67D8 /* Ace.storyboard in Resources */,
 				D7455DC42368BE7F001594FA /* LaunchScreen.storyboard in Resources */,
+				D7EAD85B23D66ABC00EE1A56 /* Models.scnassets in Resources */,
 				D7DB69EB236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Right.dae in Resources */,
+				F9A7B77B23D0F39300F518C0 /* overlay.html in Resources */,
 				D7DB6A10236DF21C00D7C367 /* README.md in Resources */,
 				2941BECD23C9165F00AE3A4F /* clip2.mp4 in Resources */,
 				D7455DC12368BE7F001594FA /* Assets.xcassets in Resources */,
 				D7455DBF2368BE77001594FA /* Main.storyboard in Resources */,
-				D7DA20D623AAE6D5005B1357 /* test.wa in Resources */,
 				D7DB69EF236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Left.dae in Resources */,
-				D7DA20D523AAE6D5005B1357 /* carter-test.wa in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -561,31 +581,39 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D7EAD85923D6684800EE1A56 /* AceVirtualObject.swift in Sources */,
 				D7455DBA2368BE77001594FA /* ViewController.swift in Sources */,
 				D7DA31F4239ED04600D1B73F /* SARViewController.swift in Sources */,
 				D7DB6A0C236DE7C700D7C367 /* TSSwift.swift in Sources */,
 				D7DB6A06236DE6CC00D7C367 /* TSRemoteHands.swift in Sources */,
 				D7455DB82368BE77001594FA /* AppDelegate.swift in Sources */,
 				D7DA31F0239ECFCE00D1B73F /* SurfaceNode.swift in Sources */,
+				D76C1CCC23D78BD600208511 /* AceVRViewController.swift in Sources */,
 				D7DA31F1239ECFCE00D1B73F /* PlaneRectangle.swift in Sources */,
 				D7DB6A0B236DE7C700D7C367 /* TSReducer.swift in Sources */,
+				D7AF69FF23C8F0D0005B67D8 /* AppStoryboard.swift in Sources */,
 				2959E0DF23C660BB00D0F98E /* ARSceneViewController.swift in Sources */,
-				D7DA20D123AAE41A005B1357 /* WakingAppViewController.swift in Sources */,
+				D7AF6A0423C8FD8D005B67D8 /* AceUIViewController.swift in Sources */,
 				D7DA31ED239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift in Sources */,
+				AD43D0CE23C68E5500AA4D24 /* QRCodeScanner.swift in Sources */,
 				D7DA31EC239ECFCE00D1B73F /* UIView+Extensions.swift in Sources */,
 				D795E76623A2E64800E97162 /* ChatViewController.swift in Sources */,
 				29EDBF6D23CE47D000146707 /* ClickableObject.swift in Sources */,
+				D7AF6A0823C9151C005B67D8 /* AceARViewController.swift in Sources */,
 				2959E0E123C6911D00D0F98E /* AVPlayerViewController.swift in Sources */,
 				D7DB6A0A236DE7C700D7C367 /* TSActions.swift in Sources */,
-				D7DB6A0E236DE91D00D7C367 /* TSSettingsViewController.swift in Sources */,
+				D7DB6A0E236DE91D00D7C367 /* SettingsViewController.swift in Sources */,
 				D7DB6A02236DE67000D7C367 /* TSLeapMotion.swift in Sources */,
 				D7DA31EE239ECFCE00D1B73F /* Collection+Extensions.swift in Sources */,
 				D7455DBC2368BE77001594FA /* Experience.rcproject in Sources */,
 				D7DB6A01236DE67000D7C367 /* TSViewController.swift in Sources */,
+				D7AF6A0623C90F91005B67D8 /* AceHandsViewController.swift in Sources */,
 				D7DA31EB239ECFCE00D1B73F /* SCNVector3+Extensions.swift in Sources */,
 				D7DA31F2239ECFCE00D1B73F /* Message.swift in Sources */,
 				D7DB69F8236DE35100D7C367 /* MathExtension.swift in Sources */,
+				D7AF6A0A23C936DE005B67D8 /* AceSketchViewController.swift in Sources */,
 				D7DB6A04236DE6AA00D7C367 /* SocketIOManager.swift in Sources */,
+				D7AF6A0123C8F4FD005B67D8 /* AceViewController.swift in Sources */,
 				D7DA31EF239ECFCE00D1B73F /* RectangleNode.swift in Sources */,
 				D7DB69F9236DE35100D7C367 /* WRTCClient.swift in Sources */,
 				D7DB69FC236DE49A00D7C367 /* ArrowNode.swift in Sources */,

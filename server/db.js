@@ -4,12 +4,29 @@ const parseDbUrl = require("parse-database-url");
 const databaseConfig = parseDbUrl(config.databaseUrl);
 const util = require('./util');
 
-// load the database info from config/...
-const connection = mysql.createConnection(databaseConfig);
-connection.connect(function(err) {
-	if (err) throw err
-	console.log(`Connected to mysql: ${databaseConfig.host}/${databaseConfig.database}`);
-});
+// handle disconnect
+var connection;
+function handleDisconnect() {
+    connection = mysql.createConnection(databaseConfig);  // Recreate the connection, since the old one cannot be reused.
+    connection.connect( function onConnect(err) {   // The server is either down
+        if (err) {                                  // or restarting (takes a while sometimes).
+            console.log('Error when connecting to db:', err);
+			setTimeout(handleDisconnect, 10000);    // We introduce a delay before attempting to reconnect,
+			return;
+		}                                           // to avoid a hot loop, and to allow our node script to
+		console.log(`Connected to mysql: ${databaseConfig.host}/${databaseConfig.database}`);
+    });                                             // process asynchronous requests in the meantime.
+                                                    // If you're also serving http, display a 503 error.
+    connection.on('error', function onError(err) {
+        console.log('DB Error:', err);
+        if (err.code == 'PROTOCOL_CONNECTION_LOST') {   // Connection to the MySQL server is usually
+            handleDisconnect();                         // lost due to either server restart, or a
+        } else {                                        // connnection idle timeout (the wait_timeout
+            throw err;                                  // server variable configures this)
+        }
+    });
+}
+handleDisconnect();
 
 module.exports = {
 	
@@ -52,6 +69,29 @@ module.exports = {
 		})		
 	},
 
+	getAnchor: (res,uuid,cb) => {
+		console.log(uuid)
+		connection.query('select * from anchor where uuid = ?',
+			[
+				uuid
+			],
+			function (err, rows, fields) {
+				if (err) throw err
+				cb(rows)
+		})		
+	},
+
+	getAnchors: (res,text,cb) => {
+		connection.query('select * from anchor where name like ?',
+			[
+				'%'+text+'%'
+			],
+			function (err, rows, fields) {
+				if (err) throw err
+				cb(rows)
+		})		
+	},
+
 	getClip: (res,uuid,cb) => {
 		connection.query('select * from clip where uuid = ?',
 			[
@@ -63,9 +103,9 @@ module.exports = {
 		})		
 	},
 
-	getClips: (res,marker_uuid,room_uuid,cb) => {
-		let q = 'select clip.user_uuid,clip.room_uuid,clip.uuid,clipMarker.id,clipMarker.marker_uuid,clipMarker.position_blob from clip,clipMarker where clipMarker.clip_uuid=clip.uuid and clipMarker.marker_uuid = ?'
-		let arr = [marker_uuid]; 
+	getClips: (res,anchor_uuid,room_uuid,cb) => {
+		let q = 'select clip.user_uuid,clip.room_uuid,clip.uuid,clipAnchor.id,clipAnchor.anchor_uuid,clipAnchor.position_blob from clip,clipAnchor where clipAnchor.clip_uuid=clip.uuid and clipAnchor.anchor_uuid = ?'
+		let arr = [anchor_uuid]; 
 		if (room_uuid) {
 			q += ' and clip.room_uuid = ?'
 			arr.push(room_uuid)
@@ -119,17 +159,17 @@ module.exports = {
 		})
 	},
 
-	addClipMarker: (res,marker_uuid,clip_uuid,position_blob,cb) => {
+	addClipAnchor: (res,anchor_uuid,clip_uuid,position_blob,cb) => {
 		let uuid = util.generateRandomId();
-		connection.query('insert into clipMarker(marker_uuid,clip_uuid,position_blob) values(?,?,?)',
+		connection.query('insert into clipAnchor(anchor_uuid,clip_uuid,position_blob) values(?,?,?)',
 			[
-				marker_uuid,
+				anchor_uuid,
 				clip_uuid,
 				position_blob
 			],
 			function (err, result) {
 				if (err) throw err
-				let obj = {'marker_uuid': marker_uuid, 'clip_uuid': clip_uuid}	
+				let obj = {'anchor_uuid': anchor_uuid, 'clip_uuid': clip_uuid}	
 				cb(obj)
 		})
 	},

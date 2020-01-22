@@ -9,7 +9,7 @@
 import UIKit
 import WebKit
 
-class ChatViewController: UIViewController {
+class ChatViewController: UIViewController,QRCodeScannerDelegate {
 
     @IBOutlet weak var webView: WKWebView!
     
@@ -17,8 +17,32 @@ class ChatViewController: UIViewController {
         let url = "\(store.ts.state.serverUrl)/chat"
         let chatUrl = URL(string:url)
         let request = URLRequest(url: chatUrl!)
+        webView.configuration.userContentController.add(self, name: "launchRA")
+        webView.configuration.userContentController.add(self, name: "launchQRScanner")
         webView.load(request)
         webView.navigationDelegate = self
+    }
+
+    func launchRA(dict: NSDictionary) {
+        // let user_uuid = dict["user_uuid"] as? String ?? ""
+         let room_uuid = dict["room_uuid"] as? String ?? ""
+
+        // TODO: Launch remote assist view controller with room uuid: room_uuid
+        let action = TSSetRoomName(roomName: room_uuid)
+        store.ts.dispatch(action)
+
+        let vc = AceViewController.instantiate(fromAppStoryboard: .Ace)
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func launchQRScanner(dict: NSDictionary) {
+        let nvc = QRCodeSCanner()
+        nvc.delegate = self
+        self.navigationController?.pushViewController(nvc, animated: true)
+    }
+
+    func qrCodeScannerResponse(code: String) {
+        webView.evaluateJavaScript("onQRCodeScanned('\(code)')", completionHandler: nil)
     }
 
 }
@@ -38,5 +62,15 @@ extension ChatViewController: WKNavigationDelegate {
         // allow any ssl cert
         let cred = URLCredential.init(trust: challenge.protectionSpace.serverTrust!)
         completionHandler(.useCredential, cred)
+    }
+}
+
+extension ChatViewController: WKScriptMessageHandler {
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        if message.name == "launchRA", let dict = message.body as? NSDictionary {
+            launchRA(dict: dict)
+        } else if message.name == "launchQRScanner", let dict = message.body as? NSDictionary {
+            launchQRScanner(dict: dict)
+        }
     }
 }

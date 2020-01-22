@@ -9,12 +9,14 @@ const PERSON_NAME = " ";
 const BOT_DELAY = 500;
 const BOT_MSG_UNKNOWN = "I'm sorry, I didn't understand your response.";
 const SERVER_API = "/api/";
+const NATIVE_UA = "ace";
 
 const CHAT_TREE = JSON.parse(CHAT_TREE_JSON);
 
 let convArchive = []; 
 let currentIndex = 1;
 let jbScanner;
+let qrScannerAction;
 
 msgerForm.addEventListener("submit", event => {
   event.preventDefault();
@@ -43,6 +45,13 @@ function launchRA() {
             function(data) {
               console.log("Connecting user",customerData.uuid,"to room", roomData.room_uuid);
               // Connect to iOS
+              if (runningNative()) {
+                window.webkit.messageHandlers.launchRA.postMessage(
+                  { 
+                    user_uuid: customerData.uuid,
+                    room_uuid: roomData.room_uuid,
+                  });                
+              }
           })
       })
   })
@@ -66,7 +75,7 @@ function getButtonHTML(botResponseArr) {
     switch (botResponseArr[i].type) {
       case "response":
        let actionLabel = botResponseArr[i].actionLabel;
-       html += `<button class="btn btn-primary" style="margin-top: 10px" onclick='injectMsg(${action},\"${actionLabel}\")'>${actionLabel}</button> `;
+       html += `<button class="btn btn-primary" style="margin-top: 10px; margin-right: 25px" onclick='injectMsg(${action},\"${actionLabel}\")'>${actionLabel}</button> `;
        break;
       case "barcode":
        html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchQRScanner(${action})'><span class="fa fa-qrcode fa-2x"></span></button> `;
@@ -135,7 +144,8 @@ function botResponse(msgText,msgLabel="") {
     }
   }  
 
-  botMsgText = CHAT_TREE.responses[currentIndex-1].q;
+  botMsgText = CHAT_TREE.responses[currentIndex-1].q; 
+  // + " " + runningNative();
 
   for (let i = 0; i < CHAT_TREE.responses[currentIndex-1].next.length; i++) {
     let pReg = /\+[0-9]+/;
@@ -184,11 +194,17 @@ function random(min, max) {
 
 function onQRCodeScanned(scannedText)
 {
-  let scannerParentElement = document.getElementById("scanner");
-  $('#myModal').modal('hide');
-  jbScanner.stopScanning();
-  jbScanner.removeFrom( scannerParentElement )
-  injectMsg(jbScanner.action,scannedText);
+  if (!runningNative()) {
+    closeJSQRScanner();
+  }
+  injectMsg(qrScannerAction,scannedText);
+}
+
+function closeJSQRScanner() {
+    let scannerParentElement = document.getElementById("scanner");
+    $('#myModal').modal('hide');
+    jbScanner.stopScanning();
+    jbScanner.removeFrom( scannerParentElement )      
 }
 
 //this function will be called when JsQRScanner is ready to use
@@ -196,17 +212,32 @@ function JsQRScannerReady()
 {
     jbScanner = new JsQRScanner(onQRCodeScanned);
     jbScanner.setSnapImageMaxSize(300);
-    console.log("QR scanner ready");
+    //console.log("QR scanner ready");
     //console.log(jbScanner);
     //launchQRScanner();
 }
 
 function launchQRScanner(action) {
-  let scannerParentElement = document.getElementById("scanner");
-  jbScanner.appendTo(scannerParentElement);
-  jbScanner.action = action;
-  $('#myModal').modal('show');
+    qrScannerAction = action;
+    if (runningNative()) {
+      window.webkit.messageHandlers.launchQRScanner.postMessage(
+      { 
+      });                
+    } else {
+      let scannerParentElement = document.getElementById("scanner");
+      jbScanner.appendTo(scannerParentElement);
+      $('#myModal').modal('show');
+    }
+}
+
+function runningNative() {
+  let n = false;
+  if (window.webkit && window.webkit.messageHandlers) {
+    n = true;
+  } 
+  return n;
 }
 
 botResponse(0);
+
 //appendMessage(BOT_NAME, BOT_IMG, "left", "Hello, how may I help you today?", []);

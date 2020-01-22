@@ -29,7 +29,9 @@ navigator.mediaDevices.getUserMedia(constraints).then(
     function(stream) {
         wrtc = new WebRTCClient({
             stream: stream,
-            room: config.roomid
+            room: config.roomid,
+            dataChannel: 'ScreenAR',
+            dataChannelCallback: dataChannelCallback
         });
 
         user_uuid = Cookies.get('expert_uuid');
@@ -430,7 +432,7 @@ function startRecording() {
             wrtc.emit('recording_started', {"name":recordingClipUUID});
             mediaRecorder.onstop = handleStop;
             mediaRecorder.ondataavailable = handleDataAvailable;
-            mediaRecorder.start();
+            mediaRecorder.start(100);
             console.log('MediaRecorder started', mediaRecorder);
         }
     )
@@ -460,9 +462,10 @@ function stepDone() {
   if (recordingLS) { 
     recordingLS = false; 
     stopRecording(); 
+    wrtc.emit('recording_stopped',{"name":recordingClipUUID}); 
   }
+  clearTimeout(clearCtxInterval);
   toggleDots(false); 
-  wrtc.emit('recording_stopped',{}); 
 }
 
 function toggleDots(down) {
@@ -570,8 +573,9 @@ function drawSketch(e) {
 
   clearTimeout(clearSketchInterval);
   if (ls) {  clearTimeout(clearCtxInterval); }
-  
-  let sCanvasCtx =  document.getElementById("sketchCanvas").getContext('2d');
+
+  let sCanvas = document.getElementById("sketchCanvas");
+  let sCanvasCtx =  sCanvas.getContext('2d');
 
   sCanvasCtx.beginPath();
 
@@ -586,7 +590,8 @@ function drawSketch(e) {
 
   sCanvasCtx.stroke(); // draw it
 
-  wrtc.emit('sketch_draw', {sX: sX, sY: sY, eX: pos.x, eY: pos.y}); // ship it
+  wrtc.emit('sketch_draw', {sX: sX, sY: sY, eX: pos.x, eY: pos.y,
+    cW: sCanvas.width, cH: sCanvas.height}); // ship it
 }
 
 setSketchOnOff();
@@ -666,3 +671,42 @@ function reconnectLeapmotion() {
 }
 reconnectLeapmotion();
 // ----- END: Comment this out to disable sending browser leapmotion data -----
+
+// ----- START: AR Pointer
+var enablePointer = false;
+
+function handlePointerClick(e) {
+    console.log('pointer_set', e.clientX, e.clientY);
+    let canvas = document.getElementById("sketchCanvas");
+    wrtc.emit('pointer_set', {
+        x: e.clientX,
+        y: e.clientY,
+        w: canvas.width,
+        h: canvas.height
+    });
+    return false;
+}
+
+$('#pointerSet').click(function(e) {
+    e.preventDefault();
+    const input = $(this).children('input');
+    const checked = !input.is(':checked');
+    const c = document.getElementById("sketchCanvas");
+    input.prop('checked', !checked);
+    if (checked) {
+        enablePointer = true;
+        $(this).addClass('btn-success');
+        c.style.zIndex = 3;
+        c.addEventListener('click', handlePointerClick);
+        renderer.domElement.removeEventListener('click', onMouseClick, false);
+    } else {
+        enablePointer = false;
+        $(this).removeClass('btn-success');
+        c.style.zIndex = 1;
+        c.removeEventListener('click', handlePointerClick);
+        renderer.domElement.addEventListener('click', onMouseClick, false);
+        wrtc.emit('pointer_clear', {});
+    }
+});
+
+// ----- EBD: AR Pointer

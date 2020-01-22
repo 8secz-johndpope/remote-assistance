@@ -1,15 +1,38 @@
 const uuid = require('uuid');
 const config = require('config');
 const fs = require('fs');
+const { exec } = require("child_process");
 
 module.exports = function(io) {
     var rooms = {};
+
+    function sleep(ms) {
+      return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+      });
+    }
+
+    async function execCmd(cmd,waitTime) {
+        await sleep(waitTime); // wait to gather data from client
+        console.log(cmd);
+        exec(cmd, (error, stdout, stderr) => {
+            if (error) {
+                console.log(`error: ${error.message}`);
+                return;
+            }
+            if (stderr) {
+                console.log(`stderr: ${stderr}`);
+                return;
+            }
+            console.log(`stdout: ${stdout}`);
+        });
+    }
+
     io.on('connect', function(socket) {
         var room;
         var users = {};
         var sid = uuid.v4();
         var fileStream;
-        var filePath;
 
         socket.on('join', function(data) {
             room = data.room;
@@ -34,10 +57,24 @@ module.exports = function(io) {
         });
 
         socket.on('recording_started', function(data) {
-            console.log('creating file');
-            filePath = config.clipLoc + data.name + ".webm";
+            console.log('creating webm file');
+            let filePath = config.clipLoc + data.name + ".webm";
             fileStream = fs.createWriteStream(filePath, { flags: 'w' });
         });
+
+        socket.on('recording_stopped', function(data) {
+            console.log('creating mp4 file');
+            let filePathThumb = config.clipLoc + data.name + ".jpg";
+            let filePathMp4 = config.clipLoc + data.name + ".mp4";
+            let filePathWebm = config.clipLoc + data.name + ".webm";
+            let cmdTranscode = "ffmpeg -i " + filePathWebm + 
+                      " -y -vcodec libx264 -qp 0 -pix_fmt yuv420p -acodec libfdk_aac " +
+                      filePathMp4;
+            execCmd(cmdTranscode,5000);
+            let cmdCreateThumb = "ffmpeg -i " + filePathWebm + 
+                      " -ss 00:00:01.000 -vframes 1 " + filePathThumb;
+            execCmd(cmdCreateThumb,5500);
+         });
 
         socket.on('recording_blob', function(data) {
             console.log('writing packet',data.length)
@@ -82,7 +119,9 @@ module.exports = function(io) {
             'recording_stopped',
             'sketch_draw',
             'sketch_clear',
-            'clip_marker'
+            'clip_marker',
+            'pointer_set',
+            'pointer_clear',
         ]
         events.forEach(function(eventName) {
             socket.on(eventName, function(data) {

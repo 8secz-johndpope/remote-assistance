@@ -69,7 +69,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, ClickableObjec
                 }
             }
         }
-    }
+    }   
     
     func buildNode(material: SCNMaterial, scnVector3: SCNVector3) -> SCNNode {
         let node = SCNNode(geometry: SCNBox(width: 0.3, height: 0.3, length: 0.001))

@@ -4,14 +4,8 @@ Remote Assistance
 The unified Remote Assistance project respository.
 
 
-How to build client
--------------------
+How to build and run client (TODO)
 
-> TODO
 
-How to run server
------------------
-
-> TODO
-
+[Server README](server/README.md)
 
