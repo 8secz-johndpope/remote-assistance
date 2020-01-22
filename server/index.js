@@ -88,7 +88,7 @@ if (!args.db_off) {
         })
     });
 
-    app.get('/api/getAllUsers', function (req, res) {
+    app.get('/api/getAllUsers/', function (req, res) {
         db.getAllUsers(res,function(data) {
             res.json(data)
         })
@@ -105,7 +105,7 @@ if (!args.db_off) {
         })
     });
 
-    app.get('/api/getAllAnchors/', function (req, res) {
+    app.get('/api/getAllAnchors', function (req, res) {
         db.getAllAnchors(res,function(data) {
             res.json(data)
         })
@@ -123,7 +123,7 @@ if (!args.db_off) {
         })
     });
 
-    app.get('/api/getAllClips/', function (req, res) {
+    app.get('/api/getAllClips', function (req, res) {
         db.getAllClips(res,function(data) {
             res.json(data)
         })
