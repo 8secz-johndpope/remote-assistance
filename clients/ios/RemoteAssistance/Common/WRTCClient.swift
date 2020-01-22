@@ -218,7 +218,10 @@ class WRTCClient : NSObject {
             return pc
         } else {
             let config = RTCConfiguration()
-            config.iceServers = [RTCIceServer(urlStrings: ["stun:stun.l.google.com:19302"])]
+            config.iceServers = [
+                RTCIceServer(urlStrings: ["stun:stun.l.google.com:19302"]),
+                RTCIceServer(urlStrings: ["stun:rhelp.fxpal.net"]),
+                ]
             config.sdpSemantics = .unifiedPlan
             config.certificate = RTCCertificate.generate(withParams: ["expires": 100000, "name": "RSASSA-PKCS1-v1_5"])
             
