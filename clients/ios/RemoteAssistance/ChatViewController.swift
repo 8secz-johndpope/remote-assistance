@@ -22,6 +22,11 @@ class ChatViewController: UIViewController,QRCodeScannerDelegate {
         webView.load(request)
         webView.navigationDelegate = self
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
 
     func launchRA(dict: NSDictionary) {
         // let user_uuid = dict["user_uuid"] as? String ?? ""

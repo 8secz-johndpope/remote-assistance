@@ -31,6 +31,7 @@ PODS:
   - SwifterSwift/SpriteKit (5.1.0)
   - SwifterSwift/SwiftStdlib (5.1.0)
   - SwifterSwift/UIKit (5.1.0)
+  - Toast-Swift (5.0.1)
 
 DEPENDENCIES:
   - GoogleWebRTC
@@ -39,6 +40,7 @@ DEPENDENCIES:
   - Socket.IO-Client-Swift (~> 15.2.0)
   - SuperAlertController/Ext
   - SwifterSwift
+  - Toast-Swift (~> 5.0.1)
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
@@ -49,6 +51,7 @@ SPEC REPOS:
     - Starscream
     - SuperAlertController
     - SwifterSwift
+    - Toast-Swift
 
 SPEC CHECKSUMS:
   GoogleWebRTC: 55e46bee9ac2a4961542e9571bea589b64493f45
@@ -58,7 +61,8 @@ SPEC CHECKSUMS:
   Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
   SuperAlertController: 7e0587b26d8f0aaa28b0f93033737b1d89729557
   SwifterSwift: a9e8e144832638c2850b43da5feaf9598c6ad65b
+  Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
 
-PODFILE CHECKSUM: c0d97b36ddd1d8d4464c41441e34b930595e7c75
+PODFILE CHECKSUM: b0d827bacb5b611100c8860fd6d56d6edaa42977
 
 COCOAPODS: 1.8.4

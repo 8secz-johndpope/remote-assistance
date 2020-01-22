@@ -77,8 +77,10 @@ class AceUIViewController : UIViewController {
     }
     
     // callbacks
-    @IBAction func onHangupClick(_ sender: Any) {
-        self.navigationController?.popViewController()
+    @IBAction func onHangupClick(_ sender: UIButton) {
+        delegate?.onHangup(sender)
+        onCloseMenu(sender)
+        resetTimer()
     }
 
     @objc func onTap(recognizer: UITapGestureRecognizer) {
@@ -149,4 +151,5 @@ protocol AceUIViewDelegate {
     func onResetScreenAR(_ btn:UIButton)
     func onSettings(_ btn:UIButton)
     func onToggleVR(_ btn:UIButton)
+    func onHangup(_ btn:UIButton)
 }

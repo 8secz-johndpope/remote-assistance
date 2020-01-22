@@ -70,9 +70,10 @@ class QRCodeSCanner: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
         present(ac, animated: true)
         captureSession = nil
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: animated)
 
         if (captureSession?.isRunning == false) {
             captureSession.startRunning()
@@ -90,6 +91,8 @@ class QRCodeSCanner: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         captureSession.stopRunning()
 
+        self.navigationController?.popViewController(animated:true)
+
         if let metadataObject = metadataObjects.first {
             guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { return }
             guard let stringValue = readableObject.stringValue else { return }
@@ -97,8 +100,6 @@ class QRCodeSCanner: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
             found(code: stringValue)
             self.delegate?.qrCodeScannerResponse(code: stringValue)
         }
-
-        self.navigationController?.popViewController(animated:true)
     }
 
     func found(code: String) {

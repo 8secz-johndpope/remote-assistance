@@ -8,4 +8,5 @@ target 'RemoteAssistance' do
   pod 'SuperAlertController/Ext'
   pod 'IconFontKit/MaterialDesignIcons'
   pod 'SwifterSwift'
+  pod 'Toast-Swift', '~> 5.0.1'
 end
