@@ -52,7 +52,7 @@ app.get('/', function (req, res) {
     res.redirect('/' + roomid)
 });
 
-if (!args.no_db) {
+if (!args.db_off) {
     const db = require('./db')
 
     app.get('/chat', function (req, res) {
