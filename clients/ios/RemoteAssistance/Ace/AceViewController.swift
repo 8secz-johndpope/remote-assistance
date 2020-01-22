@@ -74,4 +74,8 @@ extension AceViewController : AceUIViewDelegate {
     func onToggleVR(_ btn: UIButton) {
         arVC?.onToggleVR(btn)
     }
+    
+    func onHangup(_ btn: UIButton) {
+        self.navigationController?.popViewController()
+    }
 }

@@ -414,7 +414,7 @@
             </objects>
             <point key="canvasLocation" x="1161" y="1621"/>
         </scene>
-        <!--Ace Landing View Controller-->
+        <!--Ace Assistant-->
         <scene sceneID="XLe-2N-PZD">
             <objects>
                 <viewController storyboardIdentifier="AceLandingViewController" id="KQt-tt-cjl" customClass="AceLandingViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
@@ -534,10 +534,9 @@
                         <color key="backgroundColor" red="0.0" green="0.6560035944" blue="0.3153159022" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <viewLayoutGuide key="safeArea" id="YLY-nB-kNf"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Ace Assistant" image="person.crop.rectangle" catalog="system" id="s5H-WB-goE"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="V8G-wj-fi6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-                <tabBarItem title="Ace Assistant" image="person.crop.rectangle" catalog="system" id="MHT-WA-QOw"/>
-                <navigationItem id="m1R-Fq-lsv"/>
             </objects>
             <point key="canvasLocation" x="-1249.2753623188407" y="835.71428571428567"/>
         </scene>
