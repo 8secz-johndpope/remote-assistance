@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="giu-C5-QdP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="giu-C5-QdP">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,9 +19,9 @@
                     <connections>
                         <segue destination="FQY-R0-ZYw" kind="relationship" relationship="viewControllers" id="Jfu-0v-w5Z"/>
                         <segue destination="7rk-Js-EZa" kind="relationship" relationship="viewControllers" id="787-cA-r1R"/>
-                        <segue destination="GlK-ev-vYM" kind="relationship" relationship="viewControllers" id="z6l-d2-nXA"/>
-                        <segue destination="gm8-dW-RVL" kind="relationship" relationship="viewControllers" id="j0a-Hw-12b"/>
-                        <segue destination="EGO-GX-8UF" kind="relationship" relationship="viewControllers" id="pBh-yx-oUe"/>
+                        <segue destination="jOc-5h-TZa" kind="relationship" relationship="viewControllers" id="Bkd-Jk-P3T"/>
+                        <segue destination="EGO-GX-8UF" kind="relationship" relationship="viewControllers" id="X1y-Uu-rNF"/>
+                        <segue destination="gm8-dW-RVL" kind="relationship" relationship="viewControllers" id="bsW-0m-wJx"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BbL-sm-mCp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -37,25 +37,20 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pAh-hd-LJ2">
-                                <rect key="frame" x="0.0" y="20" width="414" height="856"/>
-                            </arscnView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cze-Et-3aG">
-                                <rect key="frame" x="132" y="773" width="150" height="40"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="774" id="fbY-cu-IKy"/>
-                                </constraints>
+                                <rect key="frame" x="0.0" y="88" width="414" height="725"/>
                             </arscnView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="pAh-hd-LJ2" firstAttribute="bottom" secondItem="oGF-rY-scQ" secondAttribute="bottom" id="DfL-aj-7rZ"/>
-                            <constraint firstItem="pAh-hd-LJ2" firstAttribute="centerX" secondItem="W4t-D7-Y4q" secondAttribute="centerX" id="LTg-Ky-jKV"/>
-                            <constraint firstItem="pAh-hd-LJ2" firstAttribute="leading" secondItem="oGF-rY-scQ" secondAttribute="leading" id="bNg-Zs-vUO"/>
+                            <constraint firstItem="pAh-hd-LJ2" firstAttribute="leading" secondItem="oGF-rY-scQ" secondAttribute="leading" id="FAI-F1-kem"/>
+                            <constraint firstItem="pAh-hd-LJ2" firstAttribute="bottom" secondItem="oGF-rY-scQ" secondAttribute="bottom" id="IoB-Z2-bHv"/>
+                            <constraint firstItem="pAh-hd-LJ2" firstAttribute="centerX" secondItem="W4t-D7-Y4q" secondAttribute="centerX" id="MP0-AH-VRv"/>
+                            <constraint firstItem="pAh-hd-LJ2" firstAttribute="top" secondItem="oGF-rY-scQ" secondAttribute="top" id="e4t-Eq-WdF"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="oGF-rY-scQ"/>
                     </view>
-                    <navigationItem key="navigationItem" id="kR5-TV-FXe"/>
                     <tabBarItem key="tabBarItem" title="Object" image="cube" catalog="system" id="7PA-w3-Kw1"/>
+                    <navigationItem key="navigationItem" id="kR5-TV-FXe"/>
                     <connections>
                         <outlet property="sceneView" destination="pAh-hd-LJ2" id="QWG-Gp-cqJ"/>
                         <segue destination="vQI-uw-SfN" kind="show" identifier="showVideoPlayer" id="avz-uZ-KVy"/>
@@ -63,7 +58,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CS5-vf-eIv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="709" y="838"/>
+            <point key="canvasLocation" x="760.86956521739137" y="1577.6785714285713"/>
         </scene>
         <!--Hands-->
         <scene sceneID="1sv-g4-gON">
@@ -357,12 +352,13 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R5K-e5-agg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6541" y="133"/>
+            <point key="canvasLocation" x="761" y="2332"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Item-->
         <scene sceneID="hf7-Uf-6YK">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jOc-5h-TZa" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="6cr-5q-OnD"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="XLH-qm-ohV">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
@@ -375,7 +371,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sMU-EI-ftl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4728.985507246377" y="132.58928571428572"/>
+            <point key="canvasLocation" x="761" y="846"/>
         </scene>
     </scenes>
     <resources>
