@@ -1,0 +1,9 @@
+auto wlan0
+iface wlan0 inet static
+	address 192.168.4.1
+	netmask 255.255.255.0
+	network 192.168.4.0
+	gateway 192.168.4.1
+	broadcast 192.168.4.255
+	dns-nameservers 192.168.4.1
+	dns-search fxpal.net

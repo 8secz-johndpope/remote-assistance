@@ -2,7 +2,7 @@
 
 sudo apt update -y
 sudo apt ugprade -y
-sudo apt install -y nginx hostapd dnsmasq dhcpcd openssh-server
+sudo apt install -y nginx hostapd dnsmasq dhcpcd openssh-server stun-client stun-server
 
 sudo cp -vr ./etc /
 
@@ -17,6 +17,7 @@ sudo systemctl enable hostapd
 sudo systemctl enable remote-assistance
 sudo systemctl enable dhcpcd
 sudo systemctl enable nginx
+sudo systemctl enable stun
 #sudo systemctl restart ssh
 #sudo systemctl restart hostapd
 #sudo systemctl resatrt dnsmasq
