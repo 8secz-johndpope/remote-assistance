@@ -51,13 +51,13 @@ Get user details
 {"id":int,"type":"customer|expert","photo":"url_string","uuid":"string","password":"","email":"email_string","name":"name_string"}
 ```
 
-Get all user UUIDs
+Get all users
 ```
 /api/getAllUsers
 [{"id":int,"type":"customer|expert","photo":"url_string","uuid":"string","password":"","email":"email_string","name":"name_string"}]
 ```
 
-Create a room and return a UUID
+Create a room
 ```
 /api/createRoom
 {"uuid":"string"}
@@ -75,7 +75,7 @@ Get rooms with at least one participant. Returns count of customers and experts 
 [{"room_uuid":"343973452","experts":0,"customers":1},{"room_uuid":"439560276","experts":1,"customers":1}]
 ```
 
-Get all room UUIDs
+Get all rooms
 ```
 /api/getAllRooms
 [{"id":int,"time_ping":int,"time_request":int,"time_created":int,"uuid":"string"}]
@@ -106,7 +106,7 @@ Get all anchors whose name includes given text
 [{"id":int,"uuid":"string","data":"string","type":"image|object","name":"string"}]
 ```
 
-Get all anchor UUIDs
+Get all anchors
 ```
 /api/getAllAnchors
 [{"id":int,"uuid":"string","data":"string","type":"image|object","name":"string"}]
@@ -130,13 +130,13 @@ Associate clip and anchor
 
 ```
 
-Create an entry for a clip and return UUID
+Create an entry for a clip
 ```
 /api/createClip/:name/:user_uuid/:room_uuid
 {"uuid":"152875912"}
 ```
 
-Get all clip UUIDs
+Get all clips
 ```
 /api/getAllClips
 [{"id":int,"name":string,"user_uuid":string,"room_uuid":string,"uuid":string}]
