@@ -126,7 +126,7 @@ if (!args.db_off) {
         })
     });
 
-    app.get('/api/getClips/:anchor_uuid/:room_uuid?', function (req, res) {
+    app.get('/api/getClipsForAnchor/:anchor_uuid/:room_uuid?', function (req, res) {
         db.getClips(res,req.params.anchor_uuid,req.params.room_uuid,function(data) {
             res.json(data)
         })

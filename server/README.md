@@ -108,20 +108,20 @@ Remove user from room
 Get anchor details
 ```
 /api/getAnchor/:uuid
-{"id":int,"uuid":"string","data":"string","type":"image|object","name":"string"}
+{"id":int,"uuid":"string","url":url,"type":"image|object","name":"string"}
 
 ```
 
 Get all anchors whose name includes given text 
 ```
 /api/getAllAnchors/:text
-[{"id":int,"uuid":"string","data":"string","type":"image|object","name":"string"}]
+[{"id":int,"uuid":"string","url":url,"type":"image|object","name":"string"}]
 ```
 
 Get all anchors
 ```
 /api/getAllAnchors
-[{"id":int,"uuid":"string","data":"string","type":"image|object","name":"string"}]
+[{"id":int,"uuid":"string","url":url,"type":"image|object","name":"string"}]
 ```
 
 Create clip
@@ -139,19 +139,19 @@ Delete a clip
 Get clip details. Data is available at uuid.webm, uuid.mp4, and uuid.jpg (thumbnail).
 ```
 /api/getClip/:uuid
-{"id":int,"name":string,"user_uuid":string,"room_uuid":string,"uuid":string}
+{"id":int,"name":string,"user_uuid":string,"room_uuid":string,"uuid":string,"thumbnailUrl":url,"webmUrl":url,"mp4Url":url}
 ```
 
 Get clip details (including position of clip on anchor) for given anchor (optionally also select by room)
 ```
-/api/getClips/:anchor_uuid/:room_uuid?
-[{"position_blob":"{}","id":75,"name":"demo1","user_uuid":"demo","room_uuid":"demo","uuid":"demo1"}]
+/api/getClipsForAnchor/:anchor_uuid/:room_uuid?
+[{"position_blob":"{}","id":75,"name":"demo1","user_uuid":"demo","room_uuid":"demo","uuid":"demo1","thumbnailUrl":url,"webmUrl":url,"mp4Url":url}]
 ```
 
 Get all clips (note since no anchor is given these must be without anchor positions)
 ```
 /api/getAllClips
-[{"id":int,"name":string,"user_uuid":string,"room_uuid":string,"uuid":string}]
+[{"id":int,"name":string,"user_uuid":string,"room_uuid":string,"uuid":string,"thumbnailUrl":url,"webmUrl":url,"mp4Url":url}]
 ```
 
 Add clip to anchor at a positon
