@@ -71,13 +71,13 @@ if (!args.db_off) {
     })
 
     app.get('/api/getActiveRooms', function (req, res) {
-        db.getActiveRooms(res,function(data) {
+        db.getAllRooms(res,true,function(data) {
             res.json(data)
         })
     });
 
     app.get('/api/getAllRooms', function (req, res) {
-        db.getAllRooms(res,function(data) {
+        db.getAllRooms(res,false,function(data) {
             res.json(data)
         })
     });

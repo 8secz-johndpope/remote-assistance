@@ -46,8 +46,12 @@ module.exports = {
 		})		
 	},
 
-	getActiveRooms: (res,cb) => {
-		connection.query('SELECT roomUser.room_uuid,user.type,room.* FROM roomUser,user,room where roomUser.state = 1 and user.uuid = roomUser.user_uuid and room.uuid = roomUser.room_uuid',
+	getAllRooms: (res,activeOnly,cb) => {
+		let q = 'SELECT roomUser.room_uuid,user.type,room.* FROM roomUser,user,room where user.uuid = roomUser.user_uuid and room.uuid = roomUser.room_uuid';
+		if (activeOnly) { 
+			q += ' and roomUser.state = 1';
+		}
+		connection.query(q,
 			[				
 			],
 			function (err, rows, fields) {
@@ -67,16 +71,6 @@ module.exports = {
 					if (t == "customer") { ret[index].customers = ret[index].customers+1; }
 				}
 				cb(ret);
-		})		
-	},
-
-	getAllRooms: (res,cb) => {
-		connection.query('select * from room',
-			[
-			],
-			function (err, rows, fields) {
-				if (err) throw err
-				cb(rows)
 		})		
 	},
 
@@ -249,7 +243,7 @@ module.exports = {
 				cb(obj)
 		})
 	},
-	
+
 	addUserToRoom: (res,room_uuid,user_uuid,cb) => {
 		let now = new Date() / 1000;
 		connection.query('select * from roomUser where user_uuid = ? and room_uuid = ?',

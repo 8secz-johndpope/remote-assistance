@@ -69,7 +69,7 @@ Get room details
 {"id":int,"time_ping":int,"time_request":int,"time_created":int,"uuid":"string"}
 ```
 
-Get rooms with at least one participant. Additionally returns count of customers and experts in each room.
+Get rooms with at least one participant
 ```
 /api/getActiveRooms
 [{"uuid":"test1","id":1,"time_ping":1,"time_request":2,"time_created":null,"experts":1,"customers":0}]
@@ -112,7 +112,13 @@ Get all anchors
 [{"id":int,"uuid":"string","data":"string","type":"image|object","name":"string"}]
 ```
 
-Get clip details. Data available at uuid.webm, uuid.mp4, and uuid.jpg (thumbnail).
+Create an entry for a clip
+```
+/api/createClip/:name/:user_uuid/:room_uuid
+{"uuid":"152875912"}
+```
+
+Get clip details. Data is available at uuid.webm, uuid.mp4, and uuid.jpg (thumbnail).
 ```
 /api/getClip/:uuid
 {"id":int,"name":string,"user_uuid":string,"room_uuid":string,"uuid":string}
@@ -124,21 +130,15 @@ Get clip details (including position of clip on anchor) for given anchor (option
 [{"position_blob":"{}","id":75,"name":"demo1","user_uuid":"demo","room_uuid":"demo","uuid":"demo1"}]
 ```
 
-Add clip to anchor at a positon
-```
-/api/addClipToAnchor/:clip_uuid/:anchor_uuid/:position_blob
-{"anchor_uuid":string,"clip_uuid":string}
-```
-
-Create an entry for a clip
-```
-/api/createClip/:name/:user_uuid/:room_uuid
-{"uuid":"152875912"}
-```
-
 Get all clips (without anchor position)
 ```
 /api/getAllClips
 [{"id":int,"name":string,"user_uuid":string,"room_uuid":string,"uuid":string}]
+```
+
+Add clip to anchor at a positon
+```
+/api/addClipToAnchor/:clip_uuid/:anchor_uuid/:position_blob
+{"anchor_uuid":string,"clip_uuid":string}
 ```
 
