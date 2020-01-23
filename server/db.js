@@ -41,7 +41,8 @@ module.exports = {
 			],
 			function (err, rows, fields) {
 				if (err) throw err
-				cb(rows)
+				let r = rows.length > 0 ? rows[0] : {}
+				cb(r)
 		})		
 	},
 
@@ -70,7 +71,7 @@ module.exports = {
 	},
 
 	getAllRooms: (res,cb) => {
-		connection.query('select uuid from room',
+		connection.query('select * from room',
 			[
 			],
 			function (err, rows, fields) {
@@ -87,11 +88,12 @@ module.exports = {
 			],
 			function (err, rows, fields) {
 				if (err) throw err
-				cb(rows)
+				let r = rows.length > 0 ? rows[0] : {}
+				cb(r)
 		})		
 	},
 
-	getAnchors: (res,text,cb) => {
+	getAllAnchorsSearch: (res,text,cb) => {
 		connection.query('select * from anchor where name like ?',
 			[
 				'%'+text+'%'
@@ -103,7 +105,7 @@ module.exports = {
 	},
 
 	getAllAnchors: (res,cb) => {
-		connection.query('select uuid from anchor ',
+		connection.query('select * from anchor ',
 			[
 			],
 			function (err, rows, fields) {
@@ -119,7 +121,8 @@ module.exports = {
 			],
 			function (err, rows, fields) {
 				if (err) throw err
-				cb(rows)
+				let r = rows.length > 0 ? rows[0] : {}
+				cb(r)
 		})		
 	},
 
@@ -139,7 +142,7 @@ module.exports = {
 	},
 
 	getAllClips: (res,cb) => {
-		connection.query('select uuid from clip ',
+		connection.query('select * from clip ',
 			[
 			],
 			function (err, rows, fields) {
@@ -155,7 +158,8 @@ module.exports = {
 			],
 			function (err, rows, fields) {
 				if (err) throw err
-				cb(rows)
+				let r = rows.length > 0 ? rows[0] : {}
+				cb(r)
 		})
 	},
 
@@ -173,6 +177,20 @@ module.exports = {
 		})
 	},
 
+	createRoom: (res,cb) => {
+		let uuid = util.generateRandomId();
+		let now = new Date() / 1000;
+		connection.query('insert into room(uuid,time_created) values(?,?)',
+			[
+				uuid,
+				now
+			],
+			function (err, result) {
+				if (err) throw err
+				let obj = {'uuid': uuid }	
+				cb(obj)
+		})
+	},
 	createClip: (res,name,user,room,cb) => {
 		let uuid = util.generateRandomId();
 		connection.query('insert into clip(uuid,name,user_uuid,room_uuid) values(?,?,?,?)',
@@ -190,7 +208,7 @@ module.exports = {
 	},
 
 	getAllUsers: (res,cb) => {
-		connection.query('select uuid from user ',
+		connection.query('select * from user ',
 			[
 			],
 			function (err, rows, fields) {
@@ -233,7 +251,7 @@ module.exports = {
 						],
 					function (err, rows, fields) {
 						if (err) throw err
-						let obj = {'uuid_uuid': user_uuid, "room_uuid": room_uuid }	
+						let obj = {'user_uuid': user_uuid, "room_uuid": room_uuid }	
 						cb(obj)
 					})
 				} else {
@@ -247,7 +265,7 @@ module.exports = {
 						],
 						function (err, rows, fields) {
 							if (err) throw err
-							let obj = {'uuid_uuid': user_uuid, "room_uuid": room_uuid }	
+							let obj = {'user_uuid': user_uuid, "room_uuid": room_uuid }	
 							cb(obj)
 					})					
 				}
@@ -265,7 +283,7 @@ module.exports = {
 			],
 			function (err, rows, fields) {
 				if (err) throw err
-				let obj = {'uuid_uuid': user_uuid, "room_uuid": room_uuid }	
+				let obj = {'uesr_uuid': user_uuid, "room_uuid": room_uuid }	
 				cb(obj)
 		})
 	}

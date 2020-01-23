@@ -65,9 +65,9 @@ if (!args.db_off) {
     });
 
     app.get('/api/createRoom', function(req, res) { 
-        let room_uuid = util.generateRandomId();
-        let out = {"room_uuid":room_uuid};
-        res.json(out)
+        db.createRoom(res,function(data) {
+            res.json(data)
+        })
     })
 
     app.get('/api/getActiveRooms', function (req, res) {
@@ -88,19 +88,20 @@ if (!args.db_off) {
         })
     });
 
-    app.get('/api/getAllUsers/', function (req, res) {
+    app.get('/api/getAllUsers', function (req, res) {
         db.getAllUsers(res,function(data) {
             res.json(data)
         })
     });
+
     app.get('/api/getAnchor/:uuid', function (req, res) {
         db.getAnchor(res,req.params.uuid,function(data) {
             res.json(data)
         })
     });
 
-    app.get('/api/getAnchors/:text', function (req, res) {
-        db.getAnchors(res,req.params.text,function(data) {
+    app.get('/api/getAllAnchors/:text', function (req, res) {
+        db.getAllAnchorsSearch(res,req.params.text,function(data) {
             res.json(data)
         })
     });
@@ -156,7 +157,7 @@ if (!args.db_off) {
 
     app.get('/api/createClip/:name/:user_uuid/:room_uuid', function (req, res) {
         db.getUser(res,req.params.user_uuid,function(userData) {
-            if (userData.length) {
+            if (userData.uuid) {
                 db.createClip(res, req.params.name, req.params.user_uuid, req.params.room_uuid, function(data) {
                     res.json(data)
                  })
@@ -167,9 +168,9 @@ if (!args.db_off) {
         })
     });
 
-    app.get('/api/addUserToRoom/:room_uuid/:user_uuid', function (req, res) {
+    app.get('/api/addUserToRoom/:user_uuid/:room_uuid', function (req, res) {
         db.getUser(res,req.params.user_uuid,function(userData) {
-            if (userData.length) {
+            if (userData.uuid) {
                 db.addUserToRoom(res,req.params.room_uuid,req.params.user_uuid, function(data) {
                     res.json(data)
                 });
@@ -180,9 +181,9 @@ if (!args.db_off) {
         })
     });
 
-    app.get('/api/removeUserFromRoom/:room_uuid/:user_uuid', function (req, res) {
+    app.get('/api/removeUserFromRoom/:user_uuid/:room_uuid', function (req, res) {
         db.getUser(res,req.params.user_uuid,function(userData) {
-            if (userData.length) {
+            if (userData.uuid) {
                 db.removeUserFromRoom(res,req.params.room_uuid,req.params.user_uuid, function(data) {
                     res.json(data)
                 });
