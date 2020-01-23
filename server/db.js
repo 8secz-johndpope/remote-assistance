@@ -46,17 +46,12 @@ module.exports = {
 		})		
 	},
 
-	getAllRooms: (res,activeOnly,cb) => {
-		let q = 'SELECT roomUser.room_uuid,user.type,room.* FROM roomUser,user,room where user.uuid = roomUser.user_uuid and room.uuid = roomUser.room_uuid';
-		if (activeOnly) { 
-			q += ' and roomUser.state = 1';
-		}
-		connection.query(q,
+	getActiveRooms: (res,ret,cb) => {
+		connection.query('SELECT roomUser.room_uuid,user.type,room.* FROM roomUser,user,room where roomUser.state = 1 and user.uuid = roomUser.user_uuid and room.uuid = roomUser.room_uuid',
 			[				
 			],
 			function (err, rows, fields) {
 				if (err) throw err
-				let ret = [];
 				for (let i = 0; i < rows.length; i++) {
 					let ru = rows[i].room_uuid;
 					let t = rows[i].type;
@@ -69,6 +64,21 @@ module.exports = {
 					}
 					if (t == "expert") { ret[index].experts = ret[index].experts+1; ret.push(ret.splice(index, 1)[0]); }
 					if (t == "customer") { ret[index].customers = ret[index].customers+1; }
+				}
+				cb(ret);
+		})		
+	},
+
+	getAllRooms: (res,cb) => {
+		connection.query('select * from room',
+			[
+			],
+			function (err, rows, fields) {
+				if (err) throw err
+				let ret = []
+				for (let i = 0; i < rows.length; i++) {
+					let obj = { uuid: rows[i].uuid, id: rows[i].id, time_ping: rows[i].time_ping, time_request: rows[i].time_request, time_created: rows[i].time_created, experts: 0, customers: 0 };
+					ret.unshift(obj);
 				}
 				cb(ret);
 		})		

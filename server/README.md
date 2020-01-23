@@ -78,7 +78,7 @@ Get rooms with at least one participant
 Get all rooms
 ```
 /api/getAllRooms
-[{"id":int,"time_ping":int,"time_request":int,"time_created":int,"uuid":"string"}]
+[{"uuid":"test1","id":1,"time_ping":1,"time_request":2,"time_created":null,"experts":0,"customers":0}]
 ```
 
 Add user to room
