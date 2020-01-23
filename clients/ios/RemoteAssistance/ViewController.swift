@@ -21,7 +21,7 @@ class ViewController: UITabBarController {
         UIScreen.main.brightness = currentScreenBrightness
   
         // uncomment to show the unified view ace view controller
-        let vc = AceViewController.instantiate(fromAppStoryboard: .Ace)
+        let vc = AceLandingViewController.instantiate(fromAppStoryboard: .Ace)
         let navVC = UINavigationController()
         navVC.tabBarItem = vc.tabBarItem
         navVC.pushViewController(vc)

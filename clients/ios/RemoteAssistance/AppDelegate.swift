@@ -41,6 +41,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("Setting category to AVAudioSessionCategoryPlayback failed.")
         }
         
+        // set appearance for naviation bar
+        UINavigationBar.appearance().barTintColor = #colorLiteral(red: 0.05, green:0.49, blue:0.98, alpha:1.00)
+        UINavigationBar.appearance().tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        UINavigationBar.appearance().titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        ]
+        
         return true
     }
 
