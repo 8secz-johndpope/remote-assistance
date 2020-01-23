@@ -41,7 +41,8 @@ class AceLandingViewController : UIViewController {
 extension AceLandingViewController : QRCodeScannerDelegate {
    
     func qrCodeScannerResponse(code: String) {
-        if let url = URL(string: code) {
+        if  code.hasPrefix("http"),
+            let url = URL(string: code) {
             let domain = url.host
             let port = url.port
             
@@ -56,6 +57,19 @@ extension AceLandingViewController : QRCodeScannerDelegate {
                 let vc  = AceViewController.instantiate(fromAppStoryboard: .Ace)
                 self.navigationController?.pushViewController(vc)
             }
+        } else {
+            let objectName = code
+            
+            AceAPI.sharedInstance.createRoom() { result in
+                let roomId = result.room_uuid
+                
+                let action = TSSetRoomName(roomName: "\(objectName)-\(roomId)")
+                store.ts.dispatch(action)
+
+                let vc  = AceViewController.instantiate(fromAppStoryboard: .Ace)
+                self.navigationController?.pushViewController(vc)
+            }
+            
         }
     }
 

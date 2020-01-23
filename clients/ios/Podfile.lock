@@ -3,6 +3,7 @@ PODS:
   - IconFontKit/Core (2.1.2)
   - IconFontKit/MaterialDesignIcons (2.1.2):
     - IconFontKit/Core
+  - RestEssentials (5.0.1)
   - ReSwift (5.0.0)
   - Socket.IO-Client-Swift (15.2.0):
     - Starscream (~> 3.1)
@@ -34,8 +35,9 @@ PODS:
   - Toast-Swift (5.0.1)
 
 DEPENDENCIES:
-  - GoogleWebRTC
+  - GoogleWebRTC (~> 1.1)
   - IconFontKit/MaterialDesignIcons
+  - RestEssentials (~> 5.0)
   - ReSwift
   - Socket.IO-Client-Swift (~> 15.2.0)
   - SuperAlertController/Ext
@@ -46,6 +48,7 @@ SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - GoogleWebRTC
     - IconFontKit
+    - RestEssentials
     - ReSwift
     - Socket.IO-Client-Swift
     - Starscream
@@ -56,6 +59,7 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   GoogleWebRTC: 55e46bee9ac2a4961542e9571bea589b64493f45
   IconFontKit: 3ce6ef3f532016042405819cf983fed8d649dff7
+  RestEssentials: c1f734682b42f178040752e55111fd4f13f96624
   ReSwift: 628f1a9b3ee52e3b3ca2a644435472fd77afafe1
   Socket.IO-Client-Swift: 1e3e3a1f09f3312a167f0d781eb2f383d477357c
   Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
@@ -63,6 +67,6 @@ SPEC CHECKSUMS:
   SwifterSwift: a9e8e144832638c2850b43da5feaf9598c6ad65b
   Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
 
-PODFILE CHECKSUM: b0d827bacb5b611100c8860fd6d56d6edaa42977
+PODFILE CHECKSUM: c03df101987f185d946ef172b10d9696e0c8895a
 
 COCOAPODS: 1.8.4
