@@ -17,14 +17,20 @@ class AceAPI {
     init() {
     }
     
-    class CreateRoomResponse : Codable {
+    class RoomResponse : Codable {
         let room_uuid: String
+        let experts: Int?
+        let customers: Int?
     }
     
-    func createRoom(callback: @escaping (CreateRoomResponse) -> ()) {
-        let url = "\(String(store.ts.state.serverUrl))/api/createRoom"
-        guard let api = RestController.make(urlString: url) else { return }
-        api.get(CreateRoomResponse.self) { result, response in
+    func makeApi(_ path:String) -> RestController? {
+        let url = "\(String(store.ts.state.serverUrl))/api/\(path)"
+        return RestController.make(urlString: url)
+    }
+        
+    func createRoom(callback: @escaping (RoomResponse) -> ()) {
+        guard let api = makeApi("createRoom") else { return }
+        api.get(RoomResponse.self) { result, response in
             do {
                 let response = try result.value() // response is of type HttpBinResponse
                 DispatchQueue.main.async {
@@ -35,4 +41,19 @@ class AceAPI {
             }
         }
     }
+    
+    func getActiveRooms(callback: @escaping ([RoomResponse]) -> ()) {
+        guard let api = makeApi("getActiveRooms") else { return }
+        api.get([RoomResponse].self) { result, response in
+            do {
+                let response = try result.value() // response is of type HttpBinResponse
+                DispatchQueue.main.async {
+                    callback(response)
+                }
+            } catch {
+                print("Error performing GET: \(error)")
+            }
+        }
+    }
+    
 }
