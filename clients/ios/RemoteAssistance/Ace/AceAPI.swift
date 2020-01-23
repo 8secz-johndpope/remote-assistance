@@ -13,47 +13,166 @@ import ReSwift
 class AceAPI {
     
     static let sharedInstance = AceAPI()
+    
+    var acceptSelfSignedCertificate = true
         
     init() {
     }
     
+    // response types
+    class CreateResponse : Codable {
+        let uuid: String
+    }
+
+    class UserResponse : Codable {
+        
+        enum UserType : String, Codable {
+            case customer
+            case expert
+        }
+
+        let id: Int
+        let type: UserType
+        let photo: String?
+        let uuid: String
+        let password: String?
+        let email: String?
+        let name: String?
+    }
+    
     class RoomResponse : Codable {
-        let room_uuid: String
+        let id: Int
+        let uuid: String
+        let time_ping: Int?
+        let time_request: Int?
+        let time_created: Int?
         let experts: Int?
         let customers: Int?
     }
     
-    func makeApi(_ path:String) -> RestController? {
+    class UserToRoomResponse : Codable {
+        let user_uuid: String
+        let room_uuid: String
+    }
+    
+    class AnchorResponse : Codable {
+
+        enum AnchorType : String, Codable {
+            case image
+            case object
+        }
+
+        let id: Int
+        let uuid: String
+        let data: String
+        let type: AnchorType
+        let name: String
+    }
+    
+    class ClipResponse : Codable {
+        let id: Int
+        let uuid: String
+        let name: String
+        let user_uuid: String
+        let room_uuid: String
+    }
+    
+    class AssociateClipToAnchorResponse : Codable {
+        
+    }
+    
+    
+    // internal implementation
+    private func makeApi(_ path:String) -> RestController? {
         let url = "\(String(store.ts.state.serverUrl))/api/\(path)"
-        return RestController.make(urlString: url)
+        let api = RestController.make(urlString: url)
+        api?.acceptSelfSignedCertificate = self.acceptSelfSignedCertificate
+        return api
+    }
+    
+    private func callApi<T:Decodable>(_ path:String, callback: @escaping (T?, Error?) -> ()) {
+        guard let api = makeApi(path) else { return }
+        api.get(T.self) { result, response in
+            do {
+                let response = try result.value() // response is of type HttpBinResponse
+                DispatchQueue.main.async {
+                    callback(response, nil)
+                }
+            } catch {
+                print("Error performing GET: \(error)")
+                DispatchQueue.main.async {
+                    callback(nil, error)
+                }
+            }
+        }
+
+    }
+    
+    func createCustomer(callback: @escaping (CreateResponse?, Error?) -> ()) {
+        callApi("createCustomer", callback: callback)
+    }
+    
+    func createExpert(callback: @escaping (CreateResponse?, Error?) -> ()) {
+        callApi("createExpert", callback: callback)
+    }
+    
+    func getUser(_ userId:String, callback: @escaping (UserResponse?, Error?) -> ()) {
+        callApi("getUser/\(userId)", callback: callback)
+    }
+    
+    func getAllUsers(callback: @escaping ([UserResponse]?, Error?) -> ()) {
+        callApi("getAllUsers", callback: callback)
     }
         
-    func createRoom(callback: @escaping (RoomResponse) -> ()) {
-        guard let api = makeApi("createRoom") else { return }
-        api.get(RoomResponse.self) { result, response in
-            do {
-                let response = try result.value() // response is of type HttpBinResponse
-                DispatchQueue.main.async {
-                    callback(response)
-                }
-            } catch {
-                print("Error performing GET: \(error)")
-            }
-        }
+    func createRoom(callback: @escaping (CreateResponse?, Error?) -> ()) {
+        callApi("createRoom", callback: callback)
     }
     
-    func getActiveRooms(callback: @escaping ([RoomResponse]) -> ()) {
-        guard let api = makeApi("getActiveRooms") else { return }
-        api.get([RoomResponse].self) { result, response in
-            do {
-                let response = try result.value() // response is of type HttpBinResponse
-                DispatchQueue.main.async {
-                    callback(response)
-                }
-            } catch {
-                print("Error performing GET: \(error)")
-            }
-        }
+    func getRoom(_ roomName:String, callback: @escaping (RoomResponse?, Error?) -> ()) {
+        callApi("getRoom/\(roomName)", callback: callback)
+    }
+
+    func getActiveRooms(callback: @escaping ([RoomResponse]?, Error?) -> ()) {
+        callApi("getActiveRooms", callback: callback)
+    }
+
+    func addUser(_ userId:String, toRoom roomId:String, callback: @escaping (UserToRoomResponse?, Error?) -> ()) {
+        callApi("addUserToRoom/\(userId)/\(roomId)", callback: callback)
+    }
+
+    func removeUser(_ userId:String, fromRoom roomId:String, callback: @escaping (UserToRoomResponse?, Error?) -> ()) {
+        callApi("removeUserFromRoom/\(userId)/\(roomId)", callback: callback)
     }
     
+    func getAnchor(_ anchorId:String, callback: @escaping (AnchorResponse?, Error?) -> ()) {
+        callApi("getAnchor/\(anchorId)", callback: callback)
+    }
+
+    func getAllAnchors(_ text:String = "", callback: @escaping (AnchorResponse?, Error?) -> ()) {
+        var path = "getAllAnchors"
+        if text != "" {
+            path = "getAllAnchors/\(text)"
+        }
+        callApi(path, callback: callback)
+    }
+
+    func getClip(_ clipId:String, callback: @escaping (ClipResponse?, Error?) -> ()) {
+        callApi("getClip/\(clipId)", callback: callback)
+    }
+
+    func getAllClips(_ clipId:String, callback: @escaping ([ClipResponse]?, Error?) -> ()) {
+        callApi("getAllClips", callback: callback)
+    }
+
+    func getClips(forAnchor anchorId:String, andRoom roomId:String, callback: @escaping ([ClipResponse]?, Error?) -> ()) {
+        callApi("getClips/\(anchorId)/\(roomId)", callback: callback)
+    }
+
+    func addClip(_ clipId:String, toAnchor anchorId:String, blobPos:Int, callback: @escaping (AssociateClipToAnchorResponse?, Error?) -> ()) {
+        callApi("addClipToAnchor/\(anchorId)/\(clipId)/\(blobPos)", callback: callback)
+    }
+    
+    func createClip(_ name: String, userId:String, roomId:String, callback: @escaping (CreateResponse?, Error?) -> ()) {
+        callApi("createClip/\(name)/\(userId)/\(roomId)", callback: callback)
+    }
 }

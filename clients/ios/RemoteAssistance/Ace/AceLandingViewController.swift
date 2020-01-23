@@ -60,8 +60,11 @@ extension AceLandingViewController : QRCodeScannerDelegate {
         } else {
             let objectName = code
             
-            AceAPI.sharedInstance.createRoom() { result in
-                let roomId = result.room_uuid
+            AceAPI.sharedInstance.createRoom() { result, error in
+                guard let roomId = result?.uuid else {
+                    print("API Error: createRoom failed: \(error)")
+                    return
+                }
                 
                 let action = TSSetRoomName(roomName: "\(objectName)-\(roomId)")
                 store.ts.dispatch(action)
