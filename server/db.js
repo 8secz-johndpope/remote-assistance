@@ -85,7 +85,6 @@ module.exports = {
 	},
 
 	getAnchor: (res,uuid,cb) => {
-		console.log(uuid)
 		connection.query('select * from anchor where uuid = ?',
 			[
 				uuid
@@ -259,15 +258,12 @@ module.exports = {
 	},
 	
 	addClipToAnchor: (res,anchor_uuid,clip_uuid,position_blob,cb) => {
-		let q = 'insert into clipAnchor(anchor_uuid,clip_uuid,position_blob) select * from (select ?, ?, ?) ';
-		q += 'as tmp where not exists (select anchor_uuid,clip_uuid from clipAnchor where anchor_uuid = ? and clip_uuid= ?) limit 1';
+		let q = 'insert into clipAnchor(anchor_uuid,clip_uuid,position_blob) values(?,?,?)';
 		connection.query(q,
 			[
 				anchor_uuid,
 				clip_uuid,
-				position_blob,
-				anchor_uuid,
-				clip_uuid
+				position_blob
 			],
 			function (err, result) {
 				if (err) throw err
@@ -277,8 +273,8 @@ module.exports = {
 	},
 
 	
-	removeClipFromAnchor: (res,anchor_uuid,clip_uuid,position_blob,cb) => {
-		let q = 'delete from clipAnchor where anchor_uuid = ? and clip_uuid= ?';
+	removeClipFromAnchor: (res,anchor_uuid,clip_uuid,cb) => {
+		let q = 'delete from clipAnchor where anchor_uuid = ? and clip_uuid = ?';
 		connection.query(q,
 			[
 				anchor_uuid,

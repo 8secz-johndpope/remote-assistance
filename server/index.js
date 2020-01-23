@@ -143,9 +143,11 @@ if (!args.db_off) {
             if (clipData.uuid) {
                 db.getAnchor(res,req.params.anchor_uuid,function(anchorData) {
                     if (anchorData.uuid) {
-                        db.addClipToAnchor(res,req.params.anchor_uuid,req.params.clip_uuid,req.params.position_blob,function(data) {
-                            res.json(data)
-                    })
+                        db.removeClipFromAnchor(res,req.params.anchor_uuid,req.params.clip_uuid,function(data) {
+                            db.addClipToAnchor(res,req.params.anchor_uuid,req.params.clip_uuid,req.params.position_blob,function(data) {
+                                res.json(data)
+                            })
+                        })
                     } else {
                         let out = {"error":"No anchor with that UUID"}
                         res.json(out)
@@ -163,9 +165,9 @@ if (!args.db_off) {
             if (clipData.uuid) {
                 db.getAnchor(res,req.params.anchor_uuid,function(anchorData) {
                     if (anchorData.uuid) {
-                        db.removeClipFromAnchor(res,req.params.anchor_uuid,req.params.clip_uuid,req.params.position_blob,function(data) {
+                        db.removeClipFromAnchor(res,req.params.anchor_uuid,req.params.clip_uuid,function(data) {
                             res.json(data)
-                    })
+                        })
                     } else {
                         let out = {"error":"No anchor with that UUID"}
                         res.json(out)
