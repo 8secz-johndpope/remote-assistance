@@ -47,7 +47,7 @@ module.exports = {
 	},
 
 	getActiveRooms: (res,cb) => {
-		connection.query('SELECT roomUser.room_uuid,user.type FROM roomUser,user where roomUser.state = 1 and user.uuid = roomUser.user_uuid',
+		connection.query('SELECT roomUser.room_uuid,user.type,room.* FROM roomUser,user,room where roomUser.state = 1 and user.uuid = roomUser.user_uuid and room.uuid = roomUser.room_uuid',
 			[				
 			],
 			function (err, rows, fields) {
@@ -59,7 +59,7 @@ module.exports = {
 					let index = ret.findIndex(x => x.room_uuid === ru);
 
 					if (index < 0) {
-						let obj = { room_uuid: ru, experts: 0, customers: 0 };
+						let obj = { uuid: ru, id: rows[i].id, time_ping: rows[i].time_ping, time_request: rows[i].time_request, time_created: rows[i].time_created, experts: 0, customers: 0 };
 						ret.unshift(obj);
 						index = 0;
 					}

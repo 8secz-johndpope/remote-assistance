@@ -69,10 +69,10 @@ Get room details
 {"id":int,"time_ping":int,"time_request":int,"time_created":int,"uuid":"string"}
 ```
 
-Get rooms with at least one participant. Returns count of customers and experts in each room.
+Get rooms with at least one participant. Additionally returns count of customers and experts in each room.
 ```
 /api/getActiveRooms
-[{"room_uuid":"343973452","experts":0,"customers":1},{"room_uuid":"439560276","experts":1,"customers":1}]
+[{"uuid":"test1","id":1,"time_ping":1,"time_request":2,"time_created":null,"experts":1,"customers":0}]
 ```
 
 Get all rooms
