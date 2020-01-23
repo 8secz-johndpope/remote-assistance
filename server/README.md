@@ -39,7 +39,7 @@ Create a customer
 {"uuid":"string"}
 ```
 
-Create an expert and return UUID
+Create an expert 
 ```
 /api/createExpert
 {"uuid":"string"}
