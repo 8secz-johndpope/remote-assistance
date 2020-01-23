@@ -112,21 +112,21 @@ Get all anchors
 [{"id":int,"uuid":"string","data":"string","type":"image|object","name":"string"}]
 ```
 
-Get clip details
+Get clip details. Data available at uuid.webm, uuid.mp4, and uuid.jpg (thumbnail).
 ```
 /api/getClip/:uuid
 {"id":int,"name":string,"user_uuid":string,"room_uuid":string,"uuid":string}
 ```
 
-Get clip details for given anchor (optionally also select by room)
+Get clip details (including position of clip on anchor) for given anchor (optionally also select by room)
 ```
 /api/getClips/:anchor_uuid/:room_uuid?
-
+[{"position_blob":"{}","id":75,"name":"demo1","user_uuid":"demo","room_uuid":"demo","uuid":"demo1"}]
 ```
 
 Associate clip and anchor
 ```
-/api/addClipAnchor/:anchor_uuid/:clip_uuid/:position_blob
+/api/addClipToAnchor/:anchor_uuid/:clip_uuid/:position_blob
 
 ```
 
@@ -136,7 +136,7 @@ Create an entry for a clip
 {"uuid":"152875912"}
 ```
 
-Get all clips
+Get all clips (without anchor position)
 ```
 /api/getAllClips
 [{"id":int,"name":string,"user_uuid":string,"room_uuid":string,"uuid":string}]

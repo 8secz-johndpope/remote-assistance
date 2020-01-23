@@ -127,7 +127,7 @@ module.exports = {
 	},
 
 	getClips: (res,anchor_uuid,room_uuid,cb) => {
-		let q = 'select clip.user_uuid,clip.room_uuid,clip.uuid,clipAnchor.id,clipAnchor.anchor_uuid,clipAnchor.position_blob from clip,clipAnchor where clipAnchor.clip_uuid=clip.uuid and clipAnchor.anchor_uuid = ?'
+		let q = 'select clipAnchor.position_blob,clip.* from clip,clipAnchor where clipAnchor.clip_uuid=clip.uuid and clipAnchor.anchor_uuid = ?'
 		let arr = [anchor_uuid]; 
 		if (room_uuid) {
 			q += ' and clip.room_uuid = ?'
