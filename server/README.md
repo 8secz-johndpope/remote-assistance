@@ -130,7 +130,7 @@ Get clip details (including position of clip on anchor) for given anchor (option
 [{"position_blob":"{}","id":75,"name":"demo1","user_uuid":"demo","room_uuid":"demo","uuid":"demo1"}]
 ```
 
-Get all clips (without anchor position)
+Get all clips (note since no anchor is given these must be without anchor positions)
 ```
 /api/getAllClips
 [{"id":int,"name":string,"user_uuid":string,"room_uuid":string,"uuid":string}]
