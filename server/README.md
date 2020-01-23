@@ -144,6 +144,6 @@ Add clip to anchor at a positon
 
 Remove clip from anchor
 ```
-/api/addClipToAnchor/:clip_uuid/:anchor_uuid
+/api/removeClipFromAnchor/:clip_uuid/:anchor_uuid
 {"anchor_uuid":string,"clip_uuid":string}
 ```
