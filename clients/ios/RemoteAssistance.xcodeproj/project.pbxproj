@@ -27,6 +27,8 @@
 		D7455DDA2368BE80001594FA /* RemoteAssistanceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7455DD92368BE80001594FA /* RemoteAssistanceUITests.swift */; };
 		D753162823D911AC00D686EC /* AceARViewController+ObjectAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D753162723D911AC00D686EC /* AceARViewController+ObjectAnnotation.swift */; };
 		D753162A23D926C200D686EC /* AceAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D753162923D926C200D686EC /* AceAPI.swift */; };
+		D753162C23DA46D400D686EC /* AceARViewController+ScreenAR.swift in Sources */ = {isa = PBXBuildFile; fileRef = D753162B23DA46D400D686EC /* AceARViewController+ScreenAR.swift */; };
+		D753162E23DA47AB00D686EC /* AceARViewController+ARPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D753162D23DA47AB00D686EC /* AceARViewController+ARPointer.swift */; };
 		D76C1CCC23D78BD600208511 /* AceVRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76C1CCB23D78BD600208511 /* AceVRViewController.swift */; };
 		D795E76623A2E64800E97162 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D795E76523A2E64800E97162 /* ChatViewController.swift */; };
 		D7AF69FD23C8F097005B67D8 /* Ace.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7AF69FC23C8F097005B67D8 /* Ace.storyboard */; };
@@ -128,6 +130,8 @@
 		D7455DDB2368BE80001594FA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D753162723D911AC00D686EC /* AceARViewController+ObjectAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AceARViewController+ObjectAnnotation.swift"; sourceTree = "<group>"; };
 		D753162923D926C200D686EC /* AceAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceAPI.swift; sourceTree = "<group>"; };
+		D753162B23DA46D400D686EC /* AceARViewController+ScreenAR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AceARViewController+ScreenAR.swift"; sourceTree = "<group>"; };
+		D753162D23DA47AB00D686EC /* AceARViewController+ARPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AceARViewController+ARPointer.swift"; sourceTree = "<group>"; };
 		D76C1CCB23D78BD600208511 /* AceVRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceVRViewController.swift; sourceTree = "<group>"; };
 		D795E76523A2E64800E97162 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		D7AF69FC23C8F097005B67D8 /* Ace.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Ace.storyboard; sourceTree = "<group>"; };
@@ -300,6 +304,9 @@
 			children = (
 				D7AF69FC23C8F097005B67D8 /* Ace.storyboard */,
 				D7AF6A0723C9151C005B67D8 /* AceARViewController.swift */,
+				D753162723D911AC00D686EC /* AceARViewController+ObjectAnnotation.swift */,
+				D753162B23DA46D400D686EC /* AceARViewController+ScreenAR.swift */,
+				D753162D23DA47AB00D686EC /* AceARViewController+ARPointer.swift */,
 				D7AF6A0523C90F91005B67D8 /* AceHandsViewController.swift */,
 				D7AF6A0923C936DE005B67D8 /* AceSketchViewController.swift */,
 				D7AF6A0323C8FD8D005B67D8 /* AceUIViewController.swift */,
@@ -307,7 +314,6 @@
 				D7EAD85823D6684800EE1A56 /* AceVirtualObject.swift */,
 				D76C1CCB23D78BD600208511 /* AceVRViewController.swift */,
 				D7167ED223D8CDA900655A42 /* AceLandingViewController.swift */,
-				D753162723D911AC00D686EC /* AceARViewController+ObjectAnnotation.swift */,
 				D753162923D926C200D686EC /* AceAPI.swift */,
 			);
 			path = Ace;
@@ -615,6 +621,7 @@
 				D7AF6A0823C9151C005B67D8 /* AceARViewController.swift in Sources */,
 				2959E0E123C6911D00D0F98E /* AVPlayerViewController.swift in Sources */,
 				D7DB6A0A236DE7C700D7C367 /* TSActions.swift in Sources */,
+				D753162C23DA46D400D686EC /* AceARViewController+ScreenAR.swift in Sources */,
 				D7DB6A0E236DE91D00D7C367 /* SettingsViewController.swift in Sources */,
 				D7DB6A02236DE67000D7C367 /* TSLeapMotion.swift in Sources */,
 				D7DA31EE239ECFCE00D1B73F /* Collection+Extensions.swift in Sources */,
@@ -622,6 +629,7 @@
 				D7DB6A01236DE67000D7C367 /* TSViewController.swift in Sources */,
 				D753162A23D926C200D686EC /* AceAPI.swift in Sources */,
 				D7AF6A0623C90F91005B67D8 /* AceHandsViewController.swift in Sources */,
+				D753162E23DA47AB00D686EC /* AceARViewController+ARPointer.swift in Sources */,
 				D7DA31EB239ECFCE00D1B73F /* SCNVector3+Extensions.swift in Sources */,
 				D7DA31F2239ECFCE00D1B73F /* Message.swift in Sources */,
 				D7DB69F8236DE35100D7C367 /* MathExtension.swift in Sources */,
