@@ -47,7 +47,7 @@ Create an expert
 
 Delete a user 
 ```
-/api/deleteUser
+/api/deleteUser/:uuid
 {"uuid":"string"}
 ```
 
@@ -71,7 +71,7 @@ Create a room
 
 Delete a room 
 ```
-/api/deleteRoom
+/api/deleteRoom/:uuid
 {"uuid":"string"}
 ```
 
@@ -132,7 +132,7 @@ Create clip
 
 Delete a clip 
 ```
-/api/deleteClip
+/api/deleteClip/:uuid
 {"uuid":"string"}
 ```
 
