@@ -45,6 +45,12 @@ Create an expert
 {"uuid":"string"}
 ```
 
+Delete a user 
+```
+/api/deleteUser
+{"uuid":"string"}
+```
+
 Get user details
 ```
 /api/getUser/:uuid
@@ -60,6 +66,12 @@ Get all users
 Create a room
 ```
 /api/createRoom
+{"uuid":"string"}
+```
+
+Delete a room 
+```
+/api/deleteRoom
 {"uuid":"string"}
 ```
 
@@ -112,10 +124,16 @@ Get all anchors
 [{"id":int,"uuid":"string","data":"string","type":"image|object","name":"string"}]
 ```
 
-Create an entry for a clip
+Create clip
 ```
 /api/createClip/:name/:user_uuid/:room_uuid
 {"uuid":"152875912"}
+```
+
+Delete a clip 
+```
+/api/deleteClip
+{"uuid":"string"}
 ```
 
 Get clip details. Data is available at uuid.webm, uuid.mp4, and uuid.jpg (thumbnail).

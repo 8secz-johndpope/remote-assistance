@@ -181,6 +181,18 @@ module.exports = {
 		})
 	},
 
+	deleteUser: (res,uuid,cb) => {
+		connection.query('delete from user where uuid = ?',
+			[
+				uuid
+			],
+			function (err, result) {
+				if (err) throw err
+				let obj = {'uuid': uuid }	
+				cb(obj)
+		})
+	},
+
 	createRoom: (res,cb) => {
 		let uuid = util.generateRandomId();
 		let now = new Date() / 1000;
@@ -195,6 +207,19 @@ module.exports = {
 				cb(obj)
 		})
 	},
+
+	deleteRoom: (res,uuid,cb) => {
+		connection.query('delete from room where uuid = ?',
+			[
+				uuid
+			],
+			function (err, result) {
+				if (err) throw err
+				let obj = {'uuid': uuid }	
+				cb(obj)
+		})
+	},
+
 	createClip: (res,name,user,room,cb) => {
 		let uuid = util.generateRandomId();
 		connection.query('insert into clip(uuid,name,user_uuid,room_uuid) values(?,?,?,?)',
@@ -203,6 +228,18 @@ module.exports = {
 				name,
 				user,
 				room
+			],
+			function (err, result) {
+				if (err) throw err
+				let obj = {'uuid': uuid }	
+				cb(obj)
+		})
+	},
+
+	deleteClip: (res,uuid,cb) => {
+		connection.query('delete from clip where uuid = ?',
+			[
+				uuid
 			],
 			function (err, result) {
 				if (err) throw err

@@ -68,7 +68,13 @@ if (!args.db_off) {
         db.createRoom(res,function(data) {
             res.json(data)
         })
-    })
+    });
+
+    app.get('/api/deleteRoom/:uuid', function(req, res) { 
+        db.deleteRoom(res,req.params.uuid,function(data) {
+            res.json(data)
+        })
+    });
 
     app.get('/api/getActiveRooms', function (req, res) {
         db.getActiveRooms(res,[],function(data) {
@@ -184,6 +190,13 @@ if (!args.db_off) {
         })
     });
 
+    app.get('/api/deleteUser/:uuid', function(req, res) { 
+        db.deleteUser(res,req.params.uuid,function(data) {
+            res.json(data)
+        })
+    });
+   
+
     app.get('/api/createClip/:name/:user_uuid/:room_uuid', function (req, res) {
         db.getUser(res,req.params.user_uuid,function(userData) {
             if (userData.uuid) {
@@ -201,6 +214,12 @@ if (!args.db_off) {
                 let out = {"error":"No user with that UUID"}
                 res.json(out)
             }
+        })
+    });
+
+    app.get('/api/deleteClip/:uuid', function(req, res) { 
+        db.deleteClip(res,req.params.uuid,function(data) {
+            res.json(data)
         })
     });
 
