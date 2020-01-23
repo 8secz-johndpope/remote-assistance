@@ -217,13 +217,16 @@ module.exports = {
 		})		
 	},
 	
-	addClipAnchor: (res,anchor_uuid,clip_uuid,position_blob,cb) => {
-		let uuid = util.generateRandomId();
-		connection.query('insert into clipAnchor(anchor_uuid,clip_uuid,position_blob) values(?,?,?)',
+	addClipToAnchor: (res,anchor_uuid,clip_uuid,position_blob,cb) => {
+		let q = 'insert into clipAnchor(anchor_uuid,clip_uuid,position_blob) select * from (select ?, ?, ?) ';
+		q += 'as tmp where not exists (select anchor_uuid,clip_uuid from clipAnchor where anchor_uuid = ? and clip_uuid= ?) limit 1';
+		connection.query(q,
 			[
 				anchor_uuid,
 				clip_uuid,
-				position_blob
+				position_blob,
+				anchor_uuid,
+				clip_uuid
 			],
 			function (err, result) {
 				if (err) throw err
@@ -232,6 +235,21 @@ module.exports = {
 		})
 	},
 
+	
+	removeClipFromAnchor: (res,anchor_uuid,clip_uuid,position_blob,cb) => {
+		let q = 'delete from clipAnchor where anchor_uuid = ? and clip_uuid= ?';
+		connection.query(q,
+			[
+				anchor_uuid,
+				clip_uuid
+			],
+			function (err, result) {
+				if (err) throw err
+				let obj = {'anchor_uuid': anchor_uuid, 'clip_uuid': clip_uuid}	
+				cb(obj)
+		})
+	},
+	
 	addUserToRoom: (res,room_uuid,user_uuid,cb) => {
 		let now = new Date() / 1000;
 		connection.query('select * from roomUser where user_uuid = ? and room_uuid = ?',

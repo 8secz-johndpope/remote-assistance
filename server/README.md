@@ -81,13 +81,13 @@ Get all rooms
 [{"id":int,"time_ping":int,"time_request":int,"time_created":int,"uuid":"string"}]
 ```
 
-Associate user and room
+Add user to room
 ```
 /api/addUserToRoom/:user_uuid/:room_uuid
 {"user_uuid":"string","room_uuid":"string"}
 ```
 
-Disassociate user and room
+Remove user from room
 ```
 /api/removeUserFromRoom/:user_uuid/:room_uuid
 {"user_uuid":"string","room_uuid":"string"}
@@ -124,10 +124,10 @@ Get clip details (including position of clip on anchor) for given anchor (option
 [{"position_blob":"{}","id":75,"name":"demo1","user_uuid":"demo","room_uuid":"demo","uuid":"demo1"}]
 ```
 
-Associate clip and anchor
+Add clip to anchor at a positon
 ```
-/api/addClipToAnchor/:anchor_uuid/:clip_uuid/:position_blob
-
+/api/addClipToAnchor/:clip_uuid/:anchor_uuid/:position_blob
+{"anchor_uuid":string,"clip_uuid":string}
 ```
 
 Create an entry for a clip
