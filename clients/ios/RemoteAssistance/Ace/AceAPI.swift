@@ -121,7 +121,7 @@ class AceAPI {
     }
 
     func deleteUser(_ userId:String, callback: @escaping (UuidResponse?, Error?) -> ()) {
-        callApi("deleteUser\(userId)", callback: callback)
+        callApi("deleteUser/\(userId)", callback: callback)
     }
 
     func getUser(_ userId:String, callback: @escaping (UserResponse?, Error?) -> ()) {
@@ -137,7 +137,7 @@ class AceAPI {
     }
     
     func deleteRoom(_ userId:String, callback: @escaping (UuidResponse?, Error?) -> ()) {
-        callApi("deleteUser\(userId)", callback: callback)
+        callApi("deleteRoom/\(userId)", callback: callback)
     }
 
     func getRoom(_ roomName:String, callback: @escaping (RoomResponse?, Error?) -> ()) {
@@ -153,6 +153,7 @@ class AceAPI {
     }
 
     func addUser(_ userId:String, toRoom roomId:String, callback: @escaping (UserToRoomResponse?, Error?) -> ()) {
+        print("url: /api/addUserToRoom/\(userId)/\(roomId)")
         callApi("addUserToRoom/\(userId)/\(roomId)", callback: callback)
     }
 
