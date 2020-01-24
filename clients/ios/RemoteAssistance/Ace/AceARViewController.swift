@@ -187,14 +187,7 @@ extension AceARViewController: WRTCClientDelegate {
 
 extension AceARViewController: ARSCNViewDelegate {
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        if let imageAnchor = anchor as? ARImageAnchor {
-            print("found imageAnchor!")
-            DispatchQueue.main.async {
-                print("adding rectanglenode for imageanchor")
-                let rectangleNode = RectangleNode(imageAnchor: imageAnchor, rootNode: node, view: self.webView!)
-                self.rectangleNodes[node] = rectangleNode
-            }
-        }
+        screenAR(renderer, didAdd:node, for:anchor)
         objectAnnotation(renderer, didAdd:node, for:anchor)
     }
 }

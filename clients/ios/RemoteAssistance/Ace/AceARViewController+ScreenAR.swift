@@ -89,4 +89,18 @@ extension AceARViewController {
             self.arView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
         }
     }
+    
+    func screenAR(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        if let imageAnchor = anchor as? ARImageAnchor {
+            print("found imageAnchor!")
+            if imageAnchor.name?.hasPrefix("screenar") == true {
+                DispatchQueue.main.async {
+                    print("adding rectanglenode for imageanchor")
+                    let rectangleNode = RectangleNode(imageAnchor: imageAnchor, rootNode: node, view: self.webView!)
+                    self.rectangleNodes[node] = rectangleNode
+                }
+            }
+        }
+    }
+
 }
