@@ -47,6 +47,22 @@ class AceAPITests: XCTestCase {
         wait(for: [expectation], timeout: 10.0)
     }
     
+    func testDeleteUser() {
+        let expectation = XCTestExpectation(description: "deleteExpert API")
+        api.createCustomer() { result, error in
+            XCTAssert(result != nil, "createExpert() result is nil")
+            XCTAssert(error == nil, "createExpert() returned error")
+            let userId = result!.uuid
+            self.api.deleteUser(userId) { result, error in
+                XCTAssert(result != nil, "deleteUser() result is nil")
+                XCTAssert(error == nil, "deleteUser() returned error")
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 10.0)
+    }
+
+    
     func testGetUser() {
         let expectation = XCTestExpectation(description: "getUser API")
         api.getUser("test5") { result, error in
@@ -80,14 +96,42 @@ class AceAPITests: XCTestCase {
         wait(for: [expectation], timeout: 10.0)
     }
     
+    func testDeleteRoom() {
+        let expectation = XCTestExpectation(description: "deleteRoom API")
+        api.createRoom() { result, error in
+            XCTAssert(result != nil, "createRoom() result is nil")
+            XCTAssert(error == nil, "createRoom() returned error")
+            
+            self.api.deleteRoom(result!.uuid) { result, error in
+                XCTAssert(result != nil, "createRoom() result is nil")
+                XCTAssert(error == nil, "createRoom() returned error")
+                expectation.fulfill()
+            }
+        }
+        wait(for: [expectation], timeout: 10.0)
+
+    }
+    
     func testGetRoom() {
         let expectation = XCTestExpectation(description: "getRoom API")
-        api.getRoom("test1") { result, error in
-            XCTAssert(result != nil, "getRoom() result is nil")
-            XCTAssert(error == nil, "getRoom() returned error")
-            XCTAssert(result?.time_created ?? 0 > 0, "getRoom() time_created is 0")
-            expectation.fulfill()
+        api.createRoom() { result, error in
+            XCTAssert(result != nil, "createRoom() result is nil")
+            XCTAssert(error == nil, "createRoom() returned error")
+            
+            let uuid = result!.uuid
+            self.api.getRoom(uuid) { result, error in
+                XCTAssert(result != nil, "getRoom() result is nil")
+                XCTAssert(error == nil, "getRoom() returned error")
+                XCTAssert(result?.time_created ?? 0 > 0, "getRoom() time_created is 0")
+                
+                self.api.deleteRoom(result!.uuid) { result, error in
+                    XCTAssert(result != nil, "createRoom() result is nil")
+                    XCTAssert(error == nil, "createRoom() returned error")
+                    expectation.fulfill()
+                }
+            }
         }
+
         wait(for: [expectation], timeout: 10.0)
     }
     
@@ -97,6 +141,10 @@ class AceAPITests: XCTestCase {
             XCTAssert(result != nil, "getActiveRooms() result is nil")
             XCTAssert(error == nil, "getActiveRooms() returned error")
             XCTAssert(result?.count ?? 0 > 0 , "getActiveRooms() count is 0")
+            for room in result! {
+                let count = (room.experts ?? 0) + (room.customers ?? 0)
+                XCTAssert(count > 0 , "getActiveRooms() user count is 0")
+            }
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 10.0)
@@ -113,6 +161,28 @@ class AceAPITests: XCTestCase {
         wait(for: [expectation], timeout: 10.0)
     }
     
+    
+    func testAddUserToRoom() {
+        let expectation = XCTestExpectation(description: "addUserToRoom API")
+        let userId = "test5"
+        
+        api.createRoom() { result, error in
+            XCTAssert(result != nil, "createRoom() result is nil")
+            XCTAssert(error == nil, "createRoom() returned error")
+            let roomId = result!.uuid
+            self.api.addUser(userId, toRoom: roomId) { result, error in
+                XCTAssert(result != nil, "addUserToRoom() result is nil")
+                XCTAssert(error == nil, "addUserToRoom() returned error")
+                self.api.deleteRoom(roomId) { result, error in
+                    XCTAssert(result != nil, "createRoom() result is nil")
+                    XCTAssert(error == nil, "createRoom() returned error")
+                    expectation.fulfill()
+                }
+            }
+        }
+        wait(for: [expectation], timeout: 10.0)
+    }
+
 
 
 }
