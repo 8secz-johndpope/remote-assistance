@@ -82,6 +82,6 @@ extension AceViewController : AceUIViewDelegate {
     }
 
     func onObjectDetect(_ btn: UIButton) {
-        arVC?.searchForObjects()
+        //arVC?.searchForObjects()
     }
 }

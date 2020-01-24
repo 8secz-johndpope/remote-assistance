@@ -11,33 +11,63 @@ import ARKit
 import AVKit
 import AVFoundation
 
-class ARSceneViewController: UIViewController, ARSCNViewDelegate, ClickableObjectDelegate {
+class ARSceneViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet weak var sceneView: ARSCNView!
     
     let configuration = ARWorldTrackingConfiguration()
     var objectGroupName:String!
-    var videoTag:Int = -1
     var clickableImages:[UIImage]!
     var imagePositions:[SCNVector3]!
     var videoURLs:[URL]!
+    var searchBarButton:UIBarButtonItem!
+    var pauseBarButton:UIBarButtonItem!
+    var renderer:SCNSceneRenderer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.navigationItem.title = "Search Scene"
-        let doneBarButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(ARSceneViewController.dismissView))
-        let searchBarButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(ARSceneViewController.searchForObjects))
-        self.navigationItem.rightBarButtonItems = [searchBarButton, doneBarButton]
-
         //self.sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin]
         self.sceneView.delegate = self
-        // TODO: Load the reference objects we are going to scan for
+        // TODO: This should be pulled from previous activity in other sections of the app
         self.objectGroupName = "VariousPrinters"
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.searchForObjects()
+
+        let tap = UITapGestureRecognizer(target: self, action: #selector(onTap))
+        self.view.addGestureRecognizer(tap)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.sceneView.session.pause()
+        
+        self.view.removeGestureRecognizers()
+    }
+    
+    @objc func onTap(_ gesture: UITapGestureRecognizer) {
+        print("onTap from ARSceneViewController")
+
+        let location = gesture.location(in: self.sceneView)
+
+        let hitResults = self.renderer?.hitTest(location, options:nil)
+        if let hit = hitResults?.first {
+            let node = hit.node
+            if let obj = node.geometry?.firstMaterial?.diffuse.contents as? UIImage {
+                if let tag = self.clickableImages.firstIndex(of: obj) {
+                    self.showVideo(tag: tag)
+                }
+            }
+        }
     }
     
     @objc func searchForObjects() {
         if let referenceObjects = ARReferenceObject.referenceObjects(inGroupNamed: self.objectGroupName, bundle: nil) {
+            self.navigationItem.rightBarButtonItem = self.pauseBarButton;
             self.configuration.detectionObjects = referenceObjects
             sceneView.session.run(self.configuration)
         }
@@ -46,24 +76,21 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, ClickableObjec
         }
     }
     
-    @objc func dismissView() {
-        
+    @objc func pauseSession() {
+        self.sceneView.session.pause()
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         if let _ = anchor as? ARObjectAnchor {
-            // TODO: Load assets for the object detected
+            // TODO: Optionally load assets from API
             self.loadInteralAssets()
+            self.renderer = renderer
 
             DispatchQueue.main.async {
-                
+
                 for i in 0..<self.clickableImages.count {
-                    let clickableElement = ClickableObject(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
-                    clickableElement.setImage(self.clickableImages[i], for: UIControl.State.normal)
-                    clickableElement.delegate = self
-                    clickableElement.tag = i
                     let material = SCNMaterial()
-                    material.diffuse.contents = clickableElement
+                    material.diffuse.contents = self.clickableImages[i]
                     let clickableNode = self.buildNode(material: material, scnVector3: self.imagePositions[i])
                     node.addChildNode(clickableNode)
                 }
@@ -91,17 +118,14 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, ClickableObjec
     }
     
     func showVideo(tag:Int) {
-        self.videoTag = tag
-        self.performSegue(withIdentifier: "showVideoPlayer", sender: self)
+                
+        let videoURL = self.videoURLs[tag]
+        let player = AVPlayer(url: videoURL)
+        let playerViewController = AVKit.AVPlayerViewController()
+        playerViewController.player = player
+        self.navigationController?.pushViewController(playerViewController)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showVideoPlayer" {
-            let avPlayerViewController = segue.destination as! AVPlayerViewController
-            avPlayerViewController.url = self.videoURLs[self.videoTag]
-        }
-    }
-
     func loadInteralAssets() {
         self.clickableImages = [UIImage(named: "PrinterThumb1")!, UIImage(named: "PrinterThumb2")!, UIImage(named: "PrinterThumb3")!]
         self.imagePositions = [SCNVector3(x: -0.2, y: +0.4, z: +0.05), SCNVector3(x: +0.1, y: +0.4, z: +0.05), SCNVector3(x: -0.2, y: +0.1, z: +0.05)]

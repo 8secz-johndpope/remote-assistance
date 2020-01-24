@@ -57,7 +57,7 @@ class AceARViewController : UIViewController {
         initARKit()
         initScreenAR()
         initARPointer()
-        initObjectDetection()
+        //initObjectDetection()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -188,7 +188,7 @@ extension AceARViewController: WRTCClientDelegate {
 extension AceARViewController: ARSCNViewDelegate {
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         screenAR(renderer, didAdd:node, for:anchor)
-        objectAnnotation(renderer, didAdd:node, for:anchor)
+        //objectAnnotation(renderer, didAdd:node, for:anchor)
     }
 }
 

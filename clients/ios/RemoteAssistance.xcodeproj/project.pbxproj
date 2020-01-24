@@ -11,8 +11,6 @@
 		2941BECC23C9165F00AE3A4F /* clip1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2941BEC923C9165F00AE3A4F /* clip1.mp4 */; };
 		2941BECD23C9165F00AE3A4F /* clip2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2941BECA23C9165F00AE3A4F /* clip2.mp4 */; };
 		2959E0DF23C660BB00D0F98E /* ARSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2959E0DE23C660BB00D0F98E /* ARSceneViewController.swift */; };
-		2959E0E123C6911D00D0F98E /* AVPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2959E0E023C6911D00D0F98E /* AVPlayerViewController.swift */; };
-		29EDBF6D23CE47D000146707 /* ClickableObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29EDBF6C23CE47D000146707 /* ClickableObject.swift */; };
 		A539AF265FD05F5E8642A27C /* Pods_RemoteAssistance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13B86974C1A2796697CDFACD /* Pods_RemoteAssistance.framework */; };
 		AD43D0CE23C68E5500AA4D24 /* QRCodeScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD43D0CD23C68E5500AA4D24 /* QRCodeScanner.swift */; };
 		D7167ED323D8CDA900655A42 /* AceLandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7167ED223D8CDA900655A42 /* AceLandingViewController.swift */; };
@@ -106,8 +104,6 @@
 		2941BEC923C9165F00AE3A4F /* clip1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = clip1.mp4; sourceTree = "<group>"; };
 		2941BECA23C9165F00AE3A4F /* clip2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = clip2.mp4; sourceTree = "<group>"; };
 		2959E0DE23C660BB00D0F98E /* ARSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSceneViewController.swift; sourceTree = "<group>"; };
-		2959E0E023C6911D00D0F98E /* AVPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVPlayerViewController.swift; sourceTree = "<group>"; };
-		29EDBF6C23CE47D000146707 /* ClickableObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClickableObject.swift; sourceTree = "<group>"; };
 		60AD71138BC3828FE41B6BA1 /* Pods-RemoteAssistance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.debug.xcconfig"; sourceTree = "<group>"; };
 		9AD6A81BBB56BA422FCA4EEC /* Pods-RemoteAssistance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.debug.xcconfig"; path = "Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.debug.xcconfig"; sourceTree = "<group>"; };
 		AD43D0CD23C68E5500AA4D24 /* QRCodeScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeScanner.swift; sourceTree = "<group>"; };
@@ -215,8 +211,6 @@
 			children = (
 				2941BEBF23C9013000AE3A4F /* Videos */,
 				2959E0DE23C660BB00D0F98E /* ARSceneViewController.swift */,
-				2959E0E023C6911D00D0F98E /* AVPlayerViewController.swift */,
-				29EDBF6C23CE47D000146707 /* ClickableObject.swift */,
 			);
 			path = ObjectAnnotation;
 			sourceTree = "<group>";
@@ -617,9 +611,7 @@
 				AD43D0CE23C68E5500AA4D24 /* QRCodeScanner.swift in Sources */,
 				D7DA31EC239ECFCE00D1B73F /* UIView+Extensions.swift in Sources */,
 				D795E76623A2E64800E97162 /* ChatViewController.swift in Sources */,
-				29EDBF6D23CE47D000146707 /* ClickableObject.swift in Sources */,
 				D7AF6A0823C9151C005B67D8 /* AceARViewController.swift in Sources */,
-				2959E0E123C6911D00D0F98E /* AVPlayerViewController.swift in Sources */,
 				D7DB6A0A236DE7C700D7C367 /* TSActions.swift in Sources */,
 				D753162C23DA46D400D686EC /* AceARViewController+ScreenAR.swift in Sources */,
 				D7DB6A0E236DE91D00D7C367 /* SettingsViewController.swift in Sources */,
