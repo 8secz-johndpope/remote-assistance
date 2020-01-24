@@ -5,7 +5,10 @@
   },
   "resources" : [
     {
-      "filename" : "qrcode-demo.arreferenceimage"
+      "filename" : "demo_image_1.arreferenceimage"
+    },
+    {
+      "filename" : "demo_image_2.arreferenceimage"
     },
     {
       "filename" : "screenar_card.arreferenceimage"
