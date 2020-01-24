@@ -8,9 +8,10 @@
 
 import UIKit
 import ARKit
+import AVKit
 import Toast_Swift
 
-extension AceARViewController : ClickableObjectDelegate {
+extension AceARViewController {
     
     func initObjectDetection() {
         self.objectGroupName = "VariousPrinters"
@@ -35,12 +36,8 @@ extension AceARViewController : ClickableObjectDelegate {
             DispatchQueue.main.async {
                 
                 for i in 0..<self.clickableImages.count {
-                    let clickableElement = ClickableObject(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
-                    clickableElement.setImage(self.clickableImages[i], for: UIControl.State.normal)
-                    clickableElement.delegate = self
-                    clickableElement.tag = i
                     let material = SCNMaterial()
-                    material.diffuse.contents = clickableElement
+                    material.diffuse.contents = self.clickableImages[i]
                     let clickableNode = self.buildNode(material: material, scnVector3: self.imagePositions[i])
                     node.addChildNode(clickableNode)
                 }
@@ -68,13 +65,11 @@ extension AceARViewController : ClickableObjectDelegate {
     }
     
     func showVideo(tag:Int) {
-        self.videoTag = tag
-        //self.performSegue(withIdentifier: "showVideoPlayer", sender: self)
-        let vc = AVPlayerViewController.instantiate(fromAppStoryboard: .Main)
-        vc.url = self.videoURLs[self.videoTag]
-        self.navigationController?.pushViewController(vc)
-        
-        
+        let videoURL = self.videoURLs[tag]
+        let player = AVPlayer(url: videoURL)
+        let playerViewController = AVKit.AVPlayerViewController()
+        playerViewController.player = player
+        self.navigationController?.pushViewController(playerViewController)
     }
 
     func loadInteralAssets() {
