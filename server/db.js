@@ -368,7 +368,7 @@ module.exports = {
 			],
 			function (err, rows, fields) {
 				if (err) throw err
-				let obj = {'uesr_uuid': user_uuid, "room_uuid": room_uuid }	
+				let obj = {'user_uuid': user_uuid, 'room_uuid': room_uuid }	
 				cb(obj)
 		})
 	}

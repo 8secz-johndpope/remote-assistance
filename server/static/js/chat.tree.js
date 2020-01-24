@@ -15,7 +15,8 @@ const CHAT_TREE_JSON = `
 	{
 	"id": 3,
 	"q": "OK! Press the button below then frame the barcode in the camera window.",
-	"next": ["barcode",5]
+	"next": ["barcode",5],
+	"setVar":"printerName"
 	},
 	{
 	"id": 4,
