@@ -20,7 +20,7 @@ class AceAPI {
     }
     
     // response types
-    class CreateResponse : Codable {
+    class UuidResponse : Codable {
         let uuid: String
     }
 
@@ -75,10 +75,14 @@ class AceAPI {
         let name: String
         let user_uuid: String
         let room_uuid: String
+        let thumbnailUrl: String?
+        let webmUrl: String?
+        let mp4Url: String?
     }
     
     class AssociateClipToAnchorResponse : Codable {
-        
+        let anchor_uuid: String
+        let clip_uuid: String
     }
     
     
@@ -108,14 +112,18 @@ class AceAPI {
 
     }
     
-    func createCustomer(callback: @escaping (CreateResponse?, Error?) -> ()) {
+    func createCustomer(callback: @escaping (UuidResponse?, Error?) -> ()) {
         callApi("createCustomer", callback: callback)
     }
     
-    func createExpert(callback: @escaping (CreateResponse?, Error?) -> ()) {
+    func createExpert(callback: @escaping (UuidResponse?, Error?) -> ()) {
         callApi("createExpert", callback: callback)
     }
-    
+
+    func deleteUser(_ userId:String, callback: @escaping (UuidResponse?, Error?) -> ()) {
+        callApi("deleteUser\(userId)", callback: callback)
+    }
+
     func getUser(_ userId:String, callback: @escaping (UserResponse?, Error?) -> ()) {
         callApi("getUser/\(userId)", callback: callback)
     }
@@ -124,16 +132,24 @@ class AceAPI {
         callApi("getAllUsers", callback: callback)
     }
         
-    func createRoom(callback: @escaping (CreateResponse?, Error?) -> ()) {
+    func createRoom(callback: @escaping (UuidResponse?, Error?) -> ()) {
         callApi("createRoom", callback: callback)
     }
     
+    func deleteRoom(_ userId:String, callback: @escaping (UuidResponse?, Error?) -> ()) {
+        callApi("deleteUser\(userId)", callback: callback)
+    }
+
     func getRoom(_ roomName:String, callback: @escaping (RoomResponse?, Error?) -> ()) {
         callApi("getRoom/\(roomName)", callback: callback)
     }
 
     func getActiveRooms(callback: @escaping ([RoomResponse]?, Error?) -> ()) {
         callApi("getActiveRooms", callback: callback)
+    }
+    
+    func getAllRooms(callback: @escaping ([RoomResponse]?, Error?) -> ()) {
+        callApi("getAllRooms", callback: callback)
     }
 
     func addUser(_ userId:String, toRoom roomId:String, callback: @escaping (UserToRoomResponse?, Error?) -> ()) {
@@ -155,24 +171,32 @@ class AceAPI {
         }
         callApi(path, callback: callback)
     }
+    
+    func createClip(callback: @escaping (UuidResponse?, Error?) -> ()) {
+        callApi("createClip", callback: callback)
+    }
+
+    func deleteClip(_ clipId:String, callback: @escaping (UuidResponse?, Error?) -> ()) {
+        callApi("deleteClip/\(clipId)", callback: callback)
+    }
 
     func getClip(_ clipId:String, callback: @escaping (ClipResponse?, Error?) -> ()) {
         callApi("getClip/\(clipId)", callback: callback)
+    }
+
+    func getClips(forAnchor anchorId:String, andRoom roomId:String, callback: @escaping ([ClipResponse]?, Error?) -> ()) {
+        callApi("getClipsForAnchor/\(anchorId)/\(roomId)", callback: callback)
     }
 
     func getAllClips(_ clipId:String, callback: @escaping ([ClipResponse]?, Error?) -> ()) {
         callApi("getAllClips", callback: callback)
     }
 
-    func getClips(forAnchor anchorId:String, andRoom roomId:String, callback: @escaping ([ClipResponse]?, Error?) -> ()) {
-        callApi("getClips/\(anchorId)/\(roomId)", callback: callback)
-    }
-
     func addClip(_ clipId:String, toAnchor anchorId:String, blobPos:Int, callback: @escaping (AssociateClipToAnchorResponse?, Error?) -> ()) {
         callApi("addClipToAnchor/\(anchorId)/\(clipId)/\(blobPos)", callback: callback)
     }
     
-    func createClip(_ name: String, userId:String, roomId:String, callback: @escaping (CreateResponse?, Error?) -> ()) {
-        callApi("createClip/\(name)/\(userId)/\(roomId)", callback: callback)
+    func removeClip(_ clipId:String, fromAnchor anchorId:String, callback: @escaping (AssociateClipToAnchorResponse?, Error?) -> ()) {
+        callApi("removeClipFromAnchor/\(clipId)/\(anchorId)", callback: callback)
     }
 }
