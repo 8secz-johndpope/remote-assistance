@@ -92,6 +92,7 @@ module.exports = {
 			function (err, rows, fields) {
 				if (err) throw err
 				let r = rows.length > 0 ? rows[0] : {}
+				if (r.url) { r.url = config.anchorLoc + r.url; }
 				cb(r)
 		})		
 	},
@@ -103,6 +104,9 @@ module.exports = {
 			],
 			function (err, rows, fields) {
 				if (err) throw err
+				for (let i=0; i < rows.length; i++) {
+					if (rows[i].url) { rows[i].url = config.anchorLoc + rows[i].url; }
+				}
 				cb(rows)
 		})		
 	},
@@ -113,6 +117,9 @@ module.exports = {
 			],
 			function (err, rows, fields) {
 				if (err) throw err
+				for (let i=0; i < rows.length; i++) {
+					if (rows[i].url) { rows[i].url = config.anchorLoc + rows[i].url; }
+				}
 				cb(rows)
 		})		
 	},
@@ -125,6 +132,9 @@ module.exports = {
 			function (err, rows, fields) {
 				if (err) throw err
 				let r = rows.length > 0 ? rows[0] : {}
+				r.thumbnailUrl = config.clipLoc + r.uuid + ".jpg";
+				r.webmUrl = config.clipLoc + r.uuid + ".webm";
+				r.mp4Url = config.clipLoc + r.uuid + ".mp4";
 				cb(r)
 		})		
 	},

@@ -3,5 +3,6 @@ module.exports = {
     host: process.env.HOST || '0.0.0.0',
     port: process.env.PORT || 5443,
     wsport: 3000,
-    clipLoc: "static/clipStor/"
+    clipLoc: "/static/clipStor/",
+    anchorLoc: "/static/anchorStor/"
 }
