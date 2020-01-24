@@ -14,15 +14,42 @@ class AceAPITests: XCTestCase {
     let api = AceAPI.sharedInstance
     var customerId:String = ""
     var expertId:String = ""
+    var roomId:String = ""
 
     override func setUp() {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         let setServerURL = TSSetServerURL(serverUrl: "https://localhost:5443")
         store.ts.dispatch(setServerURL)
+        
+        let expectation = XCTestExpectation(description: "Setup")
+        
+        self.api.createCustomer() { result, error in
+            self.customerId = result!.uuid
+            self.api.createExpert() { result, error in
+                self.expertId = result!.uuid
+                self.api.createRoom() { result, error in
+                    self.roomId = result!.uuid
+                    expectation.fulfill()
+                }
+            }
+        }
+        wait(for: [expectation], timeout: 10.0)
     }
 
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
+        
+        let expectation = XCTestExpectation(description: "Setup")
+        
+        self.api.deleteUser(self.customerId) { result, error in
+            self.api.deleteUser(self.expertId) { result, error in
+                self.api.deleteRoom(self.roomId) { result, error in
+                    expectation.fulfill()
+                }
+            }
+        }
+        wait(for: [expectation], timeout: 10.0)
+
     }
     
     func testCreateCustomer() {
@@ -65,7 +92,7 @@ class AceAPITests: XCTestCase {
     
     func testGetUser() {
         let expectation = XCTestExpectation(description: "getUser API")
-        api.getUser("test5") { result, error in
+        api.getUser(self.customerId) { result, error in
             XCTAssert(result != nil, "getUser() result is nil")
             XCTAssert(error == nil, "getUser() returned error")
             XCTAssert(result?.id ?? 0 > 0, "getUser() id is invalid")
@@ -164,7 +191,7 @@ class AceAPITests: XCTestCase {
     
     func testAddUserToRoom() {
         let expectation = XCTestExpectation(description: "addUserToRoom API")
-        let userId = "test5"
+        let userId = self.customerId
         
         api.createRoom() { result, error in
             XCTAssert(result != nil, "createRoom() result is nil")
@@ -183,6 +210,126 @@ class AceAPITests: XCTestCase {
         wait(for: [expectation], timeout: 10.0)
     }
 
+    func testRemoveUserFromRoom() {
+        let expectation = XCTestExpectation(description: "removeUserFromRoom API")
+        let userId = self.customerId
+        let roomId = self.roomId
+        
+        self.api.addUser(userId, toRoom: roomId) { result, error in
+            XCTAssert(result != nil, "addUserToRoom() result is nil")
+            XCTAssert(error == nil, "addUserToRoom() returned error")
+    
+            print("/api/removeUserFromRoom/\(userId)/\(roomId)")
+            self.api.removeUser(userId, fromRoom: roomId) { result, error in
+                XCTAssert(result != nil, "removeUserFromRoom() result is nil")
+                XCTAssert(error == nil, "removeUserFromRoom() returned error")
+                expectation.fulfill()
+            }
+        }
+        
+        wait(for: [expectation], timeout: 10.0)
+    }
+    
+    func testGetAnchor() {
+        let expectation = XCTestExpectation(description: "getAnchor API")
+        self.api.getAnchor("demo_image_1") { result, error in
+            XCTAssert(result != nil, "getAnchor() result is nil")
+            XCTAssert(error == nil, "getAnchor() returned error")
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 10.0)
+    }
+    
+    func testGetAllAnchors() {
+        let expectation = XCTestExpectation(description: "getAllAnchors API")
+        self.api.getAllAnchors() { result, error in
+            XCTAssert(result != nil, "getAllAnchors() result is nil")
+            XCTAssert(error == nil, "getAllAnchors() returned error")
+            XCTAssert(result?.count ?? 0 > 0, "getAllAnchors() returned 0")
+            expectation.fulfill()
+        }
+        
+        let expectation2 = XCTestExpectation(description: "getAllAnchors/:text API")
+        self.api.getAllAnchors("dell") { result, error in
+            XCTAssert(result != nil, "getAllAnchors() result is nil")
+            XCTAssert(error == nil, "getAllAnchors() returned error")
+            XCTAssert(result?.count ?? 0 == 1, "getAllAnchors() return not 1")
+            expectation2.fulfill()
+        }
 
+        
+        wait(for: [expectation, expectation2], timeout: 10.0)
+    }
+    
+    func testCreateDeleteClip() {
+        let expectation = XCTestExpectation(description: "createClip API")
+        self.api.createClip(name:"clip1", userId:self.customerId, roomId:self.roomId) { result, error in
+            XCTAssert(result != nil, "createClip() result is nil")
+            XCTAssert(error == nil, "createClip() returned error")
+            let clipId = result!.uuid
+            
+            self.api.deleteClip(clipId) { result, error in
+                XCTAssert(result != nil, "deleteClip() result is nil")
+                XCTAssert(error == nil, "deleteClip() returned error")
+                expectation.fulfill()
+            }
+        }
+        
+        wait(for: [expectation], timeout: 10.0)
+    }
+    
+    func testGetClip() {
+        let expectation = XCTestExpectation(description: "getClip API")
+        self.api.getClip("549742011") { result, error in
+            XCTAssert(result != nil, "getClip() result is nil")
+            XCTAssert(error == nil, "getClip() returned error")
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 10.0)
+    }
+
+    func testGetClipForAnchor() {
+        let expectation = XCTestExpectation(description: "getClipForAnchor API")
+        self.api.getClips(forAnchor:"demo_image_1", andRoom: self.roomId) { result, error in
+            XCTAssert(result != nil, "getClipForAnchor() result is nil")
+            XCTAssert(error == nil, "getClipForAnchor() returned error")
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 10.0)
+    }
+    
+    func testGetAllClips() {
+        let expectation = XCTestExpectation(description: "getAllClips API")
+        self.api.getAllClips() { result, error in
+            XCTAssert(result != nil, "getAllClips() result is nil")
+            XCTAssert(error == nil, "getAllClips() returned error")
+            expectation.fulfill()
+        }
+        
+        wait(for: [expectation], timeout: 10.0)
+    }
+    
+    func testAddRemoveClipToAnchor() {
+        let expectation = XCTestExpectation(description: "addClipToAnchor API")
+        let clipId = ""
+        let anchorId = ""
+        let blobPos = ""
+        
+        self.api.addClip(clipId, toAnchor:anchorId, blobPos:blobPos) { result, error in
+            XCTAssert(result != nil, "addClipToAnchor() result is nil")
+            XCTAssert(error == nil, "addClipToAnchor() returned error")
+            
+            self.api.removeClip(clipId, fromAnchor:anchorId) { result, error in
+                XCTAssert(result != nil, "removeClipFromAnchor() result is nil")
+                XCTAssert(error == nil, "addClipToAnchor() returned error")
+                expectation.fulfill()
+            }
+        }
+        
+        wait(for: [expectation], timeout: 10.0)
+    }
 
 }
