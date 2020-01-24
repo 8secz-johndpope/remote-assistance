@@ -60,7 +60,10 @@ if (!args.db_off) {
 
     app.get('/api/getRoom/:uuid', function (req, res) {
         db.getRoom(res,req.params.uuid,function(data) {
-            res.json(data)
+            db.getActiveRooms(res,data,req.params.uuid,function(activeData) {
+                if (activeData.length) { res.json(activeData[0]) }
+                else { res.json({}) }
+            })
         })
     });
 
@@ -77,14 +80,14 @@ if (!args.db_off) {
     });
 
     app.get('/api/getActiveRooms', function (req, res) {
-        db.getActiveRooms(res,[],function(data) {
+        db.getActiveRooms(res,[],null,function(data) {
             res.json(data)
         })
     });
 
     app.get('/api/getAllRooms', function (req, res) {
         db.getAllRooms(res,function(data) {
-            db.getActiveRooms(res,data,function(activeData) {
+            db.getActiveRooms(res,data,null,function(activeData) {
                 res.json(activeData)
             })
         })
@@ -115,8 +118,8 @@ if (!args.db_off) {
     });
 
     app.get('/api/getAllAnchors', function (req, res) {
-        db.getAllAnchors(res,function(data) {
-            res.json(data)
+        db.getAllAnchors(res,function(data) 
+{            res.json(data)
         })
     });
 
@@ -127,7 +130,7 @@ if (!args.db_off) {
     });
 
     app.get('/api/getClipsForAnchor/:anchor_uuid/:room_uuid?', function (req, res) {
-        db.getClips(res,req.params.anchor_uuid,req.params.room_uuid,function(data) {
+        db.getClipsForAnchor(res,req.params.anchor_uuid,req.params.room_uuid,function(data) {
             res.json(data)
         })
     });

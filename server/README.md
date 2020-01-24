@@ -78,7 +78,7 @@ Delete a room
 Get room details
 ```
 /api/getRoom/:uuid
-{"id":int,"time_ping":int,"time_request":int,"time_created":int,"uuid":"string"}
+{"id":int,"time_ping":int,"time_request":int,"time_created":int,"uuid":"string","experts":1,"customers":0}
 ```
 
 Get rooms with at least one participant

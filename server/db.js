@@ -41,21 +41,31 @@ module.exports = {
 			],
 			function (err, rows, fields) {
 				if (err) throw err
-				let r = rows.length > 0 ? rows[0] : {}
-				cb(r)
+				let ret = []
+				if (rows.length > 0) {
+					let obj = { uuid: rows[0].uuid, id: rows[0].id, time_ping: rows[0].time_ping, time_request: rows[0].time_request, time_created: rows[0].time_created, experts: 0, customers: 0 };
+					ret.unshift(obj);
+				}
+				cb(ret);
 		})		
 	},
 
-	getActiveRooms: (res,ret,cb) => {
-		connection.query('SELECT roomUser.room_uuid,user.type,room.* FROM roomUser,user,room where roomUser.state = 1 and user.uuid = roomUser.user_uuid and room.uuid = roomUser.room_uuid',
-			[				
-			],
+	getActiveRooms: (res,ret,roomName,cb) => {
+		let q = 'SELECT roomUser.room_uuid,user.type,room.* FROM roomUser,user,room where roomUser.state = 1 and user.uuid = roomUser.user_uuid and room.uuid = roomUser.room_uuid';
+		let arr = [];
+		if (roomName !== null) {
+			q += ' and roomUser.room_uuid = ?';
+			arr.unshift(roomName);
+		}
+		connection.query(q,				
+			arr
+			,
 			function (err, rows, fields) {
 				if (err) throw err
 				for (let i = 0; i < rows.length; i++) {
-					let ru = rows[i].room_uuid;
+					let ru = rows[i].room_uuid; 
 					let t = rows[i].type;
-					let index = ret.findIndex(x => x.room_uuid === ru);
+					let index = ret.findIndex(x => x.uuid === ru);
 
 					if (index < 0) {
 						let obj = { uuid: ru, id: rows[i].id, time_ping: rows[i].time_ping, time_request: rows[i].time_request, time_created: rows[i].time_created, experts: 0, customers: 0 };
@@ -139,7 +149,7 @@ module.exports = {
 		})		
 	},
 
-	getClips: (res,anchor_uuid,room_uuid,cb) => {
+	getClipsForAnchor: (res,anchor_uuid,room_uuid,cb) => {
 		let q = 'select clipAnchor.position_blob,clip.* from clip,clipAnchor where clipAnchor.clip_uuid=clip.uuid and clipAnchor.anchor_uuid = ?'
 		let arr = [anchor_uuid]; 
 		if (room_uuid) {
@@ -150,6 +160,11 @@ module.exports = {
 			arr,
 			function (err, rows, fields) {
 				if (err) throw err
+				for (let i=0; i < rows.length; i++) {
+					rows[i].thumbnailUrl = config.clipLoc + rows[i].uuid + ".jpg";
+					rows[i].webmUrl = config.clipLoc + rows[i].uuid + ".webm";
+					rows[i].mp4Url = config.clipLoc + rows[i].uuid + ".mp4";
+				}
 				cb(rows)
 		})		
 	},
@@ -160,6 +175,11 @@ module.exports = {
 			],
 			function (err, rows, fields) {
 				if (err) throw err
+				for (let i=0; i < rows.length; i++) {
+					rows[i].thumbnailUrl = config.clipLoc + rows[i].uuid + ".jpg";
+					rows[i].webmUrl = config.clipLoc + rows[i].uuid + ".webm";
+					rows[i].mp4Url = config.clipLoc + rows[i].uuid + ".mp4";
+				}
 				cb(rows)
 		})		
 	},
