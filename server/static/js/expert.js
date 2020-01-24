@@ -160,7 +160,6 @@ function onKeyDown( event ) {
 
 window.addEventListener('keydown', onKeyDown, false);
 
-
 function onWheel( event ) 
 {    
     var delta = 20;

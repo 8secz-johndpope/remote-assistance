@@ -206,7 +206,7 @@ if (!args.db_off) {
         db.getUser(res,req.params.user_uuid,function(userData) {
             if (userData.uuid) {
                 db.getRoom(res,req.params.room_uuid,function(roomData) {
-                    if (roomData.uuid) {
+                    if (roomData.length > 0) {
                         db.createClip(res, req.params.name, req.params.user_uuid, req.params.room_uuid, function(data) {
                         res.json(data)
                     })
@@ -232,7 +232,7 @@ if (!args.db_off) {
         db.getUser(res,req.params.user_uuid,function(userData) {
             if (userData.uuid) {
                 db.getRoom(res,req.params.room_uuid,function(roomData) {
-                    if (roomData.uuid) {
+                    if (roomData.length > 0) {
                         db.addUserToRoom(res,req.params.room_uuid,req.params.user_uuid, function(data) {
                             res.json(data)
                         });
@@ -252,7 +252,7 @@ if (!args.db_off) {
         db.getUser(res,req.params.user_uuid,function(userData) {
             if (userData.uuid) {
                 db.getRoom(res,req.params.room_uuid,function(roomData) {
-                    if (roomData.uuid) {
+                    if (roomData.length > 0) {
                         db.removeUserFromRoom(res,req.params.room_uuid,req.params.user_uuid, function(data) {
                             res.json(data)
                         });
