@@ -60,25 +60,36 @@ if (!args.db_off) {
 
     app.get('/api/getRoom/:uuid', function (req, res) {
         db.getRoom(res,req.params.uuid,function(data) {
-            res.json(data)
+            db.getActiveRooms(res,data,req.params.uuid,function(activeData) {
+                if (activeData.length) { res.json(activeData[0]) }
+                else { res.json({}) }
+            })
         })
     });
 
     app.get('/api/createRoom', function(req, res) { 
-        let room_uuid = util.generateRandomId();
-        let out = {"room_uuid":room_uuid};
-        res.json(out)
-    })
+        db.createRoom(res,function(data) {
+            res.json(data)
+        })
+    });
+
+    app.get('/api/deleteRoom/:uuid', function(req, res) { 
+        db.deleteRoom(res,req.params.uuid,function(data) {
+            res.json(data)
+        })
+    });
 
     app.get('/api/getActiveRooms', function (req, res) {
-        db.getActiveRooms(res,function(data) {
+        db.getActiveRooms(res,[],null,function(data) {
             res.json(data)
         })
     });
 
     app.get('/api/getAllRooms', function (req, res) {
         db.getAllRooms(res,function(data) {
-            res.json(data)
+            db.getActiveRooms(res,data,null,function(activeData) {
+                res.json(activeData)
+            })
         })
     });
 
@@ -88,26 +99,27 @@ if (!args.db_off) {
         })
     });
 
-    app.get('/api/getAllUsers/', function (req, res) {
+    app.get('/api/getAllUsers', function (req, res) {
         db.getAllUsers(res,function(data) {
             res.json(data)
         })
     });
+
     app.get('/api/getAnchor/:uuid', function (req, res) {
         db.getAnchor(res,req.params.uuid,function(data) {
             res.json(data)
         })
     });
 
-    app.get('/api/getAnchors/:text', function (req, res) {
-        db.getAnchors(res,req.params.text,function(data) {
+    app.get('/api/getAllAnchors/:text', function (req, res) {
+        db.getAllAnchorsSearch(res,req.params.text,function(data) {
             res.json(data)
         })
     });
 
     app.get('/api/getAllAnchors', function (req, res) {
-        db.getAllAnchors(res,function(data) {
-            res.json(data)
+        db.getAllAnchors(res,function(data) 
+{            res.json(data)
         })
     });
 
@@ -117,8 +129,8 @@ if (!args.db_off) {
         })
     });
 
-    app.get('/api/getClips/:anchor_uuid/:room_uuid?', function (req, res) {
-        db.getClips(res,req.params.anchor_uuid,req.params.room_uuid,function(data) {
+    app.get('/api/getClipsForAnchor/:anchor_uuid/:room_uuid?', function (req, res) {
+        db.getClipsForAnchor(res,req.params.anchor_uuid,req.params.room_uuid,function(data) {
             res.json(data)
         })
     });
@@ -129,11 +141,20 @@ if (!args.db_off) {
         })
     });
 
-    app.get('/api/addClipAnchor/:anchor_uuid/:clip_uuid/:position_blob', function (req,res) {
+    app.get('/api/addClipToAnchor/:clip_uuid/:anchor_uuid/:position_blob', function (req,res) {
         db.getClip(res,req.params.clip_uuid,function(clipData) {
-            if (clipData.length) {
-                db.addClipAnchor(res,req.params.anchor_uuid,req.params.clip_uuid,req.params.position_blob,function(data) {
-                    res.json(data)
+            if (clipData.uuid) {
+                db.getAnchor(res,req.params.anchor_uuid,function(anchorData) {
+                    if (anchorData.uuid) {
+                        db.removeClipFromAnchor(res,req.params.anchor_uuid,req.params.clip_uuid,function(data) {
+                            db.addClipToAnchor(res,req.params.anchor_uuid,req.params.clip_uuid,req.params.position_blob,function(data) {
+                                res.json(data)
+                            })
+                        })
+                    } else {
+                        let out = {"error":"No anchor with that UUID"}
+                        res.json(out)
+                    }
                 })
             } else {
                 let out = {"error":"No clip with that UUID"}
@@ -141,6 +162,26 @@ if (!args.db_off) {
             }
         })
     });
+
+    app.get('/api/removeClipFromAnchor/:clip_uuid/:anchor_uuid', function (req, res) {
+       db.getClip(res,req.params.clip_uuid,function(clipData) {
+            if (clipData.uuid) {
+                db.getAnchor(res,req.params.anchor_uuid,function(anchorData) {
+                    if (anchorData.uuid) {
+                        db.removeClipFromAnchor(res,req.params.anchor_uuid,req.params.clip_uuid,function(data) {
+                            res.json(data)
+                        })
+                    } else {
+                        let out = {"error":"No anchor with that UUID"}
+                        res.json(out)
+                    }
+                })
+            } else {
+                let out = {"error":"No clip with that UUID"}
+                res.json(out)
+            }
+        })
+     });
 
     app.get('/api/createCustomer', function (req, res) {
         db.createUser(res, "customer", function(data) {
@@ -154,12 +195,26 @@ if (!args.db_off) {
         })
     });
 
+    app.get('/api/deleteUser/:uuid', function(req, res) { 
+        db.deleteUser(res,req.params.uuid,function(data) {
+            res.json(data)
+        })
+    });
+   
+
     app.get('/api/createClip/:name/:user_uuid/:room_uuid', function (req, res) {
         db.getUser(res,req.params.user_uuid,function(userData) {
-            if (userData.length) {
-                db.createClip(res, req.params.name, req.params.user_uuid, req.params.room_uuid, function(data) {
-                    res.json(data)
-                 })
+            if (userData.uuid) {
+                db.getRoom(res,req.params.room_uuid,function(roomData) {
+                    if (roomData.length > 0) {
+                        db.createClip(res, req.params.name, req.params.user_uuid, req.params.room_uuid, function(data) {
+                        res.json(data)
+                    })
+                    } else {
+                        let out = {"error":"No room with that UUID"}
+                        res.json(out)
+                    }
+                })
             } else {
                 let out = {"error":"No user with that UUID"}
                 res.json(out)
@@ -167,12 +222,25 @@ if (!args.db_off) {
         })
     });
 
-    app.get('/api/addUserToRoom/:room_uuid/:user_uuid', function (req, res) {
+    app.get('/api/deleteClip/:uuid', function(req, res) { 
+        db.deleteClip(res,req.params.uuid,function(data) {
+            res.json(data)
+        })
+    });
+
+    app.get('/api/addUserToRoom/:user_uuid/:room_uuid', function (req, res) {
         db.getUser(res,req.params.user_uuid,function(userData) {
-            if (userData.length) {
-                db.addUserToRoom(res,req.params.room_uuid,req.params.user_uuid, function(data) {
-                    res.json(data)
-                });
+            if (userData.uuid) {
+                db.getRoom(res,req.params.room_uuid,function(roomData) {
+                    if (roomData.length > 0) {
+                        db.addUserToRoom(res,req.params.room_uuid,req.params.user_uuid, function(data) {
+                            res.json(data)
+                        });
+                    } else {
+                        let out = {"error":"No room with that UUID"}
+                        res.json(out)
+                    }
+                })
             } else {
                 let out = {"error":"No user with that UUID"}
                 res.json(out)
@@ -180,12 +248,19 @@ if (!args.db_off) {
         })
     });
 
-    app.get('/api/removeUserFromRoom/:room_uuid/:user_uuid', function (req, res) {
+    app.get('/api/removeUserFromRoom/:user_uuid/:room_uuid', function (req, res) {
         db.getUser(res,req.params.user_uuid,function(userData) {
-            if (userData.length) {
-                db.removeUserFromRoom(res,req.params.room_uuid,req.params.user_uuid, function(data) {
-                    res.json(data)
-                });
+            if (userData.uuid) {
+                db.getRoom(res,req.params.room_uuid,function(roomData) {
+                    if (roomData.length > 0) {
+                        db.removeUserFromRoom(res,req.params.room_uuid,req.params.user_uuid, function(data) {
+                            res.json(data)
+                        });
+                    } else {
+                        let out = {"error":"No room with that UUID"}
+                        res.json(out)
+                    }
+                })
             } else {
                 let out = {"error":"No user with that UUID"}
                 res.json(out)

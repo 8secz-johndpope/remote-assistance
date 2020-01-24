@@ -5,16 +5,25 @@
   },
   "resources" : [
     {
-      "filename" : "card.arreferenceimage"
+      "filename" : "demo_image_1.arreferenceimage"
     },
     {
-      "filename" : "docucolor-2-out.arreferenceimage"
+      "filename" : "demo_image_2.arreferenceimage"
     },
     {
-      "filename" : "docupal2-out.arreferenceimage"
+      "filename" : "screenar_card.arreferenceimage"
     },
     {
-      "filename" : "omni.arreferenceimage"
+      "filename" : "screenar_demo.arreferenceimage"
+    },
+    {
+      "filename" : "screenar_docucolor-2-out.arreferenceimage"
+    },
+    {
+      "filename" : "screenar_docupal2-out.arreferenceimage"
+    },
+    {
+      "filename" : "screenar_omni.arreferenceimage"
     }
   ]
 }

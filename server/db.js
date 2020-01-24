@@ -41,24 +41,34 @@ module.exports = {
 			],
 			function (err, rows, fields) {
 				if (err) throw err
-				cb(rows)
+				let ret = []
+				if (rows.length > 0) {
+					let obj = { uuid: rows[0].uuid, id: rows[0].id, time_ping: rows[0].time_ping, time_request: rows[0].time_request, time_created: rows[0].time_created, experts: 0, customers: 0 };
+					ret.unshift(obj);
+				}
+				cb(ret);
 		})		
 	},
 
-	getActiveRooms: (res,cb) => {
-		connection.query('SELECT roomUser.room_uuid,user.type FROM roomUser,user where roomUser.state = 1 and user.uuid = roomUser.user_uuid',
-			[				
-			],
+	getActiveRooms: (res,ret,roomName,cb) => {
+		let q = 'SELECT roomUser.room_uuid,user.type,room.* FROM roomUser,user,room where roomUser.state = 1 and user.uuid = roomUser.user_uuid and room.uuid = roomUser.room_uuid';
+		let arr = [];
+		if (roomName !== null) {
+			q += ' and roomUser.room_uuid = ?';
+			arr.unshift(roomName);
+		}
+		connection.query(q,				
+			arr
+			,
 			function (err, rows, fields) {
 				if (err) throw err
-				let ret = [];
 				for (let i = 0; i < rows.length; i++) {
-					let ru = rows[i].room_uuid;
+					let ru = rows[i].room_uuid; 
 					let t = rows[i].type;
-					let index = ret.findIndex(x => x.room_uuid === ru);
+					let index = ret.findIndex(x => x.uuid === ru);
 
 					if (index < 0) {
-						let obj = { room_uuid: ru, experts: 0, customers: 0 };
+						let obj = { uuid: ru, id: rows[i].id, time_ping: rows[i].time_ping, time_request: rows[i].time_request, time_created: rows[i].time_created, experts: 0, customers: 0 };
 						ret.unshift(obj);
 						index = 0;
 					}
@@ -70,44 +80,56 @@ module.exports = {
 	},
 
 	getAllRooms: (res,cb) => {
-		connection.query('select uuid from room',
+		connection.query('select * from room',
 			[
 			],
 			function (err, rows, fields) {
 				if (err) throw err
-				cb(rows)
+				let ret = []
+				for (let i = 0; i < rows.length; i++) {
+					let obj = { uuid: rows[i].uuid, id: rows[i].id, time_ping: rows[i].time_ping, time_request: rows[i].time_request, time_created: rows[i].time_created, experts: 0, customers: 0 };
+					ret.unshift(obj);
+				}
+				cb(ret);
 		})		
 	},
 
 	getAnchor: (res,uuid,cb) => {
-		console.log(uuid)
 		connection.query('select * from anchor where uuid = ?',
 			[
 				uuid
 			],
 			function (err, rows, fields) {
 				if (err) throw err
-				cb(rows)
+				let r = rows.length > 0 ? rows[0] : {}
+				if (r.url) { r.url = config.anchorLoc + r.url; }
+				cb(r)
 		})		
 	},
 
-	getAnchors: (res,text,cb) => {
+	getAllAnchorsSearch: (res,text,cb) => {
 		connection.query('select * from anchor where name like ?',
 			[
 				'%'+text+'%'
 			],
 			function (err, rows, fields) {
 				if (err) throw err
+				for (let i=0; i < rows.length; i++) {
+					if (rows[i].url) { rows[i].url = config.anchorLoc + rows[i].url; }
+				}
 				cb(rows)
 		})		
 	},
 
 	getAllAnchors: (res,cb) => {
-		connection.query('select uuid from anchor ',
+		connection.query('select * from anchor ',
 			[
 			],
 			function (err, rows, fields) {
 				if (err) throw err
+				for (let i=0; i < rows.length; i++) {
+					if (rows[i].url) { rows[i].url = config.anchorLoc + rows[i].url; }
+				}
 				cb(rows)
 		})		
 	},
@@ -119,12 +141,16 @@ module.exports = {
 			],
 			function (err, rows, fields) {
 				if (err) throw err
-				cb(rows)
+				let r = rows.length > 0 ? rows[0] : {}
+				r.thumbnailUrl = config.clipLoc + r.uuid + ".jpg";
+				r.webmUrl = config.clipLoc + r.uuid + ".webm";
+				r.mp4Url = config.clipLoc + r.uuid + ".mp4";
+				cb(r)
 		})		
 	},
 
-	getClips: (res,anchor_uuid,room_uuid,cb) => {
-		let q = 'select clip.user_uuid,clip.room_uuid,clip.uuid,clipAnchor.id,clipAnchor.anchor_uuid,clipAnchor.position_blob from clip,clipAnchor where clipAnchor.clip_uuid=clip.uuid and clipAnchor.anchor_uuid = ?'
+	getClipsForAnchor: (res,anchor_uuid,room_uuid,cb) => {
+		let q = 'select clipAnchor.position_blob,clip.* from clip,clipAnchor where clipAnchor.clip_uuid=clip.uuid and clipAnchor.anchor_uuid = ?'
 		let arr = [anchor_uuid]; 
 		if (room_uuid) {
 			q += ' and clip.room_uuid = ?'
@@ -134,16 +160,26 @@ module.exports = {
 			arr,
 			function (err, rows, fields) {
 				if (err) throw err
+				for (let i=0; i < rows.length; i++) {
+					rows[i].thumbnailUrl = config.clipLoc + rows[i].uuid + ".jpg";
+					rows[i].webmUrl = config.clipLoc + rows[i].uuid + ".webm";
+					rows[i].mp4Url = config.clipLoc + rows[i].uuid + ".mp4";
+				}
 				cb(rows)
 		})		
 	},
 
 	getAllClips: (res,cb) => {
-		connection.query('select uuid from clip ',
+		connection.query('select * from clip ',
 			[
 			],
 			function (err, rows, fields) {
 				if (err) throw err
+				for (let i=0; i < rows.length; i++) {
+					rows[i].thumbnailUrl = config.clipLoc + rows[i].uuid + ".jpg";
+					rows[i].webmUrl = config.clipLoc + rows[i].uuid + ".webm";
+					rows[i].mp4Url = config.clipLoc + rows[i].uuid + ".mp4";
+				}
 				cb(rows)
 		})		
 	},
@@ -155,7 +191,8 @@ module.exports = {
 			],
 			function (err, rows, fields) {
 				if (err) throw err
-				cb(rows)
+				let r = rows.length > 0 ? rows[0] : {}
+				cb(r)
 		})
 	},
 
@@ -165,6 +202,45 @@ module.exports = {
 			[
 				uuid,
 				type
+			],
+			function (err, result) {
+				if (err) throw err
+				let obj = {'uuid': uuid }	
+				cb(obj)
+		})
+	},
+
+	deleteUser: (res,uuid,cb) => {
+		connection.query('delete from user where uuid = ?',
+			[
+				uuid
+			],
+			function (err, result) {
+				if (err) throw err
+				let obj = {'uuid': uuid }	
+				cb(obj)
+		})
+	},
+
+	createRoom: (res,cb) => {
+		let uuid = util.generateRandomId();
+		let now = new Date() / 1000;
+		connection.query('insert into room(uuid,time_created) values(?,?)',
+			[
+				uuid,
+				now
+			],
+			function (err, result) {
+				if (err) throw err
+				let obj = {'uuid': uuid }	
+				cb(obj)
+		})
+	},
+
+	deleteRoom: (res,uuid,cb) => {
+		connection.query('delete from room where uuid = ?',
+			[
+				uuid
 			],
 			function (err, result) {
 				if (err) throw err
@@ -189,8 +265,20 @@ module.exports = {
 		})
 	},
 
+	deleteClip: (res,uuid,cb) => {
+		connection.query('delete from clip where uuid = ?',
+			[
+				uuid
+			],
+			function (err, result) {
+				if (err) throw err
+				let obj = {'uuid': uuid }	
+				cb(obj)
+		})
+	},
+
 	getAllUsers: (res,cb) => {
-		connection.query('select uuid from user ',
+		connection.query('select * from user ',
 			[
 			],
 			function (err, rows, fields) {
@@ -199,13 +287,28 @@ module.exports = {
 		})		
 	},
 	
-	addClipAnchor: (res,anchor_uuid,clip_uuid,position_blob,cb) => {
-		let uuid = util.generateRandomId();
-		connection.query('insert into clipAnchor(anchor_uuid,clip_uuid,position_blob) values(?,?,?)',
+	addClipToAnchor: (res,anchor_uuid,clip_uuid,position_blob,cb) => {
+		let q = 'insert into clipAnchor(anchor_uuid,clip_uuid,position_blob) values(?,?,?)';
+		connection.query(q,
 			[
 				anchor_uuid,
 				clip_uuid,
 				position_blob
+			],
+			function (err, result) {
+				if (err) throw err
+				let obj = {'anchor_uuid': anchor_uuid, 'clip_uuid': clip_uuid}	
+				cb(obj)
+		})
+	},
+
+	
+	removeClipFromAnchor: (res,anchor_uuid,clip_uuid,cb) => {
+		let q = 'delete from clipAnchor where anchor_uuid = ? and clip_uuid = ?';
+		connection.query(q,
+			[
+				anchor_uuid,
+				clip_uuid
 			],
 			function (err, result) {
 				if (err) throw err
@@ -233,7 +336,7 @@ module.exports = {
 						],
 					function (err, rows, fields) {
 						if (err) throw err
-						let obj = {'uuid_uuid': user_uuid, "room_uuid": room_uuid }	
+						let obj = {'user_uuid': user_uuid, "room_uuid": room_uuid }	
 						cb(obj)
 					})
 				} else {
@@ -247,7 +350,7 @@ module.exports = {
 						],
 						function (err, rows, fields) {
 							if (err) throw err
-							let obj = {'uuid_uuid': user_uuid, "room_uuid": room_uuid }	
+							let obj = {'user_uuid': user_uuid, "room_uuid": room_uuid }	
 							cb(obj)
 					})					
 				}
@@ -265,7 +368,7 @@ module.exports = {
 			],
 			function (err, rows, fields) {
 				if (err) throw err
-				let obj = {'uuid_uuid': user_uuid, "room_uuid": room_uuid }	
+				let obj = {'uesr_uuid': user_uuid, "room_uuid": room_uuid }	
 				cb(obj)
 		})
 	}

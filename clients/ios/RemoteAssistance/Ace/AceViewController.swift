@@ -27,6 +27,8 @@ class AceViewController : UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+        
+        self.view.makeToast("Joined room \(store.ts.state.roomName)", duration: 2.0, position: .center)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -73,5 +75,13 @@ extension AceViewController : AceUIViewDelegate {
     
     func onToggleVR(_ btn: UIButton) {
         arVC?.onToggleVR(btn)
+    }
+    
+    func onHangup(_ btn: UIButton) {
+        self.navigationController?.popViewController()
+    }
+
+    func onObjectDetect(_ btn: UIButton) {
+        arVC?.searchForObjects()
     }
 }

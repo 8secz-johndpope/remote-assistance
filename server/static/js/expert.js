@@ -74,9 +74,10 @@ navigator.mediaDevices.getUserMedia(constraints).then(
                                 quaternion: renderer.camera.quaternion});
                                 
         });
-        wrtc.on('clip_marker', function(clipData) {
-            let url = SERVER_API + "addClipMarker/"+clipData.marker_uuid+"/"+recordingClipUUID+"/"+clipData.position;
-            console.log('got clip marker event',url);
+        wrtc.on('add_clip_to_anchor', function(clipData) {
+            let url = SERVER_API + "addClipToAnchor/" + recordingClipUUID + 
+                      "/" + clipData.anchor_uuid + "/" + clipData.position;
+            console.log('got add_clip_to_anchor event',url);
             $.getJSON(url).then( 
                 function(data) {
                     console.log('Added clip marker',data);
@@ -159,7 +160,6 @@ function onKeyDown( event ) {
 }
 
 window.addEventListener('keydown', onKeyDown, false);
-
 
 function onWheel( event ) 
 {    
@@ -337,7 +337,7 @@ $('#fullscreen').click(function() {
 });
 
 function addUserToRoom(user_uuid) {
-    $.getJSON(SERVER_API + "addUserToRoom/" + config.roomid + "/" + user_uuid).then( 
+    $.getJSON(SERVER_API + "addUserToRoom/" + user_uuid + "/" + config.roomid).then( 
         function(data) {
             console.log('Added user to room', data);
         }

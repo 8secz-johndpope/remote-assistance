@@ -33,93 +33,135 @@ $ yarn start
 API
 ------------
 
-Create a customer and return UUID
+Create a customer
 ```
 /api/createCustomer
+{"uuid":"string"}
 ```
 
-Create an expert and return UUID
+Create an expert 
 ```
 /api/createExpert
+{"uuid":"string"}
+```
+
+Delete a user 
+```
+/api/deleteUser/:uuid
+{"uuid":"string"}
 ```
 
 Get user details
 ```
 /api/getUser/:uuid
+{"id":int,"type":"customer|expert","photo":"url_string","uuid":"string","password":"","email":"email_string","name":"name_string"}
 ```
 
-Get all user UUIDs
+Get all users
 ```
-/api/getAllUsers/
+/api/getAllUsers
+[{"id":int,"type":"customer|expert","photo":"url_string","uuid":"string","password":"","email":"email_string","name":"name_string"}]
 ```
 
-Create a room and return a UUID
+Create a room
 ```
 /api/createRoom
+{"uuid":"string"}
+```
+
+Delete a room 
+```
+/api/deleteRoom/:uuid
+{"uuid":"string"}
 ```
 
 Get room details
 ```
 /api/getRoom/:uuid
+{"id":int,"time_ping":int,"time_request":int,"time_created":int,"uuid":"string","experts":1,"customers":0}
 ```
 
-Get rooms with at least one participant. Returns count of customers and experts in each room.
+Get rooms with at least one participant
 ```
 /api/getActiveRooms
+[{"uuid":"test1","id":1,"time_ping":1,"time_request":2,"time_created":null,"experts":1,"customers":0}]
 ```
 
-Get all room UUIDs
+Get all rooms
 ```
-/api/getAllRoom/
-```
-
-Associate user and room
-```
-/api/addUserToRoom/:room_uuid/:user_uuid
+/api/getAllRooms
+[{"uuid":"test1","id":1,"time_ping":1,"time_request":2,"time_created":null,"experts":0,"customers":0}]
 ```
 
-Disassociate user and room
+Add user to room
 ```
-/api/removeUserFromRoom/:room_uuid/:user_uuid
+/api/addUserToRoom/:user_uuid/:room_uuid
+{"user_uuid":"string","room_uuid":"string"}
+```
+
+Remove user from room
+```
+/api/removeUserFromRoom/:user_uuid/:room_uuid
+{"user_uuid":"string","room_uuid":"string"}
 ```
 
 Get anchor details
 ```
 /api/getAnchor/:uuid
+{"id":int,"uuid":"string","url":url,"type":"image|object","name":"string"}
+
 ```
 
-Get details of all anchors whose name includes given text 
+Get all anchors whose name includes given text 
 ```
-/api/getAnchors/:text
-```
-
-Get all anchor UUIDs
-```
-/api/getAllAnchors/
+/api/getAllAnchors/:text
+[{"id":int,"uuid":"string","url":url,"type":"image|object","name":"string"}]
 ```
 
-Get clip details
+Get all anchors
 ```
-/api/getClip/:uuid
-```
-
-Get clip details for given anchor (optionally also select by room)
-```
-/api/getClips/:anchor_uuid/:room_uuid?
+/api/getAllAnchors
+[{"id":int,"uuid":"string","url":url,"type":"image|object","name":"string"}]
 ```
 
-Associate clip and anchor
-```
-/api/addClipAnchor/:anchor_uuid/:clip_uuid/:position_blob
-```
-
-Create an entry for a clip and return UUID
+Create clip
 ```
 /api/createClip/:name/:user_uuid/:room_uuid
+{"uuid":"152875912"}
 ```
 
-Get all clip UUIDs
+Delete a clip 
 ```
-/api/getAllClips/
+/api/deleteClip/:uuid
+{"uuid":"string"}
 ```
 
+Get clip details. Data is available at uuid.webm, uuid.mp4, and uuid.jpg (thumbnail).
+```
+/api/getClip/:uuid
+{"id":int,"name":string,"user_uuid":string,"room_uuid":string,"uuid":string,"thumbnailUrl":url,"webmUrl":url,"mp4Url":url}
+```
+
+Get clip details (including position of clip on anchor) for given anchor (optionally also select by room)
+```
+/api/getClipsForAnchor/:anchor_uuid/:room_uuid?
+[{"position_blob":"{}","id":75,"name":"demo1","user_uuid":"demo","room_uuid":"demo","uuid":"demo1","thumbnailUrl":url,"webmUrl":url,"mp4Url":url}]
+```
+
+Get all clips (note since no anchor is given these must be without anchor positions)
+```
+/api/getAllClips
+[{"id":int,"name":string,"user_uuid":string,"room_uuid":string,"uuid":string,"thumbnailUrl":url,"webmUrl":url,"mp4Url":url}]
+```
+
+Add clip to anchor at a positon
+```
+/api/addClipToAnchor/:clip_uuid/:anchor_uuid/:position_blob
+{"anchor_uuid":string,"clip_uuid":string}
+```
+
+Remove clip from anchor
+```
+/api/removeClipFromAnchor/:clip_uuid/:anchor_uuid
+{"anchor_uuid":string,"clip_uuid":string}
+```

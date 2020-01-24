@@ -119,7 +119,7 @@ module.exports = function(io) {
             'recording_stopped',
             'sketch_draw',
             'sketch_clear',
-            'clip_marker',
+            'add_clip_to_anchor',
             'pointer_set',
             'pointer_clear',
         ]

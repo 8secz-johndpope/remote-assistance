@@ -1,7 +1,7 @@
-Remote Assistance
+ACE remote assistance framework
 =================
 
-The unified Remote Assistance project respository.
+The unified Augmented Connected Enterprise (ACE) remote assistance framework project respository.
 
 
 How to build and run client (TODO)
