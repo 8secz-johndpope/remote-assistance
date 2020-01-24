@@ -41,7 +41,7 @@ function launchRA() {
     function(customerData) {
       $.getJSON(SERVER_API + "createRoom").then( 
         function(roomData) {
-          $.getJSON(SERVER_API + "addUserToRoom/"+roomData.room_uuid+"/"+customerData.uuid).then( 
+          $.getJSON(SERVER_API + "addUserToRoom/" + customerData.uuid + "/" + roomData.room_uuid).then( 
             function(data) {
               console.log("Connecting user",customerData.uuid,"to room", roomData.room_uuid);
               // Connect to iOS

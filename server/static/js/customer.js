@@ -154,8 +154,8 @@ navigator.mediaDevices.getUserMedia(constraints).then(
 
         wrtc.on('recording_started', function(data) {
             console.log("got recording started event");
-            wrtc.emit('clip_marker', 
-                      {marker_uuid: 'test_marker',
+            wrtc.emit('add_clip_to_anchor', 
+                      {anchor_uuid: 'test_marker',
                        position: '{}'
                       });            
         });
@@ -170,7 +170,7 @@ navigator.mediaDevices.getUserMedia(constraints).then(
 )
 
 function addUserToRoom(user_uuid) {
-    $.getJSON(SERVER_API + "addUserToRoom/" + config.roomid + "/" + user_uuid).then( 
+    $.getJSON(SERVER_API + "addUserToRoom/" + "/" + config.roomid + "/" + user_uuid).then( 
         function(data) {
             console.log('Added user to room', data);
         }
