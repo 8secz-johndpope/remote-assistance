@@ -19,9 +19,8 @@ extension AceARViewController {
     
     func searchForObjects() {
         if let referenceObjects = ARReferenceObject.referenceObjects(inGroupNamed: self.objectGroupName, bundle: nil) {
-            self.view.makeToast("Starting search for \(self.objectGroupName!)...", position: .center)
+            self.view.makeToast("Starting search for \(self.objectGroupName!)...", position: .bottom)
             self.configuration.detectionObjects = referenceObjects
-            arView.session.run(self.configuration)
         }
         else {
             self.showMessage(title:"Assets Missing", message: "Missing expected asset catalog: \(String(describing: self.objectGroupName))")
@@ -34,7 +33,8 @@ extension AceARViewController {
             self.loadInteralAssets()
             
             DispatchQueue.main.async {
-                
+                self.view.makeToast("Found anchor \(anchor.name ?? "Unknown")", position: .center)
+
                 for i in 0..<self.clickableImages.count {
                     let material = SCNMaterial()
                     material.diffuse.contents = self.clickableImages[i]
