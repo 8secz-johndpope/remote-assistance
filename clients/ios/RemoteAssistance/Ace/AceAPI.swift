@@ -64,7 +64,7 @@ class AceAPI {
 
         let id: Int
         let uuid: String
-        let data: String
+        let url: String
         let type: AnchorType
         let name: String
     }
@@ -88,7 +88,7 @@ class AceAPI {
     
     // internal implementation
     private func makeApi(_ path:String) -> RestController? {
-        let url = "\(String(store.ts.state.serverUrl))/api/\(path)"
+        let url = "\(String(store.ace.state.serverUrl))/api/\(path)"
         let api = RestController.make(urlString: url)
         api?.acceptSelfSignedCertificate = self.acceptSelfSignedCertificate
         return api
@@ -98,9 +98,9 @@ class AceAPI {
         guard let api = makeApi(path) else { return }
         api.get(T.self) { result, response in
             do {
-                let response = try result.value() // response is of type HttpBinResponse
+                let value = try result.value() // response is of type HttpBinResponse
                 DispatchQueue.main.async {
-                    callback(response, nil)
+                    callback(value, nil)
                 }
             } catch {
                 print("Error performing GET: \(error)")
@@ -165,7 +165,7 @@ class AceAPI {
         callApi("getAnchor/\(anchorId)", callback: callback)
     }
 
-    func getAllAnchors(_ text:String = "", callback: @escaping (AnchorResponse?, Error?) -> ()) {
+    func getAllAnchors(_ text:String = "", callback: @escaping ([AnchorResponse]?, Error?) -> ()) {
         var path = "getAllAnchors"
         if text != "" {
             path = "getAllAnchors/\(text)"
@@ -173,8 +173,8 @@ class AceAPI {
         callApi(path, callback: callback)
     }
     
-    func createClip(callback: @escaping (UuidResponse?, Error?) -> ()) {
-        callApi("createClip", callback: callback)
+    func createClip(name:String, userId:String, roomId:String, callback: @escaping (UuidResponse?, Error?) -> ()) {
+        callApi("createClip/\(name)/\(userId)/\(roomId)", callback: callback)
     }
 
     func deleteClip(_ clipId:String, callback: @escaping (UuidResponse?, Error?) -> ()) {
@@ -189,11 +189,11 @@ class AceAPI {
         callApi("getClipsForAnchor/\(anchorId)/\(roomId)", callback: callback)
     }
 
-    func getAllClips(_ clipId:String, callback: @escaping ([ClipResponse]?, Error?) -> ()) {
+    func getAllClips(callback: @escaping ([ClipResponse]?, Error?) -> ()) {
         callApi("getAllClips", callback: callback)
     }
 
-    func addClip(_ clipId:String, toAnchor anchorId:String, blobPos:Int, callback: @escaping (AssociateClipToAnchorResponse?, Error?) -> ()) {
+    func addClip(_ clipId:String, toAnchor anchorId:String, blobPos:String, callback: @escaping (AssociateClipToAnchorResponse?, Error?) -> ()) {
         callApi("addClipToAnchor/\(anchorId)/\(clipId)/\(blobPos)", callback: callback)
     }
     

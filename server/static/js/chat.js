@@ -13,7 +13,7 @@ const NATIVE_UA = "ace";
 
 const CHAT_TREE = JSON.parse(CHAT_TREE_JSON);
 
-let convArchive = []; 
+let convArchive = {}; convArchive.responses = []; 
 let currentIndex = 1;
 let jbScanner;
 let qrScannerAction;
@@ -33,6 +33,7 @@ msgerForm.addEventListener("submit", event => {
 function injectMsg(msg,msgLabel) {
   console.log(msg,msgLabel);
   appendMessage(PERSON_NAME, PERSON_IMG, "right", msgLabel,[]);
+  saveResponse(CHAT_TREE.responses[currentIndex-1],msg,msgLabel);
   botResponse(msg,msgLabel);
 }
 
@@ -50,6 +51,7 @@ function launchRA() {
                   { 
                     user_uuid: customerData.uuid,
                     room_uuid: roomData.room_uuid,
+                    archive: convArchive
                   });                
               }
           })
@@ -117,10 +119,12 @@ function appendMessage(name, img, side, text, botResponseArr) {
   msgerChat.scrollTop += 500;
 }
 
-function saveResponse(q,r,rl) {
+function saveResponse(item,r,rl) {
   let res = new Object();
-  res.question = q; res.response = r; res.responseLabel = rl;
-  convArchive.push(res);
+  res.question = item.q; res.response = r; res.responseLabel = rl;
+  if (item.setVar) { let sv = item.setVar; convArchive[sv] = rl; }
+  convArchive.responses.push(res);
+  console.log(JSON.stringify(convArchive));
 }
 
 function botResponse(msgText,msgLabel="") {
@@ -129,8 +133,8 @@ function botResponse(msgText,msgLabel="") {
   let botResponseArr = [];
 
   let msgTextInt = parseInt(msgText);
+
   if (isNaN(msgTextInt)) {
-    saveResponse(CHAT_TREE.responses[currentIndex-1].q,msgText,msgLabel);
     currentIndex = CHAT_TREE.responses[currentIndex-1].next[1];
   } else if (msgText == 0) { 
       currentIndex = 1;
@@ -138,7 +142,6 @@ function botResponse(msgText,msgLabel="") {
     for (let i = 0; i < CHAT_TREE.responses[currentIndex-1].next.length; i++) {
      if ((CHAT_TREE.responses[currentIndex-1].next.length == 1) || (msgTextInt == CHAT_TREE.responses[currentIndex-1].next[i])) {
       //console.log(msgTextInt);
-      saveResponse(CHAT_TREE.responses[currentIndex-1].q,msgText,msgLabel);
       currentIndex = CHAT_TREE.responses[currentIndex-1].next[i];
      }
     }
@@ -162,7 +165,6 @@ function botResponse(msgText,msgLabel="") {
     } else if (t.match(eReg)) {
           nextBtn.type = "email"; nextBtn.action = t;
     } else if (t.match(pReg)) {
-          console.log("Phone");
           nextBtn.type = "phone"; nextBtn.action = t;
     } else {
       let tL = CHAT_TREE.responses[currentIndex-1].nextLabels ? CHAT_TREE.responses[currentIndex-1].nextLabels[i] : t;

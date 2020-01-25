@@ -57,7 +57,7 @@ class AceARViewController : UIViewController {
         initARKit()
         initScreenAR()
         initARPointer()
-        //initObjectDetection()
+        initObjectDetection()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -98,6 +98,9 @@ class AceARViewController : UIViewController {
     
         configuration.detectionImages = refImages
         configuration.maximumNumberOfTrackedImages = 1
+        
+        // search for objects to annotate
+        self.searchForObjects()
 
         // Run the view's session
         self.arView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
@@ -188,7 +191,7 @@ extension AceARViewController: WRTCClientDelegate {
 extension AceARViewController: ARSCNViewDelegate {
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         screenAR(renderer, didAdd:node, for:anchor)
-        //objectAnnotation(renderer, didAdd:node, for:anchor)
+        objectAnnotation(renderer, didAdd:node, for:anchor)
     }
 }
 

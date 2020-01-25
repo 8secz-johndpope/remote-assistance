@@ -46,13 +46,15 @@ extension AceLandingViewController : QRCodeScannerDelegate {
             let domain = url.host
             let port = url.port
             
+            self.navigationController?.popViewController()
+            
             if let domain = domain {
                 var portStr = ""
                 if let port = port {
                     portStr = ":\(String(port))"
                 }
-                let action = TSSetServerURL(serverUrl: "https://\(domain)\(portStr)")
-                store.ts.dispatch(action)
+                let action = AceAction.SetServerURL(serverUrl: "https://\(domain)\(portStr)")
+                store.ace.dispatch(action)
                 
                 let vc  = AceViewController.instantiate(fromAppStoryboard: .Ace)
                 self.navigationController?.pushViewController(vc)
@@ -66,8 +68,8 @@ extension AceLandingViewController : QRCodeScannerDelegate {
                     return
                 }
                 
-                let action = TSSetRoomName(roomName: "\(objectName)-\(roomId)")
-                store.ts.dispatch(action)
+                let action = AceAction.SetRoomName(roomName: "\(objectName)-\(roomId)")
+                store.ace.dispatch(action)
 
                 let vc  = AceViewController.instantiate(fromAppStoryboard: .Ace)
                 self.navigationController?.pushViewController(vc)

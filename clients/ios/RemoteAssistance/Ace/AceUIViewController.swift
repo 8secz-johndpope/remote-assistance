@@ -30,7 +30,7 @@ class AceUIViewController : UIViewController {
         let tap = UITapGestureRecognizer(target: self, action: #selector(onTap))
         self.view.addGestureRecognizer(tap)
 
-        infoLabel.text = "url: \(store.ts.state.serverUrl)\nroom: \(store.ts.state.roomName)"
+        infoLabel.text = "url: \(store.ace.state.serverUrl)\nroom: \(store.ace.state.roomName)"
         
     }
 

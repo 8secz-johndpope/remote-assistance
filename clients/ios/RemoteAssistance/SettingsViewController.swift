@@ -68,9 +68,9 @@ public enum SettingType {
     var detail: String? {
         switch self {
         case .serverUrl:
-            return store.ts.state.serverUrl
+            return store.ace.state.serverUrl
         case .roomName:
-            return store.ts.state.roomName
+            return store.ace.state.roomName
         case .help:
             return "Remote assistance help"
         }
@@ -100,8 +100,8 @@ class SettingsViewController: UIViewController,QRCodeScannerDelegate {
             if let port = port {
                 portStr = ":\(String(port))"
             }
-            let action = TSSetServerURL(serverUrl: "https://\(domain)\(portStr)")
-            store.ts.dispatch(action)
+            let action = AceAction.SetServerURL(serverUrl: "https://\(domain)\(portStr)")
+            store.ace.dispatch(action)
         }
     }
 
@@ -113,7 +113,7 @@ class SettingsViewController: UIViewController,QRCodeScannerDelegate {
         self.tableView.tableFooterView = UIView.init()
         //self.tableView.sizeToFit()
 
-        store.ts.subscribe(self)
+        store.ace.subscribe(self)
             
         self.navigationController?.navigationBar.tintColor = UIColor.white
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
@@ -160,13 +160,13 @@ class SettingsViewController: UIViewController,QRCodeScannerDelegate {
         switch type {
         case .serverUrl:
             if let textController = alertController.contentViewController as? OneTextFieldViewController {
-                let action = TSSetServerURL(serverUrl: textController.textField.text!)
-                store.ts.dispatch(action)
+                let action = AceAction.SetServerURL(serverUrl: textController.textField.text!)
+                store.ace.dispatch(action)
             }
         case .roomName:
             if let textController = alertController.contentViewController as? OneTextFieldViewController {
-                let action = TSSetRoomName(roomName: textController.textField.text!)
-                store.ts.dispatch(action)
+                let action = AceAction.SetRoomName(roomName: textController.textField.text!)
+                store.ace.dispatch(action)
             }
         default:
             break
@@ -196,7 +196,7 @@ extension SettingsViewController : UITableViewDelegate, UITableViewDataSource {
         let type = dataSource[indexPath.row]
         switch (type) {
         case .help:
-            if let url = URL(string: "\(store.ts.state.serverUrl)/help") {
+            if let url = URL(string: "\(store.ace.state.serverUrl)/help") {
                 UIApplication.shared.openURL(url)
             }
         default:
@@ -207,7 +207,7 @@ extension SettingsViewController : UITableViewDelegate, UITableViewDataSource {
 }
 
 extension SettingsViewController : StoreSubscriber {
-    func newState(state: TSState) {
+    func newState(state: AceState) {
         tableView.reloadData()
         //tableView.invalidateIntrinsicContentSize()
         //tableView.layoutIfNeeded()
