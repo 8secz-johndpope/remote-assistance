@@ -72,6 +72,12 @@ class WRTCClient : NSObject {
         store.ace.unsubscribe(self)
         self.delegate = nil
         self.stream = nil
+        
+        for (_, pc) in pcs {
+            pc.close()
+        }
+        self.pcs = [String:RTCPeerConnection]()
+        self.iceCandidates = [String:[RTCIceCandidate]]()
     }
 
     func initSocket() {

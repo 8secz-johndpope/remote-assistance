@@ -78,6 +78,7 @@ extension AceViewController : AceUIViewDelegate {
     }
     
     func onHangup(_ btn: UIButton) {
+        self.wrtc.disconnect()
         self.navigationController?.popViewController()
     }
 
