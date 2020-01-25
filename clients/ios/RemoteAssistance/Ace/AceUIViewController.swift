@@ -28,7 +28,8 @@ class AceUIViewController : UIViewController {
         menuView.backgroundColor = UIColor(hexString:"#fff", transparency: 0.8)
 
         let tap = UITapGestureRecognizer(target: self, action: #selector(onTap))
-        self.view.addGestureRecognizer(tap)
+        tap.delegate = self.parent as! UIGestureRecognizerDelegate
+        self.parent?.view.addGestureRecognizer(tap)
 
         infoLabel.text = "url: \(store.ace.state.serverUrl)\nroom: \(store.ace.state.roomName)"
         

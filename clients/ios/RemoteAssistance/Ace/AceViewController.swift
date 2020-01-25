@@ -26,6 +26,7 @@ class AceViewController : UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         
         self.view.makeToast("Joined room \(store.ace.state.roomName)", duration: 2.0, position: .center)
@@ -35,22 +36,26 @@ class AceViewController : UIViewController {
         switch (segue.identifier) {
         case "arVC":
             if let vc = segue.destination as? AceARViewController {
+                addChild(vc)
                 vc.wrtc = self.wrtc
                 arVC = vc
             }
             break
         case "handsVC":
             if let vc = segue.destination as? AceHandsViewController {
+                addChild(vc)
                 handsVC = vc
             }
             break
         case "sketchVC":
             if let vc = segue.destination as? AceSketchViewController {
+                addChild(vc)
                 sketchVC = vc
             }
             break
         case "uiVC":
             if let vc = segue.destination as? AceUIViewController {
+                addChild(vc)
                 vc.wrtc = self.wrtc
                 uiVC = vc
                 uiVC?.delegate = self
@@ -84,5 +89,11 @@ extension AceViewController : AceUIViewDelegate {
 
     func onObjectDetect(_ btn: UIButton) {
         //arVC?.searchForObjects()
+    }
+}
+
+extension AceViewController : UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }

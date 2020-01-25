@@ -41,6 +41,7 @@ class AceARViewController : UIViewController {
     var vrVC:AceVRViewController?
     
     // Object Annotation
+    var renderer:SCNSceneRenderer?
     var objectGroupName:String!
     var videoTag:Int = -1
     var clickableImages:[UIImage]!
@@ -50,8 +51,6 @@ class AceARViewController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-    self.navigationController?.setNavigationBarHidden(true, animated: true)
-
         initWebRTCClient()
         initMediaStream()
         initARKit()
@@ -61,9 +60,26 @@ class AceARViewController : UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+
         super.viewWillAppear(animated)
         self.setupAR()
         self.wrtc?.connect()
+        self.objectAnnotationViewWillAppear()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        rectangleNodes.forEach({ $1.removeFromParentNode() })
+        rectangleNodes.removeAll()
+        
+        // Pause the view's session
+        self.arView.session.pause()
+        
+        self.wrtc?.disconnect()
+
+        self.objectAnnotationViewWillDisappear()
     }
     
     func setupAR() {
@@ -105,19 +121,7 @@ class AceARViewController : UIViewController {
         // Run the view's session
         self.arView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
         
-        rectangleNodes.forEach({ $1.removeFromParentNode() })
-        rectangleNodes.removeAll()
-        
-        // Pause the view's session
-        self.arView.session.pause()
-        
-        self.wrtc?.disconnect()
-    }
-    
     func initMediaStream() {
         self.videoSource = self.wrtc?.factory.videoSource()
         let capturer = WRTCCustomCapturer(delegate: self.videoSource)
@@ -146,7 +150,7 @@ class AceARViewController : UIViewController {
     }
         
     func initARKit() {
-        self.arView.debugOptions = [.showFeaturePoints, .showWorldOrigin]
+//        self.arView.debugOptions = [.showFeaturePoints, .showWorldOrigin]
         self.arView.scene = SCNScene()
         self.arView.autoenablesDefaultLighting = true;
         self.arView.delegate = self
@@ -190,6 +194,7 @@ extension AceARViewController: WRTCClientDelegate {
 
 extension AceARViewController: ARSCNViewDelegate {
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        self.renderer = renderer
         screenAR(renderer, didAdd:node, for:anchor)
         objectAnnotation(renderer, didAdd:node, for:anchor)
     }

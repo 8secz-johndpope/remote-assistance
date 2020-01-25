@@ -11,10 +11,35 @@ import ARKit
 import AVKit
 import Toast_Swift
 
+class ObjectAnnotationNode : SCNNode {
+    
+    var url:URL?
+    
+    init(geometry: SCNGeometry?) {
+        super.init()
+        self.geometry = geometry
+        self.categoryBitMask = 0x1
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 extension AceARViewController {
     
     func initObjectDetection() {
         self.objectGroupName = "VariousPrinters"
+    }
+    
+    func objectAnnotationViewWillAppear() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(onTap))
+        tap.delegate = self.parent as? UIGestureRecognizerDelegate
+        self.parent?.view.addGestureRecognizer(tap)
+    }
+    
+    func objectAnnotationViewWillDisappear() {
+        self.view.removeGestureRecognizers()
     }
     
     func searchForObjects() {
@@ -38,15 +63,16 @@ extension AceARViewController {
                 for i in 0..<self.clickableImages.count {
                     let material = SCNMaterial()
                     material.diffuse.contents = self.clickableImages[i]
-                    let clickableNode = self.buildNode(material: material, scnVector3: self.imagePositions[i])
+                    let clickableNode = self.buildNode(material: material, scnVector3: self.imagePositions[i], url:self.videoURLs[i])
                     node.addChildNode(clickableNode)
                 }
             }
         }
     }
     
-    func buildNode(material: SCNMaterial, scnVector3: SCNVector3) -> SCNNode {
-        let node = SCNNode(geometry: SCNBox(width: 0.3, height: 0.3, length: 0.001))
+    func buildNode(material: SCNMaterial, scnVector3: SCNVector3, url:URL) -> SCNNode {
+        let node = ObjectAnnotationNode(geometry: SCNBox(width: 0.3, height: 0.3, length: 0.001))
+        node.url = url
         node.geometry?.firstMaterial = material
         node.position = scnVector3
         node.opacity = 1
@@ -66,11 +92,17 @@ extension AceARViewController {
     
     func showVideo(tag:Int) {
         let videoURL = self.videoURLs[tag]
-        let player = AVPlayer(url: videoURL)
+        self.showVideo(url:videoURL)
+    }
+    
+    func showVideo(url:URL) {
+        let player = AVPlayer(url: url)
         let playerViewController = AVKit.AVPlayerViewController()
         playerViewController.player = player
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
         self.navigationController?.pushViewController(playerViewController)
     }
+
 
     func loadInteralAssets() {
         self.clickableImages = [UIImage(named: "PrinterThumb1")!, UIImage(named: "PrinterThumb2")!, UIImage(named: "PrinterThumb3")!]
@@ -81,4 +113,23 @@ extension AceARViewController {
             URL(fileURLWithPath: Bundle.main.path(forResource: "clip3", ofType: "mp4")!)
         ]
     }
+    
+    @objc func onTap(_ gesture: UITapGestureRecognizer) {
+        print("onTap from AceARViewController+ObjectAnnotation")
+
+        let location = gesture.location(in: self.arView)
+
+        let options:[SCNHitTestOption:Any] = [.boundingBoxOnly: true, .categoryBitMask: 0x1]
+        if let hitResults = self.renderer?.hitTest(location, options:options) {
+            for hit in hitResults {
+                if let node = hit.node as? ObjectAnnotationNode,
+                    let url = node.url {
+                    self.showVideo(url: url)
+                } else {
+                    print("didn't find ObjectAnnotationNode \(hit.node)")
+                }
+            }
+        }
+    }
+
 }
