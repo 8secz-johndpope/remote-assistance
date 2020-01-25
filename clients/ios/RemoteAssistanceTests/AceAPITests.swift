@@ -18,8 +18,8 @@ class AceAPITests: XCTestCase {
 
     override func setUp() {
         // Put setup code here. This method is called before the invocation of each test method in the class.
-        let setServerURL = TSSetServerURL(serverUrl: "https://localhost:5443")
-        store.ts.dispatch(setServerURL)
+        let setServerURL = SetServerURL(serverUrl: "https://localhost:5443")
+        store.ace.dispatch(setServerURL)
         
         let expectation = XCTestExpectation(description: "Setup")
         
@@ -316,7 +316,7 @@ class AceAPITests: XCTestCase {
         let expectation = XCTestExpectation(description: "addClipToAnchor API")
         let clipId = ""
         let anchorId = ""
-        let blobPos = ""
+        let blobPos = "{x:100,y:200,z:200}"
         
         self.api.addClip(clipId, toAnchor:anchorId, blobPos:blobPos) { result, error in
             XCTAssert(result != nil, "addClipToAnchor() result is nil")

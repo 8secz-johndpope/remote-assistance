@@ -28,7 +28,7 @@ class AceViewController : UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         
-        self.view.makeToast("Joined room \(store.ts.state.roomName)", duration: 2.0, position: .center)
+        self.view.makeToast("Joined room \(store.ace.state.roomName)", duration: 2.0, position: .center)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

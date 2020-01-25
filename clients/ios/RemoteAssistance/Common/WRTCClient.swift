@@ -60,7 +60,7 @@ class WRTCClient : NSObject {
         
         
         initSocket()
-        store.ts.subscribe(self)                
+        store.ace.subscribe(self)                
     }
     
     func connect() {
@@ -69,7 +69,7 @@ class WRTCClient : NSObject {
     }
     
     func disconnect() {
-        store.ts.unsubscribe(self)
+        store.ace.unsubscribe(self)
         self.delegate = nil
         self.stream = nil
     }
@@ -373,8 +373,8 @@ extension WRTCClient : RTCPeerConnectionDelegate {
 
 extension WRTCClient : StoreSubscriber {
     
-    func newState(state: TSState) {
-        if store.ts.state.serverUrl != SocketIOManager.sharedInstance.url.absoluteString {
+    func newState(state: AceState) {
+        if store.ace.state.serverUrl != SocketIOManager.sharedInstance.url.absoluteString {
             self.initSocket()
         }
     }

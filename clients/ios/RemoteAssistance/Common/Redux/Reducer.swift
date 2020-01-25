@@ -11,15 +11,15 @@ import ReSwift
 
 // the reducer is responsible for evolving the application state based
 // on the actions it receives
-func TSReducer(action: Action, state: TSState?) -> TSState {
+func Reducer(action: Action, state: AceState?) -> AceState {
     // if no state has been provided, create the default state
-    var state = state ?? TSState()
+    var state = state ?? AceState()
     
     switch action {
-    case let action as TSSetServerURL:
+    case let action as AceAction.SetServerURL:
         state.serverUrl = action.serverUrl
         UserDefaults.standard.set(state.serverUrl, forKey: "serverUrl")
-    case let action as TSSetRoomName:
+    case let action as AceAction.SetRoomName:
         state.roomName = action.roomName
         UserDefaults.standard.set(state.roomName, forKey: "roomName")
     default:

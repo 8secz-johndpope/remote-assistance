@@ -88,7 +88,7 @@ class AceAPI {
     
     // internal implementation
     private func makeApi(_ path:String) -> RestController? {
-        let url = "\(String(store.ts.state.serverUrl))/api/\(path)"
+        let url = "\(String(store.ace.state.serverUrl))/api/\(path)"
         let api = RestController.make(urlString: url)
         api?.acceptSelfSignedCertificate = self.acceptSelfSignedCertificate
         return api
