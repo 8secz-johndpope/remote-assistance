@@ -107,6 +107,54 @@ module.exports = {
 		})		
 	},
 
+	createAnchor: (res,type,cb) => {
+		let uuid = util.generateRandomId();
+		connection.query('insert into anchor(uuid,type) values(?,?)',
+			[
+				uuid,
+				type
+			],
+			function (err, result) {
+				if (err) throw err
+				let obj = {'uuid': uuid }	
+				cb(obj)
+		})
+	},
+
+	deleteAnchor: (res,uuid,cb) => {
+		connection.query('delete from anchor where uuid = ?',
+			[
+				uuid
+			],
+			function (err, result) {
+				if (err) throw err
+				let obj = {'uuid': uuid }	
+				cb(obj)
+		})
+	},
+
+	updateAnchor: (res,put,uuid,body,cb) => {
+		let q = 'update anchor set ';
+		let arr = [];
+		let qArr = [];
+		if (body.type) { qArr.push('type = ?'); arr.push(body.type); }
+		else if (put) { qArr.push('type = "none"'); }
+		if (body.name) { qArr.push('name = ?'); arr.push(body.name); }
+		else if (put) { qArr.push('name = ""'); }
+		if (body.url) { qArr.push('url = ?'); arr.push(body.url); }
+		else if (put) { qArr.push('url = ""'); }
+		q += qArr.join(',');
+		q += ' where uuid = ?'; arr.push(uuid);
+		console.log(q)
+		connection.query(q,
+			arr,
+			function (err, result) {
+				if (err) throw err
+				let obj = {'uuid': uuid }	
+				cb(obj)
+		})
+	},
+
 	getAllAnchorsSearch: (res,text,cb) => {
 		connection.query('select * from anchor where name like ?',
 			[
@@ -142,28 +190,28 @@ module.exports = {
 			function (err, rows, fields) {
 				if (err) throw err
 				let r = rows.length > 0 ? rows[0] : {}
-				r.thumbnailUrl = config.clipLoc + r.uuid + ".jpg";
-				r.webmUrl = config.clipLoc + r.uuid + ".webm";
-				r.mp4Url = config.clipLoc + r.uuid + ".mp4";
+				r.thumbnail_url = config.clipLoc + r.uuid + ".jpg";
+				r.webm_url = config.clipLoc + r.uuid + ".webm";
+				r.mp4_url = config.clipLoc + r.uuid + ".mp4";
 				cb(r)
 		})		
 	},
 
-	getClipsForAnchor: (res,anchor_uuid,room_uuid,cb) => {
-		let q = 'select clipAnchor.position_blob,clip.* from clip,clipAnchor where clipAnchor.clip_uuid=clip.uuid and clipAnchor.anchor_uuid = ?'
+	getClipsForAnchor: (res,anchor_uuid,cb) => {
+		let q = 'select clipAnchor.position,clip.* from clip,clipAnchor where clipAnchor.clip_uuid=clip.uuid and clipAnchor.anchor_uuid = ?'
 		let arr = [anchor_uuid]; 
-		if (room_uuid) {
-			q += ' and clip.room_uuid = ?'
-			arr.push(room_uuid)
-		}
+		//if (room_uuid) {
+		//	q += ' and clip.room_uuid = ?'
+		//	arr.push(room_uuid)
+		//}
 		connection.query(q,
 			arr,
 			function (err, rows, fields) {
 				if (err) throw err
 				for (let i=0; i < rows.length; i++) {
-					rows[i].thumbnailUrl = config.clipLoc + rows[i].uuid + ".jpg";
-					rows[i].webmUrl = config.clipLoc + rows[i].uuid + ".webm";
-					rows[i].mp4Url = config.clipLoc + rows[i].uuid + ".mp4";
+					rows[i].thumbnail_url = config.clipLoc + rows[i].uuid + ".jpg";
+					rows[i].webm_url = config.clipLoc + rows[i].uuid + ".webm";
+					rows[i].mp4_url = config.clipLoc + rows[i].uuid + ".mp4";
 				}
 				cb(rows)
 		})		
@@ -222,6 +270,30 @@ module.exports = {
 		})
 	},
 
+	updateUser: (res,put,uuid,body,cb) => {
+		let q = 'update user set ';
+		let arr = [];
+		if (body.type) { q += 'type = ? '; arr.push(body.type); }
+		else if (put) { q += 'type = "none" '; }
+		if (body.photo) { q += 'photo = ? '; arr.push(body.photo); }
+		else if (put) { q += 'photo = "" '; }
+		if (body.email) { q += 'email = ? '; arr.push(body.email); }
+		else if (put) { q += 'email = "" '; }
+		if (body.password) { q += 'password = ? '; arr.push(body.password); }
+		else if (put) { q += 'password = "" '; }
+		if (body.name) { q += 'name = ? '; arr.push(body.name); }
+		else if (put) { q += 'name = "" '; }
+		q += 'where uuid = ?'; arr.push(uuid);
+		console.log(q)
+		connection.query(q,
+			arr,
+			function (err, result) {
+				if (err) throw err
+				let obj = {'uuid': uuid }	
+				cb(obj)
+		})
+	},
+
 	createRoom: (res,cb) => {
 		let uuid = util.generateRandomId();
 		let now = new Date() / 1000;
@@ -230,6 +302,27 @@ module.exports = {
 				uuid,
 				now
 			],
+			function (err, result) {
+				if (err) throw err
+				let obj = {'uuid': uuid }	
+				cb(obj)
+		})
+	},
+
+	updateRoom: (res,put,uuid,body,cb) => {
+		let q = 'update room set ';
+		let qArr = [];
+		let arr = [];
+		if (body.time_created) { qArr.push('time_created = ?'); arr.push(body.time_created); }
+		else if (put) { qArr.push('time_created = 0'); }
+		if (body.time_ping) { qArr.push('time_ping = ?'); arr.push(body.time_ping); }
+		else if (put) { qArr.push('time_ping = 0'); }
+		if (body.time_request) { qArr.push('time_request = ?'); arr.push(body.time_request); }
+		else if (put) { qArr.push('time_request = 0'); }
+		q += qArr.join(',');
+		q += ' where uuid = ?'; arr.push(uuid);
+		connection.query(q,
+			arr,
 			function (err, result) {
 				if (err) throw err
 				let obj = {'uuid': uuid }	
@@ -277,6 +370,28 @@ module.exports = {
 		})
 	},
 
+	updateClip: (res,put,uuid,body,cb) => {
+		let q = 'update clip set ';
+		let arr = [];
+		let qArr = [];
+		if (body.name) { qArr.push('name = ?'); arr.push(body.name); }
+		else if (put) { qArr.push('name = ""'); }
+		if (body.user_uuid) { qArr.push('user_uuid = ?'); arr.push(body.user_uuid); }
+		else if (put) { qArr.push('user_uuid = 0'); }
+		if (body.room_uuid) { qArr.push('room_uuid = ?'); arr.push(body.room_uuid); }
+		else if (put) { qArr.push('room_uuid = 0'); }
+		q += qArr.join(',');
+		q += ' where uuid = ?'; arr.push(uuid);
+		console.log(q)
+		connection.query(q,
+			arr,
+			function (err, result) {
+				if (err) throw err
+				let obj = {'uuid': uuid }	
+				cb(obj)
+		})
+	},
+
 	getAllUsers: (res,cb) => {
 		connection.query('select * from user ',
 			[
@@ -286,14 +401,38 @@ module.exports = {
 				cb(rows)
 		})		
 	},
-	
-	addClipToAnchor: (res,anchor_uuid,clip_uuid,position_blob,cb) => {
-		let q = 'insert into clipAnchor(anchor_uuid,clip_uuid,position_blob) values(?,?,?)';
+
+	getAllClipAnchors: (res,cb) => {
+		connection.query('select * from clipAnchor ',
+			[
+			],
+			function (err, rows, fields) {
+				if (err) throw err
+				cb(rows)
+		})		
+	},
+
+	getClipAnchor: (res,uuid,cb) => {
+		connection.query('select * from clipAnchor where uuid = ?',
+			[
+				uuid
+			],
+			function (err, rows, fields) {
+				if (err) throw err
+				let r = rows.length > 0 ? rows[0] : {}
+				cb(r)
+		})
+	},
+
+	addClipToAnchor: (res,anchor_uuid,clip_uuid,position,cb) => {
+		let uuid = util.generateRandomId();
+		let q = 'insert into clipAnchor(anchor_uuid,clip_uuid,position,uuid) values(?,?,?,?)';
 		connection.query(q,
 			[
 				anchor_uuid,
 				clip_uuid,
-				position_blob
+				position,
+				uuid
 			],
 			function (err, result) {
 				if (err) throw err
@@ -317,9 +456,38 @@ module.exports = {
 		})
 	},
 
+	deleteClipAnchor: (res,uuid,cb) => {
+		connection.query('delete from clipAnchor where uuid = ?',
+			[
+				uuid
+			],
+			function (err, result) {
+				if (err) throw err
+				let obj = {'uuid': uuid }	
+				cb(obj)
+		})
+	},
+
+	updateClipAnchor: (res,put,uuid,body,cb) => {
+		let q = 'update clipAnchor set ';
+		let arr = [];
+		if (body.position) { q += 'position = ? '; arr.push(body.position); }
+		else if (put) { q += 'position = 0 '; }
+		q += 'where uuid = ?'; arr.push(uuid);
+		console.log(q)
+		connection.query(q,
+			arr,
+			function (err, result) {
+				if (err) throw err
+				let obj = {'uuid': uuid }	
+				cb(obj)
+		})
+	},
+
 	addUserToRoom: (res,room_uuid,user_uuid,cb) => {
+		let uuid = util.generateRandomId();
 		let now = new Date() / 1000;
-		connection.query('select * from roomUser where user_uuid = ? and room_uuid = ?',
+		connection.query('select * from userRoom where user_uuid = ? and room_uuid = ?',
 			[
 				user_uuid,
 				room_uuid
@@ -327,7 +495,7 @@ module.exports = {
 			function (err, rows, fields) {
 				if (err) throw err
 				if (rows.length > 0) {
-					connection.query('update roomUser set time_ping = ?, state = ? where room_uuid = ? and user_uuid = ?',
+					connection.query('update userRoom set time_ping = ?, state = ? where room_uuid = ? and user_uuid = ?',
 						[
 							now,
 							1,
@@ -340,13 +508,14 @@ module.exports = {
 						cb(obj)
 					})
 				} else {
-					connection.query('insert into roomUser(room_uuid,user_uuid,time_ping,state) values(?,?,?,?) '
+					connection.query('insert into userRoom(room_uuid,user_uuid,time_ping,state) values(?,?,?,?,?) '
 						,
 						[
 							room_uuid,
 							user_uuid,
 							now,
-							1
+							1,
+							uuid
 						],
 						function (err, rows, fields) {
 							if (err) throw err
@@ -359,7 +528,7 @@ module.exports = {
 
 	removeUserFromRoom: (res,room_uuid,user_uuid,cb) => {
 		let now = new Date() / 1000;
-		connection.query('update roomUser set time_ping = ?, state = ? where room_uuid = ? and user_uuid = ?',
+		connection.query('update userRoom set time_ping = ?, state = ? where room_uuid = ? and user_uuid = ?',
 			[
 				now,
 				0,
@@ -371,7 +540,61 @@ module.exports = {
 				let obj = {'user_uuid': user_uuid, 'room_uuid': room_uuid }	
 				cb(obj)
 		})
-	}
+	},
+
+	deleteUserRoom: (res,uuid,cb) => {
+		connection.query('delete from userRoom where uuid = ?',
+			[
+				uuid
+			],
+			function (err, result) {
+				if (err) throw err
+				let obj = {'uuid': uuid }	
+				cb(obj)
+		})
+	},
+
+	updateUserRoom: (res,put,uuid,body,cb) => {
+		let q = 'update userRoom set ';
+		let arr = [];
+		let qArr = [];
+		if (body.time_ping) { qArr.push('time_ping = ?'); arr.push(body.time_ping); }
+		else if (put) { qArr.push('time_ping = 0'); }
+		if (body.state) { qArr.push('state = ?'); arr.push(body.state); }
+		else if (put) { qArr.push('state = 0'); }
+		q += qArr.join(',');
+		q += ' where uuid = ?'; arr.push(uuid);
+		console.log(q)
+		connection.query(q,
+			arr,
+			function (err, result) {
+				if (err) throw err
+				let obj = {'uuid': uuid }	
+				cb(obj)
+		})
+	},	
+
+	getAllUserRooms: (res,cb) => {
+		connection.query('select * from userRoom ',
+			[
+			],
+			function (err, rows, fields) {
+				if (err) throw err
+				cb(rows)
+		})		
+	},
+
+	getUserRoom: (res,uuid,cb) => {
+		connection.query('select * from userRoom where uuid = ?',
+			[
+				uuid
+			],
+			function (err, rows, fields) {
+				if (err) throw err
+				let r = rows.length > 0 ? rows[0] : {}
+				cb(r)
+		})
+	},
 
 }
 

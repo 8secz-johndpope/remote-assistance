@@ -38,20 +38,20 @@ function injectMsg(msg,msgLabel) {
 }
 
 function launchRA() {
-  $.getJSON(SERVER_API + "createCustomer").then(
+  $.post(SERVER_API + "user").then(
     function(customerData) {
-      $.getJSON(SERVER_API + "createRoom").then( 
+      $.post(SERVER_API + "room").then( 
         function(roomData) {
-          $.getJSON(SERVER_API + "addUserToRoom/" + customerData.uuid + "/" + roomData.room_uuid).then( 
+          $.post(SERVER_API + "userRoom", {"user_uuid":customerData.uuid,"room_uuid":roomData.uuid}).then( 
             function(data) {
-              console.log("Connecting user",customerData.uuid,"to room", roomData.room_uuid);
+              console.log("Connecting user",customerData.uuid,"to room", roomData.uuid);
               // Connect to iOS
               if (runningNative()) {
                 window.webkit.messageHandlers.launchRA.postMessage(
                   { 
                     user_uuid: customerData.uuid,
                     room_uuid: roomData.room_uuid,
-                    archive: convArchive
+                    archive: convArchive //JSON.stringify(convArchive)
                   });                
               }
           })

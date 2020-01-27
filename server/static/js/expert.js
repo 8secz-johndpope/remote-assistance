@@ -392,7 +392,7 @@ function registerActivityLS() {
     if (!recordingLS) {
         recordingLS = true;
         toggleDots(true); 
-        wrtc.emit('recording_started',{"name":recordingClipUUID}); 
+        wrtc.emit('recording_started',{"clip_uuid":recordingClipUUID}); 
         startRecording();
     } 
     clearTimeout(clearCtxInterval);
@@ -462,7 +462,7 @@ function stepDone() {
   if (recordingLS) { 
     recordingLS = false; 
     stopRecording(); 
-    wrtc.emit('recording_stopped',{"name":recordingClipUUID}); 
+    wrtc.emit('recording_stopped',{"clip_uuid":recordingClipUUID}); 
   }
   clearTimeout(clearCtxInterval);
   toggleDots(false); 

@@ -33,135 +33,228 @@ $ yarn start
 API
 ------------
 
-Create a customer
+Create a user
 ```
-/api/createCustomer
-{"uuid":"string"}
-```
-
-Create an expert 
-```
-/api/createExpert
-{"uuid":"string"}
-```
-
-Delete a user 
-```
-/api/deleteUser/:uuid
-{"uuid":"string"}
+post /api/user
+data {type:"customer|expert"}
+return {"uuid":"string"}
 ```
 
 Get user details
 ```
-/api/getUser/:uuid
-{"id":int,"type":"customer|expert","photo":"url_string","uuid":"string","password":"","email":"email_string","name":"name_string"}
+get /api/user/:uuid
+return {"id":int,"type":"customer|expert","photo":"url_string","uuid":"string","password":"","email":"email_string","name":"name_string"}
 ```
 
 Get all users
 ```
-/api/getAllUsers
-[{"id":int,"type":"customer|expert","photo":"url_string","uuid":"string","password":"","email":"email_string","name":"name_string"}]
+get /api/user
+return [{"id":int,"type":"customer|expert","photo":"url_string","uuid":"string","password":"","email":"email_string","name":"name_string"}]
 ```
+
+Update user
+```
+put|patch /api/user/:uuid
+data {"type":"customer|expert","photo":"url_string","password":"","email":"email_string","name":"name_string"}
+return {"uuid":"string"}
+```
+
+Delete a user 
+```
+delete /api/user/:uuid
+return {"uuid":"string"}
+```
+
 
 Create a room
 ```
-/api/createRoom
-{"uuid":"string"}
-```
-
-Delete a room 
-```
-/api/deleteRoom/:uuid
-{"uuid":"string"}
+post /api/room
+return {"uuid":"string"}
 ```
 
 Get room details
 ```
-/api/getRoom/:uuid
-{"id":int,"time_ping":int,"time_request":int,"time_created":int,"uuid":"string","experts":1,"customers":0}
-```
-
-Get rooms with at least one participant
-```
-/api/getActiveRooms
-[{"uuid":"test1","id":1,"time_ping":1,"time_request":2,"time_created":null,"experts":1,"customers":0}]
+get /api/room/:uuid
+return {"id":int,"time_ping":int,"time_request":int,"time_created":int,"uuid":"string","experts":1,"customers":0}
 ```
 
 Get all rooms
 ```
-/api/getAllRooms
-[{"uuid":"test1","id":1,"time_ping":1,"time_request":2,"time_created":null,"experts":0,"customers":0}]
+get /api/room
+return [{"uuid":"test1","id":1,"time_ping":1,"time_request":2,"time_created":null,"experts":0,"customers":0}]
 ```
 
-Add user to room
+Get rooms with at least one participant
 ```
-/api/addUserToRoom/:user_uuid/:room_uuid
-{"user_uuid":"string","room_uuid":"string"}
+get /api/room?active=1
+[{"uuid":"test1","id":1,"time_ping":1,"time_request":2,"time_created":null,"experts":1,"customers":0}]
 ```
 
-Remove user from room
+Update room
 ```
-/api/removeUserFromRoom/:user_uuid/:room_uuid
-{"user_uuid":"string","room_uuid":"string"}
+put|patch /api/room/:uuid
+data {time_ping":int,"time_request":int,"time_created":int}
+return {"uuid":"string"}
+```
+
+Delete a room 
+```
+delete /api/room/:uuid
+return {"uuid":"string"}
+```
+
+
+Create an anchor
+```
+post /api/anchor
+data {type:"image|object"}
+return {"uuid":"string"}
 ```
 
 Get anchor details
 ```
-/api/getAnchor/:uuid
-{"id":int,"uuid":"string","url":url,"type":"image|object","name":"string"}
-
-```
-
-Get all anchors whose name includes given text 
-```
-/api/getAllAnchors/:text
-[{"id":int,"uuid":"string","url":url,"type":"image|object","name":"string"}]
+get /api/anchor/:uuid
+return {"id":int,"uuid":"string","url":url,"type":"image|object","name":"string"}
 ```
 
 Get all anchors
 ```
-/api/getAllAnchors
-[{"id":int,"uuid":"string","url":url,"type":"image|object","name":"string"}]
+get /api/room
+return [{"id":int,"uuid":"string","url":url,"type":"image|object","name":"string"}]
 ```
+
+Get all anchors whose name includes a given string
+```
+get /api/room?text=string
+return [{"id":int,"uuid":"string","url":url,"type":"image|object","name":"string"}]
+```
+
+Update anchor
+```
+put|patch /api/anchor/:uuid
+data {"url":url,"type":"image|object","name":"string"}
+return {"uuid":"string"}
+```
+
+Delete an anchor
+```
+delete /api/anchor/:uuid
+return {"uuid":"string"}
+```
+
 
 Create clip
 ```
-/api/createClip/:name/:user_uuid/:room_uuid
-{"uuid":"152875912"}
+post /api/clip
+data {"name":string,"user_uuid":string,"room_uuid":string}
+return {"uuid":"152875912"}
 ```
 
-Delete a clip 
+Get clip details
 ```
-/api/deleteClip/:uuid
-{"uuid":"string"}
-```
-
-Get clip details. Data is available at uuid.webm, uuid.mp4, and uuid.jpg (thumbnail).
-```
-/api/getClip/:uuid
-{"id":int,"name":string,"user_uuid":string,"room_uuid":string,"uuid":string,"thumbnailUrl":url,"webmUrl":url,"mp4Url":url}
-```
-
-Get clip details (including position of clip on anchor) for given anchor (optionally also select by room)
-```
-/api/getClipsForAnchor/:anchor_uuid/:room_uuid?
-[{"position_blob":"{}","id":75,"name":"demo1","user_uuid":"demo","room_uuid":"demo","uuid":"demo1","thumbnailUrl":url,"webmUrl":url,"mp4Url":url}]
+get /api/clip/:uuid
+return {"id":int,"name":string,"user_uuid":string,"room_uuid":string,"uuid":string,"thumbnail_url":url,"webm_url":url,"mp4_url":url}
 ```
 
 Get all clips (note since no anchor is given these must be without anchor positions)
 ```
-/api/getAllClips
-[{"id":int,"name":string,"user_uuid":string,"room_uuid":string,"uuid":string,"thumbnailUrl":url,"webmUrl":url,"mp4Url":url}]
+get /api/clip
+return [{"id":int,"name":string,"user_uuid":string,"room_uuid":string,"uuid":string,"thumbnail_url":url,"webm_url":url,"mp4_url":url}]
 ```
 
-Add clip to anchor at a positon
+Get clips attached to anchor 
 ```
-/api/addClipToAnchor/:clip_uuid/:anchor_uuid/:position_blob
-{"anchor_uuid":string,"clip_uuid":string}
+get /api/clip?anchor_uuid=string
+return [{"position":"{}","id":75,"name":"demo1","user_uuid":"demo","room_uuid":"demo","uuid":"demo1","thumbnailUrl":url,"webmUrl":url,"mp4Url":url}]
 ```
 
-Remove clip from anchor
+Update clip
 ```
-/api/removeClipFromAnchor/:clip_uuid/:anchor_uuid
-{"anchor_uuid":string,"clip_uuid":string}
+put|patch /api/clip/:uuid
+data {"name":string,"user_uuid":string,"room_uuid":string,"thumbnail_url":url,"webm_url":url,"mp4_url":url}
+return {"uuid":"string"}
 ```
+
+Delete a clip
+```
+delete /api/clip/:uuid
+return {"uuid":"string"}
+
+
+Create clipAnchor
+```
+post /api/clipAnchor
+data {"clip_uuid":string,"anchor_uuid":string,"position":json}
+return {"uuid":"152875912"}
+```
+
+Get clipAnchor details
+```
+get /api/clipAnchor/:uuid
+return {"id":int,"anchor_uuid":string,"clip_uuid":string,"position":json,"uuid":string}
+```
+
+Get all clipAnchors
+```
+get /api/clipAnchor
+return [{"id":int,"anchor_uuid":string,"clip_uuid":string,"position":json,"uuid":string}]
+```
+
+Update clipAnchor
+```
+put|patch /api/clipAnchor/:uuid
+data {"position":json}
+return {"uuid":"string"}
+```
+
+Delete clipAnchor
+```
+delete /api/clipAnchor/:uuid
+return {"uuid":"string"}
+```
+
+Delete clipAnchor given clip and anchor uuids
+```
+delete /api/clipAnchor/:clip_uuid/:anchor_uuid
+return {"uuid":"string"}
+```
+
+
+Create userRoom
+```
+post /api/userRoom
+data {"user_uuid":string,"room_uuid":string}
+return {"uuid":"152875912"}
+```
+
+Get userRoom details
+```
+get /api/userRoom/:uuid
+return {"id":int,"anchor_uuid":string,"clip_uuid":string,"position":json,"uuid":string}
+```
+
+Get all userRooms
+```
+get /api/userRoom
+return [{"id":int,"anchor_uuid":string,"clip_uuid":string,"position":json,"uuid":string}]
+```
+
+Update userRoom
+```
+put|patch /api/userRoom/:uuid
+data {"time_ping":string,"state":int}
+return {"uuid":"string"}
+```
+
+Delete userRoom
+```
+delete /api/userRoom/:uuid
+return {"uuid":"string"}
+```
+
+Delete userRoom given user and room uuids
+```
+delete /api/clipAnchor/:user_uuid/:room_uuid
+return {"uuid":"string"}
+```
+
