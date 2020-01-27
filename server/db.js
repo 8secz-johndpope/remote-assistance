@@ -137,22 +137,26 @@ module.exports = {
 		let q = 'update anchor set ';
 		let arr = [];
 		let qArr = [];
-		if (body.type) { qArr.push('type = ?'); arr.push(body.type); }
+		if (typeof body.type !== 'undefined') { qArr.push('type = ?'); arr.push(body.type); }
 		else if (put) { qArr.push('type = "none"'); }
-		if (body.name) { qArr.push('name = ?'); arr.push(body.name); }
+		if (typeof body.name !== 'undefined') { qArr.push('name = ?'); arr.push(body.name); }
 		else if (put) { qArr.push('name = ""'); }
-		if (body.url) { qArr.push('url = ?'); arr.push(body.url); }
+		if (typeof body.url !== 'undefined') { qArr.push('url = ?'); arr.push(body.url); }
 		else if (put) { qArr.push('url = ""'); }
 		q += qArr.join(',');
 		q += ' where uuid = ?'; arr.push(uuid);
-		console.log(q)
-		connection.query(q,
-			arr,
-			function (err, result) {
-				if (err) throw err
-				let obj = {'uuid': uuid }	
-				cb(obj)
-		})
+		if (qArr.length > 0) {
+			connection.query(q,
+				arr,
+				function (err, result) {
+					if (err) throw err
+					let obj = {'uuid': uuid }	
+					cb(obj)
+			})			
+		} else {
+			let obj = {'uuid': uuid }	
+			cb(obj)
+		}
 	},
 
 	getAllAnchorsSearch: (res,text,cb) => {
@@ -273,25 +277,32 @@ module.exports = {
 	updateUser: (res,put,uuid,body,cb) => {
 		let q = 'update user set ';
 		let arr = [];
-		if (body.type) { q += 'type = ? '; arr.push(body.type); }
+		let qArr = [];
+		if (typeof body.type !== 'undefined') { qArr.push('type = ?'); arr.push(body.type); }
 		else if (put) { q += 'type = "none" '; }
-		if (body.photo) { q += 'photo = ? '; arr.push(body.photo); }
+		if (typeof body.photo !== 'undefined') { qArr.push('photo = ?'); arr.push(body.photo); }
 		else if (put) { q += 'photo = "" '; }
-		if (body.email) { q += 'email = ? '; arr.push(body.email); }
+		if (typeof body.email !== 'undefined') { qArr.push('email = ?'); arr.push(body.email); }
 		else if (put) { q += 'email = "" '; }
-		if (body.password) { q += 'password = ? '; arr.push(body.password); }
+		if (typeof body.password !== 'undefined') { qArr.push('password = ?'); arr.push(body.password); }
 		else if (put) { q += 'password = "" '; }
-		if (body.name) { q += 'name = ? '; arr.push(body.name); }
+		if (typeof body.name !== 'undefined') { qArr.push('name = ?'); arr.push(body.name); }
 		else if (put) { q += 'name = "" '; }
-		q += 'where uuid = ?'; arr.push(uuid);
-		console.log(q)
-		connection.query(q,
-			arr,
-			function (err, result) {
-				if (err) throw err
-				let obj = {'uuid': uuid }	
-				cb(obj)
-		})
+		q += qArr.join(',');
+		q += ' where uuid = ?'; arr.push(uuid);
+
+		if (qArr.length > 0) {
+			connection.query(q,
+				arr,
+				function (err, result) {
+					if (err) throw err
+					let obj = {'uuid': uuid }	
+					cb(obj)
+			})			
+		} else {
+			let obj = {'uuid': uuid }	
+			cb(obj)
+		}
 	},
 
 	createRoom: (res,cb) => {
@@ -313,21 +324,27 @@ module.exports = {
 		let q = 'update room set ';
 		let qArr = [];
 		let arr = [];
-		if (body.time_created) { qArr.push('time_created = ?'); arr.push(body.time_created); }
+		if (typeof body.time_created !== 'undefined') { qArr.push('time_created = ?'); arr.push(body.time_created); }
 		else if (put) { qArr.push('time_created = 0'); }
-		if (body.time_ping) { qArr.push('time_ping = ?'); arr.push(body.time_ping); }
+		if (typeof body.time_ping !== 'undefined') { qArr.push('time_ping = ?'); arr.push(body.time_ping); }
 		else if (put) { qArr.push('time_ping = 0'); }
-		if (body.time_request) { qArr.push('time_request = ?'); arr.push(body.time_request); }
+		if (typeof body.time_request !== 'undefined') { qArr.push('time_request = ?'); arr.push(body.time_request); }
 		else if (put) { qArr.push('time_request = 0'); }
 		q += qArr.join(',');
 		q += ' where uuid = ?'; arr.push(uuid);
-		connection.query(q,
-			arr,
-			function (err, result) {
-				if (err) throw err
-				let obj = {'uuid': uuid }	
-				cb(obj)
-		})
+
+		if (qArr.length > 0) {
+			connection.query(q,
+				arr,
+				function (err, result) {
+					if (err) throw err
+					let obj = {'uuid': uuid }	
+					cb(obj)
+			})			
+		} else {
+			let obj = {'uuid': uuid }	
+			cb(obj)
+		}
 	},
 
 	deleteRoom: (res,uuid,cb) => {
@@ -374,22 +391,27 @@ module.exports = {
 		let q = 'update clip set ';
 		let arr = [];
 		let qArr = [];
-		if (body.name) { qArr.push('name = ?'); arr.push(body.name); }
+		if (typeof body.name !== 'undefined') { qArr.push('name = ?'); arr.push(body.name); }
 		else if (put) { qArr.push('name = ""'); }
-		if (body.user_uuid) { qArr.push('user_uuid = ?'); arr.push(body.user_uuid); }
+		if (typeof body.user_uuid !== 'undefined') { qArr.push('user_uuid = ?'); arr.push(body.user_uuid); }
 		else if (put) { qArr.push('user_uuid = 0'); }
-		if (body.room_uuid) { qArr.push('room_uuid = ?'); arr.push(body.room_uuid); }
+		if (typeof body.room_uuid !== 'undefined') { qArr.push('room_uuid = ?'); arr.push(body.room_uuid); }
 		else if (put) { qArr.push('room_uuid = 0'); }
 		q += qArr.join(',');
 		q += ' where uuid = ?'; arr.push(uuid);
-		console.log(q)
-		connection.query(q,
-			arr,
-			function (err, result) {
-				if (err) throw err
-				let obj = {'uuid': uuid }	
-				cb(obj)
-		})
+
+		if (qArr.length > 0) {
+			connection.query(q,
+				arr,
+				function (err, result) {
+					if (err) throw err
+					let obj = {'uuid': uuid }	
+					cb(obj)
+			})			
+		} else {
+			let obj = {'uuid': uuid }	
+			cb(obj)			
+		}
 	},
 
 	getAllUsers: (res,cb) => {
@@ -436,7 +458,7 @@ module.exports = {
 			],
 			function (err, result) {
 				if (err) throw err
-				let obj = {'anchor_uuid': anchor_uuid, 'clip_uuid': clip_uuid}	
+				let obj = {'uuid': uuid}	
 				cb(obj)
 		})
 	},
@@ -451,7 +473,7 @@ module.exports = {
 			],
 			function (err, result) {
 				if (err) throw err
-				let obj = {'anchor_uuid': anchor_uuid, 'clip_uuid': clip_uuid}	
+				let obj = {'anchor_uuid': anchor_uuid,'clip_uuid': clip_uuid}	
 				cb(obj)
 		})
 	},
@@ -471,10 +493,9 @@ module.exports = {
 	updateClipAnchor: (res,put,uuid,body,cb) => {
 		let q = 'update clipAnchor set ';
 		let arr = [];
-		if (body.position) { q += 'position = ? '; arr.push(body.position); }
+		if (typeof body.position !== 'undefined') { q += 'position = ? '; arr.push(body.position); }
 		else if (put) { q += 'position = 0 '; }
 		q += 'where uuid = ?'; arr.push(uuid);
-		console.log(q)
 		connection.query(q,
 			arr,
 			function (err, result) {
@@ -485,7 +506,6 @@ module.exports = {
 	},
 
 	addUserToRoom: (res,room_uuid,user_uuid,cb) => {
-		let uuid = util.generateRandomId();
 		let now = new Date() / 1000;
 		connection.query('select * from userRoom where user_uuid = ? and room_uuid = ?',
 			[
@@ -495,6 +515,7 @@ module.exports = {
 			function (err, rows, fields) {
 				if (err) throw err
 				if (rows.length > 0) {
+					let uuid = rows[0]["uuid"];
 					connection.query('update userRoom set time_ping = ?, state = ? where room_uuid = ? and user_uuid = ?',
 						[
 							now,
@@ -504,11 +525,12 @@ module.exports = {
 						],
 					function (err, rows, fields) {
 						if (err) throw err
-						let obj = {'user_uuid': user_uuid, "room_uuid": room_uuid }	
+						let obj = {'uuid': uuid}	
 						cb(obj)
 					})
 				} else {
-					connection.query('insert into userRoom(room_uuid,user_uuid,time_ping,state) values(?,?,?,?,?) '
+					let uuid = util.generateRandomId();
+					connection.query('insert into userRoom(room_uuid,user_uuid,time_ping,state,uuid) values(?,?,?,?,?) '
 						,
 						[
 							room_uuid,
@@ -519,7 +541,7 @@ module.exports = {
 						],
 						function (err, rows, fields) {
 							if (err) throw err
-							let obj = {'user_uuid': user_uuid, "room_uuid": room_uuid }	
+							let obj = {'uuid': uuid}	
 							cb(obj)
 					})					
 				}
@@ -537,7 +559,7 @@ module.exports = {
 			],
 			function (err, rows, fields) {
 				if (err) throw err
-				let obj = {'user_uuid': user_uuid, 'room_uuid': room_uuid }	
+				let obj = {'room_uuid': room_uuid,'user_uuid': user_uuid}	
 				cb(obj)
 		})
 	},
@@ -558,20 +580,24 @@ module.exports = {
 		let q = 'update userRoom set ';
 		let arr = [];
 		let qArr = [];
-		if (body.time_ping) { qArr.push('time_ping = ?'); arr.push(body.time_ping); }
+		if (typeof body.time_ping !== 'undefined') { qArr.push('time_ping = ?'); arr.push(body.time_ping); }
 		else if (put) { qArr.push('time_ping = 0'); }
-		if (body.state) { qArr.push('state = ?'); arr.push(body.state); }
+		if (typeof body.state !== 'undefined') { qArr.push('state = ?'); arr.push(body.state); }
 		else if (put) { qArr.push('state = 0'); }
-		q += qArr.join(',');
-		q += ' where uuid = ?'; arr.push(uuid);
-		console.log(q)
-		connection.query(q,
-			arr,
-			function (err, result) {
-				if (err) throw err
-				let obj = {'uuid': uuid }	
-				cb(obj)
-		})
+		if (qArr.length > 0 ) { 
+			q += qArr.join(',');
+			q += ' where uuid = ?'; arr.push(uuid);
+			connection.query(q,
+				arr,
+				function (err, result) {
+					if (err) throw err
+					let obj = {'uuid': uuid }	
+					cb(obj)
+			})
+		} else {
+			let obj = {'uuid': uuid }	
+			cb(obj)
+		}
 	},	
 
 	getAllUserRooms: (res,cb) => {

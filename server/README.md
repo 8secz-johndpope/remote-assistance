@@ -216,7 +216,7 @@ return {"uuid":"string"}
 Delete clipAnchor given clip and anchor uuids
 ```
 delete /api/clipAnchor/:clip_uuid/:anchor_uuid
-return {"uuid":"string"}
+return {"clip_uuid":"string","anchor_uuid":"string"}
 ```
 
 

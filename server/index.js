@@ -306,13 +306,13 @@ if (!args.db_off) {
     });
 
     app.put('/api/clipAnchor/:uuid', function(req, res) { 
-        db.updateClipAnchor(res,req.params.uuid,req.body,function(data) {
+        db.updateClipAnchor(res,true,req.params.uuid,req.body,function(data) {
             res.status(202).json(data)
         })
     });
 
     app.patch('/api/clipAnchor/:uuid', function(req, res) { 
-        db.updateClipAnchor(res,req.params.uuid,req.body,function(data) {
+        db.updateClipAnchor(res,false,req.params.uuid,req.body,function(data) {
             res.status(202).json(data)
         })
     });
@@ -379,13 +379,13 @@ if (!args.db_off) {
     });
 
     app.put('/api/userRoom/:uuid', function(req, res) { 
-        db.updateUserRoom(res,req.params.uuid,req.body,function(data) {
+        db.updateUserRoom(res,true,req.params.uuid,req.body,function(data) {
             res.status(202).json(data)
         })
     });
 
     app.patch('/api/userRoom/:uuid', function(req, res) { 
-        db.updateUserRoom(res,req.params.uuid,req.body,function(data) {
+        db.updateUserRoom(res,false,req.params.uuid,req.body,function(data) {
             res.status(202).json(data)
         })
     });
