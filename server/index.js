@@ -183,7 +183,7 @@ if (!args.db_off) {
 
     app.get('/api/anchor', function (req, res) {
         if (req.query.text) {
-            db.getAllAnchorsSearch(res,req.params.text,function(data) {
+            db.getAllAnchorsSearch(res,req.query.text,function(data) {
                 res.json(data)
             })
         } else {
@@ -194,13 +194,13 @@ if (!args.db_off) {
     });
 
     app.put('/api/anchor/:uuid', function(req, res) { 
-        db.updateAnchor(res,req.params.uuid,req.body,function(data) {
+        db.updateAnchor(res,true,req.params.uuid,req.body,function(data) {
             res.status(202).json(data)
         })
     });
 
     app.patch('/api/anchor/:uuid', function(req, res) { 
-        db.updateAnchor(res,req.params.uuid,req.body,function(data) {
+        db.updateAnchor(res,false,req.params.uuid,req.body,function(data) {
             res.status(202).json(data)
         })
     });

@@ -51,10 +51,10 @@ module.exports = {
 	},
 
 	getActiveRooms: (res,ret,roomName,cb) => {
-		let q = 'SELECT roomUser.room_uuid,user.type,room.* FROM roomUser,user,room where roomUser.state = 1 and user.uuid = roomUser.user_uuid and room.uuid = roomUser.room_uuid';
+		let q = 'SELECT userRoom.room_uuid,user.type,room.* FROM userRoom,user,room where userRoom.state = 1 and user.uuid = userRoom.user_uuid and room.uuid = userRoom.room_uuid';
 		let arr = [];
 		if (roomName !== null) {
-			q += ' and roomUser.room_uuid = ?';
+			q += ' and userRoom.room_uuid = ?';
 			arr.unshift(roomName);
 		}
 		connection.query(q,				

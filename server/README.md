@@ -36,7 +36,7 @@ API
 Create a user
 ```
 post /api/user
-data {type:"customer|expert"}
+data {"type":"customer|expert"}
 return {"uuid":"string"}
 ```
 
