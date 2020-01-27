@@ -179,7 +179,7 @@ Delete a clip
 ```
 delete /api/clip/:uuid
 return {"uuid":"string"}
-
+```
 
 Create clipAnchor
 ```
