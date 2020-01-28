@@ -41,10 +41,9 @@ module.exports = {
 			],
 			function (err, rows, fields) {
 				if (err) throw err
-				let ret = []
+				let ret = null
 				if (rows.length > 0) {
-					let obj = { uuid: rows[0].uuid, id: rows[0].id, time_ping: rows[0].time_ping, time_request: rows[0].time_request, time_created: rows[0].time_created, experts: 0, customers: 0 };
-					ret.unshift(obj);
+					ret = { uuid: rows[0].uuid, id: rows[0].id, time_ping: rows[0].time_ping, time_request: rows[0].time_request, time_created: rows[0].time_created, experts: 0, customers: 0 };
 				}
 				cb(ret);
 		})		
@@ -338,6 +337,7 @@ module.exports = {
 		let q;
 		if (insert) {
 			q = 'insert into ';
+			body.time_created = Date.now();
 		} else {
 			q = 'update ';
 		}
