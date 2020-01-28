@@ -83,7 +83,10 @@ navigator.mediaDevices.getUserMedia(constraints).then(
         });        
         wrtc.on('conversation_archive', function(data) {
             document.getElementById("chat").style.display = 'inline';
-            data = JSON.parse(data);
+            if (typeof(data) == "string") {
+                // convert string to JSON struct
+                data = JSON.parse(data);
+            }
             console.log(data);
             let ca = document.getElementById("conversationArchive");
             
