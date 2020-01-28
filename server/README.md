@@ -255,7 +255,7 @@ return {"uuid":"string"}
 
 Delete userRoom given user and room uuids
 ```
-delete /api/clipAnchor/:user_uuid/:room_uuid
+delete /api/userRoom/:user_uuid/:room_uuid
 return {"uuid":"string"}
 ```
 

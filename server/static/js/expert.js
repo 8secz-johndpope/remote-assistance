@@ -36,13 +36,13 @@ navigator.mediaDevices.getUserMedia(constraints).then(
 
         user_uuid = Cookies.get('expert_uuid');
         if (user_uuid === undefined) {
-            $.getJSON(SERVER_API + "createExpert").then( 
-                function(data) {
+            $.post(SERVER_API + "user", {"type": "expert"}).then( 
+             function(data) {
                     console.log('Created expert', data);
                     Cookies.set('expert_uuid',data.uuid);
                     addUserToRoom(data.uuid);
-                }
-            );
+             }
+            )
         } else {
             console.log('Got expert', user_uuid);
             addUserToRoom(user_uuid);
@@ -75,13 +75,11 @@ navigator.mediaDevices.getUserMedia(constraints).then(
                                 
         });
         wrtc.on('add_clip_to_anchor', function(clipData) {
-            let url = SERVER_API + "addClipToAnchor/" + recordingClipUUID + 
-                      "/" + clipData.anchor_uuid + "/" + clipData.position;
-            console.log('got add_clip_to_anchor event',url);
-            $.getJSON(url).then( 
-                function(data) {
-                    console.log('Added clip marker',data);
-            })
+            $.post(SERVER_API + "clipAnchor", {"clip_uuid":recordingClipUUID,"anchor_uuid":clipData.anchor_uuid,"position":clipData.position}).then( 
+             function(data) {
+                console.log('Added clip marker',data);
+             }
+            )
         });        
 
         // Create renderer after wrtc because it shares the same socket
@@ -337,7 +335,7 @@ $('#fullscreen').click(function() {
 });
 
 function addUserToRoom(user_uuid) {
-    $.getJSON(SERVER_API + "addUserToRoom/" + user_uuid + "/" + config.roomid).then( 
+    $.post(SERVER_API + "userRoom", {"user_uuid":user_uuid,"room_uuid":config.roomid}).then( 
         function(data) {
             console.log('Added user to room', data);
         }
@@ -347,7 +345,8 @@ function addUserToRoom(user_uuid) {
 function removeUserFromRoom() {
     $.ajax({
       dataType: "json",
-      url: SERVER_API + "removeUserFromRoom/" + config.roomid + "/" + user_uuid,
+      type: "DELETE",
+      url: SERVER_API + "userRoom/" + user_uuid + "/" + config.roomid,
       async: false, 
       success: function(data) {
            console.log('Removed user from room', data);
@@ -424,19 +423,16 @@ function startRecording() {
   }
   console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
 
-  let url = SERVER_API + "createClip/lsClip/" + user_uuid + "/" + config.roomid;
-  console.log(url);
-  $.getJSON(url).then( 
-        function(data) {
+  $.post(SERVER_API + "clip", {"name": "lsClip","user_uuid":user_uuid,"room_uuid":config.roomid}).then( 
+     function(data) {
             recordingClipUUID = data.uuid;
             wrtc.emit('recording_started', {"name":recordingClipUUID});
             mediaRecorder.onstop = handleStop;
             mediaRecorder.ondataavailable = handleDataAvailable;
             mediaRecorder.start(100);
             console.log('MediaRecorder started', mediaRecorder);
-        }
-    )
-}
+     }
+  )
 
 function stopRecording() {
   mediaRecorder.stop();

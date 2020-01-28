@@ -111,13 +111,13 @@ navigator.mediaDevices.getUserMedia(constraints).then(
 
         user_uuid = Cookies.get('customer_uuid');
         if (user_uuid === undefined) {
-            $.getJSON(SERVER_API + "createCustomer").then( 
-                function(data) {
+            $.post(SERVER_API + "user", {"type": "customer"}).then( 
+             function(data) {
                     console.log('Created customer', data);
                     Cookies.set('customer_uuid', data.uuid);
                     addUserToRoom(data.uuid);
-                }
-            );
+             }
+            )
         } else {
             console.log('Got customer', user_uuid);
             addUserToRoom(user_uuid);
@@ -170,7 +170,7 @@ navigator.mediaDevices.getUserMedia(constraints).then(
 )
 
 function addUserToRoom(user_uuid) {
-    $.getJSON(SERVER_API + "addUserToRoom/" + "/" + config.roomid + "/" + user_uuid).then( 
+    $.post(SERVER_API + "userRoom", {"user_uuid":user_uuid,"room_uuid":config.roomid}).then( 
         function(data) {
             console.log('Added user to room', data);
         }
@@ -302,7 +302,8 @@ if (isIOS() && typeof DeviceMotionEvent.requestPermission === 'function') {
 function removeUserFromRoom() {
     $.ajax({
       dataType: "json",
-      url: SERVER_API + "removeUserFromRoom/" + config.roomid + "/" + user_uuid,
+      type: "DELETE",
+      url: SERVER_API + "userRoom/" + user_uuid + "/" + config.roomid,
       async: false, 
       success: function(data) {
            console.log('Removed user from room', data);
