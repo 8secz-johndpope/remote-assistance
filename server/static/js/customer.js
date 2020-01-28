@@ -137,9 +137,11 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             });
 
             let convArchive = localStorage.getItem('convArchive');
-            wrtc.emit('conversation_archive', convArchive);
+            if (convArchive !== null) {
+              wrtc.emit('conversation_archive', convArchive);
+              console.log(convArchive);
+            }
         
-            console.log(convArchive);
         });
 
         wrtc.on('camera_update', function(data) {

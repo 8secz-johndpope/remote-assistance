@@ -82,7 +82,20 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             )
         });        
         wrtc.on('conversation_archive', function(data) {
+            document.getElementById("chat").style.display = 'inline';
+            data = JSON.parse(data);
             console.log(data);
+            let ca = document.getElementById("conversationArchive");
+            
+            for (let i=0; i<data.responses.length;i++) {
+                let row = ca.insertRow(ca.rows.length);
+                let c1 = row.insertCell(0);
+                let c2 = row.insertCell(1);
+                c1.innerHTML = data.responses[i].question;
+                c2.innerHTML = "<b>"+data.responses[i].responseLabel+"<b>";
+                c2.style.verticalAlign = "top";
+            }
+            console.log(ca.innerHTML);
         }); 
 
         // Create renderer after wrtc because it shares the same socket

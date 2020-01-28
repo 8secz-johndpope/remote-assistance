@@ -36,6 +36,22 @@
     z-index: 10;
 }
 
+#chat {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    z-index: 10;
+    display: none; 
+}
+
+#collapseChat {
+    position: absolute;
+    left: 10px;
+    top: 60px;
+    width: 300px;
+    z-index: 10;
+}
+
 .btn-xlg {
     padding: .5rem 1rem;
     font-size: 2rem;
@@ -59,3 +75,4 @@
   object-fit:contain;
   opacity:0.1;
 }
+

@@ -10,6 +10,16 @@
     <video id="video" autoplay="1"></video>
     <canvas id='sketchCanvas' draggable="false"></canvas>
 </div>
+<div id="chat">
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseChat" aria-expanded="false" aria-controls="collapseChat"> <i class="fa fa-comments"></i>  </button>
+</div>
+<div class="collapse" id="collapseChat">
+  <b>Customer chat</b>
+  <div class="card card-body">
+    <table border=1 frame=void rules=rows id="conversationArchive" cellpadding="5px" style="font-size:75%">
+    </table>
+  </div>
+</div>
 <div id="toolbar">
     <div class="btn-group btn-group-toggle" data-toggle="buttons">
         <label class="btn btn-primary btn-lg" id="zoom-small">
