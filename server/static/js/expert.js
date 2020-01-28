@@ -34,19 +34,19 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             dataChannelCallback: dataChannelCallback
         });
 
-        user_uuid = Cookies.get('expert_uuid');
-        if (user_uuid === undefined) {
+        user_uuid = localStorage.getItem('expert_uuid');
+        if (user_uuid === null) {
             $.post(SERVER_API + "user", {"type": "expert"}).then( 
              function(data) {
                     console.log('Created expert', data);
-                    Cookies.set('expert_uuid',data.uuid);
+                    localStorage.setItem('expert_uuid',data.uuid);
                     addUserToRoom(data.uuid);
              }
             )
         } else {
             console.log('Got expert', user_uuid);
             addUserToRoom(user_uuid);
-        }  
+        } 
 
         wrtc.on('stream', function(id, stream) {
             var video = $('#video').show().get(0)
@@ -81,6 +81,9 @@ navigator.mediaDevices.getUserMedia(constraints).then(
              }
             )
         });        
+        wrtc.on('conversation_archive', function(data) {
+            console.log(data);
+        }); 
 
         // Create renderer after wrtc because it shares the same socket
         renderer = new Renderer( 

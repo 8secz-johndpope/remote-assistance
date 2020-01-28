@@ -233,8 +233,9 @@ Renderer = function ( parameters ) {
 
         // compose video and threejs
         ctx.drawImage(scope.renderer.domElement, 0, 0, canvas.width, canvas.height);
-        if (sar)
-          sar.animate(ctx.canvas);
+        if (typeof sar !== 'undefined') {
+            sar.animate(ctx.canvas);
+        }
     }
 
 

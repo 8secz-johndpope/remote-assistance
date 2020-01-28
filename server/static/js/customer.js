@@ -109,12 +109,12 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             room: config.roomid
         });
 
-        user_uuid = Cookies.get('customer_uuid');
-        if (user_uuid === undefined) {
+        user_uuid = localStorage.getItem('customer_uuid');
+        if (user_uuid === null) {
             $.post(SERVER_API + "user", {"type": "customer"}).then( 
              function(data) {
                     console.log('Created customer', data);
-                    Cookies.set('customer_uuid', data.uuid);
+                    localStorage.setItem('customer_uuid', data.uuid);
                     addUserToRoom(data.uuid);
              }
             )
@@ -135,8 +135,12 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             stream.addEventListener('ended', function() {
                 audio.remove();
             });
-        });
 
+            let convArchive = localStorage.getItem('convArchive');
+            wrtc.emit('conversation_archive', convArchive);
+        
+            console.log(convArchive);
+        });
 
         wrtc.on('camera_update', function(data) {
             if (renderer) {
