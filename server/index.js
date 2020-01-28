@@ -67,8 +67,10 @@ if (!args.db_off) {
 
     // Room
     app.post('/api/room', function(req, res) { 
-        db.createRoom(res,function(data) {
-            res.status(201).json(data);
+        db.updateRoom(res,true,true,util.generateRandomId(),req.body,function(roomData) {
+            db.getRoom(res,roomData.uuid,function(data) {
+                res.status(201).json(data)
+            })
         })
     });
 
@@ -96,14 +98,24 @@ if (!args.db_off) {
     });
 
     app.put('/api/room/:uuid', function(req, res) { 
-        db.updateRoom(res,true,req.params.uuid,req.body,function(data) {
-            res.status(202).json(data);
+        db.updateRoom(res,false,true,req.params.uuid,req.body,function(roomData) {
+            db.getRoom(res,roomData.uuid,function(data) {
+                db.getActiveRooms(res,data,req.params.uuid,function(activeData) {
+                    if (activeData.length) { res.status(202).json(activeData[0]); }
+                    else { res.status(404).json({}); }
+                })
+            })
         })
     });
 
     app.patch('/api/room/:uuid', function(req, res) { 
-        db.updateRoom(res,false,req.params.uuid,req.body,function(data) {
-            res.status(202).json(data);
+        db.updateRoom(res,false,false,req.params.uuid,req.body,function(roomData) {
+            db.getRoom(res,roomData.uuid,function(data) {
+                db.getActiveRooms(res,data,req.params.uuid,function(activeData) {
+                    if (activeData.length) { res.status(202).json(activeData[0]); }
+                    else { res.status(404).json({}); }
+                })
+            })
         })
     });
 
@@ -116,10 +128,10 @@ if (!args.db_off) {
 
     // User
     app.post('/api/user', function(req, res) { 
-        let type = "none";
-        if (req.body.type) { type = req.body.type; }
-        db.createUser(res,type,function(data) {
-            res.status(201).json(data)
+        db.updateUser(res,true,true,util.generateRandomId(),req.body,function(userData) {
+            db.getUser(res,userData.uuid,function(data) {
+                res.status(201).json(data)
+            })
         })
     });
 
@@ -148,14 +160,18 @@ if (!args.db_off) {
     });
 
     app.put('/api/user/:uuid', function(req, res) { 
-        db.updateUser(res,true,req.params.uuid,req.body,function(data) {
-            res.status(202).json(data)
+        db.updateUser(res,false,true,req.params.uuid,req.body,function(userData) {
+            db.getUser(res,userData.uuid,function(data) {
+                res.status(202).json(data)
+            })
         })
     });
 
     app.patch('/api/user/:uuid', function(req, res) { 
-        db.updateUser(res,false,req.params.uuid,req.body,function(data) {
-            res.status(202).json(data)
+        db.updateUser(res,false,false,req.params.uuid,req.body,function(userData) {
+            db.getUser(res,userData.uuid,function(data) {
+                res.status(202).json(data)
+            })
         })
     });
 

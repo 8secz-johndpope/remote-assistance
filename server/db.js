@@ -274,22 +274,29 @@ module.exports = {
 		})
 	},
 
-	updateUser: (res,put,uuid,body,cb) => {
-		let q = 'update user set ';
+	updateUser: (res,insert,put,uuid,body,cb) => {
+		let q;
+		if (insert) {
+			q = 'insert into ';
+		} else {
+			q = 'update ';
+		}
+		q += ' user set ';
 		let arr = [];
 		let qArr = [];
 		if (typeof body.type !== 'undefined') { qArr.push('type = ?'); arr.push(body.type); }
-		else if (put) { q += 'type = "none" '; }
-		if (typeof body.photo !== 'undefined') { qArr.push('photo = ?'); arr.push(body.photo); }
-		else if (put) { q += 'photo = "" '; }
+		else if (put) { qArr.push('type = "none"'); }
+		if (typeof body.photo_url !== 'undefined') { qArr.push('photo_url = ?'); arr.push(body.photo_url); }
+		else if (put) { qArr.push('photo_url = ""'); }
 		if (typeof body.email !== 'undefined') { qArr.push('email = ?'); arr.push(body.email); }
-		else if (put) { q += 'email = "" '; }
+		else if (put) { qArr.push('email = ""'); }
 		if (typeof body.password !== 'undefined') { qArr.push('password = ?'); arr.push(body.password); }
-		else if (put) { q += 'password = "" '; }
+		else if (put) { qArr.push('password = ""'); }
 		if (typeof body.name !== 'undefined') { qArr.push('name = ?'); arr.push(body.name); }
-		else if (put) { q += 'name = "" '; }
+		else if (put) { qArr.push('name = "" '); }
+		if (insert) { qArr.push('uuid = ?'); arr.push(uuid); }
 		q += qArr.join(',');
-		q += ' where uuid = ?'; arr.push(uuid);
+		if (!insert) { q += ' where uuid = ?'; arr.push(uuid); }
 
 		if (qArr.length > 0) {
 			connection.query(q,
@@ -320,8 +327,14 @@ module.exports = {
 		})
 	},
 
-	updateRoom: (res,put,uuid,body,cb) => {
-		let q = 'update room set ';
+	updateRoom: (res,insert,put,uuid,body,cb) => {
+		let q;
+		if (insert) {
+			q = 'insert into ';
+		} else {
+			q = 'update ';
+		}
+		q += ' room set ';
 		let qArr = [];
 		let arr = [];
 		if (typeof body.time_created !== 'undefined') { qArr.push('time_created = ?'); arr.push(body.time_created); }
@@ -330,8 +343,9 @@ module.exports = {
 		else if (put) { qArr.push('time_ping = 0'); }
 		if (typeof body.time_request !== 'undefined') { qArr.push('time_request = ?'); arr.push(body.time_request); }
 		else if (put) { qArr.push('time_request = 0'); }
+		if (insert) { qArr.push('uuid = ?'); arr.push(uuid); }
 		q += qArr.join(',');
-		q += ' where uuid = ?'; arr.push(uuid);
+		if (!insert) { q += ' where uuid = ?'; arr.push(uuid); }
 
 		if (qArr.length > 0) {
 			connection.query(q,
