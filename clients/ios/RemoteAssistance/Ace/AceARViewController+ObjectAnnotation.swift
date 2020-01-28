@@ -46,6 +46,7 @@ extension AceARViewController {
     }
     
     @objc func searchForObjects() {
+        self.arView.session.pause()
         self.view.makeToast("Starting search for \(self.objectGroupName!)...", position: .bottom)
         self.anchorFound = false
         var foundAllObjects = true
@@ -75,17 +76,19 @@ extension AceARViewController {
 
     func objectAnnotation(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         self.renderer = renderer
-        
-        if anchor.name?.hasPrefix("object") == false {
-            return
-        }
-
+                
         if !self.anchorFound {
             if let _ = anchor as? ARImageAnchor {
+                
+                // image anhors need to be named "object_XXX"
+                if anchor.name?.hasPrefix("object") == false {
+                    return
+                }
+
                 self.anchorFound = true
                 print("ObjectAnnotation found imageAnchor!")
                 DispatchQueue.main.async {
-                self.view.makeToast("Found anchor \(anchor.name ?? "Unknown")", position: .center)
+                    self.view.makeToast("Found image anchor \(anchor.name ?? "Unknown")", position: .center)
                     for i in 0..<self.clickableImages.count {
                         let material = SCNMaterial()
                         material.diffuse.contents = self.clickableImages[i]
@@ -104,7 +107,7 @@ extension AceARViewController {
                 self.anchorFound = true
                 print("ObjectAnnotation found objectAnchor!")
                 DispatchQueue.main.async {
-                    self.view.makeToast("Found anchor \(anchor.name ?? "Unknown")", position: .center)
+                    self.view.makeToast("Found object anchor \(anchor.name ?? "Unknown")", position: .center)
                     for i in 0..<self.clickableImages.count {
                         let material = SCNMaterial()
                         material.diffuse.contents = self.clickableImages[i]
