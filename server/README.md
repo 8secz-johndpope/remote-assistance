@@ -69,6 +69,7 @@ return {"uuid":"string"}
 Create a room
 ```
 post /api/room
+data {time_ping":int,"time_request":int,"time_created":int}
 return {"id":int,"time_ping":int,"time_request":int,"time_created":int,"uuid":"string","experts":1,"customers":0}
 ```
 
@@ -107,7 +108,7 @@ return {"uuid":"string"}
 Create an anchor
 ```
 post /api/anchor
-data {type:"image|object"}
+data {"url":url,"type":"image|object","name":"string"}
 return {"id":int,"uuid":"string","url":url,"type":"image|object","name":"string"}
 ```
 
@@ -146,7 +147,7 @@ return {"uuid":"string"}
 Create clip
 ```
 post /api/clip
-data {"name":string,"user_uuid":string,"room_uuid":string}
+data {"name":string,"user_uuid":string,"room_uuid":string,"thumbnail_url":url,"webm_url":url,"mp4_url":url}
 return {"id":int,"name":string,"user_uuid":string,"room_uuid":string,"uuid":string,"thumbnail_url":url,"webm_url":url,"mp4_url":url}
 ```
 
@@ -203,7 +204,7 @@ return [{"id":int,"anchor_uuid":string,"clip_uuid":string,"position":json,"uuid"
 Update clipAnchor
 ```
 put|patch /api/clipAnchor/:uuid
-data {"position":json}
+data {"clip_uuid":string,"anchor_uuid":string,"position":json}
 return {"id":int,"anchor_uuid":string,"clip_uuid":string,"position":json,"uuid":string}
 ```
 
@@ -223,7 +224,7 @@ return {"clip_uuid":"string","anchor_uuid":"string"}
 Create userRoom
 ```
 post /api/userRoom
-data {"user_uuid":string,"room_uuid":string}
+data {"user_uuid":string,"room_uuid":string,"time_ping":string,"state":int}
 return {"id":int,"anchor_uuid":string,"clip_uuid":string,"position":json,"uuid":string}
 ```
 
@@ -242,7 +243,7 @@ return [{"id":int,"anchor_uuid":string,"clip_uuid":string,"position":json,"uuid"
 Update userRoom
 ```
 put|patch /api/userRoom/:uuid
-data {"time_ping":string,"state":int}
+data {"user_uuid":string,"room_uuid":string,"time_ping":string,"state":int}
 return {"id":int,"anchor_uuid":string,"clip_uuid":string,"position":json,"uuid":string}
 ```
 
