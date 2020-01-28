@@ -123,10 +123,6 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             addUserToRoom(user_uuid);
         }
 
-        let convArchive = localStorage.getItem('convArchive');
-        wrtc.emit('conversation_archive', convArchive);
-        console.log(convArchive);
-
         wrtc.on('stream', function(id, stream) {
             var audio = $('<audio autoplay/>');
             audio[0].id = id;
@@ -139,8 +135,12 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             stream.addEventListener('ended', function() {
                 audio.remove();
             });
-        });
 
+            let convArchive = localStorage.getItem('convArchive');
+            wrtc.emit('conversation_archive', convArchive);
+        
+            console.log(convArchive);
+        });
 
         wrtc.on('camera_update', function(data) {
             if (renderer) {

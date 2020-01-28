@@ -34,12 +34,12 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             dataChannelCallback: dataChannelCallback
         });
 
-        user_uuid = localStorage.setItem('expert_uuid');
+        user_uuid = localStorage.getItem('expert_uuid');
         if (user_uuid === null) {
             $.post(SERVER_API + "user", {"type": "expert"}).then( 
              function(data) {
                     console.log('Created expert', data);
-                    localStorage.getItem('expert_uuid',data.uuid);
+                    localStorage.setItem('expert_uuid',data.uuid);
                     addUserToRoom(data.uuid);
              }
             )
@@ -81,6 +81,9 @@ navigator.mediaDevices.getUserMedia(constraints).then(
              }
             )
         });        
+        wrtc.on('conversation_archive', function(data) {
+            console.log(data);
+        }); 
 
         // Create renderer after wrtc because it shares the same socket
         renderer = new Renderer( 
