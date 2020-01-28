@@ -36,12 +36,14 @@ class ChatViewController: UIViewController {
     func launchRA(dict: NSDictionary) {
         var roomId = "fxpal"
         
-        // save to user defaults
-        UserDefaults.standard.set(dict, forKey: "conversation_archive")
+        if let archive = dict["archive"] as? [String:Any] {
+            // save conversation archive to user defaults
+            UserDefaults.standard.set(archive, forKey: "conversation_archive")
 
-        // create room name based on printer
-        if let printerName = (dict["archive"] as! [String:Any])["printerName"] as? String {
-            roomId = "\(printerName.replacingOccurrences(of:" ", with: "-"))-\(generateRandomId())"
+            // create room name based on printer
+            if let printerName = archive["printerName"] as? String {
+                roomId = "\(printerName.replacingOccurrences(of:" ", with: "-"))-\(generateRandomId())"
+            }
         }
         
         // Launch remote assist view controller with room uuid: roomId
