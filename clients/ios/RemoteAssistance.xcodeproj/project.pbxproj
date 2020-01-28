@@ -263,6 +263,7 @@
 				D795E76523A2E64800E97162 /* ChatViewController.swift */,
 				AD43D0CD23C68E5500AA4D24 /* QRCodeScanner.swift */,
 				D7DB6A0D236DE91D00D7C367 /* SettingsViewController.swift */,
+				D7DA31F3239ED04600D1B73F /* SARViewController.swift */,
 				D7AF69FE23C8F0D0005B67D8 /* AppStoryboard.swift */,
 				D7AF6A0223C8FCDB005B67D8 /* Ace */,
 				2959E0DD23C65B6300D0F98E /* ObjectAnnotation */,
@@ -321,7 +322,6 @@
 				D7DA31E5239ECFCE00D1B73F /* Nodes */,
 				D7DA31E8239ECFCE00D1B73F /* PlaneRectangle.swift */,
 				D7DA31E9239ECFCE00D1B73F /* Message.swift */,
-				D7DA31F3239ED04600D1B73F /* SARViewController.swift */,
 			);
 			path = ScreenAR;
 			sourceTree = "<group>";
