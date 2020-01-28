@@ -399,40 +399,41 @@ function registerActivityLS() {
 }
 
 function startRecording() {
-  let options = {mimeType: 'video/webm;videoBitsPerSecond:2500000;ignoreMutedMedia:true'};
-  try {
-    mediaRecorder = new MediaRecorder(renderer.getCanvas().captureStream(), options);
-  } catch (e0) {
-    console.log('Unable to create MediaRecorder with options Object: ', e0);
+    let options = {mimeType: 'video/webm;videoBitsPerSecond:2500000;ignoreMutedMedia:true'};
     try {
-      options = {mimeType: 'video/webm,codecs=vp9'};
-      mediaRecorder = new MediaRecorder(renderer.getCanvas().captureStream(), options);
-    } catch (e1) {
-      console.log('Unable to create MediaRecorder with options Object: ', e1);
-      try {
-        options = 'video/vp8'; // Chrome 47
         mediaRecorder = new MediaRecorder(renderer.getCanvas().captureStream(), options);
-      } catch (e2) {
-        alert('MediaRecorder is not supported by this browser.\n\n' +
-          'Try Firefox 29 or later, or Chrome 47 or later, ' +
-          'with Enable experimental Web Platform features enabled from chrome://flags.');
-        console.error('Exception while creating MediaRecorder:', e2);
-        return;
-      }
+    } catch (e0) {
+        console.log('Unable to create MediaRecorder with options Object: ', e0);
+        try {
+            options = {mimeType: 'video/webm,codecs=vp9'};
+            mediaRecorder = new MediaRecorder(renderer.getCanvas().captureStream(), options);
+        } catch (e1) {
+                console.log('Unable to create MediaRecorder with options Object: ', e1);
+            try {
+                options = 'video/vp8'; // Chrome 47
+                mediaRecorder = new MediaRecorder(renderer.getCanvas().captureStream(), options);
+            } catch (e2) {
+                alert('MediaRecorder is not supported by this browser.\n\n' +
+                      'Try Firefox 29 or later, or Chrome 47 or later, ' +
+                      'with Enable experimental Web Platform features enabled from chrome://flags.');
+                console.error('Exception while creating MediaRecorder:', e2);
+                return;
+            }
+        }
     }
-  }
-  console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
+    console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
 
-  $.post(SERVER_API + "clip", {"name": "lsClip","user_uuid":user_uuid,"room_uuid":config.roomid}).then( 
-     function(data) {
+    $.post(SERVER_API + "clip", {"name": "lsClip","user_uuid":user_uuid,"room_uuid":config.roomid}).then( 
+        function(data) {
             recordingClipUUID = data.uuid;
             wrtc.emit('recording_started', {"name":recordingClipUUID});
             mediaRecorder.onstop = handleStop;
             mediaRecorder.ondataavailable = handleDataAvailable;
             mediaRecorder.start(100);
             console.log('MediaRecorder started', mediaRecorder);
-     }
-  )
+        }
+    )
+}
 
 function stopRecording() {
   mediaRecorder.stop();
