@@ -349,7 +349,6 @@ if (!args.db_off) {
         })
     });
 
-
     app.delete('/api/clipAnchor/:clip_uuid/:anchor_uuid', function (req, res) {
        db.getClip(res,req.params.clip_uuid,function(clipData) {
             if (clipData.uuid) {
@@ -383,9 +382,11 @@ if (!args.db_off) {
             if (userData.uuid) {
                 db.getRoom(res,req.body.room_uuid,function(roomData) {
                     if (roomData.length > 0) {
-                        db.addUserToRoom(res,req.body.room_uuid,req.body.user_uuid, function(data) {
-                            res.status(201).json(data)
-                        });
+                            db.updateUserRoom(res,true,true,util.generateRandomId(),req.body,function(userRoomData) {
+                                db.getUserRoom(res,userRoomData.uuid,function(data) {
+                                    res.status(201).json(data)
+                                })
+                            })
                     } else {
                         let out = {"error":"No room with that UUID"}
                         res.status(404).json(out)
@@ -411,14 +412,18 @@ if (!args.db_off) {
     });
 
     app.put('/api/userRoom/:uuid', function(req, res) { 
-        db.updateUserRoom(res,true,req.params.uuid,req.body,function(data) {
-            res.status(202).json(data)
+        db.updateUserRoom(res,false,true,req.params.uuid,req.body,function(userRoomData) {
+            db.getUserRoom(res,userRoomData.uuid,function(data) {
+                res.status(202).json(data)
+            })
         })
     });
 
     app.patch('/api/userRoom/:uuid', function(req, res) { 
-        db.updateUserRoom(res,false,req.params.uuid,req.body,function(data) {
-            res.status(202).json(data)
+        db.updateUserRoom(res,false,false,req.params.uuid,req.body,function(userRoomData) {
+            db.getUserRoom(res,userRoomData.uuid,function(data) {
+                res.status(202).json(data)
+            })
         })
     });
 

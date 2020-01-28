@@ -618,17 +618,29 @@ module.exports = {
 		})
 	},
 
-	updateUserRoom: (res,put,uuid,body,cb) => {
-		let q = 'update userRoom set ';
+	updateUserRoom: (res,insert,put,uuid,body,cb) => {
+		let q;
+		if (insert) {
+			q = 'insert into ';
+		} else {
+			q = 'update ';
+		}
+		q += ' userRoom set ';
 		let arr = [];
 		let qArr = [];
+		if (typeof body.room_uuid !== 'undefined') { qArr.push('room_uuid = ?'); arr.push(body.room_uuid); }
+		else if (put) { qArr.push('room_uuid = "none"'); }
+		if (typeof body.user_uuid !== 'undefined') { qArr.push('user_uuid = ?'); arr.push(body.user_uuid); }
+		else if (put) { qArr.push('user_uuid = ""'); }
 		if (typeof body.time_ping !== 'undefined') { qArr.push('time_ping = ?'); arr.push(body.time_ping); }
 		else if (put) { qArr.push('time_ping = 0'); }
 		if (typeof body.state !== 'undefined') { qArr.push('state = ?'); arr.push(body.state); }
 		else if (put) { qArr.push('state = 0'); }
+		if (insert) { qArr.push('uuid = ?'); arr.push(uuid); }
+		q += qArr.join(',');
+		if (!insert) { q += ' where uuid = ?'; arr.push(uuid); }
+
 		if (qArr.length > 0 ) { 
-			q += qArr.join(',');
-			q += ' where uuid = ?'; arr.push(uuid);
 			connection.query(q,
 				arr,
 				function (err, result) {

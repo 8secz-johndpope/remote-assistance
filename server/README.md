@@ -224,7 +224,7 @@ Create userRoom
 ```
 post /api/userRoom
 data {"user_uuid":string,"room_uuid":string}
-return {"uuid":"152875912"}
+return {"id":int,"anchor_uuid":string,"clip_uuid":string,"position":json,"uuid":string}
 ```
 
 Get userRoom details
@@ -243,7 +243,7 @@ Update userRoom
 ```
 put|patch /api/userRoom/:uuid
 data {"time_ping":string,"state":int}
-return {"uuid":"string"}
+return {"id":int,"anchor_uuid":string,"clip_uuid":string,"position":json,"uuid":string}
 ```
 
 Delete userRoom
