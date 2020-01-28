@@ -200,9 +200,11 @@ module.exports = {
 			function (err, rows, fields) {
 				if (err) throw err
 				let r = rows.length > 0 ? rows[0] : {}
-				r.thumbnail_url = config.clipLoc + r.uuid + ".jpg";
-				r.webm_url = config.clipLoc + r.uuid + ".webm";
-				r.mp4_url = config.clipLoc + r.uuid + ".mp4";
+				if (rows.length > 0) {
+					r.thumbnail_url = config.clipLoc + r.uuid + ".jpg";
+					r.webm_url = config.clipLoc + r.uuid + ".webm";
+					r.mp4_url = config.clipLoc + r.uuid + ".mp4";
+				}
 				cb(r)
 		})		
 	},

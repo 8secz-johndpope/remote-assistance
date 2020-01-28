@@ -264,7 +264,11 @@ if (db !== null) {
 
     app.get('/api/clip/:uuid', function (req, res) {
         db.getClip(res,req.params.uuid,function(data) {
-            res.json(data)
+            if (data.uuid) {
+                res.json(data)
+            } else {
+                res.status(404).json(data)
+            }
         })
     });
 
