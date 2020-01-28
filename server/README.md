@@ -147,7 +147,7 @@ Create clip
 ```
 post /api/clip
 data {"name":string,"user_uuid":string,"room_uuid":string}
-return {"uuid":"152875912"}
+return {"id":int,"name":string,"user_uuid":string,"room_uuid":string,"uuid":string,"thumbnail_url":url,"webm_url":url,"mp4_url":url}
 ```
 
 Get clip details
@@ -172,7 +172,7 @@ Update clip
 ```
 put|patch /api/clip/:uuid
 data {"name":string,"user_uuid":string,"room_uuid":string,"thumbnail_url":url,"webm_url":url,"mp4_url":url}
-return {"uuid":"string"}
+return {"id":int,"name":string,"user_uuid":string,"room_uuid":string,"uuid":string,"thumbnail_url":url,"webm_url":url,"mp4_url":url}
 ```
 
 Delete a clip

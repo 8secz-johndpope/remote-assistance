@@ -408,8 +408,14 @@ module.exports = {
 		})
 	},
 
-	updateClip: (res,put,uuid,body,cb) => {
-		let q = 'update clip set ';
+	updateClip: (res,insert,put,uuid,body,cb) => {
+		let q;
+		if (insert) {
+			q = 'insert into ';
+		} else {
+			q = 'update ';
+		}
+		q += ' clip set ';
 		let arr = [];
 		let qArr = [];
 		if (typeof body.name !== 'undefined') { qArr.push('name = ?'); arr.push(body.name); }
@@ -418,8 +424,9 @@ module.exports = {
 		else if (put) { qArr.push('user_uuid = 0'); }
 		if (typeof body.room_uuid !== 'undefined') { qArr.push('room_uuid = ?'); arr.push(body.room_uuid); }
 		else if (put) { qArr.push('room_uuid = 0'); }
+		if (insert) { qArr.push('uuid = ?'); arr.push(uuid); }
 		q += qArr.join(',');
-		q += ' where uuid = ?'; arr.push(uuid);
+		if (!insert) { q += ' where uuid = ?'; arr.push(uuid); }
 
 		if (qArr.length > 0) {
 			connection.query(q,

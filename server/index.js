@@ -212,7 +212,7 @@ if (!args.db_off) {
     app.put('/api/anchor/:uuid', function(req, res) { 
         db.updateAnchor(res,false,true,req.params.uuid,req.body,function(anchorData) {
             db.getAnchor(res,anchorData.uuid,function(data) {
-                res.status(201).json(data)
+                res.status(202).json(data)
             })
         })
     });
@@ -220,7 +220,7 @@ if (!args.db_off) {
     app.patch('/api/anchor/:uuid', function(req, res) { 
         db.updateAnchor(res,false,false,req.params.uuid,req.body,function(anchorData) {
             db.getAnchor(res,anchorData.uuid,function(data) {
-                res.status(201).json(data)
+                res.status(202).json(data)
             })
         })
     });
@@ -238,9 +238,11 @@ if (!args.db_off) {
             if (userData.uuid) {
                 db.getRoom(res,req.body.room_uuid,function(roomData) {
                     if (roomData.length > 0) {
-                        db.createClip(res, req.body.name, req.body.user_uuid, req.body.room_uuid, function(data) {
-                        res.status(201).json(data)
-                    })
+                        db.updateClip(res,true,true,util.generateRandomId(),req.body,function(clipData) {
+                            db.getClip(res,clipData.uuid,function(data) {
+                                res.status(201).json(data)
+                            })
+                        })
                     } else {
                         let out = {"error":"No room with that UUID"}
                         res.status(404).json(out)
@@ -272,14 +274,18 @@ if (!args.db_off) {
     });
 
     app.put('/api/clip/:uuid', function(req, res) { 
-        db.updateClip(res,true,req.params.uuid,req.body,function(data) {
-            res.status(202).json(data)
+        db.updateClip(res,false,true,req.params.uuid,req.body,function(clipData) {
+            db.getClip(res,clipData.uuid,function(data) {
+                res.status(202).json(data)
+            })
         })
     });
 
     app.patch('/api/clip/:uuid', function(req, res) { 
-        db.updateClip(res,false,req.params.uuid,req.body,function(data) {
-            res.status(202).json(data)
+        db.updateClip(res,false,false,req.params.uuid,req.body,function(clipData) {
+            db.getClip(res,clipData.uuid,function(data) {
+                res.status(202).json(data)
+            })
         })
     });
 
