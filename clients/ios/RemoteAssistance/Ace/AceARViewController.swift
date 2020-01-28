@@ -179,8 +179,24 @@ class AceARViewController : UIViewController {
 
 extension AceARViewController: WRTCClientDelegate {
     func wrtc(_ wrtc: WRTCClient, didReceiveData data: Data) {
+        //let text = String(data: data, encoding: .utf8) ?? "(Binary: \(data.count) bytes)"
+        //print("wrtc: received datachannel message \(text)")
         let text = String(data: data, encoding: .utf8) ?? "(Binary: \(data.count) bytes)"
         print("wrtc: received datachannel message \(text)")
+        let coords = text.components(separatedBy: ",")
+        var textContent = ""
+        if coords.count >= 3 {
+            textContent = coords[2]
+        }
+        
+        if let x = Int(coords[0]), let y = Int(coords[1]) {
+            DispatchQueue.main.async {
+                let js = "showMark(\(x),\(y),\"\(textContent)\",\"rectangle\")"
+                //print("sending js=",js)
+                self.webView?.stringByEvaluatingJavaScript(from: js)
+                //self.webView?.evaluateJavaScript(js, completionHandler: { (res, err) in })
+            }
+        }
     }
 
     func wrtc(_ wrtc:WRTCClient, didAdd stream:RTCMediaStream) {
@@ -221,6 +237,16 @@ extension AceARViewController: ARSessionDelegate {
         self.arView.projectPoint(worldBottomRight)
         ]
         
+        // make sure all corners are in the frame
+        for pt in points {
+            if (pt.x < 0 || pt.y < 0) {
+                return nil
+            }
+            if (CGFloat(pt.x) >= imageSize.width || CGFloat(pt.y) >= imageSize.height) {
+                return nil
+            }
+        }
+
         let scalex = imageSize.width / self.view.frame.width
         let scaley = imageSize.height / self.view.frame.height
         let cgPoints: [CGPoint] = points.map {
