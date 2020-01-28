@@ -234,9 +234,9 @@ module.exports = {
 			function (err, rows, fields) {
 				if (err) throw err
 				for (let i=0; i < rows.length; i++) {
-					rows[i].thumbnailUrl = config.clipLoc + rows[i].uuid + ".jpg";
-					rows[i].webmUrl = config.clipLoc + rows[i].uuid + ".webm";
-					rows[i].mp4Url = config.clipLoc + rows[i].uuid + ".mp4";
+					rows[i].thumbnail_url = config.clipLoc + rows[i].uuid + ".jpg";
+					rows[i].webm_url = config.clipLoc + rows[i].uuid + ".webm";
+					rows[i].mp4_url = config.clipLoc + rows[i].uuid + ".mp4";
 				}
 				cb(rows)
 		})		
