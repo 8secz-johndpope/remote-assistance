@@ -9,6 +9,7 @@
 import UIKit
 import ARKit
 import SceneKit
+import WebRTC
 
 class AceViewController : UIViewController {
     
@@ -21,6 +22,8 @@ class AceViewController : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.wrtc.delegate = self
         
         self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0.4784313725, blue: 1, alpha: 1)
     }
@@ -95,5 +98,19 @@ extension AceViewController : AceUIViewDelegate {
 extension AceViewController : UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
+    }
+}
+
+
+extension AceViewController : WRTCClientDelegate {
+    func wrtc(_ wrtc: WRTCClient, didAdd stream: RTCMediaStream) {
+        if let dict = UserDefaults.standard.object(forKey: "conversation_archive") as? [String:Any] {
+            SocketIOManager.sharedInstance.emit("conversation_archive", dict)
+        }
+    }
+    func wrtc(_ wrtc: WRTCClient, didRemove stream: RTCMediaStream) {
+    }
+
+    func wrtc(_ wrtc: WRTCClient, didReceiveData data: Data) {
     }
 }

@@ -9,7 +9,7 @@
 import UIKit
 import WebKit
 
-class ChatViewController: UIViewController,QRCodeScannerDelegate {
+class ChatViewController: UIViewController {
 
     @IBOutlet weak var webView: WKWebView!
     
@@ -27,15 +27,25 @@ class ChatViewController: UIViewController,QRCodeScannerDelegate {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
+    
+    func generateRandomId(_ length:Int = 9) -> String {
+        let letters = "0123456789"
+        return String((0..<length).map{ _ in letters.randomElement()! })
+    }
 
     func launchRA(dict: NSDictionary) {
-        // let user_uuid = dict["user_uuid"] as? String ?? ""
-        let room_uuid = dict["room_uuid"] as? String ?? ""
+        var roomId = "fxpal"
+        
+        // save to user defaults
+        UserDefaults.standard.set(dict, forKey: "conversation_archive")
 
-        let printer_name = (dict["archive"] as! [String:Any])["printerName"]!
-
-        // TODO: Launch remote assist view controller with room uuid: room_uuid
-        let action = AceAction.SetRoomName(roomName: room_uuid)
+        // create room name based on printer
+        if let printerName = (dict["archive"] as! [String:Any])["printerName"] as? String {
+            roomId = "\(printerName.replacingOccurrences(of:" ", with: "-"))-\(generateRandomId())"
+        }
+        
+        // Launch remote assist view controller with room uuid: roomId
+        let action = AceAction.SetRoomName(roomName: roomId)
         store.ace.dispatch(action)
 
         let vc = AceViewController.instantiate(fromAppStoryboard: .Ace)
@@ -47,6 +57,10 @@ class ChatViewController: UIViewController,QRCodeScannerDelegate {
         nvc.delegate = self
         self.navigationController?.pushViewController(nvc, animated: true)
     }
+        
+}
+    
+extension ChatViewController : QRCodeScannerDelegate {
 
     func qrCodeScannerResponse(code: String) {
         webView.evaluateJavaScript("onQRCodeScanned('\(code)')", completionHandler: nil)
