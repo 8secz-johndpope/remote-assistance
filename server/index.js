@@ -76,10 +76,8 @@ if (!args.db_off) {
 
     app.get('/api/room/:uuid', function (req, res) {
         db.getRoom(res,req.params.uuid,function(data) {
-            db.getActiveRooms(res,data,req.params.uuid,function(activeData) {
-                if (activeData.length) { res.json(activeData[0]); }
-                else { res.status(404).json({}); }
-            })
+            if (data) { res.json(data); }
+            else { res.status(404).json({}); }
         })
     });
 
