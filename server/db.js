@@ -41,7 +41,7 @@ module.exports = {
 			],
 			function (err, rows, fields) {
 				if (err) throw err
-				let ret = []
+				let ret = {}
 				if (rows.length > 0) {
 					ret = { uuid: rows[0].uuid, id: rows[0].id, time_ping: rows[0].time_ping, time_request: rows[0].time_request, time_created: rows[0].time_created, experts: 0, customers: 0 };
 				}

@@ -85,7 +85,7 @@ if (db !== null) {
 
     app.get('/api/room/:uuid', function (req, res) {
         db.getRoom(res,req.params.uuid,function(data) {
-            if (data) { res.json(data); }
+            if (data.uuid) { res.json(data); }
             else { res.status(404).json({}); }
         })
     });
@@ -244,7 +244,7 @@ if (db !== null) {
         db.getUser(res,req.body.user_uuid,function(userData) {
             if (userData.uuid) {
                 db.getRoom(res,req.body.room_uuid,function(roomData) {
-                    if (roomData.length > 0) {
+                    if (roomData.uuid) {
                         db.updateClip(res,true,true,util.generateRandomId(),req.body,function(clipData) {
                             db.getClip(res,clipData.uuid,function(data) {
                                 res.status(201).json(data)
@@ -442,7 +442,7 @@ if (db !== null) {
         db.getUser(res,req.params.user_uuid,function(userData) {
             if (userData.uuid) {
                 db.getRoom(res,req.params.room_uuid,function(roomData) {
-                    if (roomData.length > 0) {
+                    if (roomData.uuid) {
                         db.removeUserFromRoom(res,req.params.room_uuid,req.params.user_uuid, function(data) {
                             res.status(410).json(data)
                         });
