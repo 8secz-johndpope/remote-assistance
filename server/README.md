@@ -166,7 +166,7 @@ return [{"id":int,"name":string,"user_uuid":string,"room_uuid":string,"uuid":str
 Get clips attached to anchor 
 ```
 get /api/clip?anchor_uuid=string
-return [{"position":"{}","id":75,"name":"demo1","user_uuid":"demo","room_uuid":"demo","uuid":"demo1","thumbnailUrl":url,"webmUrl":url,"mp4Url":url}]
+return [{"position":"{}","id":75,"name":"demo1","user_uuid":"demo","room_uuid":"demo","uuid":"demo1","thumbnail_url":url,"webm_url":url,"mp4_url":url}]
 ```
 
 Update clip
