@@ -272,18 +272,6 @@ if (db !== null) {
         })
     });
 
-    app.get('/api/clip', function (req, res) {
-        if (req.query.anchor_uuid) {
-            db.getClipsForAnchor(res,req.params.anchor_uuid,function(data) {
-                res.json(data)
-            })
-        } else {
-            db.getAllClips(res,function(data) {
-                res.json(data)
-            })            
-        }
-    });
-
     app.put('/api/clip/:uuid', function(req, res) { 
         db.updateClip(res,false,true,req.params.uuid,req.body,function(clipData) {
             db.getClip(res,clipData.uuid,function(data) {
@@ -305,6 +293,19 @@ if (db !== null) {
             res.status(410).json(data)
         })
     });
+
+    app.get('/api/clip', function (req, res) {
+        if (req.query.anchor_uuid) {
+            db.getClipsForAnchor(res,req.query.anchor_uuid,function(data) {
+                res.json(data)
+            })
+        } else {
+            db.getAllClips(res,function(data) {
+                res.json(data)
+            })            
+        }
+    });
+
 
 
     // clipAnchor
