@@ -170,7 +170,8 @@ navigator.mediaDevices.getUserMedia(constraints).then(
 )
 
 function addUserToRoom(user_uuid) {
-    $.post(SERVER_API + "userRoom", {"user_uuid":user_uuid,"room_uuid":config.roomid}).then( 
+  let d = {"user_uuid":user_uuid,"room_uuid":config.roomid};
+    $.post(SERVER_API + "userRoom", d).then( 
         function(data) {
             console.log('Added user to room', data);
         }

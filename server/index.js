@@ -44,18 +44,27 @@ parser.addArgument(
 
 var args = parser.parseArgs();
 
+var db = null
+if (!args.db_off) {
+    db = require('./db')
+}
+
 // Routing
+app.use(bodyParser.urlencoded())
 app.use(bodyParser.json())
 
 app.use('/static', express.static(__dirname + '/static'))
 
 app.get('/', function (req, res) {
     var roomid = util.generateRandomId();
-    res.redirect('/' + roomid)
+    if (db !== null) {
+        db.updateRoom(res,true,true,roomid,req.body,function(roomData) {
+            res.redirect('/' + roomid)
+        });        
+    }
 });
 
-if (!args.db_off) {
-    const db = require('./db')
+if (db !== null) {
 
     // Chat
     app.get('/chat', function (req, res) {
@@ -377,9 +386,9 @@ if (!args.db_off) {
     //userRoom
     app.post('/api/userRoom', function (req, res) {
         db.getUser(res,req.body.user_uuid,function(userData) {
-            if (userData.uuid) {
+            if (userData.uuid) { 
                 db.getRoom(res,req.body.room_uuid,function(roomData) {
-                    if (roomData.length > 0) {
+                    if (roomData.uuid) {
                             db.updateUserRoom(res,true,true,util.generateRandomId(),req.body,function(userRoomData) {
                                 db.getUserRoom(res,userRoomData.uuid,function(data) {
                                     res.status(201).json(data)
@@ -392,7 +401,7 @@ if (!args.db_off) {
                 })
             } else {
                 let out = {"error":"No user with that UUID"}
-                res.status(404).json(out)
+                res.status(200).json(req.body)
             }
         })
     });
