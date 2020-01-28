@@ -109,15 +109,15 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             room: config.roomid
         });
 
-        user_uuid = Cookies.get('customer_uuid');
-        if (user_uuid === undefined) {
-            $.getJSON(SERVER_API + "createCustomer").then( 
-                function(data) {
+        user_uuid = localStorage.getItem('customer_uuid');
+        if (user_uuid === null) {
+            $.post(SERVER_API + "user", {"type": "customer"}).then( 
+             function(data) {
                     console.log('Created customer', data);
-                    Cookies.set('customer_uuid', data.uuid);
+                    localStorage.setItem('customer_uuid', data.uuid);
                     addUserToRoom(data.uuid);
-                }
-            );
+             }
+            )
         } else {
             console.log('Got customer', user_uuid);
             addUserToRoom(user_uuid);
@@ -135,8 +135,12 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             stream.addEventListener('ended', function() {
                 audio.remove();
             });
-        });
 
+            let convArchive = localStorage.getItem('convArchive');
+            wrtc.emit('conversation_archive', convArchive);
+        
+            console.log(convArchive);
+        });
 
         wrtc.on('camera_update', function(data) {
             if (renderer) {
@@ -170,7 +174,8 @@ navigator.mediaDevices.getUserMedia(constraints).then(
 )
 
 function addUserToRoom(user_uuid) {
-    $.getJSON(SERVER_API + "addUserToRoom/" + "/" + config.roomid + "/" + user_uuid).then( 
+  let d = {"user_uuid":user_uuid,"room_uuid":config.roomid};
+    $.post(SERVER_API + "userRoom", d).then( 
         function(data) {
             console.log('Added user to room', data);
         }
@@ -302,7 +307,8 @@ if (isIOS() && typeof DeviceMotionEvent.requestPermission === 'function') {
 function removeUserFromRoom() {
     $.ajax({
       dataType: "json",
-      url: SERVER_API + "removeUserFromRoom/" + config.roomid + "/" + user_uuid,
+      type: "DELETE",
+      url: SERVER_API + "userRoom/" + user_uuid + "/" + config.roomid,
       async: false, 
       success: function(data) {
            console.log('Removed user from room', data);

@@ -14,7 +14,7 @@ class ChatViewController: UIViewController,QRCodeScannerDelegate {
     @IBOutlet weak var webView: WKWebView!
     
     override func viewDidLoad() {
-        let url = "\(store.ts.state.serverUrl)/chat"
+        let url = "\(store.ace.state.serverUrl)/chat"
         let chatUrl = URL(string:url)
         let request = URLRequest(url: chatUrl!)
         webView.configuration.userContentController.add(self, name: "launchRA")
@@ -32,8 +32,11 @@ class ChatViewController: UIViewController,QRCodeScannerDelegate {
         // let user_uuid = dict["user_uuid"] as? String ?? ""
         let room_uuid = dict["room_uuid"] as? String ?? ""
 
-        let action = TSSetRoomName(roomName: room_uuid)
-        store.ts.dispatch(action)
+        let printer_name = (dict["archive"] as! [String:Any])["printerName"]!
+
+        // TODO: Launch remote assist view controller with room uuid: room_uuid
+        let action = AceAction.SetRoomName(roomName: room_uuid)
+        store.ace.dispatch(action)
 
         let vc = AceViewController.instantiate(fromAppStoryboard: .Ace)
         self.navigationController?.pushViewController(vc, animated: true)

@@ -38,25 +38,20 @@ function injectMsg(msg,msgLabel) {
 }
 
 function launchRA() {
-  $.getJSON(SERVER_API + "createCustomer").then(
-    function(customerData) {
-      $.getJSON(SERVER_API + "createRoom").then( 
-        function(roomData) {
-          $.getJSON(SERVER_API + "addUserToRoom/" + customerData.uuid + "/" + roomData.room_uuid).then( 
-            function(data) {
-              console.log("Connecting user",customerData.uuid,"to room", roomData.room_uuid);
-              // Connect to iOS
-              if (runningNative()) {
-                window.webkit.messageHandlers.launchRA.postMessage(
-                  { 
-                    user_uuid: customerData.uuid,
-                    room_uuid: roomData.room_uuid,
-                    archive: convArchive
-                  });                
-              }
-          })
-      })
-  })
+  localStorage.setItem('convArchive',JSON.stringify(convArchive));
+  $.post(SERVER_API + "room").then( 
+    function(roomData) {
+      if (runningNative()) {
+        window.webkit.messageHandlers.launchRA.postMessage(
+          { 
+            user_uuid: user_uuid,
+            room_uuid: roomData.room_uuid,
+            archive: convArchive //JSON.stringify(convArchive)
+          });                
+      } else {
+          window.location.href = "/" + roomData.uuid + "/customer"; 
+      }
+    })
 }
 
 function launchEmail(msg) { 
@@ -240,6 +235,19 @@ function runningNative() {
   return n;
 }
 
+function loadUser() {
+  if (user_uuid === undefined) {
+    $.post(SERVER_API + "user", {"type": "customer"}).then( 
+      function(data) {
+        console.log('Created customer', data);
+        Cookies.set('customer_uuid', data.uuid);
+      }
+    )
+  }
+}
+
+let user_uuid = Cookies.get('customer_uuid');
+loadUser();
 botResponse(0);
 
 //appendMessage(BOT_NAME, BOT_IMG, "left", "Hello, how may I help you today?", []);

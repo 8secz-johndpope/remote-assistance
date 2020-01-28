@@ -73,8 +73,6 @@ extension AceARViewController {
 
     
     func initARPointer() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(onTap))
-        self.view.addGestureRecognizer(tap)
         self.arrowObject = AceVirtualObject.object(byName: "Arrow.scn")
         
         // animate
@@ -102,14 +100,7 @@ extension AceARViewController {
         }
 
     }
-    
-    @objc func onTap(_ gesture: UITapGestureRecognizer) {
-        print("onTap from AceARViewController")
-        
-        let touchLocation = gesture.location(in: arView)
-        setArrow(touchLocation)
-    }
-    
+
     func setArrow(_ point:CGPoint) {
         if let object = self.arrowObject {
             setDown(object, basedOn: point)

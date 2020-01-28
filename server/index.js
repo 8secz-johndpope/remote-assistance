@@ -8,6 +8,7 @@ const nunjucks = require('nunjucks');
 const argparse = require('argparse');
 const config = require('config');
 const WebSocketServer = require('ws').Server;
+const bodyParser = require('body-parser')
 var dateFilter = require('nunjucks-date-filter');
 
 const room = require('./room');
@@ -43,232 +44,430 @@ parser.addArgument(
 
 var args = parser.parseArgs();
 
+var db = null
+if (!args.db_off) {
+    db = require('./db')
+}
+
 // Routing
+app.use(bodyParser.urlencoded())
+app.use(bodyParser.json())
+
 app.use('/static', express.static(__dirname + '/static'))
 
 app.get('/', function (req, res) {
     var roomid = util.generateRandomId();
-    res.redirect('/' + roomid)
+    if (db !== null) {
+        db.updateRoom(res,true,true,roomid,req.body,function(roomData) {
+            res.redirect('/' + roomid)
+        });        
+    }
 });
 
-if (!args.db_off) {
-    const db = require('./db')
+if (db !== null) {
 
+    // Chat
     app.get('/chat', function (req, res) {
         res.render('chat.html')
     });
 
-    app.get('/api/getRoom/:uuid', function (req, res) {
+
+    // API
+
+    // Room
+    app.post('/api/room', function(req, res) { 
+        db.updateRoom(res,true,true,util.generateRandomId(),req.body,function(roomData) {
+            db.getRoom(res,roomData.uuid,function(data) {
+                res.status(201).json(data)
+            })
+        })
+    });
+
+    app.get('/api/room/:uuid', function (req, res) {
         db.getRoom(res,req.params.uuid,function(data) {
-            db.getActiveRooms(res,data,req.params.uuid,function(activeData) {
-                if (activeData.length) { res.json(activeData[0]) }
-                else { res.json({}) }
+            if (data.uuid) { res.json(data); }
+            else { res.status(404).json({}); }
+        })
+    });
+
+    app.get('/api/room', function (req, res) {
+        if(req.query.active) {
+            db.getActiveRooms(res,[],null,function(data) {
+                res.json(data);
+            })
+        } else {
+            db.getAllRooms(res,function(data) {
+                db.getActiveRooms(res,data,null,function(activeData) {
+                    res.json(activeData);
+                })
+            })            
+        }
+    });
+
+    app.put('/api/room/:uuid', function(req, res) { 
+        db.updateRoom(res,false,true,req.params.uuid,req.body,function(roomData) {
+            db.getRoom(res,roomData.uuid,function(data) {
+                db.getActiveRooms(res,data,req.params.uuid,function(activeData) {
+                    if (activeData.length) { res.status(202).json(activeData[0]); }
+                    else { res.status(404).json({}); }
+                })
             })
         })
     });
 
-    app.get('/api/createRoom', function(req, res) { 
-        db.createRoom(res,function(data) {
-            res.json(data)
+    app.patch('/api/room/:uuid', function(req, res) { 
+        db.updateRoom(res,false,false,req.params.uuid,req.body,function(roomData) {
+            db.getRoom(res,roomData.uuid,function(data) {
+                db.getActiveRooms(res,data,req.params.uuid,function(activeData) {
+                    if (activeData.length) { res.status(202).json(activeData[0]); }
+                    else { res.status(404).json({}); }
+                })
+            })
         })
     });
 
-    app.get('/api/deleteRoom/:uuid', function(req, res) { 
+    app.delete('/api/room/:uuid', function(req, res) { 
         db.deleteRoom(res,req.params.uuid,function(data) {
-            res.json(data)
+            res.status(410).json(data);
         })
     });
 
-    app.get('/api/getActiveRooms', function (req, res) {
-        db.getActiveRooms(res,[],null,function(data) {
-            res.json(data)
-        })
-    });
 
-    app.get('/api/getAllRooms', function (req, res) {
-        db.getAllRooms(res,function(data) {
-            db.getActiveRooms(res,data,null,function(activeData) {
-                res.json(activeData)
+    // User
+    app.post('/api/user', function(req, res) { 
+        db.updateUser(res,true,true,util.generateRandomId(),req.body,function(userData) {
+            db.getUser(res,userData.uuid,function(data) {
+                res.status(201).json(data)
             })
         })
     });
 
-    app.get('/api/getUser/:uuid', function (req, res) {
+    app.post('/api/customer', function (req, res) {
+        db.createUser(res, "customer", function(data) {
+            res.status(201).json(data)
+        })
+    });
+
+    app.post('/api/expert', function (req, res) {
+        db.createUser(res, "expert", function(data) {
+            res.status(201).json(data)
+        })
+    });
+
+    app.get('/api/user/:uuid', function (req, res) {
         db.getUser(res,req.params.uuid,function(data) {
             res.json(data)
         })
     });
 
-    app.get('/api/getAllUsers', function (req, res) {
+    app.get('/api/user', function (req, res) {
         db.getAllUsers(res,function(data) {
             res.json(data)
         })
     });
 
-    app.get('/api/getAnchor/:uuid', function (req, res) {
+    app.put('/api/user/:uuid', function(req, res) { 
+        db.updateUser(res,false,true,req.params.uuid,req.body,function(userData) {
+            db.getUser(res,userData.uuid,function(data) {
+                res.status(202).json(data)
+            })
+        })
+    });
+
+    app.patch('/api/user/:uuid', function(req, res) { 
+        db.updateUser(res,false,false,req.params.uuid,req.body,function(userData) {
+            db.getUser(res,userData.uuid,function(data) {
+                res.status(202).json(data)
+            })
+        })
+    });
+
+    app.delete('/api/user/:uuid', function(req, res) { 
+        db.deleteUser(res,req.params.uuid,function(data) {
+            res.status(410).json(data)
+        })
+    });
+
+
+    // Anchor
+    app.post('/api/anchor', function(req, res) { 
+        db.updateAnchor(res,true,true,util.generateRandomId(),req.body,function(anchorData) {
+            db.getAnchor(res,anchorData.uuid,function(data) {
+                res.status(201).json(data)
+            })
+        })
+    });
+
+    app.get('/api/anchor/:uuid', function (req, res) {
         db.getAnchor(res,req.params.uuid,function(data) {
             res.json(data)
         })
     });
 
-    app.get('/api/getAllAnchors/:text', function (req, res) {
-        db.getAllAnchorsSearch(res,req.params.text,function(data) {
-            res.json(data)
+    app.get('/api/anchor', function (req, res) {
+        if (req.query.text) {
+            db.getAllAnchorsSearch(res,req.query.text,function(data) {
+                res.json(data)
+            })
+        } else {
+            db.getAllAnchors(res,function(data) {
+                res.json(data)
+            })
+        }
+    });
+
+    app.put('/api/anchor/:uuid', function(req, res) { 
+        db.updateAnchor(res,false,true,req.params.uuid,req.body,function(anchorData) {
+            db.getAnchor(res,anchorData.uuid,function(data) {
+                res.status(202).json(data)
+            })
         })
     });
 
-    app.get('/api/getAllAnchors', function (req, res) {
-        db.getAllAnchors(res,function(data) 
-{            res.json(data)
+    app.patch('/api/anchor/:uuid', function(req, res) { 
+        db.updateAnchor(res,false,false,req.params.uuid,req.body,function(anchorData) {
+            db.getAnchor(res,anchorData.uuid,function(data) {
+                res.status(202).json(data)
+            })
         })
     });
 
-    app.get('/api/getClip/:uuid', function (req, res) {
-        db.getClip(res,req.params.uuid,function(data) {
-            res.json(data)
+    app.delete('/api/anchor/:uuid', function(req, res) { 
+        db.deleteAnchor(res,req.params.uuid,function(data) {
+            res.status(410).json(data)
         })
     });
 
-    app.get('/api/getClipsForAnchor/:anchor_uuid/:room_uuid?', function (req, res) {
-        db.getClipsForAnchor(res,req.params.anchor_uuid,req.params.room_uuid,function(data) {
-            res.json(data)
-        })
-    });
 
-    app.get('/api/getAllClips', function (req, res) {
-        db.getAllClips(res,function(data) {
-            res.json(data)
-        })
-    });
-
-    app.get('/api/addClipToAnchor/:clip_uuid/:anchor_uuid/:position_blob', function (req,res) {
-        db.getClip(res,req.params.clip_uuid,function(clipData) {
-            if (clipData.uuid) {
-                db.getAnchor(res,req.params.anchor_uuid,function(anchorData) {
-                    if (anchorData.uuid) {
-                        db.removeClipFromAnchor(res,req.params.anchor_uuid,req.params.clip_uuid,function(data) {
-                            db.addClipToAnchor(res,req.params.anchor_uuid,req.params.clip_uuid,req.params.position_blob,function(data) {
-                                res.json(data)
+    // Clip 
+    app.post('/api/clip', function (req, res) {
+        db.getUser(res,req.body.user_uuid,function(userData) {
+            if (userData.uuid) {
+                db.getRoom(res,req.body.room_uuid,function(roomData) {
+                    if (roomData.uuid) {
+                        db.updateClip(res,true,true,util.generateRandomId(),req.body,function(clipData) {
+                            db.getClip(res,clipData.uuid,function(data) {
+                                res.status(201).json(data)
                             })
                         })
                     } else {
-                        let out = {"error":"No anchor with that UUID"}
-                        res.json(out)
+                        let out = {"error":"No room with that UUID"}
+                        res.status(404).json(out)
                     }
                 })
             } else {
-                let out = {"error":"No clip with that UUID"}
-                res.json(out)
+                let out = {"error":"No user with that UUID"}
+                res.status(404).json(out)
             }
         })
     });
 
-    app.get('/api/removeClipFromAnchor/:clip_uuid/:anchor_uuid', function (req, res) {
+    app.get('/api/clip/:uuid', function (req, res) {
+        db.getClip(res,req.params.uuid,function(data) {
+            if (data.uuid) {
+                res.json(data)
+            } else {
+                res.status(404).json(data)
+            }
+        })
+    });
+
+    app.put('/api/clip/:uuid', function(req, res) { 
+        db.updateClip(res,false,true,req.params.uuid,req.body,function(clipData) {
+            db.getClip(res,clipData.uuid,function(data) {
+                res.status(202).json(data)
+            })
+        })
+    });
+
+    app.patch('/api/clip/:uuid', function(req, res) { 
+        db.updateClip(res,false,false,req.params.uuid,req.body,function(clipData) {
+            db.getClip(res,clipData.uuid,function(data) {
+                res.status(202).json(data)
+            })
+        })
+    });
+
+    app.delete('/api/clip/:uuid', function(req, res) { 
+        db.deleteClip(res,req.params.uuid,function(data) {
+            res.status(410).json(data)
+        })
+    });
+
+    app.get('/api/clip', function (req, res) {
+        if (req.query.anchor_uuid) {
+            db.getClipsForAnchor(res,req.query.anchor_uuid,function(data) {
+                res.json(data)
+            })
+        } else {
+            db.getAllClips(res,function(data) {
+                res.json(data)
+            })            
+        }
+    });
+
+
+
+    // clipAnchor
+    app.post('/api/clipAnchor', function (req,res) {
+        db.getClip(res,req.body.clip_uuid,function(clipData) {
+            if (clipData.uuid) {
+                db.getAnchor(res,req.body.anchor_uuid,function(anchorData) {
+                    if (anchorData.uuid) {
+                        db.removeClipFromAnchor(res,req.body.anchor_uuid,req.body.clip_uuid,function(data) {
+                            db.updateClipAnchor(res,true,true,util.generateRandomId(),req.body,function(clipAData) {
+                                db.getClipAnchor(res,clipAData.uuid,function(data) {
+                                    res.status(201).json(data)
+                                })
+                            })
+                        })
+                    } else {
+                        let out = {"error":"No anchor with that UUID"}
+                        res.status(404).json(out)
+                    }
+                })
+            } else {
+                let out = {"error":"No clip with that UUID"}
+                res.status(404).json(out)
+            }
+        })
+    });
+
+    app.get('/api/clipAnchor/:uuid', function (req, res) {
+        db.getClipAnchor(res,req.params.uuid,function(data) {
+            res.json(data)
+        })
+    });
+
+    app.get('/api/clipAnchor', function (req, res) {
+        db.getAllClipAnchors(res,function(data) {
+            res.json(data)
+        })
+    });
+
+    app.put('/api/clipAnchor/:uuid', function(req, res) { 
+        db.updateClipAnchor(res,false,true,req.params.uuid,req.body,function(clipAData) {
+            db.getClipAnchor(res,clipAData.uuid,function(data) {
+             res.status(202).json(data)
+            })
+        })
+    });
+
+    app.patch('/api/clipAnchor/:uuid', function(req, res) { 
+        db.updateClipAnchor(res,false,false,req.params.uuid,req.body,function(clipAData) {
+            db.getClipAnchor(res,clipAData.uuid,function(data) {
+             res.status(202).json(data)
+            })
+        })
+    });
+
+    app.delete('/api/clipAnchor/:clip_uuid/:anchor_uuid', function (req, res) {
        db.getClip(res,req.params.clip_uuid,function(clipData) {
             if (clipData.uuid) {
                 db.getAnchor(res,req.params.anchor_uuid,function(anchorData) {
                     if (anchorData.uuid) {
                         db.removeClipFromAnchor(res,req.params.anchor_uuid,req.params.clip_uuid,function(data) {
-                            res.json(data)
+                            res.status(410).json(data)
                         })
                     } else {
                         let out = {"error":"No anchor with that UUID"}
-                        res.json(out)
+                        res.status(404).json(out)
                     }
                 })
             } else {
                 let out = {"error":"No clip with that UUID"}
-                res.json(out)
+                res.status(404).json(out)
             }
         })
      });
 
-    app.get('/api/createCustomer', function (req, res) {
-        db.createUser(res, "customer", function(data) {
-            res.json(data)
+    app.delete('/api/clipAnchor/:uuid', function(req, res) { 
+        db.deleteClipAnchor(res,req.params.uuid,function(data) {
+            res.status(410).json(data)
         })
     });
 
-    app.get('/api/createExpert', function (req, res) {
-        db.createUser(res, "expert", function(data) {
-            res.json(data)
-        })
-    });
 
-    app.get('/api/deleteUser/:uuid', function(req, res) { 
-        db.deleteUser(res,req.params.uuid,function(data) {
-            res.json(data)
-        })
-    });
-   
-
-    app.get('/api/createClip/:name/:user_uuid/:room_uuid', function (req, res) {
-        db.getUser(res,req.params.user_uuid,function(userData) {
-            if (userData.uuid) {
-                db.getRoom(res,req.params.room_uuid,function(roomData) {
-                    if (roomData.length > 0) {
-                        db.createClip(res, req.params.name, req.params.user_uuid, req.params.room_uuid, function(data) {
-                        res.json(data)
-                    })
+    //userRoom
+    app.post('/api/userRoom', function (req, res) {
+        db.getUser(res,req.body.user_uuid,function(userData) {
+            if (userData.uuid) { 
+                db.getRoom(res,req.body.room_uuid,function(roomData) {
+                    if (roomData.uuid) {
+                            db.updateUserRoom(res,true,true,util.generateRandomId(),req.body,function(userRoomData) {
+                                db.getUserRoom(res,userRoomData.uuid,function(data) {
+                                    res.status(201).json(data)
+                                })
+                            })
                     } else {
                         let out = {"error":"No room with that UUID"}
-                        res.json(out)
+                        res.status(404).json(out)
                     }
                 })
             } else {
                 let out = {"error":"No user with that UUID"}
-                res.json(out)
+                res.status(200).json(req.body)
             }
         })
     });
 
-    app.get('/api/deleteClip/:uuid', function(req, res) { 
-        db.deleteClip(res,req.params.uuid,function(data) {
+    app.get('/api/userRoom/:uuid', function (req, res) {
+        db.getUserRoom(res,req.params.uuid,function(data) {
             res.json(data)
         })
     });
 
-    app.get('/api/addUserToRoom/:user_uuid/:room_uuid', function (req, res) {
-        db.getUser(res,req.params.user_uuid,function(userData) {
-            if (userData.uuid) {
-                db.getRoom(res,req.params.room_uuid,function(roomData) {
-                    if (roomData.length > 0) {
-                        db.addUserToRoom(res,req.params.room_uuid,req.params.user_uuid, function(data) {
-                            res.json(data)
-                        });
-                    } else {
-                        let out = {"error":"No room with that UUID"}
-                        res.json(out)
-                    }
-                })
-            } else {
-                let out = {"error":"No user with that UUID"}
-                res.json(out)
-            }
+    app.get('/api/userRoom', function (req, res) {
+        db.getAllUserRooms(res,function(data) {
+            res.json(data)
         })
     });
 
-    app.get('/api/removeUserFromRoom/:user_uuid/:room_uuid', function (req, res) {
+    app.put('/api/userRoom/:uuid', function(req, res) { 
+        db.updateUserRoom(res,false,true,req.params.uuid,req.body,function(userRoomData) {
+            db.getUserRoom(res,userRoomData.uuid,function(data) {
+                res.status(202).json(data)
+            })
+        })
+    });
+
+    app.patch('/api/userRoom/:uuid', function(req, res) { 
+        db.updateUserRoom(res,false,false,req.params.uuid,req.body,function(userRoomData) {
+            db.getUserRoom(res,userRoomData.uuid,function(data) {
+                res.status(202).json(data)
+            })
+        })
+    });
+
+    app.delete('/api/userRoom/:user_uuid/:room_uuid', function (req, res) {
         db.getUser(res,req.params.user_uuid,function(userData) {
             if (userData.uuid) {
                 db.getRoom(res,req.params.room_uuid,function(roomData) {
-                    if (roomData.length > 0) {
+                    if (roomData.uuid) {
                         db.removeUserFromRoom(res,req.params.room_uuid,req.params.user_uuid, function(data) {
-                            res.json(data)
+                            res.status(410).json(data)
                         });
                     } else {
                         let out = {"error":"No room with that UUID"}
-                        res.json(out)
+                        res.status(404).json(out)
                     }
                 })
             } else {
                 let out = {"error":"No user with that UUID"}
-                res.json(out)
+                res.status(404).json(out)
             }
         })
     });
 
+    app.delete('/api/userRoom/:uuid', function(req, res) { 
+        db.deleteUserRoom(res,req.params.uuid,function(data) {
+            res.status(410).json(data)
+        })
+    });
+
+    // End API
 }
+
 
 app.get('/help', function (req, res) {
     res.render('help.html')

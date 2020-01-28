@@ -11,42 +11,115 @@ import ARKit
 import AVKit
 import Toast_Swift
 
+class ObjectAnnotationNode : SCNNode {
+    
+    var url:URL?
+    
+    init(geometry: SCNGeometry?) {
+        super.init()
+        self.geometry = geometry
+        self.categoryBitMask = 0x1
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 extension AceARViewController {
     
     func initObjectDetection() {
         self.objectGroupName = "VariousPrinters"
+        self.imageGroupName = "AR Resources"
     }
     
-    func searchForObjects() {
-        if let referenceObjects = ARReferenceObject.referenceObjects(inGroupNamed: self.objectGroupName, bundle: nil) {
-            self.view.makeToast("Starting search for \(self.objectGroupName!)...", position: .center)
+    func objectAnnotationViewWillAppear() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(onTap))
+        tap.delegate = self.parent as? UIGestureRecognizerDelegate
+        self.parent?.view.addGestureRecognizer(tap)
+        self.loadInteralAssets()
+    }
+    
+    func objectAnnotationViewWillDisappear() {
+        self.view.removeGestureRecognizers()
+        self.anchorFound = false
+    }
+    
+    @objc func searchForObjects() {
+        self.view.makeToast("Starting search for \(self.objectGroupName!)...", position: .bottom)
+        self.anchorFound = false
+        var foundAllObjects = true
+        if let referenceObjects = ARReferenceObject.referenceObjects(inGroupNamed: self.objectGroupName, bundle: Bundle.main) {
             self.configuration.detectionObjects = referenceObjects
-            arView.session.run(self.configuration)
         }
         else {
-            self.showMessage(title:"Assets Missing", message: "Missing expected asset catalog: \(String(describing: self.objectGroupName))")
+            foundAllObjects = false
+            self.showMessage(title:"Assets Missing", message: "Missing expected assets in catalog: \(String(describing: self.objectGroupName))")
+        }
+        if let referenceImages = ARReferenceImage.referenceImages(inGroupNamed: self.imageGroupName, bundle: Bundle.main) {
+            self.configuration.detectionImages = referenceImages
+        }
+        else {
+            foundAllObjects = false
+            self.showMessage(title:"Assets Missing", message: "Missing expected assets in catalog: \(String(describing: self.imageGroupName))")
+        }
+        if foundAllObjects {
+            let options: ARSession.RunOptions = [.resetTracking, .removeExistingAnchors]
+            arView.session.run(self.configuration, options: options)
         }
     }
     
+    @objc func pauseSession() {
+        self.arView.session.pause()
+    }
+
     func objectAnnotation(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        if let _ = anchor as? ARObjectAnchor {
-            // TODO: Load assets for the object detected
-            self.loadInteralAssets()
+        self.renderer = renderer
+        
+        if anchor.name?.hasPrefix("object") == false {
+            return
+        }
+
+        if !self.anchorFound {
+            if let _ = anchor as? ARImageAnchor {
+                self.anchorFound = true
+                print("ObjectAnnotation found imageAnchor!")
+                DispatchQueue.main.async {
+                self.view.makeToast("Found anchor \(anchor.name ?? "Unknown")", position: .center)
+                    for i in 0..<self.clickableImages.count {
+                        let material = SCNMaterial()
+                        material.diffuse.contents = self.clickableImages[i]
+                        let url = self.videoURLs[i]
+                        let clickableNode = self.buildNode(material: material, scnVector3: self.imagePositions[i], url: url)
+                        let orientationNode = SCNNode()
+                        // inverse quat
+                        orientationNode.orientation = SCNVector4(x: -node.orientation.x, y: -node.orientation.y, z:-node.orientation.z, w: node.orientation.w)
+                        orientationNode.addChildNode(clickableNode)
+                        node.addChildNode(orientationNode)
+                    }
+                }
+            }
             
-            DispatchQueue.main.async {
-                
-                for i in 0..<self.clickableImages.count {
-                    let material = SCNMaterial()
-                    material.diffuse.contents = self.clickableImages[i]
-                    let clickableNode = self.buildNode(material: material, scnVector3: self.imagePositions[i])
-                    node.addChildNode(clickableNode)
+            if let _ = anchor as? ARObjectAnchor {
+                self.anchorFound = true
+                print("ObjectAnnotation found objectAnchor!")
+                DispatchQueue.main.async {
+                    self.view.makeToast("Found anchor \(anchor.name ?? "Unknown")", position: .center)
+                    for i in 0..<self.clickableImages.count {
+                        let material = SCNMaterial()
+                        material.diffuse.contents = self.clickableImages[i]
+                        let url = self.videoURLs[i]
+                        let clickableNode = self.buildNode(material: material, scnVector3: self.imagePositions[i], url: url)
+                        node.addChildNode(clickableNode)
+                    }
                 }
             }
         }
     }
     
-    func buildNode(material: SCNMaterial, scnVector3: SCNVector3) -> SCNNode {
-        let node = SCNNode(geometry: SCNBox(width: 0.3, height: 0.3, length: 0.001))
+    func buildNode(material: SCNMaterial, scnVector3: SCNVector3, url:URL) -> SCNNode {
+        let node = ObjectAnnotationNode(geometry: SCNBox(width: 0.3, height: 0.3, length: 0.001))
+        node.url = url
         node.geometry?.firstMaterial = material
         node.position = scnVector3
         node.opacity = 1
@@ -66,11 +139,17 @@ extension AceARViewController {
     
     func showVideo(tag:Int) {
         let videoURL = self.videoURLs[tag]
-        let player = AVPlayer(url: videoURL)
+        self.showVideo(url:videoURL)
+    }
+    
+    func showVideo(url:URL) {
+        let player = AVPlayer(url: url)
         let playerViewController = AVKit.AVPlayerViewController()
         playerViewController.player = player
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
         self.navigationController?.pushViewController(playerViewController)
     }
+
 
     func loadInteralAssets() {
         self.clickableImages = [UIImage(named: "PrinterThumb1")!, UIImage(named: "PrinterThumb2")!, UIImage(named: "PrinterThumb3")!]
@@ -81,4 +160,23 @@ extension AceARViewController {
             URL(fileURLWithPath: Bundle.main.path(forResource: "clip3", ofType: "mp4")!)
         ]
     }
+    
+    @objc func onTap(_ gesture: UITapGestureRecognizer) {
+        print("onTap from AceARViewController+ObjectAnnotation")
+
+        let location = gesture.location(in: self.arView)
+
+        let options:[SCNHitTestOption:Any] = [.boundingBoxOnly: true, .categoryBitMask: 0x1]
+        if let hitResults = self.renderer?.hitTest(location, options:options) {
+            for hit in hitResults {
+                if let node = hit.node as? ObjectAnnotationNode,
+                    let url = node.url {
+                    self.showVideo(url: url)
+                } else {
+                    print("didn't find ObjectAnnotationNode \(hit.node)")
+                }
+            }
+        }
+    }
+
 }

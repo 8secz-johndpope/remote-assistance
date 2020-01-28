@@ -46,7 +46,7 @@ extension AceARViewController {
         let context = UIGraphicsGetCurrentContext()
         context?.setStrokeColor(red: 0, green: 0, blue: 0, alpha: 1)
         //context?.setLineWidth(8)
-        context?.stroke(rect, width: 8)
+        context?.stroke(rect, width: 16)
         context?.setFillColor(red: 255, green: 255, blue: 255, alpha: 1)
 
         /*let tl = points[0]

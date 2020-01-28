@@ -41,29 +41,46 @@ class AceARViewController : UIViewController {
     var vrVC:AceVRViewController?
     
     // Object Annotation
+    var renderer:SCNSceneRenderer?
     var objectGroupName:String!
-    var videoTag:Int = -1
+    var imageGroupName:String!
     var clickableImages:[UIImage]!
     var imagePositions:[SCNVector3]!
     var videoURLs:[URL]!
+    var anchorFound = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-    self.navigationController?.setNavigationBarHidden(true, animated: true)
-
         initWebRTCClient()
         initMediaStream()
         initARKit()
         initScreenAR()
         initARPointer()
-        //initObjectDetection()
+        initObjectDetection()
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(true, animated: true)
+
         super.viewWillAppear(animated)
         self.setupAR()
         self.wrtc?.connect()
+        self.objectAnnotationViewWillAppear()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        rectangleNodes.forEach({ $1.removeFromParentNode() })
+        rectangleNodes.removeAll()
+        
+        // Pause the view's session
+        self.arView.session.pause()
+        
+        self.wrtc?.disconnect()
+
+        self.objectAnnotationViewWillDisappear()
     }
     
     func setupAR() {
@@ -98,23 +115,14 @@ class AceARViewController : UIViewController {
     
         configuration.detectionImages = refImages
         configuration.maximumNumberOfTrackedImages = 1
+        
+        // search for objects to annotate
+        self.searchForObjects()
 
         // Run the view's session
         self.arView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
         
-        rectangleNodes.forEach({ $1.removeFromParentNode() })
-        rectangleNodes.removeAll()
-        
-        // Pause the view's session
-        self.arView.session.pause()
-        
-        self.wrtc?.disconnect()
-    }
-    
     func initMediaStream() {
         self.videoSource = self.wrtc?.factory.videoSource()
         let capturer = WRTCCustomCapturer(delegate: self.videoSource)
@@ -143,7 +151,7 @@ class AceARViewController : UIViewController {
     }
         
     func initARKit() {
-        self.arView.debugOptions = [.showFeaturePoints, .showWorldOrigin]
+//        self.arView.debugOptions = [.showFeaturePoints, .showWorldOrigin]
         self.arView.scene = SCNScene()
         self.arView.autoenablesDefaultLighting = true;
         self.arView.delegate = self
@@ -172,8 +180,24 @@ class AceARViewController : UIViewController {
 
 extension AceARViewController: WRTCClientDelegate {
     func wrtc(_ wrtc: WRTCClient, didReceiveData data: Data) {
+        //let text = String(data: data, encoding: .utf8) ?? "(Binary: \(data.count) bytes)"
+        //print("wrtc: received datachannel message \(text)")
         let text = String(data: data, encoding: .utf8) ?? "(Binary: \(data.count) bytes)"
         print("wrtc: received datachannel message \(text)")
+        let coords = text.components(separatedBy: ",")
+        var textContent = ""
+        if coords.count >= 3 {
+            textContent = coords[2]
+        }
+        
+        if let x = Int(coords[0]), let y = Int(coords[1]) {
+            DispatchQueue.main.async {
+                let js = "showMark(\(x),\(y),\"\(textContent)\",\"rectangle\")"
+                //print("sending js=",js)
+                self.webView?.stringByEvaluatingJavaScript(from: js)
+                //self.webView?.evaluateJavaScript(js, completionHandler: { (res, err) in })
+            }
+        }
     }
 
     func wrtc(_ wrtc:WRTCClient, didAdd stream:RTCMediaStream) {
@@ -187,8 +211,9 @@ extension AceARViewController: WRTCClientDelegate {
 
 extension AceARViewController: ARSCNViewDelegate {
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        self.renderer = renderer
         screenAR(renderer, didAdd:node, for:anchor)
-        //objectAnnotation(renderer, didAdd:node, for:anchor)
+        objectAnnotation(renderer, didAdd:node, for:anchor)
     }
 }
 
@@ -213,6 +238,16 @@ extension AceARViewController: ARSessionDelegate {
         self.arView.projectPoint(worldBottomRight)
         ]
         
+        // make sure all corners are in the frame
+        for pt in points {
+            if (pt.x < 0 || pt.y < 0) {
+                return nil
+            }
+            if (CGFloat(pt.x) >= imageSize.width || CGFloat(pt.y) >= imageSize.height) {
+                return nil
+            }
+        }
+
         let scalex = imageSize.width / self.view.frame.width
         let scaley = imageSize.height / self.view.frame.height
         let cgPoints: [CGPoint] = points.map {

@@ -22,8 +22,8 @@ class SocketIOManager {
     var callbacks:[String:NormalCallback] = [String:NormalCallback]()
     
     private init() {
-        self.roomName = store.ts.state.roomName
-        self.url = URL(string: store.ts.state.serverUrl) ?? URL(string: "https://remote-assistance.paldeploy.com")!
+        self.roomName = store.ace.state.roomName
+        self.url = URL(string: store.ace.state.serverUrl) ?? URL(string: "https://remote-assistance.paldeploy.com")!
 
         self.manager = SocketManager(socketURL: self.url,
                                      config: [.log(enableLogging), .selfSigned(true),
@@ -34,7 +34,7 @@ class SocketIOManager {
             self.socket.emit("join", ["room": self.roomName])
         }
         
-        store.ts.subscribe(self)
+        store.ace.subscribe(self)
     }
 
     func connect() {
@@ -79,12 +79,12 @@ class SocketIOManager {
 
 extension SocketIOManager : StoreSubscriber {
     
-    func newState(state: TSState) {
-        if store.ts.state.serverUrl != self.url.absoluteString ||
-            store.ts.state.roomName != self.roomName
+    func newState(state: AceState) {
+        if store.ace.state.serverUrl != self.url.absoluteString ||
+            store.ace.state.roomName != self.roomName
            {
-            self.roomName = store.ts.state.roomName
-            self.url = URL(string: store.ts.state.serverUrl) ?? URL(string: "https://remote-assistance.paldeploy.com")!
+            self.roomName = store.ace.state.roomName
+            self.url = URL(string: store.ace.state.serverUrl) ?? URL(string: "https://remote-assistance.paldeploy.com")!
 
             self.manager.disconnect()
             

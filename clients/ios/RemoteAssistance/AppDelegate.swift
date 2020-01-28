@@ -13,7 +13,7 @@ import ReSwift
 // Put all reducers here
 struct AppStore {
     // tele sekeleton
-    var ts = Store<TSState>(reducer: TSReducer, state: nil)
+    var ace = Store<AceState>(reducer: Reducer, state: nil)
 }
 var store = AppStore()
 
@@ -47,6 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().titleTextAttributes = [
             NSAttributedString.Key.foregroundColor: #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         ]
+        UIBarButtonItem.appearance().tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         
         return true
     }

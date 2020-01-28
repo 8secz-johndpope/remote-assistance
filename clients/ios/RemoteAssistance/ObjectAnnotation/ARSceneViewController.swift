@@ -17,12 +17,14 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
     
     let configuration = ARWorldTrackingConfiguration()
     var objectGroupName:String!
+    var imageGroupName:String!
     var clickableImages:[UIImage]!
     var imagePositions:[SCNVector3]!
     var videoURLs:[URL]!
     var searchBarButton:UIBarButtonItem!
     var pauseBarButton:UIBarButtonItem!
     var renderer:SCNSceneRenderer?
+    var anchorFound = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +34,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
         self.sceneView.delegate = self
         // TODO: This should be pulled from previous activity in other sections of the app
         self.objectGroupName = "VariousPrinters"
+        self.imageGroupName = "AR Resources"
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -40,11 +43,14 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
 
         let tap = UITapGestureRecognizer(target: self, action: #selector(onTap))
         self.view.addGestureRecognizer(tap)
+        // TODO: Optionally load assets from API
+        self.loadInteralAssets()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.sceneView.session.pause()
+        self.anchorFound = false
         
         self.view.removeGestureRecognizers()
     }
@@ -66,13 +72,25 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
     }
     
     @objc func searchForObjects() {
-        if let referenceObjects = ARReferenceObject.referenceObjects(inGroupNamed: self.objectGroupName, bundle: nil) {
-            self.navigationItem.rightBarButtonItem = self.pauseBarButton;
+        self.anchorFound = false
+        var foundAllObjects = true
+        if let referenceObjects = ARReferenceObject.referenceObjects(inGroupNamed: self.objectGroupName, bundle: Bundle.main) {
             self.configuration.detectionObjects = referenceObjects
-            sceneView.session.run(self.configuration)
         }
         else {
-            self.showMessage(title:"Assets Missing", message: "Missing expected asset catalog: \(String(describing: self.objectGroupName))")
+            foundAllObjects = false
+            self.showMessage(title:"Assets Missing", message: "Missing expected assets in catalog: \(String(describing: self.objectGroupName))")
+        }
+        if let referenceImages = ARReferenceImage.referenceImages(inGroupNamed: self.imageGroupName, bundle: Bundle.main) {
+            self.configuration.detectionImages = referenceImages
+        }
+        else {
+            foundAllObjects = false
+            self.showMessage(title:"Assets Missing", message: "Missing expected assets in catalog: \(String(describing: self.imageGroupName))")
+        }
+        if foundAllObjects {
+            let options: ARSession.RunOptions = [.resetTracking, .removeExistingAnchors]
+            sceneView.session.run(self.configuration, options: options)
         }
     }
     
@@ -81,22 +99,37 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        if let _ = anchor as? ARObjectAnchor {
-            // TODO: Optionally load assets from API
-            self.loadInteralAssets()
-            self.renderer = renderer
 
-            DispatchQueue.main.async {
+        self.renderer = renderer
 
-                for i in 0..<self.clickableImages.count {
-                    let material = SCNMaterial()
-                    material.diffuse.contents = self.clickableImages[i]
-                    let clickableNode = self.buildNode(material: material, scnVector3: self.imagePositions[i])
-                    node.addChildNode(clickableNode)
+        if !self.anchorFound {
+            if let _ = anchor as? ARImageAnchor {
+                self.anchorFound = true
+                print("ObjectAnnotation found imageAnchor!")
+                DispatchQueue.main.async {
+                    for i in 0..<self.clickableImages.count {
+                        let material = SCNMaterial()
+                        material.diffuse.contents = self.clickableImages[i]
+                        let clickableNode = self.buildNode(material: material, scnVector3: self.imagePositions[i])
+                        node.addChildNode(clickableNode)
+                    }
+                }
+            }
+            
+            if let _ = anchor as? ARObjectAnchor {
+                self.anchorFound = true
+                print("ObjectAnnotation found objectAnchor!")
+                DispatchQueue.main.async {
+                    for i in 0..<self.clickableImages.count {
+                        let material = SCNMaterial()
+                        material.diffuse.contents = self.clickableImages[i]
+                        let clickableNode = self.buildNode(material: material, scnVector3: self.imagePositions[i])
+                        node.addChildNode(clickableNode)
+                    }
                 }
             }
         }
-    }   
+    }
     
     func buildNode(material: SCNMaterial, scnVector3: SCNVector3) -> SCNNode {
         let node = SCNNode(geometry: SCNBox(width: 0.3, height: 0.3, length: 0.001))

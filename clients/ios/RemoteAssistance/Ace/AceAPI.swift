@@ -24,40 +24,46 @@ class AceAPI {
         let uuid: String
     }
 
-    class UserResponse : Codable {
+    struct User : Codable {
         
         enum UserType : String, Codable {
+            case none
             case customer
             case expert
         }
-
+        
         let id: Int
-        let type: UserType
-        let photo: String?
         let uuid: String
-        let password: String?
-        let email: String?
+        let type: UserType
         let name: String?
+        let email: String?
+        let password: String?
+        let photo_url: String?
     }
     
-    class RoomResponse : Codable {
+    struct Room : Codable {
         let id: Int
         let uuid: String
+        let time_created: Int
         let time_ping: Int?
         let time_request: Int?
-        let time_created: Int?
         let experts: Int?
         let customers: Int?
     }
     
-    class UserToRoomResponse : Codable {
+    struct UserRoom : Codable {
+        let id: Int?
+        let uuid: String?
         let user_uuid: String
         let room_uuid: String
+        let time_ping: Int?
+        let state: Int?
     }
     
-    class AnchorResponse : Codable {
+    struct Anchor : Codable {
 
         enum AnchorType : String, Codable {
+            case none
             case image
             case object
         }
@@ -69,18 +75,18 @@ class AceAPI {
         let name: String
     }
     
-    class ClipResponse : Codable {
+    struct Clip : Codable {
         let id: Int
         let uuid: String
         let name: String
         let user_uuid: String
         let room_uuid: String
-        let thumbnailUrl: String?
-        let webmUrl: String?
-        let mp4Url: String?
+        let thumbnail_url: String?
+        let webm_url: String?
+        let mp4_url: String?
     }
     
-    class AssociateClipToAnchorResponse : Codable {
+    struct AssociateClipToAnchorResponse : Codable {
         let anchor_uuid: String
         let clip_uuid: String
     }
@@ -88,15 +94,32 @@ class AceAPI {
     
     // internal implementation
     private func makeApi(_ path:String) -> RestController? {
-        let url = "\(String(store.ts.state.serverUrl))/api/\(path)"
+        let url = "\(String(store.ace.state.serverUrl))/api/\(path)"
         let api = RestController.make(urlString: url)
         api?.acceptSelfSignedCertificate = self.acceptSelfSignedCertificate
         return api
     }
     
-    private func callApi<T:Decodable>(_ path:String, callback: @escaping (T?, Error?) -> ()) {
+    private func get<T:Codable>(_ path:String, callback: @escaping (T?, Error?) -> ()) {
         guard let api = makeApi(path) else { return }
         api.get(T.self) { result, response in
+            do {
+                let value = try result.value() // response is of type HttpBinResponse
+                DispatchQueue.main.async {
+                    callback(value, nil)
+                }
+            } catch {
+                print("Error performing GET: \(error)")
+                DispatchQueue.main.async {
+                    callback(nil, error)
+                }
+            }
+        }
+    }
+    
+    private func post<T:Codable>(_ path:String, _ data:T, callback: @escaping (T?, Error?) -> ()) {
+        guard let api = makeApi(path) else { return }
+        api.post(data, responseType: T.self) { result, response in
             do {
                 let value = try result.value() // response is of type HttpBinResponse
                 DispatchQueue.main.async {
@@ -112,92 +135,173 @@ class AceAPI {
 
     }
     
-    func createCustomer(callback: @escaping (UuidResponse?, Error?) -> ()) {
-        callApi("createCustomer", callback: callback)
+    private func put<T:Codable>(_ path:String, _ data:T, callback: @escaping (T?, Error?) -> ()) {
+        guard let api = makeApi(path) else { return }
+        api.put(data, responseType: T.self) { result, response in
+            do {
+                let value = try result.value() // response is of type HttpBinResponse
+                DispatchQueue.main.async {
+                    callback(value, nil)
+                }
+            } catch {
+                print("Error performing GET: \(error)")
+                DispatchQueue.main.async {
+                    callback(nil, error)
+                }
+            }
+        }
+
     }
     
-    func createExpert(callback: @escaping (UuidResponse?, Error?) -> ()) {
-        callApi("createExpert", callback: callback)
-    }
-
-    func deleteUser(_ userId:String, callback: @escaping (UuidResponse?, Error?) -> ()) {
-        callApi("deleteUser/\(userId)", callback: callback)
-    }
-
-    func getUser(_ userId:String, callback: @escaping (UserResponse?, Error?) -> ()) {
-        callApi("getUser/\(userId)", callback: callback)
+    private func patch<T:Codable>(_ path:String, _ data:T, callback: @escaping (T?, Error?) -> ()) {
+        guard let api = makeApi(path) else { return }
+        api.patch(data, responseType: T.self) { result, response in
+            do {
+                let value = try result.value() // response is of type HttpBinResponse
+                DispatchQueue.main.async {
+                    callback(value, nil)
+                }
+            } catch {
+                print("Error performing GET: \(error)")
+                DispatchQueue.main.async {
+                    callback(nil, error)
+                }
+            }
+        }
     }
     
-    func getAllUsers(callback: @escaping ([UserResponse]?, Error?) -> ()) {
-        callApi("getAllUsers", callback: callback)
+    private func delete<T:Codable>(_ path:String, callback: @escaping (T?, Error?) -> ()) {
+        guard let api = makeApi(path) else { return }
+        let decodableDeserializer = DecodableDeserializer<T>()
+        api.delete(JSON(), withDeserializer: decodableDeserializer) { result, response in
+            do {
+                let value = try result.value() // response is of type HttpBinResponse
+                DispatchQueue.main.async {
+                    callback(value, nil)
+                }
+            } catch {
+                print("Error performing GET: \(error)")
+                DispatchQueue.main.async {
+                    callback(nil, error)
+                }
+            }
+        }
     }
         
-    func createRoom(callback: @escaping (UuidResponse?, Error?) -> ()) {
-        callApi("createRoom", callback: callback)
+    func createUser(_ user:User, callback: @escaping (User?, Error?) -> ()) {
+        post("user", user, callback: callback)
+    }
+
+    func updateUser(_ user:User, callback: @escaping (User?, Error?) -> ()) {
+        put("user", user, callback: callback)
+    }
+
+    func deleteUser(_ uuid:String, callback: @escaping (UuidResponse?, Error?) -> ()) {
+        delete("user/\(uuid)", callback: callback)
+    }
+
+    func getUser(_ uuid:String, callback: @escaping (User?, Error?) -> ()) {
+        get("user/\(uuid)", callback: callback)
     }
     
-    func deleteRoom(_ userId:String, callback: @escaping (UuidResponse?, Error?) -> ()) {
-        callApi("deleteRoom/\(userId)", callback: callback)
+    func getAllUsers(callback: @escaping ([User]?, Error?) -> ()) {
+        get("user", callback: callback)
     }
 
-    func getRoom(_ roomName:String, callback: @escaping (RoomResponse?, Error?) -> ()) {
-        callApi("getRoom/\(roomName)", callback: callback)
-    }
-
-    func getActiveRooms(callback: @escaping ([RoomResponse]?, Error?) -> ()) {
-        callApi("getActiveRooms", callback: callback)
+    func createRoom(callback: @escaping (Room?, Error?) -> ()) {
+        let room = Room(id:0, uuid:"", time_created: 0, time_ping: nil, time_request: nil, experts: nil, customers: nil)
+        post("room", room, callback: callback)
     }
     
-    func getAllRooms(callback: @escaping ([RoomResponse]?, Error?) -> ()) {
-        callApi("getAllRooms", callback: callback)
+    func updateRoom(_ room:Room, callback: @escaping (Room?, Error?) -> ()) {
+        put("room", room, callback: callback)
     }
 
-    func addUser(_ userId:String, toRoom roomId:String, callback: @escaping (UserToRoomResponse?, Error?) -> ()) {
-        print("url: /api/addUserToRoom/\(userId)/\(roomId)")
-        callApi("addUserToRoom/\(userId)/\(roomId)", callback: callback)
+    func deleteRoom(_ uuid:String, callback: @escaping (UuidResponse?, Error?) -> ()) {
+        delete("room/\(uuid)", callback: callback)
     }
 
-    func removeUser(_ userId:String, fromRoom roomId:String, callback: @escaping (UserToRoomResponse?, Error?) -> ()) {
-        callApi("removeUserFromRoom/\(userId)/\(roomId)", callback: callback)
+    func getRoom(_ uuid:String, callback: @escaping (Room?, Error?) -> ()) {
+        get("room/\(uuid)", callback: callback)
+    }
+
+    func getActiveRooms(callback: @escaping ([Room]?, Error?) -> ()) {
+        get("room?active=1", callback: callback)
+    }
+
+    func getAllRooms(callback: @escaping ([Room]?, Error?) -> ()) {
+        get("room", callback: callback)
+    }
+
+    func addUser(_ userId:String, toRoom roomId:String, callback: @escaping (UserRoom?, Error?) -> ()) {
+        let userRoom = UserRoom(id: 0, uuid: "", user_uuid: userId, room_uuid: roomId, time_ping: nil, state: nil)
+        post("userRoom", userRoom, callback: callback)
+    }
+
+    func removeUser(_ userId:String, fromRoom roomId:String, callback: @escaping (UserRoom?, Error?) -> ()) {
+        delete("userRoom/\(userId)/\(roomId)", callback: callback)
     }
     
-    func getAnchor(_ anchorId:String, callback: @escaping (AnchorResponse?, Error?) -> ()) {
-        callApi("getAnchor/\(anchorId)", callback: callback)
+//    func getUsers(inRoom roomId:String, callback: @escaping (UserRoom?, Error?) -> ()) {
+//        get("userRoom/\(userId)/\(roomId)", callback: callback)
+//    }
+
+    
+    func createAnchor(_ anchor:Anchor, callback: @escaping (Anchor?, Error?) -> ()) {
+        post("anchor", anchor, callback: callback)
     }
 
-    func getAllAnchors(_ text:String = "", callback: @escaping ([AnchorResponse]?, Error?) -> ()) {
-        var path = "getAllAnchors"
+    func updateAnchor(_ anchor:Anchor, callback: @escaping (Anchor?, Error?) -> ()) {
+        put("anchor", anchor, callback: callback)
+    }
+
+    func deleteAnchor(_ uuid:String, callback: @escaping (UuidResponse?, Error?) -> ()) {
+        delete("anchor/\(uuid)", callback: callback)
+    }
+        
+    func getAnchor(_ uuid:String, callback: @escaping (Anchor?, Error?) -> ()) {
+        get("anchor/\(uuid)", callback: callback)
+    }
+
+
+    func getAllAnchors(_ text:String = "", callback: @escaping ([Anchor]?, Error?) -> ()) {
+        var path = "anchor"
         if text != "" {
-            path = "getAllAnchors/\(text)"
+            let encodedText = text.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed)
+            path = "anchor?text=\(encodedText ?? "")"
         }
-        callApi(path, callback: callback)
+        get(path, callback: callback)
+    }
+
+    func createClip(_ clip:Clip, callback: @escaping (Clip?, Error?) -> ()) {
+        post("clip", clip, callback: callback)
+    }
+
+    func updateClip(_ clip:Clip, callback: @escaping (Clip?, Error?) -> ()) {
+        put("clip", clip, callback: callback)
+    }
+
+    func deleteClip(_ uuid:String, callback: @escaping (UuidResponse?, Error?) -> ()) {
+        delete("clip/\(uuid)", callback: callback)
     }
     
-    func createClip(name:String, userId:String, roomId:String, callback: @escaping (UuidResponse?, Error?) -> ()) {
-        callApi("createClip/\(name)/\(userId)/\(roomId)", callback: callback)
+    func getClip(_ uuid:String, callback: @escaping (Clip?, Error?) -> ()) {
+        get("clip/\(uuid)", callback: callback)
     }
 
-    func deleteClip(_ clipId:String, callback: @escaping (UuidResponse?, Error?) -> ()) {
-        callApi("deleteClip/\(clipId)", callback: callback)
+    func getClips(forAnchor anchorId:String, callback: @escaping ([Clip]?, Error?) -> ()) {
+        get("clip?anchor_uuid=\(anchorId)", callback: callback)
     }
 
-    func getClip(_ clipId:String, callback: @escaping (ClipResponse?, Error?) -> ()) {
-        callApi("getClip/\(clipId)", callback: callback)
+    func getAllClips(callback: @escaping ([Clip]?, Error?) -> ()) {
+        get("clip", callback: callback)
     }
 
-    func getClips(forAnchor anchorId:String, andRoom roomId:String, callback: @escaping ([ClipResponse]?, Error?) -> ()) {
-        callApi("getClipsForAnchor/\(anchorId)/\(roomId)", callback: callback)
-    }
-
-    func getAllClips(callback: @escaping ([ClipResponse]?, Error?) -> ()) {
-        callApi("getAllClips", callback: callback)
-    }
-
-    func addClip(_ clipId:String, toAnchor anchorId:String, blobPos:String, callback: @escaping (AssociateClipToAnchorResponse?, Error?) -> ()) {
-        callApi("addClipToAnchor/\(anchorId)/\(clipId)/\(blobPos)", callback: callback)
-    }
-    
-    func removeClip(_ clipId:String, fromAnchor anchorId:String, callback: @escaping (AssociateClipToAnchorResponse?, Error?) -> ()) {
-        callApi("removeClipFromAnchor/\(clipId)/\(anchorId)", callback: callback)
-    }
+//    func addClip(_ clipId:String, toAnchor anchorId:String, blobPos:String, callback: @escaping (AssociateClipToAnchorResponse?, Error?) -> ()) {
+//        callApi("addClipToAnchor/\(anchorId)/\(clipId)/\(blobPos)", callback: callback)
+//    }
+//
+//    func removeClip(_ clipId:String, fromAnchor anchorId:String, callback: @escaping (AssociateClipToAnchorResponse?, Error?) -> ()) {
+//        callApi("removeClipFromAnchor/\(clipId)/\(anchorId)", callback: callback)
+//    }
 }
