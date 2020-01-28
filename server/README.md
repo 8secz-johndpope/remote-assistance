@@ -36,27 +36,27 @@ API
 Create a user
 ```
 post /api/user
-data {"type":"customer|expert"}
-return {"uuid":"string"}
+data {"type":"customer|expert","photo_url":"url_string","password":"","email":"email_string","name":"name_string"}
+return {"id":int,"type":"customer|expert","photo_url":"url_string","uuid":"string","password":"","email":"email_string","name":"name_string"}
 ```
 
 Get user details
 ```
 get /api/user/:uuid
-return {"id":int,"type":"customer|expert","photo":"url_string","uuid":"string","password":"","email":"email_string","name":"name_string"}
+return {"id":int,"type":"customer|expert","photo_url":"url_string","uuid":"string","password":"","email":"email_string","name":"name_string"}
 ```
 
 Get all users
 ```
 get /api/user
-return [{"id":int,"type":"customer|expert","photo":"url_string","uuid":"string","password":"","email":"email_string","name":"name_string"}]
+return [{"id":int,"type":"customer|expert","photo_url":"url_string","uuid":"string","password":"","email":"email_string","name":"name_string"}]
 ```
 
 Update user
 ```
 put|patch /api/user/:uuid
-data {"type":"customer|expert","photo":"url_string","password":"","email":"email_string","name":"name_string"}
-return {"uuid":"string"}
+data {"type":"customer|expert","photo_url":"url_string","password":"","email":"email_string","name":"name_string"}
+return {"id":int,"type":"customer|expert","photo_url":"url_string","uuid":"string","password":"","email":"email_string","name":"name_string"}
 ```
 
 Delete a user 
@@ -69,7 +69,7 @@ return {"uuid":"string"}
 Create a room
 ```
 post /api/room
-return {"uuid":"string"}
+return {"id":int,"time_ping":int,"time_request":int,"time_created":int,"uuid":"string","experts":1,"customers":0}
 ```
 
 Get room details
@@ -94,7 +94,7 @@ Update room
 ```
 put|patch /api/room/:uuid
 data {time_ping":int,"time_request":int,"time_created":int}
-return {"uuid":"string"}
+return {"id":int,"time_ping":int,"time_request":int,"time_created":int,"uuid":"string","experts":1,"customers":0}
 ```
 
 Delete a room 
@@ -216,7 +216,7 @@ return {"uuid":"string"}
 Delete clipAnchor given clip and anchor uuids
 ```
 delete /api/clipAnchor/:clip_uuid/:anchor_uuid
-return {"uuid":"string"}
+return {"clip_uuid":"string","anchor_uuid":"string"}
 ```
 
 
