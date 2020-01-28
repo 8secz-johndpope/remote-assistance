@@ -133,8 +133,14 @@ module.exports = {
 		})
 	},
 
-	updateAnchor: (res,put,uuid,body,cb) => {
-		let q = 'update anchor set ';
+	updateAnchor: (res,insert,put,uuid,body,cb) => {
+		let q;
+		if (insert) {
+			q = 'insert into ';
+		} else {
+			q = 'update ';
+		}
+		q += ' anchor set ';
 		let arr = [];
 		let qArr = [];
 		if (typeof body.type !== 'undefined') { qArr.push('type = ?'); arr.push(body.type); }
@@ -143,8 +149,9 @@ module.exports = {
 		else if (put) { qArr.push('name = ""'); }
 		if (typeof body.url !== 'undefined') { qArr.push('url = ?'); arr.push(body.url); }
 		else if (put) { qArr.push('url = ""'); }
+		if (insert) { qArr.push('uuid = ?'); arr.push(uuid); }
 		q += qArr.join(',');
-		q += ' where uuid = ?'; arr.push(uuid);
+		if (!insert) { q += ' where uuid = ?'; arr.push(uuid); }
 		if (qArr.length > 0) {
 			connection.query(q,
 				arr,

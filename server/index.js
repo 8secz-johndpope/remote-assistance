@@ -184,10 +184,10 @@ if (!args.db_off) {
 
     // Anchor
     app.post('/api/anchor', function(req, res) { 
-        let type = "none";
-        if (req.body.type) { type = req.body.type; }
-        db.createAnchor(res,type,function(data) {
-            res.status(201).json(data)
+        db.updateAnchor(res,true,true,util.generateRandomId(),req.body,function(anchorData) {
+            db.getAnchor(res,anchorData.uuid,function(data) {
+                res.status(201).json(data)
+            })
         })
     });
 
@@ -210,14 +210,18 @@ if (!args.db_off) {
     });
 
     app.put('/api/anchor/:uuid', function(req, res) { 
-        db.updateAnchor(res,true,req.params.uuid,req.body,function(data) {
-            res.status(202).json(data)
+        db.updateAnchor(res,false,true,req.params.uuid,req.body,function(anchorData) {
+            db.getAnchor(res,anchorData.uuid,function(data) {
+                res.status(201).json(data)
+            })
         })
     });
 
     app.patch('/api/anchor/:uuid', function(req, res) { 
-        db.updateAnchor(res,false,req.params.uuid,req.body,function(data) {
-            res.status(202).json(data)
+        db.updateAnchor(res,false,false,req.params.uuid,req.body,function(anchorData) {
+            db.getAnchor(res,anchorData.uuid,function(data) {
+                res.status(201).json(data)
+            })
         })
     });
 
