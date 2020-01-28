@@ -303,8 +303,10 @@ if (!args.db_off) {
                 db.getAnchor(res,req.body.anchor_uuid,function(anchorData) {
                     if (anchorData.uuid) {
                         db.removeClipFromAnchor(res,req.body.anchor_uuid,req.body.clip_uuid,function(data) {
-                            db.addClipToAnchor(res,req.body.anchor_uuid,req.body.clip_uuid,req.body.position,function(data) {
-                                res.status(201).json(data)
+                            db.updateClipAnchor(res,true,true,util.generateRandomId(),req.body,function(clipAData) {
+                                db.getClipAnchor(res,clipAData.uuid,function(data) {
+                                    res.status(201).json(data)
+                                })
                             })
                         })
                     } else {
@@ -332,14 +334,18 @@ if (!args.db_off) {
     });
 
     app.put('/api/clipAnchor/:uuid', function(req, res) { 
-        db.updateClipAnchor(res,true,req.params.uuid,req.body,function(data) {
-            res.status(202).json(data)
+        db.updateClipAnchor(res,false,true,req.params.uuid,req.body,function(clipAData) {
+            db.getClipAnchor(res,clipAData.uuid,function(data) {
+             res.status(202).json(data)
+            })
         })
     });
 
     app.patch('/api/clipAnchor/:uuid', function(req, res) { 
-        db.updateClipAnchor(res,false,req.params.uuid,req.body,function(data) {
-            res.status(202).json(data)
+        db.updateClipAnchor(res,false,false,req.params.uuid,req.body,function(clipAData) {
+            db.getClipAnchor(res,clipAData.uuid,function(data) {
+             res.status(202).json(data)
+            })
         })
     });
 

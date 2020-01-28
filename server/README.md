@@ -185,7 +185,7 @@ Create clipAnchor
 ```
 post /api/clipAnchor
 data {"clip_uuid":string,"anchor_uuid":string,"position":json}
-return {"uuid":"152875912"}
+return {"id":int,"anchor_uuid":string,"clip_uuid":string,"position":json,"uuid":string}
 ```
 
 Get clipAnchor details
@@ -204,7 +204,7 @@ Update clipAnchor
 ```
 put|patch /api/clipAnchor/:uuid
 data {"position":json}
-return {"uuid":"string"}
+return {"id":int,"anchor_uuid":string,"clip_uuid":string,"position":json,"uuid":string}
 ```
 
 Delete clipAnchor

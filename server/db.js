@@ -518,12 +518,26 @@ module.exports = {
 		})
 	},
 
-	updateClipAnchor: (res,put,uuid,body,cb) => {
-		let q = 'update clipAnchor set ';
+	updateClipAnchor: (res,insert,put,uuid,body,cb) => {
+		let q;
+		if (insert) {
+			q = 'insert into ';
+		} else {
+			q = 'update ';
+		}
+		q += ' clipAnchor set ';
 		let arr = [];
-		if (typeof body.position !== 'undefined') { q += 'position = ? '; arr.push(body.position); }
-		else if (put) { q += 'position = 0 '; }
-		q += 'where uuid = ?'; arr.push(uuid);
+		let qArr = [];
+		if (typeof body.clip_uuid !== 'undefined') { qArr.push('clip_uuid = ?'); arr.push(body.clip_uuid); }
+		else if (put) { qArr.push('clip_uuid = "none"'); }
+		if (typeof body.anchor_uuid !== 'undefined') { qArr.push('anchor_uuid = ?'); arr.push(body.anchor_uuid); }
+		else if (put) { qArr.push('anchor_uuid = ""'); }
+		if (typeof body.position !== 'undefined') { qArr.push('position = ?'); arr.push(body.position); }
+		else if (put) { qArr.push('position = ""'); }
+		if (insert) { qArr.push('uuid = ?'); arr.push(uuid); }
+		q += qArr.join(',');
+		if (!insert) { q += ' where uuid = ?'; arr.push(uuid); }
+
 		connection.query(q,
 			arr,
 			function (err, result) {
