@@ -43,10 +43,11 @@ class AceARViewController : UIViewController {
     // Object Annotation
     var renderer:SCNSceneRenderer?
     var objectGroupName:String!
-    var videoTag:Int = -1
+    var imageGroupName:String!
     var clickableImages:[UIImage]!
     var imagePositions:[SCNVector3]!
     var videoURLs:[URL]!
+    var anchorFound = false
 
     override func viewDidLoad() {
         super.viewDidLoad()

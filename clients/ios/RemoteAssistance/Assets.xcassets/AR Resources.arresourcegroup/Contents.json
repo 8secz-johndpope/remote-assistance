@@ -5,10 +5,10 @@
   },
   "resources" : [
     {
-      "filename" : "demo_image_1.arreferenceimage"
+      "filename" : "object_demo_image_1.arreferenceimage"
     },
     {
-      "filename" : "demo_image_2.arreferenceimage"
+      "filename" : "object_demo_image_2.arreferenceimage"
     },
     {
       "filename" : "screenar_card.arreferenceimage"
