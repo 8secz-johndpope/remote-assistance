@@ -1,12 +1,13 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
 :root{
 --blue:#3d73d3;
 }
 
-body{font-family:Arial}
-/*background-image:url(wood.jpg)*/
 
-}
-canvas,img{object-fit:contain;background-color:gray;vertical-align:top;border:1px solid blue;background-color:#ccc}
+body{font-family:'Open Sans',Arial,sans-serif;}
+
+canvas{object-fit:contain;background-color:gray;vertical-align:top;border:0px solid var(--blue);background-color:#ccc}
 #overlay{position:absolute;width:100%;height:100%;overflow:hidden}
 #sourcecanvas{position:absolute;object-fit:contain;width:100%;height:100%;overflow:hidden}
 #correctedcanvas{float:right;margin-right:16px;background-color:#ccc;width:400px;height:300px;object-fit:contain}
