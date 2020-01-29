@@ -36,6 +36,73 @@ correctedcanvas.addEventListener('click',function (evt) {
       console.error('no wrtc.sendChannel for sending click',x,y);
 });
 
+function OneEuroFilter(freq, mincutoff, beta, dcutoff){
+	var that = {};
+	var x = LowPassFilter(alpha(mincutoff));
+	var dx = LowPassFilter(alpha(dcutoff));
+	var lastTime = undefined;
+	
+	mincutoff = mincutoff || 1;
+	beta = beta || 0;
+	dcutoff = dcutoff || 1;
+	
+	function alpha(cutoff){
+		var te = 1 / freq;
+		var tau = 1 / (2 * Math.PI * cutoff);
+		return 1 / (1 + tau / te);
+	}
+	
+	that.filter = function(v, timestamp){
+		if(lastTime !== undefined && timestamp !== undefined)
+			freq = 1 / (timestamp - lastTime);
+		lastTime = timestamp;
+		var dvalue = x.hasLastRawValue() ? (v - x.lastRawValue()) * freq : 0;
+		var edvalue = dx.filterWithAlpha(dvalue, alpha(dcutoff));
+		var cutoff = mincutoff + beta * Math.abs(edvalue);
+		return x.filterWithAlpha(v, alpha(cutoff));
+	}
+	
+	return that;
+}
+
+function LowPassFilter(alpha, initval){
+	var that = {};
+	var y = initval || 0;
+	var s = y;
+	
+	function lowpass(v){
+		y = v;
+		s = alpha * v + (1 - alpha) * s;
+		return s;
+	}
+	
+	that.filter = function(v){
+		y = v;
+		s = v;
+		that.filter = lowpass;
+		return s;
+	}
+	
+	that.filterWithAlpha = function(v, a){
+		alpha = a;
+		return that.filter(v);
+	}
+	
+	that.hasLastRawValue = function(){
+		return that.filter === lowpass;
+	}
+	
+	that.lastRawValue = function(){
+		return y;
+	}
+	
+	return that;
+}
+
+var freq = 30;
+var filterx = OneEuroFilter(freq, 1, 0.01, 1);
+var filtery = OneEuroFilter(freq, 1, 0.01, 1);
+
 function sarAnimate(scopeCanvas2d)
 {
   let ctx = scopeCanvas2d.getContext('2d');
@@ -77,9 +144,81 @@ function sarAnimate(scopeCanvas2d)
       correctedctx.font = '24px Arial';
       correctedctx.fillText('HAND',40,40);
     }
+    let fingerPosition = detectFingerTip(correctedctx.getImageData(0,0,correctedcanvas.width,correctedcanvas.height));
+    if (fingerPosition)
+    {
+      correctedctx.fillStyle = 'red';
+      correctedctx.beginPath();
+      correctedctx.ellipse(fingerPosition.x,fingerPosition.y,8,8,0,0,2*Math.PI);
+      correctedctx.fill();
+    }
   }
   else
     correctedcanvas.style.opacity = 0.1;
+}
+
+function detectFingerTip(imgData) {
+  let data = imgData.data;
+  let canvasw = imgData.width;
+  let canvash = imgData.height;
+  let idx = 0;
+  let miny = -1;
+  let rows = {};
+  let minx = canvasw;
+  let maxx = 0;
+  for (let y=0;y<canvash;y++)
+  {
+    for (let x=0;x<canvasw;x++)
+    {
+      if (data[idx] < 100 && data[idx+1] >= 250 && data[idx+2] < 100)
+      {
+        if (rows[y])
+        {
+          rows[y].min = Math.min(x,rows[y].min)
+          rows[y].max = Math.max(x,rows[y].max)
+        }
+        else
+        {
+          rows[y] = {min:x,max:x};
+        }
+      }
+      idx += 4;
+    }
+  }
+  let middlex = 0;
+  let nmiddle = 0;
+  let meanwidth = 0;
+  let top = -1;
+  for (let y in rows)
+  {
+    let row = rows[y];
+    if (row.max - row.min > 50)
+    {
+      if (top === -1)
+        top = +y;
+      middlex += (row.max + row.min) / 2;
+      nmiddle++;
+      meanwidth += row.max - row.min;
+      //ctxtip.fillRect(row.min,y,row.max-row.min,1);
+    }
+    if (nmiddle > 10)
+      break;
+  }
+  if (nmiddle >= 10)
+  {
+    middlex /= nmiddle;
+    //var timestamp = (1.0 / freq) * i;
+		var filteredx = filterx.filter(middlex);
+		var filteredy = filtery.filter(top);
+
+    /*ctx.fillStyle = 'red';
+    ctx.beginPath();
+    ctx.ellipse(filteredx,filteredy,8,8,0,0,2*Math.PI);
+    ctx.fill();*/
+    return {x:filteredx, y: filteredy};
+  }
+  else
+    return null;
 }
 
 var dataChannelCallback = function(data) {

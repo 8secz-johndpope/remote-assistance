@@ -150,6 +150,15 @@ function drawVideo()
       correctedctx.font = '24px Arial';
       correctedctx.fillText('HAND',40,40);
     }
+    let fingerPosition = detectFingerTip(correctedctx.getImageData(0,0,correctedcanvas.width,correctedcanvas.height));
+    if (fingerPosition)
+    {
+      correctedctx.fillStyle = 'red';
+      correctedctx.beginPath();
+      correctedctx.ellipse(fingerPosition.x,fingerPosition.y,8,8,0,0,2*Math.PI);
+      correctedctx.fill();
+    }
+
   }
   else
     correctedcanvas.style.opacity = 0.1;
@@ -158,6 +167,70 @@ function drawVideo()
   //ctx.drawImage(video,border,border,canvasw-2*border,canvash-2*border,0,0,canvasw,canvash); // remove white dots from view
 
   window.requestAnimationFrame(drawVideo);
+}
+
+function detectFingerTip(imgData) {
+  let data = imgData.data;
+  let canvasw = imgData.width;
+  let canvash = imgData.height;
+  let idx = 0;
+  let miny = -1;
+  let rows = {};
+  let minx = canvasw;
+  let maxx = 0;
+  for (let y=0;y<canvash;y++)
+  {
+    for (let x=0;x<canvasw;x++)
+    {
+      if (data[idx] < 100 && data[idx+1] >= 250 && data[idx+2] < 100)
+      {
+        if (rows[y])
+        {
+          rows[y].min = Math.min(x,rows[y].min)
+          rows[y].max = Math.max(x,rows[y].max)
+        }
+        else
+        {
+          rows[y] = {min:x,max:x};
+        }
+      }
+      idx += 4;
+    }
+  }
+  let middlex = 0;
+  let nmiddle = 0;
+  let meanwidth = 0;
+  let top = -1;
+  for (let y in rows)
+  {
+    let row = rows[y];
+    if (row.max - row.min > 50)
+    {
+      if (top === -1)
+        top = +y;
+      middlex += (row.max + row.min) / 2;
+      nmiddle++;
+      meanwidth += row.max - row.min;
+      //ctxtip.fillRect(row.min,y,row.max-row.min,1);
+    }
+    if (nmiddle > 10)
+      break;
+  }
+  if (nmiddle >= 10)
+  {
+    middlex /= nmiddle;
+    //var timestamp = (1.0 / freq) * i;
+		var filteredx = middlex;//filterx.filter(middlex);
+		var filteredy = top;//filtery.filter(top);
+
+    /*ctx.fillStyle = 'red';
+    ctx.beginPath();
+    ctx.ellipse(filteredx,filteredy,8,8,0,0,2*Math.PI);
+    ctx.fill();*/
+    return {x:filteredx, y: filteredy};
+  }
+  else
+    return null;
 }
 
 function detectCorners(ctx)
