@@ -59,6 +59,10 @@ module.exports = function(io) {
 
         socket.on('recording_started', function(data) {
             console.log('creating webm file');
+            if (data.debug) {
+                console.log('fake recording_started event');
+                return;
+            }
             let filePath = config.clipLoc + data.clip_uuid + ".webm";
             fileStream = fs.createWriteStream(filePath, { flags: 'w' });
         });
