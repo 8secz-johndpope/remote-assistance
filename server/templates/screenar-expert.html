@@ -13,6 +13,8 @@
   <canvas id='sourcecanvas'></canvas>
   <div id='overlay'></div>
 </div>
+<div id='results'>
+</div>
 {% endblock %}
 {% block js %}
 <script src="/static/ext/socket.io/2.2.0/socket.io.js"></script>
@@ -41,19 +43,19 @@ var constraints = {
     audio: true
 }
 
-let skinDetected = false;
-let skinTimeout = null;
+//let skinDetected = false;
+//let skinTimeout = null;
 
 var dataChannelCallback = function(data) {
   //console.log('dataChannelCallback data=',data);
-  if (data === 'skin')
+  /*if (data === 'skin')
   {
     clearTimeout(skinTimeout);
     skinDetected = true;
     console.error('skin detected');
     skinTimeout = setTimeout(function () { skinDetected = false; },30);
     return;
-  }
+  }*/
   let anchorSize = [];
   data.split(',').forEach(i => anchorSize.push(parseInt(i)));
   let anchorWidth = anchorSize[0];
@@ -69,12 +71,52 @@ var dataChannelCallback = function(data) {
 }
 
 var wrtc;
+var mediaRecorder = null;
+//var shouldStop = false;
+//var stopped = false;
+var recordedChunks = [];
+var handOverTimeout = null;
+var lastImage = null;
+var anchorPoints = [];
+var sessionStarted = false;
+
+function initAudioRecorder(audiotrack)
+{
+    mediaRecorder = new MediaRecorder(audiotrack);
+    mediaRecorder.addEventListener('dataavailable', function(e) {
+      if (e.data.size > 0) {
+        recordedChunks.push(e.data);
+      }
+    });
+
+    mediaRecorder.addEventListener('stop', function() {
+      console.log('stopped');
+      var audioElement = document.createElement('audio');
+      audioElement.controls = true;
+      let blob = new Blob(recordedChunks);
+      anchorPoints.push({image:lastImage,audio:blob});
+      audioElement.src = URL.createObjectURL(blob);
+      results.appendChild(audioElement);
+      recordedChunks = [];
+      stopped = false;
+      mediaRecorder.start();
+    });
+    //mediaRecorder.start();
+}
+
 navigator.mediaDevices.getUserMedia(constraints).then(
     function(stream) {
         wrtc = new WebRTCClient({ stream: stream, dataChannel:'ScreenAR', dataChannelCallback: dataChannelCallback, room: config.room });
         wrtc.on('stream', function(id, stream) {
-            var video = $('#video')[0]
+            var video = $('#video')[0];
             video.srcObject = stream;
+            var audioTracks = stream.getAudioTracks();
+            if (audioTracks && audioTracks.length > 0)
+            {
+              var audioMediaStream = stream.clone();
+              audioMediaStream.removeTrack(audioMediaStream.getVideoTracks()[0]);
+              initAudioRecorder(audioMediaStream);
+            }
             video.autoplay = true;
         });
     }
@@ -117,46 +159,37 @@ function drawVideo()
   let corners = detectCorners(ctx);
   if (corners !== null)
   {
-    correctedcanvas.style.opacity = 1;
-    /*ctx.lineWidth = 3;
-    ctx.font = '32px Arial';
-    ctx.fillStyle = 'blue';
-    ctx.strokeStyle = 'red';
-    ctx.beginPath();
-    ctx.moveTo(corners.tl.x,corners.tl.y);
-    ctx.lineTo(corners.tr.x,corners.tr.y);
-    ctx.lineTo(corners.br.x,corners.br.y);
-    ctx.lineTo(corners.bl.x,corners.bl.y);
-    ctx.lineTo(corners.tl.x,corners.tl.y);
-    ctx.stroke();*/
+    if (sessionStarted === false)
+    {
+      console.log('started audio recording');
+      sessionStarted = true;
+      mediaRecorder.start();
+    }
+    if (correctedcanvas.style.opacity !== 1)
+      correctedcanvas.style.opacity = 1;
 
     let texture = fxcanvas.texture(canvas);
     fxcanvas.draw(texture).perspective(
-      [
-        corners.tl.x,corners.tl.y,
-        corners.tr.x,corners.tr.y,
-        corners.br.x,corners.br.y,
-        corners.bl.x,corners.bl.y],
-      [
-        0,0,
-        canvasw,0,
-        canvasw,canvash,
-        0,canvash]).update();
-    //fxcanvas.draw(texture).perspective( [0,canvash,canvasw,canvash,0,0,canvasw,0], [0,canvash,canvasw,canvash,0,0,canvasw,0] ).update();
+      [corners.tl.x,corners.tl.y,corners.tr.x,corners.tr.y,corners.br.x,corners.br.y,corners.bl.x,corners.bl.y],
+      [0,0,canvasw,0,canvasw,canvash,0,canvash]).update();
     correctedctx.drawImage(fxcanvas,0,0,correctedcanvas.width,correctedcanvas.height);
-    if (skinDetected)
-    {
-      correctedctx.fillStyle = 'yellow';
-      correctedctx.font = '24px Arial';
-      correctedctx.fillText('HAND',40,40);
-    }
+
     let fingerPosition = detectFingerTip(correctedctx.getImageData(0,0,correctedcanvas.width,correctedcanvas.height));
     if (fingerPosition)
     {
+      clearTimeout(handOverTimeout);      
+      correctedctx.fillStyle = 'yellow';
+      correctedctx.font = '24px Arial';
+      correctedctx.fillText('HAND',40,40);
+
       correctedctx.fillStyle = 'red';
       correctedctx.beginPath();
       correctedctx.ellipse(fingerPosition.x,fingerPosition.y,8,8,0,0,2*Math.PI);
       correctedctx.fill();
+    }
+    else
+    {
+      handOverTimeout = setTimeout(handOutNow,1000);
     }
 
   }
@@ -166,8 +199,85 @@ function drawVideo()
   //const border = 16;
   //ctx.drawImage(video,border,border,canvasw-2*border,canvash-2*border,0,0,canvasw,canvash); // remove white dots from view
 
-  window.requestAnimationFrame(drawVideo);
+  //window.requestAnimationFrame(drawVideo);
+  setTimeout(drawVideo,1000/10);
 }
+
+function handOutNow()
+{
+  if (lastImage === null)
+  {
+    lastImage = correctedcanvas.toDataURL();
+    mediaRecorder.stop();
+  }
+}
+
+function OneEuroFilter(freq, mincutoff, beta, dcutoff){
+	var that = {};
+	var x = LowPassFilter(alpha(mincutoff));
+	var dx = LowPassFilter(alpha(dcutoff));
+	var lastTime = undefined;
+	
+	mincutoff = mincutoff || 1;
+	beta = beta || 0;
+	dcutoff = dcutoff || 1;
+	
+	function alpha(cutoff){
+		var te = 1 / freq;
+		var tau = 1 / (2 * Math.PI * cutoff);
+		return 1 / (1 + tau / te);
+	}
+	
+	that.filter = function(v, timestamp){
+		if(lastTime !== undefined && timestamp !== undefined)
+			freq = 1 / (timestamp - lastTime);
+		lastTime = timestamp;
+		var dvalue = x.hasLastRawValue() ? (v - x.lastRawValue()) * freq : 0;
+		var edvalue = dx.filterWithAlpha(dvalue, alpha(dcutoff));
+		var cutoff = mincutoff + beta * Math.abs(edvalue);
+		return x.filterWithAlpha(v, alpha(cutoff));
+	}
+	
+	return that;
+}
+
+function LowPassFilter(alpha, initval){
+	var that = {};
+	var y = initval || 0;
+	var s = y;
+	
+	function lowpass(v){
+		y = v;
+		s = alpha * v + (1 - alpha) * s;
+		return s;
+	}
+	
+	that.filter = function(v){
+		y = v;
+		s = v;
+		that.filter = lowpass;
+		return s;
+	}
+	
+	that.filterWithAlpha = function(v, a){
+		alpha = a;
+		return that.filter(v);
+	}
+	
+	that.hasLastRawValue = function(){
+		return that.filter === lowpass;
+	}
+	
+	that.lastRawValue = function(){
+		return y;
+	}
+	
+	return that;
+}
+
+var freq = 30;
+var filterx = OneEuroFilter(freq, 1, 0.01, 1);
+var filtery = OneEuroFilter(freq, 1, 0.01, 1);
 
 function detectFingerTip(imgData) {
   let data = imgData.data;
@@ -219,14 +329,9 @@ function detectFingerTip(imgData) {
   if (nmiddle >= 10)
   {
     middlex /= nmiddle;
-    //var timestamp = (1.0 / freq) * i;
-		var filteredx = middlex;//filterx.filter(middlex);
-		var filteredy = top;//filtery.filter(top);
+		var filteredx = filterx.filter(middlex);
+		var filteredy = filtery.filter(top);
 
-    /*ctx.fillStyle = 'red';
-    ctx.beginPath();
-    ctx.ellipse(filteredx,filteredy,8,8,0,0,2*Math.PI);
-    ctx.fill();*/
     return {x:filteredx, y: filteredy};
   }
   else
@@ -270,17 +375,6 @@ function detectCorners(ctx)
   // don't count this frame is less than 94 percent of the pixels were not black
   if (nblack * 100 / canvasw < 94)
     return null;
-  /*let tr = {x:-1,y:-1};
-  idx = 4 * canvasw - 4;
-  for (let i=canvasw;i>=0;i--)
-  {
-    if (data[idx] >= th && data[idx+1] >= th && data[idx+2] >= th)
-    {
-      tr.x = i;
-      break;
-    }
-    idx -= 4;
-  }*/
 
   // bottom gives x positions of bl and br corners
   let bl = {x:-1,y:-1};
@@ -365,80 +459,6 @@ function goodPoint(pt)
 {
   return pt.x !== -1 && pt.y !== -1;
 }
-/*let maxr = 129;
-let maxg = 129;
-let minb = 129;
-function detectBlue(ctx)
-{
-  if (canvasw === 0 || canvash === 0)
-    return;
-  let imgData = ctx.getImageData(0,0,canvasw,canvash);
-  let data = imgData.data;
-  let tl = {x:3000,y:3000};
-  let tr = {x:0,y:3000};
-  let bl = {x:3000,y:0};
-  let br = {x:0,y:0};
-  let x = 0;
-  let y = 0;
-  for (let i=0;i<data.length;i+=4)
-  {
-    // detect blue dots
-    if (data[i] < maxr && data[i+1] < maxg && data[i+2] > minb)
-    {
-      data[i] = 0xff;
-      data[i+1] = 0xff;
-      data[i+2] = 0xff;
-      if (x < bl.x)
-      {
-        bl.x = x;
-        bl.y = y;
-      }
-      if (x > br.x)
-      {
-        br.x = x;
-        br.y = y;
-      }
-    }
-    // detect green dots
-    if (data[i] < maxr && data[i+1] > minb && data[i+2] < maxr)
-    {
-      data[i] = 0xff;
-      data[i+1] = 0xff;
-      data[i+2] = 0xff;
-      if (x < tl.x)
-      {
-        tl.x = x;
-        tl.y = y;
-      }
-      if (x > tr.x)
-      {
-        tr.x = x;
-        tr.y = y;
-      }
-    }
-    else
-    {
-      data[i] = 0x00;
-      data[i+1] = 0x00;
-      data[i+2] = 0x00;
-    }
-    x += 1;
-    if (x > canvasw)
-    {
-      x = 0;
-      y += 1;
-    }
-  }
-  ctx.putImageData(imgData,0,0);
-  ctx.fillStyle = 'red';
-  ctx.fillRect(tl.x,tl.y,20,20);
-  ctx.fillStyle = 'blue';
-  ctx.fillRect(tr.x,tr.y,20,20);
-  ctx.fillStyle = 'green';
-  ctx.fillRect(bl.x,bl.y,20,20);
-  ctx.fillStyle = 'orange';
-  ctx.fillRect(br.x,br.y,20,20);
-}*/
 
 function sendClick(x,y,text)
 {
