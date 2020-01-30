@@ -1,24 +1,45 @@
 Remote Assistance server
 ======================
 
+Prerequisites
+-------------
+
+* Install nvm
+
+  *Mac:*
+  ```bash
+  $ brew install nvm
+  ```
+
+  *Windows:*
+  
+  Download and install: https://github.com/coreybutler/nvm-windows
+
+* Install Node.js
+  ```
+  $ nvm install 10.15.1
+  $ nvm use 10.15.1
+  ```
+ 
+* Install yarn
+  ```
+  $ npm install -g yarn
+  ```
+
+* Install leapmotion
+
+  1. Download Leapmotion V2 software: https://developer.leapmotion.com/setup/desktop
+  2. Start the `Leapmotion Control Panel` app
+  3. Check `Allow Web Apps` under the `General` panel
+  4. Check `Allow Background Apps` under the `General` panel
+  
+  
+  ![Leapmotion Control Panel](https://i.imgur.com/3Mjsiwn.jpg "Leapmotion Control Panel")
+
+
+
 Setup and run
 ------------
-
-Install yarn
-```bash
-$ brew install yarn
-```
-
-Install nvm
-```bash
-$ brew install nvm
-```
-
-Install node with nvm
-```bash
-$ nvm install 10.15.1
-$ nvm use 10.15.1
-```
 
 Install node packages
 ``` bash
@@ -30,8 +51,14 @@ Run
 $ yarn start
 ```
 
-API
-------------
+Connect with browser
+--------------------
+
+1. Expert opens https://[ip-address]:5443/ & clicks on expert
+2. Customer uses a 
+
+API Documentation
+-----------------
 
 Create a user
 ```
