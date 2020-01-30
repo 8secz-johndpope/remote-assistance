@@ -73,17 +73,40 @@ var dataChannelCallback = function(data) {
 
 var wrtc;
 var mediaRecorder = null;
-//var shouldStop = false;
-//var stopped = false;
+var croppedMediaRecorder = null;
+var recordedCroppedChunks = [];
 var recordedChunks = [];
 var handOverTimeout = null;
 var lastImage = null;
 var anchorPoints = [];
 var sessionStarted = false;
 
-function initAudioRecorder(audiotrack)
+function startCroppedMediaRecorder(canvasstream)
 {
-    mediaRecorder = new MediaRecorder(audiotrack);
+    //let options =  {mimeType: 'video/webm;videoBitsPerSecond:2500000;ignoreMutedMedia:true'};
+    croppedMediaRecorder = new MediaRecorder(canvasstream);
+    croppedMediaRecorder.addEventListener('dataavailable', function(e) {
+      if (e.data.size > 0) {
+        recordedCroppedChunks.push(e.data);
+      }
+    });
+
+    croppedMediaRecorder.addEventListener('stop', function() {
+      console.log('stopped');
+      var download = document.createElement('a');
+      download.textContent = 'download video';
+      let blob = new Blob(recordedCroppedChunks);
+      download.href = URL.createObjectURL(blob);
+      download.download = 'test.webm';
+      results.appendChild(download);
+      recordedCroppedChunks = [];
+    });
+    croppedMediaRecorder.start();
+}
+
+function initAudioRecorder(audiostream)
+{
+    mediaRecorder = new MediaRecorder(audiostream);
     mediaRecorder.addEventListener('dataavailable', function(e) {
       if (e.data.size > 0) {
         recordedChunks.push(e.data);
@@ -99,10 +122,8 @@ function initAudioRecorder(audiotrack)
       audioElement.src = URL.createObjectURL(blob);
       results.appendChild(audioElement);
       recordedChunks = [];
-      stopped = false;
       mediaRecorder.start();
     });
-    //mediaRecorder.start();
 }
 
 navigator.mediaDevices.getUserMedia(constraints).then(
@@ -164,6 +185,7 @@ function drawVideo()
     {
       console.log('started audio recording');
       sessionStarted = true;
+      startCroppedMediaRecorder(correctedcanvas.captureStream());
       mediaRecorder.start();
     }
     if (correctedcanvas.style.opacity !== 1)
@@ -461,10 +483,10 @@ function goodPoint(pt)
   return pt.x !== -1 && pt.y !== -1;
 }
 
-function sendClick(x,y,text)
+function sendClick(x,y,w,h,text)
 {
   if (wrtc && wrtc.sendChannel)
-    wrtc.sendChannel.send(`${x},${y},text`);
+    wrtc.sendChannel.send(`${x},${y},${w},${h},text`);
 }
 
 video.addEventListener('loadedmetadata',function (evt) {
@@ -483,7 +505,7 @@ correctedcanvas.addEventListener('click',function (evt) {
     y = (y * 100 / correctedcanvas.offsetHeight) | 0;
     console.log(x,y);
     //showMark(x,y,'Tap');
-    sendClick(x,y,'Tap');
+    sendClick(x,y,30,15,'Tap');
 });
 </script>
 {% endblock%}

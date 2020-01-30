@@ -1,11 +1,11 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Raleway|Open+Sans&display=swap');
 
 :root{
 --blue:#3d73d3;
 }
 
 
-body{font-family:'Open Sans',Arial,sans-serif;}
+body{font-family:'Raleway','Open Sans',Arial,sans-serif;}
 
 canvas{object-fit:contain;background-color:gray;vertical-align:top;border:0px solid var(--blue);background-color:#ccc}
 #overlay{position:absolute;width:100%;height:100%;overflow:hidden}
