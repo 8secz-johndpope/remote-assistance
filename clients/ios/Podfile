@@ -1,6 +1,6 @@
 source 'https://github.com/CocoaPods/Specs.git'
 target 'RemoteAssistance' do
-  platform :ios, '9.0'
+  platform :ios, '13.0'
   use_frameworks!
   pod 'GoogleWebRTC', '~> 1.1'
   pod 'Socket.IO-Client-Swift', '~> 15.2.0'
@@ -10,4 +10,5 @@ target 'RemoteAssistance' do
   pod 'SwifterSwift'
   pod 'Toast-Swift', '~> 5.0.1'
   pod 'RestEssentials', '~> 5.0'
+  pod 'Alamofire', '~> 5.0.0-rc.3'
 end
