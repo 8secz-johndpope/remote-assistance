@@ -48,6 +48,12 @@ class AceARViewController : UIViewController {
     var imagePositions:[SCNVector3]!
     var videoURLs:[URL]!
     var anchorFound = false
+    var nodeFound:SCNNode?
+    var recordingUuid:String?
+    var clipThumbnailReady = false
+    var clipReady = false
+    var liveAnnotation = true
+    var recordingUrl:URL?
 
     override func viewDidLoad() {
         super.viewDidLoad()

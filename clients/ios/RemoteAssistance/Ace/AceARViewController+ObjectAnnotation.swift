@@ -10,6 +10,8 @@ import UIKit
 import ARKit
 import AVKit
 import Toast_Swift
+import AVFoundation
+import Alamofire
 
 class ObjectAnnotationNode : SCNNode {
     
@@ -31,7 +33,33 @@ extension AceARViewController {
     func initObjectDetection() {
         self.objectGroupName = "VariousPrinters"
         self.imageGroupName = "AR Resources"
+        self.initSocket()
     }
+    
+    func initSocket() {
+        let socket = SocketIOManager.sharedInstance
+        socket.on("recording_started") { data, ack in
+            if let object = data[0] as? [String:Any], let uuid = object["clip_uuid"] as? String {
+                self.recordingUuid = uuid
+                self.annotateObjectWithRecordingPlaceholder()
+                self.showToast(message: "recording_started: \(self.recordingUuid ?? "unknown")")
+            }
+            else {
+                self.showMessage(title: "recording_started", message: "data was null")
+            }
+        }
+        socket.on("clip_ready") { data, ack in
+            self.showToast(message: "clip_ready")
+            self.clipReady = true
+            self.tryAnnotateObjectWithRecording()
+        }
+        socket.on("clip_thumbnail_ready") { data, ack in
+            self.showToast(message: "clip_thumbnail_ready")
+            self.clipThumbnailReady = true
+            self.tryAnnotateObjectWithRecording()
+        }
+    }
+
     
     func objectAnnotationViewWillAppear() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(onTap))
@@ -120,7 +148,7 @@ extension AceARViewController {
         }
     }
     
-    func buildNode(material: SCNMaterial, scnVector3: SCNVector3, url:URL) -> SCNNode {
+    func buildNode(material: SCNMaterial, scnVector3: SCNVector3, url:URL?) -> SCNNode {
         let node = ObjectAnnotationNode(geometry: SCNBox(width: 0.3, height: 0.3, length: 0.001))
         node.url = url
         node.geometry?.firstMaterial = material
@@ -181,5 +209,62 @@ extension AceARViewController {
             }
         }
     }
-
+    
+    func annotateObjectWithRecordingPlaceholder() {
+        if let node = self.nodeFound {
+            let material = SCNMaterial()
+            material.diffuse.contents = UIImage(named: "PrinterThumb1")!
+            let placeholderNode = self.buildNode(material: material, scnVector3: SCNVector3(x: 0.0, y: 0.0, z: 0.0), url: nil)
+            node.addChildNode(placeholderNode)
+        }
+    }
+    
+    func tryAnnotateObjectWithRecording() {
+        if self.clipThumbnailReady && self.clipReady {
+            if let recUuid = self.recordingUuid, let node = self.nodeFound {
+                let api = AceAPI.sharedInstance
+                api.getClip(recUuid) { result, error in
+                    if let err = error {
+                        self.showToast(message: "getClip exception: \(err)")
+                        return
+                    }
+                    if let res = result {
+                        let thumb_url_string = store.ace.state.serverUrl + res.thumbnail_url!
+                        let mp4_url = store.ace.state.serverUrl + res.mp4_url!
+                        print(thumb_url_string)
+                        print(mp4_url)
+                        self.recordingUrl = URL(string: mp4_url)
+                        AF.request(thumb_url_string).responseData { (response) in
+                            if response.error == nil {
+                                print(response.result)
+                                if let data = response.data {
+                                    let recordingThumbnail = UIImage(data: data)
+                                    node.enumerateChildNodes { (nd, stop) in
+                                        nd.removeFromParentNode()
+                                    }
+                                    let material = SCNMaterial()
+                                    material.diffuse.contents = recordingThumbnail
+                                    let thumbnailNode = self.buildNode(material: material, scnVector3: SCNVector3(x: 0.0, y: 0.0, z: 0.0), url: nil)
+                                    node.addChildNode(thumbnailNode)
+                                }
+                            }
+                            else {
+                                self.showMessage(title: "Get Thumbnail Error", message: "\(String(describing: response.error))")
+                                print(response.error ?? "getImageFromStor Error")
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                self.showMessage(title: "tryAnnotateObjectWithRecording", message: "Either clip_uuid or discovered node was null")
+            }
+        }
+    }
+    
+    func showToast(message:String) {
+        DispatchQueue.main.async {
+            self.view.makeToast(message)
+        }
+    }
 }
