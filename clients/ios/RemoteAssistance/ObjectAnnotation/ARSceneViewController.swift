@@ -31,7 +31,10 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
     var recordingUuid:String?
     var clipThumbnailReady = false
     var clipReady = false
+    
+    // Yulius - this is my mode switch
     var liveAnnotation = true
+    
     var recordingUrl:URL?
 
     override func viewDidLoad() {
@@ -127,7 +130,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
                         for i in 0..<self.clickableImages.count {
                             let material = SCNMaterial()
                             material.diffuse.contents = self.clickableImages[i]
-                            let clickableNode = self.buildNode(material: material, scnVector3: self.imagePositions[i])
+                            let clickableNode = self.buildNode(material: material, scnVector3: self.imagePositions[i], nodeQuat: node.orientation)
                             node.addChildNode(clickableNode)
                         }
                     }
@@ -159,6 +162,14 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
         node.position = scnVector3
         node.opacity = 1
         return node
+    }
+    
+    func buildNode(material: SCNMaterial, scnVector3: SCNVector3, nodeQuat:SCNQuaternion) -> SCNNode {
+        let node = self.buildNode(material: material, scnVector3: scnVector3)
+        let orientationNode = SCNNode()
+        orientationNode.orientation = SCNVector4(x: -nodeQuat.x, y: -nodeQuat.y, z:-nodeQuat.z, w: nodeQuat.w)
+        orientationNode.addChildNode(node)
+        return orientationNode
     }
 
     func showMessage(title: String, message:String) {
@@ -206,10 +217,13 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
     func initSocket() {
         let socket = SocketIOManager.sharedInstance
         socket.on("recording_started") { data, ack in
-            self.showToast(message: "recording_started")
             if let object = data[0] as? [String:Any], let uuid = object["clip_uuid"] as? String {
                 self.recordingUuid = uuid
                 self.annotateObjectWithRecordingPlaceholder()
+                self.showToast(message: "recording_started: \(self.recordingUuid ?? "unknown")")
+            }
+            else {
+                self.showMessage(title: "recording_started", message: "data was null")
             }
         }
         socket.on("clip_ready") { data, ack in
@@ -222,13 +236,14 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
             self.clipThumbnailReady = true
             self.tryAnnotateObjectWithRecording()
         }
+        socket.connect()
     }
     
     func annotateObjectWithRecordingPlaceholder() {
         if let node = self.nodeFound {
             let material = SCNMaterial()
             material.diffuse.contents = UIImage(named: "PrinterThumb1")!
-            let placeholderNode = self.buildNode(material: material, scnVector3: SCNVector3(x: 0.0, y: 0.0, z: 0.0))
+            let placeholderNode = self.buildNode(material: material, scnVector3: SCNVector3(x: 0.0, y: 0.0, z: 0.0), nodeQuat: node.orientation)
             node.addChildNode(placeholderNode)
         }
     }
@@ -247,33 +262,31 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
                         print(thumb_url_string)
                         print(mp4_url)
                         self.recordingUrl = URL(string: mp4_url)
-                        let recordingThumbnail = self.getImageFromStor(url: thumb_url_string)
-                        node.enumerateChildNodes { (nd, stop) in
-                            nd.removeFromParentNode()
+                        AF.request(thumb_url_string).responseData { (response) in
+                            if response.error == nil {
+                                print(response.result)
+                                if let data = response.data {
+                                    let recordingThumbnail = UIImage(data: data)
+                                    node.enumerateChildNodes { (nd, stop) in
+                                        nd.removeFromParentNode()
+                                    }
+                                    let material = SCNMaterial()
+                                    material.diffuse.contents = recordingThumbnail
+                                    let thumbnailNode = self.buildNode(material: material, scnVector3: SCNVector3(x: 0.0, y: 0.0, z: 0.0), nodeQuat: node.orientation)
+                                    node.addChildNode(thumbnailNode)
+                                }
+                            }
+                            else {
+                                self.showMessage(title: "Get Thumbnail Error", message: "\(String(describing: response.error))")
+                                print(response.error ?? "getImageFromStor Error")
+                            }
                         }
-                        let material = SCNMaterial()
-                        material.diffuse.contents = recordingThumbnail
-                        let thumbnailNode = self.buildNode(material: material, scnVector3: SCNVector3(x: 0.0, y: 0.0, z: 0.0))
-                        node.addChildNode(thumbnailNode)
                     }
                 }
             }
-        }
-    }
-    
-    func getImageFromStor(url:String) -> UIImage? {
-        var image:UIImage?
-        AF.request(url).responseData { (response) in
-            if response.error == nil {
-                print(response.result)
-                if let data = response.data {
-                    image = UIImage(data: data)
-                }
-            }
             else {
-                print(response.error ?? "getImageFromStor Error")
+                self.showMessage(title: "tryAnnotateObjectWithRecording", message: "Either clip_uuid or discovered node was null")
             }
         }
-        return image
     }
 }
