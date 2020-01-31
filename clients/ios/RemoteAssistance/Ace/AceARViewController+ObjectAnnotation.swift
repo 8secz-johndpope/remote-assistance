@@ -213,7 +213,7 @@ extension AceARViewController {
     func annotateObjectWithRecordingPlaceholder() {
         if let node = self.nodeFound {
             let material = SCNMaterial()
-            material.diffuse.contents = UIImage(named: "PrinterThumb1")!
+            material.diffuse.contents = UIImage(named: "Standby")!
             let placeholderNode = self.buildNode(material: material, scnVector3: SCNVector3(x: 0.0, y: 0.0, z: 0.0), url: nil)
             node.addChildNode(placeholderNode)
         }
