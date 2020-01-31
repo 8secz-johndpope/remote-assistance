@@ -728,13 +728,13 @@ $('#pointerSet').click(function(e) {
 // ----- EBD: AR Pointer
 
 $('#dbg-send-recording_started').click(function() {
-    wrtc.emit('recording_started', {"clip_uuid": "549742011", "debug": true})
+    wrtc.emit('recording_started', {"clip_uuid": "demo1", "debug": true})
 });
 
 $('#dbg-send-clip_ready').click(function() {
-    wrtc.emit('clip_ready', {"clip_uuid": "549742011", "debug": true})
+    wrtc.emit('clip_ready', {"clip_uuid": "demo1", "debug": true})
 });
 
 $('#dbg-send-clip_thumbnail_ready').click(function() {
-    wrtc.emit('clip_thumbnail_ready', {"clip_uuid": "549742011", "debug": true})
+    wrtc.emit('clip_thumbnail_ready', {"clip_uuid": "demo1", "debug": true})
 });
