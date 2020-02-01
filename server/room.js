@@ -75,10 +75,10 @@ module.exports = function(io) {
             let cmdTranscode = "ffmpeg -i " + filePathWebm + 
                       " -y -vcodec libx264 -qp 0 -pix_fmt yuv420p -acodec libfdk_aac " +
                       filePathMp4;
-            execCmd(cmdTranscode,"clip_ready",data.clip_uuid,5000);
+            execCmd(cmdTranscode,"clip_ready",data.clip_uuid,2000);
             let cmdCreateThumb = "ffmpeg -i " + filePathWebm + 
                       " -ss 00:00:01.000 -vframes 1 " + filePathThumb;
-            execCmd(cmdCreateThumb,"clip_thumbnail_ready",data.clip_uuid,5500);
+            execCmd(cmdCreateThumb,"clip_thumbnail_ready",data.clip_uuid,2500);
          });
 
         socket.on('recording_blob', function(data) {
