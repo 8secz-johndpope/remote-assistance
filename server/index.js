@@ -251,8 +251,15 @@ if (db !== null) {
                             })
                         })
                     } else {
-                        let out = {"error":"No room with that UUID"}
-                        res.status(404).json(out)
+                        let body = {};
+                        body.time_created = new Date() / 1000;
+                        db.updateRoom(res,true,true,req.body.room_uuid,req.body,function(roomData) {
+                            db.updateClip(res,true,true,util.generateRandomId(),req.body,function(clipData) {
+                                db.getClip(res,clipData.uuid,function(data) {
+                                    res.status(201).json(data)
+                                })
+                            })
+                        })
                     }
                 })
             } else {
