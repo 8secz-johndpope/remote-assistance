@@ -98,7 +98,7 @@ navigator.mediaDevices.getUserMedia(constraints).then(
                 c2.innerHTML = "<b>"+data.responses[i].responseLabel+"<b>";
                 c2.style.verticalAlign = "top";
             }
-            console.log(ca.innerHTML);
+            //console.log(ca.innerHTML);
         }); 
 
         // Create renderer after wrtc because it shares the same socket
@@ -445,7 +445,7 @@ function startRecording() {
     $.post(SERVER_API + "clip", {"name": "lsClip","user_uuid":user_uuid,"room_uuid":config.roomid}).then( 
         function(data) {
             recordingClipUUID = data.uuid;
-            wrtc.emit('recording_started', {"name":recordingClipUUID});
+            wrtc.emit('recording_started', {"clip_uuid":recordingClipUUID});
             mediaRecorder.onstop = handleStop;
             mediaRecorder.ondataavailable = handleDataAvailable;
             mediaRecorder.start(100);
