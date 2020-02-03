@@ -448,7 +448,7 @@ function startRecording() {
             wrtc.emit('recording_started', {"clip_uuid":recordingClipUUID});
             mediaRecorder.onstop = handleStop;
             mediaRecorder.ondataavailable = handleDataAvailable;
-            mediaRecorder.start(100);
+            mediaRecorder.start(500);
             console.log('MediaRecorder started', mediaRecorder);
         }
     )
