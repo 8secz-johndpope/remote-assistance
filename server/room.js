@@ -74,7 +74,7 @@ module.exports = function(io) {
             let filePathMp4 = config.clipLoc + data.clip_uuid + ".mp4";
             let filePathWebm = config.clipLoc + data.clip_uuid + ".webm";
             let cmdTranscode = "ffmpeg -i " + filePathWebm + 
-                      " -y -vcodec libx264 -qp 0 -pix_fmt yuv420p -acodec libfdk_aac " +
+                      " -y -vcodec libx264 -pix_fmt yuv420p -acodec libfdk_aac -vf \"pad=ceil(iw/2)*2:ceil(ih/2)*2\" " +
                       filePathMp4;
             execCmd(cmdTranscode,"clip_ready",data.clip_uuid,2000);
             let cmdCreateThumb = "ffmpeg -i " + filePathWebm + 
