@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css?family=Raleway|Open+Sans&display=swap');
-
 body,
 html {
     margin: 0;
@@ -20,7 +18,7 @@ html {
 --blue:#3d73d3;
 }
 
-body{font-family:'Raleway','Open Sans',Arial,sans-serif;}
+body{font-family:Arial,sans-serif;}
 
 button{margin:16px}
 

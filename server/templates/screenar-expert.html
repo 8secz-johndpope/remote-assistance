@@ -299,13 +299,18 @@ function captureImage()
 {
   if (currentAnchor !== null)
     addARAnnotation(anchorPoints.length-1);
-  let lastImageSrc = correctedcanvas.toDataURL();
+  let lastImageSrc = correctedcanvas.toDataURL('image/jpeg',0.8);
   console.log('captureImage');
   currentAnchor = {points:[],src:lastImageSrc,timestamp:new Date().getTime()/1000}
   anchorPoints.push(currentAnchor);
   
   if (wrtc && wrtc.sendChannel)
-    wrtc.sendChannel.send('captureImage');
+  {
+    //wrtc.sendChannel.send('captureImage' + lastImageSrc);
+    let base64url = lastImageSrc.substring("data:image/jpeg;base64,".length);
+    console.log(base64url);
+    wrtc.sendChannel.send(base64url);
+  }
 
 }
 
