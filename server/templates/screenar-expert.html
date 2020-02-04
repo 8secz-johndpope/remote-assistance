@@ -7,6 +7,7 @@
 {% block header %}{% endblock %}
 {% block content %}
 
+<button onclick='stopSession()'>STOP</button>
 <div style="margin:16px;color:var(--blue);font-size:32px;line-height:64px"><img style="vertical-align:bottom;height:64px;" src='static/images/artutor-icon.png'/> ARTutor</div>
 <canvas id='correctedcanvas'></canvas>
 <video id='video'></video>
@@ -15,6 +16,12 @@
   <div id='overlay'></div>
 </div>
 <div id='results'>
+<audio id='audio' controls></audio>
+<!--img class='snapshot' src='https://www.google.com/logos/google.jpg'>
+<img class='snapshot' src='https://www.google.com/logos/google.jpg'>
+<img class='snapshot' src='https://www.google.com/logos/google.jpg'>
+<img class='snapshot' src='https://www.google.com/logos/google.jpg'>
+<img class='snapshot' src='https://www.google.com/logos/google.jpg'-->
 </div>
 {% endblock %}
 {% block js %}
@@ -76,12 +83,14 @@ var mediaRecorder = null;
 var croppedMediaRecorder = null;
 var recordedCroppedChunks = [];
 var recordedChunks = [];
-var handOverTimeout = null;
+var captureTimeout = null;
 var lastImage = null;
 var anchorPoints = [];
 var sessionStarted = false;
+var sessionStopped = false;
+var stopSessionTimeout = null;
 
-function startCroppedMediaRecorder(canvasstream)
+/*function startCroppedMediaRecorder(canvasstream)
 {
     //let options =  {mimeType: 'video/webm;videoBitsPerSecond:2500000;ignoreMutedMedia:true'};
     croppedMediaRecorder = new MediaRecorder(canvasstream);
@@ -102,7 +111,7 @@ function startCroppedMediaRecorder(canvasstream)
       recordedCroppedChunks = [];
     });
     croppedMediaRecorder.start();
-}
+}*/
 
 function initAudioRecorder(audiostream)
 {
@@ -115,14 +124,16 @@ function initAudioRecorder(audiostream)
 
     mediaRecorder.addEventListener('stop', function() {
       console.log('stopped');
-      var audioElement = document.createElement('audio');
-      audioElement.controls = true;
+      //var audioElement = document.createElement('audio');
+      //audioElement.controls = true;
+      //audioElement.id = 'audio';
       let blob = new Blob(recordedChunks);
-      anchorPoints.push({image:lastImage,audio:blob});
-      audioElement.src = URL.createObjectURL(blob);
-      results.appendChild(audioElement);
+      //audioElement.src = URL.createObjectURL(blob);
+      audio.src = URL.createObjectURL(blob);
+      //results.appendChild(audioElement);
+      //buildARAnnotations();
       recordedChunks = [];
-      mediaRecorder.start();
+      //mediaRecorder.start();
     });
 }
 
@@ -185,7 +196,7 @@ function drawVideo()
     {
       console.log('started audio recording');
       sessionStarted = true;
-      startCroppedMediaRecorder(correctedcanvas.captureStream());
+      //startCroppedMediaRecorder(correctedcanvas.captureStream());
       mediaRecorder.start();
     }
     if (correctedcanvas.style.opacity !== 1)
@@ -200,7 +211,9 @@ function drawVideo()
     let fingerPosition = detectFingerTip(correctedctx.getImageData(0,0,correctedcanvas.width,correctedcanvas.height));
     if (fingerPosition)
     {
-      clearTimeout(handOverTimeout);      
+      currentAnchor.points.push(fingerPosition);
+      clearTimeout(captureTimeout);      
+      captureTimeout = null;
       correctedctx.fillStyle = 'yellow';
       correctedctx.font = '24px Arial';
       correctedctx.fillText('HAND',40,40);
@@ -212,12 +225,20 @@ function drawVideo()
     }
     else
     {
-      handOverTimeout = setTimeout(handOutNow,1000);
+      if (sessionStopped === false && captureTimeout === null)
+        captureTimeout = setTimeout(captureImage,1000);
     }
 
   }
   else
+  {
+    /*if (sessionStopped === false && sessionStarted)
+    {
+      sessionStopped = true;
+      stopSessionTimeout = setTimeout(stopSession,2000);
+    }*/
     correctedcanvas.style.opacity = 0.1;
+  }
 
   //const border = 16;
   //ctx.drawImage(video,border,border,canvasw-2*border,canvash-2*border,0,0,canvasw,canvash); // remove white dots from view
@@ -226,13 +247,66 @@ function drawVideo()
   setTimeout(drawVideo,1000/10);
 }
 
-function handOutNow()
+let currentAnchor = null;
+function stopSession()
 {
-  if (lastImage === null)
-  {
-    lastImage = correctedcanvas.toDataURL();
-    mediaRecorder.stop();
+  if (currentAnchor !== null)
+    addARAnnotation(anchorPoints.length-1);
+  sessionStopped = true;
+  console.log('stopSession');
+  mediaRecorder.stop();
+}
+
+function addARAnnotation(idx)
+{
+  let img = document.createElement('img');
+  img.onload = function () {
+    let canvas = document.createElement('canvas');
+    let ctx = canvas.getContext('2d');
+    canvas.className = 'snapshot';
+    canvas.dataset.timestamp = anchorPoints[+this.dataset.index].timestamp;
+    canvas.width = this.naturalWidth;
+    canvas.height = this.naturalHeight;
+    ctx.drawImage(this,0,0);
+    let points = anchorPoints[+this.dataset.index].points;
+    if (points && points.length > 1)
+    {
+      ctx.strokeStyle = 'rgba(0,0,255,0.8)';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(points[0].x,points[0].y);
+      for (let i=1;i<points.length;i++)
+      {
+        ctx.lineTo(points[i].x,points[i].y);
+      }
+      ctx.stroke();
+    }
+    canvas.addEventListener('click',function () {audio.currentTime = +this.dataset.timestamp; audio.play(); });
+    results.appendChild(canvas);
   }
+  img.dataset.index = idx;
+  img.src = anchorPoints[idx].src;
+}
+
+/*function buildARAnnotations()
+{
+  anchorPoints.forEach((obj,idx) => {
+    addARAnnotation(idx);
+  });
+}*/
+
+function captureImage()
+{
+  if (currentAnchor !== null)
+    addARAnnotation(anchorPoints.length-1);
+  let lastImageSrc = correctedcanvas.toDataURL();
+  console.log('captureImage');
+  currentAnchor = {points:[],src:lastImageSrc,timestamp:new Date().getTime()/1000}
+  anchorPoints.push(currentAnchor);
+  
+  if (wrtc && wrtc.sendChannel)
+    wrtc.sendChannel.send('captureImage');
+
 }
 
 function OneEuroFilter(freq, mincutoff, beta, dcutoff){
@@ -365,7 +439,7 @@ function detectCorners(ctx)
 {
   if (canvasw === 0 || canvash === 0)
   {
-    //console.error('detectCorners fails because canvasw/canvash=0',canvasw,canvash);
+    console.error('detectCorners fails because canvasw/canvash=0',canvasw,canvash);
     return null;
   }
   let imgData = ctx.getImageData(0,0,canvasw,canvash);
@@ -395,9 +469,9 @@ function detectCorners(ctx)
     idx += 4;
   }
 
-  // don't count this frame is less than 94 percent of the pixels were not black
+  /*// don't count this frame if less than 94 percent of the pixels were not black
   if (nblack * 100 / canvasw < 94)
-    return null;
+    return null;*/
 
   // bottom gives x positions of bl and br corners
   let bl = {x:-1,y:-1};
