@@ -739,17 +739,10 @@ $('#toggleScreenAR').click(function(e) {
         enableScreenAR = true;
         $(this).addClass('btn-success');
         c.show();
-        // c.style.zIndex = 3;
-        // c.addEventListener('click', handlePointerClick);
-        // renderer.domElement.removeEventListener('click', onMouseClick, false);
     } else {
         enablePointer = false;
         $(this).removeClass('btn-success');
         c.hide();
-        // c.style.zIndex = 1;
-        // c.removeEventListener('click', handlePointerClick);
-        // renderer.domElement.addEventListener('click', onMouseClick, false);
-        // wrtc.emit('pointer_clear', {});
     }
 });
 $('#correctedcanvas').hide();

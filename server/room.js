@@ -12,7 +12,7 @@ module.exports = function(io) {
       });
     }
 
-    async function execCmd(cmd,event,uuid,waitTime) {
+    async function execCmd(cmd, event, room, uuid, waitTime) {
         await sleep(waitTime); // wait to gather data from client
         console.log(cmd);
         exec(cmd, (error, stdout, stderr) => {
@@ -22,10 +22,11 @@ module.exports = function(io) {
             }
             if (stderr) {
                 console.log(`stderr: ${stderr}`);
-                return;
+                // We don't return because ffmpeg returns stderr for the status
+                // return;
             }
             console.log(`stdout: ${stdout}`);
-            io.to(room).emit(event, {uuid:uuid});
+            io.to(room).emit(event, {clip_uuid:uuid});
         });
     }
 
@@ -76,10 +77,10 @@ module.exports = function(io) {
             let cmdTranscode = "ffmpeg -i " + filePathWebm + 
                       " -y -vcodec libx264 -pix_fmt yuv420p -acodec libfdk_aac -vf \"pad=ceil(iw/2)*2:ceil(ih/2)*2\" " +
                       filePathMp4;
-            execCmd(cmdTranscode,"clip_ready",data.clip_uuid,2000);
+            execCmd(cmdTranscode,"clip_ready", room, data.clip_uuid,2000);
             let cmdCreateThumb = "ffmpeg -i " + filePathWebm + 
                       " -ss 00:00:01.000 -vframes 1 " + filePathThumb;
-            execCmd(cmdCreateThumb,"clip_thumbnail_ready",data.clip_uuid,2500);
+            execCmd(cmdCreateThumb,"clip_thumbnail_ready", room, data.clip_uuid,2500);
          });
 
         socket.on('recording_blob', function(data) {
