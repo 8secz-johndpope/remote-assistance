@@ -147,13 +147,13 @@ return {"id":int,"uuid":"string","url":url,"type":"image|object","name":"string"
 
 Get all anchors
 ```
-get /api/room
+get /api/anchor
 return [{"id":int,"uuid":"string","url":url,"type":"image|object","name":"string"}]
 ```
 
 Get all anchors whose name includes a given string
 ```
-get /api/room?text=string
+get /api/anchor?text=string
 return [{"id":int,"uuid":"string","url":url,"type":"image|object","name":"string"}]
 ```
 
