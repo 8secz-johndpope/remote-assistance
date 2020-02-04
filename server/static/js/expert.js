@@ -725,7 +725,35 @@ $('#pointerSet').click(function(e) {
     }
 });
 
-// ----- EBD: AR Pointer
+// ----- END: AR Pointer
+
+// ----- START: ScreenAR
+var enableScreenAR = false;
+$('#toggleScreenAR').click(function(e) {
+    e.preventDefault();
+    const input = $(this).children('input');
+    const checked = !input.is(':checked');
+    const c = $('#correctedcanvas');
+    input.prop('checked', !checked);
+    if (checked) {
+        enableScreenAR = true;
+        $(this).addClass('btn-success');
+        c.show();
+        // c.style.zIndex = 3;
+        // c.addEventListener('click', handlePointerClick);
+        // renderer.domElement.removeEventListener('click', onMouseClick, false);
+    } else {
+        enablePointer = false;
+        $(this).removeClass('btn-success');
+        c.hide();
+        // c.style.zIndex = 1;
+        // c.removeEventListener('click', handlePointerClick);
+        // renderer.domElement.addEventListener('click', onMouseClick, false);
+        // wrtc.emit('pointer_clear', {});
+    }
+});
+$('#correctedcanvas').hide();
+// ----- END: ScreenAR
 
 $('#dbg-send-recording_started').click(function() {
     wrtc.emit('recording_started', {"clip_uuid": "demo1", "debug": true})

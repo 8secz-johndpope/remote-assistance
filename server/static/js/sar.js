@@ -10,8 +10,7 @@ sarcanvas.width = sarcanvasw;
 sarcanvas.height = sarcanvash;
 var sarctx = sarcanvas.getContext('2d');
 
-var correctedcanvas = document.createElement('canvas');
-correctedcanvas.id = 'correctedcanvas';
+var correctedcanvas = document.getElementById('correctedcanvas');
 correctedcanvas.width = sarcanvasw;
 correctedcanvas.height = sarcanvash;
 var correctedctx = correctedcanvas.getContext('2d');

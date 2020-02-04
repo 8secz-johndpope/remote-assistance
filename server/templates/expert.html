@@ -16,54 +16,106 @@
 <div class="collapse" id="collapseChat">
   <b>Customer chat</b>
   <div class="card card-body">
-    <table border=1 frame=void rules=rows id="conversationArchive" cellpadding="5px" style="font-size:75%">
+    <table border="1" frame=void rules=rows id="conversationArchive" cellpadding="5px" style="font-size:75%">
     </table>
   </div>
 </div>
 <div id="toolbar">
-    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-        <label class="btn btn-primary btn-lg" id="zoom-small">
-            <input type="radio" name="options" autocomplete="off" checked> <i class="fa fa-search-minus"></i>
-        </label>
-        <label class="btn btn-primary btn-lg active" id="zoom-medium">
-            <input type="radio" name="options" autocomplete="off"> <i class="fa fa-search"></i>
-        </label>
-        <label class="btn btn-primary btn-lg" id="zoom-large">
-            <input type="radio" name="options" autocomplete="off"> <i class="fa fa-search-plus"></i>
-        </label>
+    <div class="row ml-1">
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-hands" role="tabpanel" aria-labelledby="pills-hands-tab">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-primary btn-lg" id="zoom-small">
+                        <input type="radio" name="options" autocomplete="off" checked> <i class="fa fa-search-minus"></i>
+                    </label>
+                    <label class="btn btn-primary btn-lg active" id="zoom-medium">
+                        <input type="radio" name="options" autocomplete="off"> <i class="fa fa-search"></i>
+                    </label>
+                    <label class="btn btn-primary btn-lg" id="zoom-large">
+                        <input type="radio" name="options" autocomplete="off"> <i class="fa fa-search-plus"></i>
+                    </label>
+                </div>
+                <button class="btn btn-primary btn-lg" id="reset" data-trigger="hover" data-placement="top" data-content="Reset camera orientation"> reset </button>
+                <button class="btn btn-lg btn-danger" id="leapmotion" data-trigger="hover" data-placement="top" data-content="Leapmotion Websocket Connection. Click to reconnect."> connect to leapmotion </button>
+            </div>
+            <div class="tab-pane fade" id="pills-pen" role="tabpanel" aria-labelledby="pills-pen-tab">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-primary btn-lg" id="lblSketchOnOff" >
+                    <input type="checkbox" id="sketchOnOff" /><i style="color:orange" id="sketchOnOffIcon" class="fa fa-pencil"></i> 
+                    </label>
+                </div>
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label id="lblLsStepsOnOff" class="btn btn-primary btn-lg">
+                    <input type="checkbox" id="lsStepsOnOff" /><span> <i style="color:#DC3545" id="lsStepsOnOffIcon" class="fa fa-video-camera"></i> </span>
+                    </label>
+                </div>
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label id="lblLsStepsCount" class="btn btn-primary btn-lg">
+                    <input type="checkbox" id="lsStepsCount" /><span id="lsStepsCountSpan">steps &nbsp</span>
+                    </label>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-pointer" role="tabpanel" aria-labelledby="pills-pointer-tab">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" data-trigger="hover" data-placement="top" data-content="Enable AR pointer">
+                    <label id="pointerSet" class="btn btn-lg btn-primary">
+                    <input type="checkbox" autocomplete="off">
+                    <i class="fa fa-arrow-circle-down"></i>
+                    </label>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-screenar" role="tabpanel" aria-labelledby="pills-screenar-tab">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" data-trigger="hover" data-placement="top" data-content="Enable ScreenAR">
+                    <label id="toggleScreenAR" class="btn btn-lg btn-primary">
+                    <input type="checkbox" autocomplete="off">
+                    <i class="fa fa-pencil-square-o"></i>
+                    </label>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-debug" role="tabpanel" aria-labelledby="pills-debug-tab">
+                <!--- DEBUG: Remove me later after iOS side is working-->
+                <button class="btn btn-lg btn-primary" id="dbg-send-recording_started" data-trigger="hover" data-placement="top" data-content="Debug"> DBG: Send recording_started </button>
+                <button class="btn btn-lg btn-primary" id="dbg-send-clip_ready" data-trigger="hover" data-placement="top" data-content="Debug">DBG:  Send clip_ready </button>
+                <button class="btn btn-lg btn-primary" id="dbg-send-clip_thumbnail_ready" data-trigger="hover" data-placement="top" data-content="Debug"> DBG: Send clip_thumbnail_ready </button>
+            </div>
+          </div>
     </div>
-    <button class="btn btn-primary btn-lg" id="reset" data-trigger="hover" data-placement="top" data-content="Reset camera orientation"> reset </button>
-    <button class="btn btn-primary btn-lg" id="fullscreen" data-trigger="hover" data-placement="top"  data-content="Toggle fullscreen"><i class="fa fa-window-maximize"></i></button>
-    <button class="btn btn-primary btn-lg" id="qr" data-toggle="modal" data-target="#qrcode-modal" data-trigger="hover" data-placement="top" data-content="Show QR Code"> <i class="fa fa-qrcode"></i> </button>
-    <button class="btn btn-lg btn-danger" id="leapmotion" data-trigger="hover" data-placement="top" data-content="Leapmotion Websocket Connection. Click to reconnect."> connect to leapmotion </button>
-    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-        <label class="btn btn-primary btn-lg" id="lblSketchOnOff" >
-           <input type="checkbox" id="sketchOnOff" /><i style="color:orange" id="sketchOnOffIcon" class="fa fa-pencil"></i> 
-        </label>
+    <div class="row mx-1 mt-2">
+        <ul class="nav nav-pills mx-2" id="pills-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="pills-hands-tab" data-toggle="pill" href="#pills-hands" role="tab" aria-controls="pills-hands" aria-selected="true"
+                    data-trigger="hover" data-placement="top" data-content="Hands">
+                    <i class="fa fa-hand-o-up"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-pen-tab" data-toggle="pill" href="#pills-pen" role="tab" aria-controls="pills-pen" aria-selected="false"
+                    data-trigger="hover" data-placement="top" data-content="Sketch">
+                <i class="fa fa-pencil"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-pointer-tab" data-toggle="pill" href="#pills-pointer" role="tab" aria-controls="pills-pointer" aria-selected="false"
+                    data-trigger="hover" data-placement="top" data-content="Pointer">
+                    <i class="fa fa-arrow-circle-down"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-screenar-tab" data-toggle="pill" href="#pills-screenar" role="tab" aria-controls="pills-screenar" aria-selected="false"
+                    data-trigger="hover" data-placement="top" data-content="ScreenAR">
+                    <i class="fa fa-pencil-square-o"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-debug-tab" data-toggle="pill" href="#pills-debug" role="tab" aria-controls="pills-debug" aria-selected="false"
+                    data-trigger="hover" data-placement="top" data-content="Debug">
+                <i class="fa fa-bug"></i></a>
+            </li>
+        </ul>
+        <div>
+            <a class="btn btn-primary text-white p-2" id="fullscreen" data-trigger="hover" data-placement="top"  data-content="Toggle fullscreen"><i class="fa fa-fw fa-window-maximize"></i></a>
+            <a class="btn btn-primary text-white p-2" id="qr" data-toggle="modal" data-target="#qrcode-modal" data-trigger="hover" data-placement="top" data-content="Show QR Code"> <i class="fa fa-fw fa-qrcode"></i> </a>
+        </div>
     </div>
-    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-        <label id="lblLsStepsOnOff" class="btn btn-primary btn-lg">
-           <input type="checkbox" id="lsStepsOnOff" /><span> <i style="color:#DC3545" id="lsStepsOnOffIcon" class="fa fa-video-camera"></i> </span>
-        </label>
-    </div>
-    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-        <label id="lblLsStepsCount" class="btn btn-primary btn-lg">
-           <input type="checkbox" id="lsStepsCount" /><span id="lsStepsCountSpan">steps &nbsp</span>
-        </label>
-    </div>
-    <!-- <input type="checkbox" id="lsSteps" data-toggle="toggle" checked data-on="steps" data-off="steps off" data-width="100" data-height="48"> -->
-
-    <div class="btn-group btn-group-toggle" data-toggle="buttons" data-trigger="hover" data-placement="top" data-content="Enable AR pointer">
-        <label id="pointerSet" class="btn btn-lg btn-primary">
-          <input type="checkbox" autocomplete="off">
-          <i class="fa fa-arrow-circle-down"></i>
-        </label>
-    </div>
-
-    <!--- DEBUG: Remove me later after iOS side is working-->
-    <button class="btn btn-lg btn-primary" id="dbg-send-recording_started" data-trigger="hover" data-placement="top" data-content="Debug"> DBG: Send recording_started </button>
-    <button class="btn btn-lg btn-primary" id="dbg-send-clip_ready" data-trigger="hover" data-placement="top" data-content="Debug">DBG:  Send clip_ready </button>
-    <button class="btn btn-lg btn-primary" id="dbg-send-clip_thumbnail_ready" data-trigger="hover" data-placement="top" data-content="Debug"> DBG: Send clip_thumbnail_ready </button>
 </div>
 
 <!-- Modal -->
@@ -99,6 +151,8 @@
 
     </div>
 
+
+<canvas id="correctedcanvas" width="480" height="320" style="opacity: 0.1;"></canvas>
 {% endblock %}
 
 {% block js %}
