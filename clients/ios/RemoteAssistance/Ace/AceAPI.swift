@@ -100,92 +100,54 @@ class AceAPI {
         return api
     }
     
-    private func get<T:Codable>(_ path:String, callback: @escaping (T?, Error?) -> ()) {
-        guard let api = makeApi(path) else { return }
-        api.get(T.self) { result, response in
+    private func restCallback<T:Codable>(_ method:String, _ path:String, _ callback: @escaping (T?, Error?) -> ()) -> (Result<T>, HTTPURLResponse?) -> () {
+        return { result, response in
             do {
                 let value = try result.value() // response is of type HttpBinResponse
                 DispatchQueue.main.async {
                     callback(value, nil)
                 }
+            } catch NetworkingError.malformedResponse(let data, let error?) {
+                let dataStr = String(data: data, encoding: .utf8)!
+                print("JSON parse error \(method): \(path) error: \(error) data: \(dataStr)")
+                DispatchQueue.main.async {
+                    callback(nil, NetworkingError.malformedResponse(data, error))
+                }
+
             } catch {
-                print("Error performing GET: \(error)")
+                print("Error performing \(method): \(path) error: \(error)")
                 DispatchQueue.main.async {
                     callback(nil, error)
                 }
             }
+
         }
+    }
+    
+    private func get<T:Codable>(_ path:String, callback: @escaping (T?, Error?) -> ()) {
+        guard let api = makeApi(path) else { return }
+        api.get(T.self, callback: self.restCallback("GET", path, callback))
     }
     
     private func post<T:Codable>(_ path:String, _ data:T, callback: @escaping (T?, Error?) -> ()) {
         guard let api = makeApi(path) else { return }
-        api.post(data, responseType: T.self) { result, response in
-            do {
-                let value = try result.value() // response is of type HttpBinResponse
-                DispatchQueue.main.async {
-                    callback(value, nil)
-                }
-            } catch {
-                print("Error performing GET: \(error)")
-                DispatchQueue.main.async {
-                    callback(nil, error)
-                }
-            }
-        }
-
+        api.post(data, responseType: T.self, callback: self.restCallback("POST", path, callback))
     }
     
     private func put<T:Codable>(_ path:String, _ data:T, callback: @escaping (T?, Error?) -> ()) {
         guard let api = makeApi(path) else { return }
-        api.put(data, responseType: T.self) { result, response in
-            do {
-                let value = try result.value() // response is of type HttpBinResponse
-                DispatchQueue.main.async {
-                    callback(value, nil)
-                }
-            } catch {
-                print("Error performing GET: \(error)")
-                DispatchQueue.main.async {
-                    callback(nil, error)
-                }
-            }
-        }
-
+        api.put(data, responseType: T.self, callback: self.restCallback("PUT", path, callback))
     }
     
     private func patch<T:Codable>(_ path:String, _ data:T, callback: @escaping (T?, Error?) -> ()) {
         guard let api = makeApi(path) else { return }
-        api.patch(data, responseType: T.self) { result, response in
-            do {
-                let value = try result.value() // response is of type HttpBinResponse
-                DispatchQueue.main.async {
-                    callback(value, nil)
-                }
-            } catch {
-                print("Error performing GET: \(error)")
-                DispatchQueue.main.async {
-                    callback(nil, error)
-                }
-            }
-        }
+        api.patch(data, responseType: T.self, callback: self.restCallback("PATCH", path, callback))
     }
     
     private func delete<T:Codable>(_ path:String, callback: @escaping (T?, Error?) -> ()) {
         guard let api = makeApi(path) else { return }
         let decodableDeserializer = DecodableDeserializer<T>()
-        api.delete(JSON(), withDeserializer: decodableDeserializer) { result, response in
-            do {
-                let value = try result.value() // response is of type HttpBinResponse
-                DispatchQueue.main.async {
-                    callback(value, nil)
-                }
-            } catch {
-                print("Error performing GET: \(error)")
-                DispatchQueue.main.async {
-                    callback(nil, error)
-                }
-            }
-        }
+        api.delete(JSON(), withDeserializer: decodableDeserializer, callback: self.restCallback("DELETE", path, callback))
     }
         
     func createUser(_ user:User, callback: @escaping (User?, Error?) -> ()) {

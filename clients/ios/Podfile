@@ -9,6 +9,6 @@ target 'RemoteAssistance' do
   pod 'IconFontKit/MaterialDesignIcons'
   pod 'SwifterSwift'
   pod 'Toast-Swift', '~> 5.0.1'
-  pod 'RestEssentials', '~> 5.0'
+  pod 'RestEssentials', '~> 5.1'
   pod 'Alamofire', '~> 5.0.0-rc.3'
 end

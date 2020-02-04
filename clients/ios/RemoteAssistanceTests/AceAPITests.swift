@@ -17,8 +17,8 @@ class AceAPITests: XCTestCase {
 
     override func setUp() {
         // Put setup code here. This method is called before the invocation of each test method in the class.
-//        let setServerURL = AceAction.SetServerURL(serverUrl: "https://localhost:5443")
-        let setServerURL = AceAction.SetServerURL(serverUrl: "https://yulius.fxpal.net:5443")
+        let setServerURL = AceAction.SetServerURL(serverUrl: "https://localhost:5443")
+//        let setServerURL = AceAction.SetServerURL(serverUrl: "https://yulius.fxpal.net:5443")
         store.ace.dispatch(setServerURL)
         
 //        let expectation = XCTestExpectation(description: "Setup")
