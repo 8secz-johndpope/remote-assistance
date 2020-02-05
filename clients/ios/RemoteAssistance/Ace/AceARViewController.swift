@@ -208,6 +208,9 @@ extension AceARViewController: WRTCClientDelegate {
 
     func wrtc(_ wrtc:WRTCClient, didAdd stream:RTCMediaStream) {
         print("wrtc: \(stream) add stream")
+        if let dict = UserDefaults.standard.object(forKey: "conversation_archive") as? [String:Any] {
+            SocketIOManager.sharedInstance.emit("conversation_archive", dict)
+        }
     }
 
     func wrtc(_ wrtc:WRTCClient, didRemove stream:RTCMediaStream) {

@@ -300,7 +300,7 @@ extension WRTCClient: RTCDataChannelDelegate {
     }
     
     func dataChannel(_ dataChannel: RTCDataChannel, didReceiveMessageWith buffer: RTCDataBuffer) {
-        self.delegate?.wrtc(self, didReceiveData: buffer.data)
+        self.delegate?.wrtc?(self, didReceiveData: buffer.data)
     }
 }
 
@@ -318,7 +318,7 @@ extension WRTCClient : RTCPeerConnectionDelegate {
     func peerConnection(_ peerConnection: RTCPeerConnection, didAdd stream: RTCMediaStream) {
         print("peerConnection: \(peerConnection) add stream")
 //        stream.videoTracks[0].add(self.remoteView)
-        self.delegate?.wrtc(self, didAdd:stream)
+        self.delegate?.wrtc?(self, didAdd:stream)
 
         // set speaker because we have to wait until a stream
         // is added before the audio subsystem is initialized
@@ -327,7 +327,7 @@ extension WRTCClient : RTCPeerConnectionDelegate {
     
     func peerConnection(_ peerConnection: RTCPeerConnection, didRemove stream: RTCMediaStream) {
         print("peerConnection: \(peerConnection) remove stream")
-        self.delegate?.wrtc(self, didRemove:stream)
+        self.delegate?.wrtc?(self, didRemove:stream)
     }
     
     func peerConnectionShouldNegotiate(_ peerConnection: RTCPeerConnection) {
@@ -388,10 +388,10 @@ extension WRTCClient : StoreSubscriber {
 
 
 
-protocol WRTCClientDelegate {
-    func wrtc(_ wrtc:WRTCClient, didAdd stream:RTCMediaStream)
-    func wrtc(_ wrtc:WRTCClient, didRemove stream:RTCMediaStream)
-    func wrtc(_ wrtc:WRTCClient, didReceiveData data: Data)
+@objc protocol WRTCClientDelegate {
+    @objc optional func wrtc(_ wrtc:WRTCClient, didAdd stream:RTCMediaStream)
+    @objc optional func wrtc(_ wrtc:WRTCClient, didRemove stream:RTCMediaStream)
+    @objc optional func wrtc(_ wrtc:WRTCClient, didReceiveData data: Data)
 }
 
 class WRTCCustomCapturer : RTCVideoCapturer {
