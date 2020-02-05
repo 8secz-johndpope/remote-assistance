@@ -15,7 +15,8 @@ const CHAT_TREE_JSON = `
 	{
 	"id": 3,
 	"q": "Question text 3?",
-	"next": ["barcode",4]
+	"next": ["barcode",4],
+	"setVar":"printerName"
 	},
 	{
 	"id": 4,

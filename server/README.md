@@ -69,12 +69,12 @@ The chat interface takes as input a decision tree stored as a JSON file in stati
 "nextLabels": ["1","2","3"]
   ```
 
-The user will see the question "Great. Would you like 1) help fixing my printer 2) help ordering printer parts or 3) to speak with someone?" followed by three buttons labeled "1", "2", and "3" which will navigate them to questions 6, 7, and 8 respectively. 
+The user will see the question "Great. Would you like 1) help fixing my printer 2) help ordering printer parts or 3) to speak with someone?" followed by three buttons labeled "1", "2", and "3" which will navigate them to questions with *ids* 6, 7, and 8 respectively. 
 
-Note that there are some special cases for the next array:
-- Phone numbers ("+16508424823") and email addresses ("test\@fxpal.com") are converted to phone call and email buttons respectively.
-- "ra" will generate a button that launches the remote assistance application
-- "barcode" is followed by a single id that the script will navigate to after the user scans a barcode. If setVar is set, the payload of the barcode is also set to that variable name.
+Note that there are some special cases for the *next* array:
+- Phone numbers and email addresses are converted to phone call and email buttons respectively.
+- Text "ra" will generate a button that launches the remote assistance application.
+- Text "barcode" followed by a single *id* indicates that the app will navigate to question *id* after the user scans a barcode. If setVar is also present, the payload of the barcode is also set to that variable name.
 
 
 API Documentation
