@@ -54,6 +54,9 @@ class AceARViewController : UIViewController {
     var clipReady = false
     var liveAnnotation = true
     var recordingUrl:URL?
+    
+    // mode
+    var mode = "none"
 
     override func viewDidLoad() {
         super.viewDidLoad()

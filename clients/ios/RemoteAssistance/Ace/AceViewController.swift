@@ -19,11 +19,14 @@ class AceViewController : UIViewController {
     var sketchVC: AceSketchViewController?
     
     var wrtc:WRTCClient = WRTCClient()
+    var mode:String = "none"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0.4784313725, blue: 1, alpha: 1)
+        
+        initSetMode()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -66,6 +69,55 @@ class AceViewController : UIViewController {
             break
         }
     }
+    
+    func initSetMode() {
+        let socket = SocketIOManager.sharedInstance
+        socket.on("set_mode") { data, ack in
+            if let object = data[0] as? [String:String],
+                let mode = object["mode"] {
+                self.setMode(mode)
+            }
+        }
+    }
+    
+    func setMode(_ mode:String) {
+        self.mode = mode
+        print("set_mode: \(mode)")
+        
+        if (mode != "hands") {
+            handsVC?.view.isHidden = true
+        }
+        
+        if (mode != "sketch") {
+            sketchVC?.view.isHidden = true
+        }
+        
+        if (mode != "pointer") {
+            arVC?.resetPointer()
+        }
+
+        if (mode != "screenar") {
+            arVC?.resetScreenAR()
+        }
+                
+        switch (self.mode) {
+            case "hands":
+                handsVC?.view.isHidden = false
+                break
+            case "sketch":
+                sketchVC?.view.isHidden = false
+                break
+            case "pointer":
+                arVC?.enablePointer()
+                break
+            case "screenar":
+                arVC?.enableScreenAR()
+                break
+            default:
+                break
+        }
+    }
+
 }
 
 extension AceViewController : AceUIViewDelegate {

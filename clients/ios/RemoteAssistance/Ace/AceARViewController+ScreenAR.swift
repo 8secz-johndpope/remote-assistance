@@ -80,13 +80,7 @@ extension AceARViewController {
     
     @IBAction func onResetScreenAR(_ sender: UIButton) {
         DispatchQueue.main.async {
-            self.arView.session.pause()
-            self.rectangleNodes.forEach({ $1.removeFromParentNode() })
-            self.rectangleNodes.removeAll()
-            self.arView.scene.rootNode.enumerateChildNodes { (node, stop) in
-                node.removeFromParentNode()
-            }
-            self.arView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
+            self.resetScreenAR()
         }
     }
     
@@ -101,6 +95,20 @@ extension AceARViewController {
                 }
             }
         }
+    }
+    
+    func resetScreenAR() {
+        self.arView.session.pause()
+        self.rectangleNodes.forEach({ $1.removeFromParentNode() })
+        self.rectangleNodes.removeAll()
+        self.arView.scene.rootNode.enumerateChildNodes { (node, stop) in
+            node.removeFromParentNode()
+        }
+        self.arView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
+    }
+    
+    func enableScreenAR() {
+        self.arView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
     }
 
 }

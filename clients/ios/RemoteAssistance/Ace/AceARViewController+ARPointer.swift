@@ -147,7 +147,8 @@ extension AceARViewController {
     private func setVirtualObject3DPosition(_ results: [ARRaycastResult], with virtualObject: AceVirtualObject) {
         
         guard let result = results.first else {
-            fatalError("Unexpected case: the update handler is always supposed to return at least one result.")
+            print("ERROR: Unexpected case: the update handler is always supposed to return at least one result.")
+            return
         }
         
         self.setTransform(of: virtualObject, with: result)
@@ -188,4 +189,14 @@ extension AceARViewController {
             object.removeFromParentNode()
         }
     }
+    
+    func resetPointer() {
+        removeArrow()
+        self.arView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+    }
+    
+    func enablePointer() {
+        self.arView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+    }
+    
 }
