@@ -10,6 +10,9 @@ var constraints = {
 const SERVER_API = "/api/";
 const SERVER_CLIP_STOR = "/stor/";
 
+// can be the following: hands, screenar, sketch, pointer
+var mode = "hands"
+
 //// Rendering
 var renderer;
 
@@ -213,7 +216,7 @@ function onMouseClick(event)
                                 quaternion: renderer.camera.quaternion});
 }
 
-// toolbar buttons
+// ----- START: Toolbar -----
 $('#zoom-small').click(function(e) {
     console.log('zoom-small');
     renderer.setCameraDistance(500);
@@ -276,32 +279,32 @@ $('#lblLsStepsOnOff').click(function(e) {
     setLSOnOff();
 });
 
-$('#lblSketchOnOff').click(function(e) {
-    const checked = $('input', this).is(':checked');
-    const c = document.getElementById("sketchCanvas");
-    if (!checked) {
-        sketch = true;
-        c.style.zIndex = 3;        
-        c.addEventListener('mousemove', drawSketch);
-        c.addEventListener('mouseup', handleMouseUp);
-        c.addEventListener('mousedown', handleMouseDown);
-        c.addEventListener('mouseout', handleMouseUp);
-        c.addEventListener('mouseenter', setPosition);
+// $('#lblSketchOnOff').click(function(e) {
+//     const checked = $('input', this).is(':checked');
+//     const c = document.getElementById("sketchCanvas");
+//     if (!checked) {
+//         sketch = true;
+//         c.style.zIndex = 3;        
+//         c.addEventListener('mousemove', drawSketch);
+//         c.addEventListener('mouseup', handleMouseUp);
+//         c.addEventListener('mousedown', handleMouseDown);
+//         c.addEventListener('mouseout', handleMouseUp);
+//         c.addEventListener('mouseenter', setPosition);
 
-        renderer.domElement.removeEventListener('click', onMouseClick, false);
-    } else {
-        sketch = false;
-        c.style.zIndex = 1;        
-        c.removeEventListener('mousemove', drawSketch);
-        c.removeEventListener('mouseup', handleMouseUp);
-        c.removeEventListener('mousedown', handleMouseDown);
-        c.removeEventListener('mouseout', handleMouseUp);
-        c.removeEventListener('mouseenter', setPosition);
+//         renderer.domElement.removeEventListener('click', onMouseClick, false);
+//     } else {
+//         sketch = false;
+//         c.style.zIndex = 1;        
+//         c.removeEventListener('mousemove', drawSketch);
+//         c.removeEventListener('mouseup', handleMouseUp);
+//         c.removeEventListener('mousedown', handleMouseDown);
+//         c.removeEventListener('mouseout', handleMouseUp);
+//         c.removeEventListener('mouseenter', setPosition);
 
-        renderer.domElement.addEventListener('click', onMouseClick, false);
-    }
-    setSketchOnOff();
-});
+//         renderer.domElement.addEventListener('click', onMouseClick, false);
+//     }
+//     setSketchOnOff();
+// });
 
 var lmSocket;
 $('#leapmotion').click(function(e) {
@@ -381,6 +384,98 @@ function removeUserFromRoom() {
 window.onbeforeunload = function() {
       removeUserFromRoom();
 }
+
+
+function setMode(newMode) {
+    // console.log('setMode', mode);
+
+    // reset hands
+    if (mode == "hands" && newMode != "hands") {
+        if (renderer) {
+            $(renderer.canvas).hide();
+            renderer.domElement.removeEventListener('click', onMouseClick, false);
+        }
+    }
+
+    // reset sketch
+    if (mode == "sketch" && newMode != "sketch") {
+        sketch = false;
+        const c = document.getElementById("sketchCanvas");
+        c.style.zIndex = 1;
+        c.removeEventListener('mousemove', drawSketch);
+        c.removeEventListener('mouseup', handleMouseUp);
+        c.removeEventListener('mousedown', handleMouseDown);
+        c.removeEventListener('mouseout', handleMouseUp);
+        c.removeEventListener('mouseenter', setPosition);
+    }
+
+    // reset pointer
+    if (mode == "pointer" && newMode != "pointer") {
+        enablePointer = false;
+        const c = document.getElementById("sketchCanvas");
+        c.style.zIndex = 1;
+        c.removeEventListener('click', handlePointerClick);
+        wrtc.emit('pointer_clear', {});
+    }
+
+    // reset screenar
+    if (mode == "screenar" && newMode != "screenar") {
+        enablePointer = false;
+        $('#correctedcanvas').hide();
+    }
+
+    switch(newMode) {
+        case "hands": {
+            if (renderer && renderer.interaction_box) {
+                $(renderer.canvas).show();
+                renderer.domElement.addEventListener('click', onMouseClick, false);
+            }
+            break;
+        }
+
+        case "sketch": {
+            const c = document.getElementById("sketchCanvas");
+            sketch = true;
+            c.style.zIndex = 3;
+            c.addEventListener('mousemove', drawSketch);
+            c.addEventListener('mouseup', handleMouseUp);
+            c.addEventListener('mousedown', handleMouseDown);
+            c.addEventListener('mouseout', handleMouseUp);
+            c.addEventListener('mouseenter', setPosition);
+            renderer.domElement.removeEventListener('click', onMouseClick, false);
+            break;
+        }
+
+        case "pointer": {
+            enablePointer = true;
+            const c = document.getElementById("sketchCanvas");
+            c.style.zIndex = 3;
+            c.addEventListener('click', handlePointerClick);
+            renderer.domElement.removeEventListener('click', onMouseClick, false);
+            break;
+        }
+
+        case "screenar": {
+            enableScreenAR = true;
+            $('#correctedcanvas').show();
+            break;
+        }
+    }
+
+    mode = newMode;
+}
+
+$('#toolbar-tab a').on('click', function (e) {
+    e.preventDefault()
+
+    var newMode = $(this).data('tab') || 'none';
+    setMode(newMode);
+
+    $(this).tab('show');
+});
+// default is hands for now
+setMode('hands')
+// ----- END: Toolbar -----
 
 // ----- START: Live Steps -----
 let ls = false;
@@ -703,48 +798,48 @@ function handlePointerClick(e) {
     return false;
 }
 
-$('#pointerSet').click(function(e) {
-    e.preventDefault();
-    const input = $(this).children('input');
-    const checked = !input.is(':checked');
-    const c = document.getElementById("sketchCanvas");
-    input.prop('checked', !checked);
-    if (checked) {
-        enablePointer = true;
-        $(this).addClass('btn-success');
-        c.style.zIndex = 3;
-        c.addEventListener('click', handlePointerClick);
-        renderer.domElement.removeEventListener('click', onMouseClick, false);
-    } else {
-        enablePointer = false;
-        $(this).removeClass('btn-success');
-        c.style.zIndex = 1;
-        c.removeEventListener('click', handlePointerClick);
-        renderer.domElement.addEventListener('click', onMouseClick, false);
-        wrtc.emit('pointer_clear', {});
-    }
-});
+// $('#pointerSet').click(function(e) {
+//     e.preventDefault();
+//     const input = $(this).children('input');
+//     const checked = !input.is(':checked');
+//     const c = document.getElementById("sketchCanvas");
+//     input.prop('checked', !checked);
+//     if (checked) {
+//         enablePointer = true;
+//         $(this).addClass('btn-success');
+//         c.style.zIndex = 3;
+//         c.addEventListener('click', handlePointerClick);
+//         renderer.domElement.removeEventListener('click', onMouseClick, false);
+//     } else {
+//         enablePointer = false;
+//         $(this).removeClass('btn-success');
+//         c.style.zIndex = 1;
+//         c.removeEventListener('click', handlePointerClick);
+//         renderer.domElement.addEventListener('click', onMouseClick, false);
+//         wrtc.emit('pointer_clear', {});
+//     }
+// });
 
 // ----- END: AR Pointer
 
 // ----- START: ScreenAR
 var enableScreenAR = false;
-$('#toggleScreenAR').click(function(e) {
-    e.preventDefault();
-    const input = $(this).children('input');
-    const checked = !input.is(':checked');
-    const c = $('#correctedcanvas');
-    input.prop('checked', !checked);
-    if (checked) {
-        enableScreenAR = true;
-        $(this).addClass('btn-success');
-        c.show();
-    } else {
-        enablePointer = false;
-        $(this).removeClass('btn-success');
-        c.hide();
-    }
-});
+// $('#toggleScreenAR').click(function(e) {
+//     e.preventDefault();
+//     const input = $(this).children('input');
+//     const checked = !input.is(':checked');
+//     const c = $('#correctedcanvas');
+//     input.prop('checked', !checked);
+//     if (checked) {
+//         enableScreenAR = true;
+//         $(this).addClass('btn-success');
+//         c.show();
+//     } else {
+//         enablePointer = false;
+//         $(this).removeClass('btn-success');
+//         c.hide();
+//     }
+// });
 $('#correctedcanvas').hide();
 // ----- END: ScreenAR
 

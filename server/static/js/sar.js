@@ -368,6 +368,9 @@ function goodPoint(pt)
 
 var sar = {
   animate: function (canvas) {
+    if (!window.enableScreenAR) {
+      return;
+    }
     //console.log('sar animate');
     sarAnimate(canvas);
   },
