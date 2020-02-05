@@ -20,7 +20,7 @@ const CHAT_TREE_JSON = `
 	{
 	"id": 4,
 	"q": "Question text 4?",
-	"next": ["ra","email","+15107612345"]
+	"next": ["ra","email@email.com","+15107612345"]
 	}
  ]
 }`;
