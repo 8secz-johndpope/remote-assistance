@@ -8,7 +8,8 @@ const nunjucks = require('nunjucks');
 const argparse = require('argparse');
 const config = require('config');
 const WebSocketServer = require('ws').Server;
-const bodyParser = require('body-parser')
+//const bodyParser = require('body-parser')
+const bb = require('express-busboy')
 var dateFilter = require('nunjucks-date-filter');
 
 const room = require('./room');
@@ -50,8 +51,11 @@ if (!args.db_off) {
 }
 
 // Routing
-app.use(bodyParser.urlencoded())
-app.use(bodyParser.json())
+//app.use(bodyParser.urlencoded())
+//app.use(bodyParser.json())
+bb.extend(app, {
+    upload: true
+})
 
 app.use('/static', express.static(__dirname + '/static'))
 
@@ -191,7 +195,7 @@ if (db !== null) {
 
     // Anchor
     app.post('/api/anchor', function(req, res) { 
-        db.updateAnchor(res,true,true,util.generateRandomId(),req.body,function(anchorData) {
+        db.updateAnchor(res,true,true,util.generateRandomId(),req,function(anchorData) {
             db.getAnchor(res,anchorData.uuid,function(data) {
                 res.status(201).json(data)
             })
@@ -217,7 +221,7 @@ if (db !== null) {
     });
 
     app.put('/api/anchor/:uuid', function(req, res) { 
-        db.updateAnchor(res,false,true,req.params.uuid,req.body,function(anchorData) {
+        db.updateAnchor(res,false,true,req.params.uuid,req,function(anchorData) {
             db.getAnchor(res,anchorData.uuid,function(data) {
                 res.status(202).json(data)
             })
@@ -225,7 +229,7 @@ if (db !== null) {
     });
 
     app.patch('/api/anchor/:uuid', function(req, res) { 
-        db.updateAnchor(res,false,false,req.params.uuid,req.body,function(anchorData) {
+        db.updateAnchor(res,false,false,req.params.uuid,req,function(anchorData) {
             db.getAnchor(res,anchorData.uuid,function(data) {
                 res.status(202).json(data)
             })

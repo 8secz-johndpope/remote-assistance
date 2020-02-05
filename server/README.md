@@ -135,7 +135,8 @@ return {"uuid":"string"}
 Create an anchor
 ```
 post /api/anchor
-data {"url":url,"type":"image|object","name":"string"}
+data {type":"image|object","name":"string"}
+data file (any name)
 return {"id":int,"uuid":"string","url":url,"type":"image|object","name":"string"}
 ```
 
@@ -160,7 +161,8 @@ return [{"id":int,"uuid":"string","url":url,"type":"image|object","name":"string
 Update anchor
 ```
 put|patch /api/anchor/:uuid
-data {"url":url,"type":"image|object","name":"string"}
+data {type":"image|object","name":"string"}
+data file (any name)
 return {"id":int,"uuid":"string","url":url,"type":"image|object","name":"string"}
 ```
 

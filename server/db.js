@@ -3,6 +3,7 @@ const config = require('config');
 const parseDbUrl = require("parse-database-url");
 const databaseConfig = parseDbUrl(config.databaseUrl);
 const util = require('./util');
+const fs = require('fs');
 
 // handle disconnect
 var connection;
@@ -132,7 +133,19 @@ module.exports = {
 		})
 	},
 
-	updateAnchor: (res,insert,put,uuid,body,cb) => {
+	updateAnchor: (res,insert,put,uuid,req,cb) => {
+		let fp = null;
+		if (req.files) {
+			let fns = Object.keys(req.files)
+			let fo = req.files[fns[0]]
+			console.log(fo)
+			fp = uuid + '.' + fo.filename.split('.').pop()
+			fs.readFile(fo.file, function (err, data) {
+			  fs.writeFile(config.anchorLoc + fp, data, function (err) {
+			  });
+			});
+		}
+		let body = req.body;
 		let q;
 		if (insert) {
 			q = 'insert into ';
@@ -146,10 +159,11 @@ module.exports = {
 		else if (put) { qArr.push('type = "none"'); }
 		if (typeof body.name !== 'undefined') { qArr.push('name = ?'); arr.push(body.name); }
 		else if (put) { qArr.push('name = ""'); }
-		if (typeof body.url !== 'undefined') { qArr.push('url = ?'); arr.push(body.url); }
+		if (fp !== null) { qArr.push('url = ?'); arr.push(fp); }
 		else if (put) { qArr.push('url = ""'); }
 		if (insert) { qArr.push('uuid = ?'); arr.push(uuid); }
 		q += qArr.join(',');
+		console.log(q)
 		if (!insert) { q += ' where uuid = ?'; arr.push(uuid); }
 		if (qArr.length > 0) {
 			connection.query(q,
