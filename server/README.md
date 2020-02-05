@@ -60,7 +60,7 @@ Connect with browser
 
 Chat UI
 -----------------
-The chat interface takes as input a decision tree stored as a JSON file in static/js/chat.tree.js. Please see [see this example](static/js/chat.tree.example.js). Each entry in the responses array has an id, question, and array of options stored in next. Each entry can also optionally include a nextLabels array. next is an array of ids to which the user can navigate to after the current question. Each entry is converted to buttons with labels set in the nextLabels array. If nextLabels is not set, their label name is set to their id name. For example, in this case:
+The chat interface takes as input a decision tree stored as a JSON file in static/js/chat.tree.js. Please see [see this example](static/js/chat.tree.example.js). Each entry in the responses array has an id, question, and array of options stored in next. Each entry can also optionally include a nextLabels array. next is an array of ids to which the user can navigate after the current question. Each entry is converted to buttons with labels set in the nextLabels array. If the nextLabels array is not set, label names are set to id names. For example, in this case:
 
 ```
 "id": 5,
