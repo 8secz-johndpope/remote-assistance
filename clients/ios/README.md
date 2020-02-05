@@ -9,7 +9,7 @@ How to build & run the app
    ```
    $ brew install cocoapods
    ```
-4. Install Pods.  (Run the same directory as `Podfile`)
+4. Install Pods.  (Run the same directory as `Podfile`.  Also make `Xcode` is not running)
    ```
    $ pod install
    ```
