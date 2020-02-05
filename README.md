@@ -4,8 +4,7 @@ ACE remote assistance framework
 The unified Augmented Connected Enterprise (ACE) remote assistance framework project respository.
 
 
-How to build and run client (TODO)
-
+[Build and run the iOS client](clients/ios/README.md)
 
 [Server README](server/README.md)
 
