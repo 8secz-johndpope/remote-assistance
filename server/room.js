@@ -131,7 +131,8 @@ module.exports = function(io) {
             'add_clip_to_anchor',
             'pointer_set',
             'pointer_clear',
-            'conversation_archive'
+            'conversation_archive',
+            'set_mode',
         ]
         events.forEach(function(eventName) {
             socket.on(eventName, function(data) {

@@ -63,7 +63,11 @@ navigator.mediaDevices.getUserMedia(constraints).then(
                     connected = false; 
                     onReset();
                 });
-            })
+            });
+            
+            wrtc.on('connect', function() {
+                wrtc.emit('set_mode', {mode});
+            });
         });
         wrtc.on('gyro', function(data) {
             // console.log('gyro', data);
@@ -102,7 +106,7 @@ navigator.mediaDevices.getUserMedia(constraints).then(
                 c2.style.verticalAlign = "top";
             }
             //console.log(ca.innerHTML);
-        }); 
+        });
 
         // Create renderer after wrtc because it shares the same socket
         renderer = new Renderer( 
@@ -463,6 +467,9 @@ function setMode(newMode) {
     }
 
     mode = newMode;
+    if (wrtc) {
+        wrtc.emit('set_mode', {mode});
+    }
 }
 
 $('#toolbar-tab a').on('click', function (e) {
