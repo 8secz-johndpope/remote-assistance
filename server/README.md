@@ -60,7 +60,7 @@ Connect with browser
 
 Chat UI
 -----------------
-The chat interface takes as input a decision tree stored as a JSON file in static/js/chat.tree.js. Please see static/js/chat.tree.example.js for an example. Each entry in the responses array has an id, question, and array of options stored in next and nextLabels. next is an array of ids to which the user can navigate to after this question. They are converted to buttons with labels set in the nextLabels array. If nextLabels is not set their label name is set to their id name. For example, in this case:
+The chat interface takes as input a decision tree stored as a JSON file in static/js/chat.tree.js. Please see [see this example](server/static/js/chat.tree.example.js). Each entry in the responses array has an id, question, and array of options stored in next. Each entry can also optionally include a nextLabels array. next is an array of ids to which the user can navigate to after the current question. Each entry is converted to buttons with labels set in the nextLabels array. If nextLabels is not set, their label name is set to their id name. For example, in this case:
 
 ```
 "id": 5,
@@ -72,7 +72,7 @@ The chat interface takes as input a decision tree stored as a JSON file in stati
 The user will see the question ("Great. Would you like 1) help fixing my printer 2) help ordering printer parts or 3) to speak with someone?") followed by three buttons labeled "1", "2", and "3" which will navigate them to questions 6, 7, and 8 respectively. 
 
 Note that there are some special cases for the next array:
-- Phone numbers ("+16508424823") and email addresses are converted to phone call and email buttons automatically.
+- Phone numbers ("+16508424823") and email addresses ("test@fxpal.com") are converted to phone call and email buttons respectively.
 - "ra" will generate a button that launches the remote assistance application
 - "barcode" is followed by a single id that the script will navigate to after the user scans a barcode. If setVar is set, the payload of the barcode is also set to that variable name.
 
