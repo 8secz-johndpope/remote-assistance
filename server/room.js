@@ -18,7 +18,8 @@ module.exports = function(io) {
         exec(cmd, (error, stdout, stderr) => {
             if (error) {
                 console.log(`error: ${error.message}`);
-                return;
+                // don't return on error because we have no way to tell client for now.  always emit message
+                // return;
             }
             if (stderr) {
                 console.log(`stderr: ${stderr}`);
