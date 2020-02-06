@@ -93,9 +93,9 @@ class AceARViewController : UIViewController {
     }
     
     func setupAR() {
-        guard let refImages = ARReferenceImage.referenceImages(inGroupNamed: "AR Resources", bundle: Bundle.main) else {
-                fatalError("Missing expected asset catalog resources.")
-        }
+//        guard let refImages = ARReferenceImage.referenceImages(inGroupNamed: "AR Resources", bundle: Bundle.main) else {
+//                fatalError("Missing expected asset catalog resources.")
+//        }
 
         // Create a session configuration
       
@@ -122,11 +122,11 @@ class AceARViewController : UIViewController {
 
         configuration.planeDetection = [.horizontal, .vertical]
     
-        configuration.detectionImages = refImages
+//        configuration.detectionImages = refImages
         configuration.maximumNumberOfTrackedImages = 1
         
         // search for objects to annotate
-        self.searchForObjects()
+//        self.searchForObjects()
 
         // Run the view's session
         self.arView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])

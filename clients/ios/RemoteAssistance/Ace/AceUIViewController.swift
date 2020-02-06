@@ -33,6 +33,7 @@ class AceUIViewController : UIViewController {
 
         infoLabel.text = "url: \(store.ace.state.serverUrl)\nroom: \(store.ace.state.roomName)"
         
+        SocketIOManager.sharedInstance.connect()
     }
 
     func resetTimer() {
@@ -82,6 +83,7 @@ class AceUIViewController : UIViewController {
         delegate?.onHangup(sender)
         onCloseMenu(sender)
         resetTimer()
+        SocketIOManager.sharedInstance.disconnect()
     }
 
     @objc func onTap(recognizer: UITapGestureRecognizer) {

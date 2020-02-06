@@ -191,6 +191,7 @@ extension AceARViewController {
     }
     
     func resetPointer() {
+        self.arView.session.pause()
         removeArrow()
         self.arView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
     }

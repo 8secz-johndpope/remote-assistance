@@ -118,7 +118,12 @@ extension AceARViewController {
                 print("ObjectAnnotation found imageAnchor!")
                 DispatchQueue.main.async {
                     self.view.makeToast("Found image anchor \(anchor.name ?? "Unknown")", position: .center)
-                    self.nodeFound = node
+                    
+                    let orientationNode = SCNNode()
+                    orientationNode.eulerAngles = SCNVector3(x:-Float.pi/2, y:0, z:0)
+                    node.addChildNode(orientationNode)
+                    self.nodeFound = orientationNode
+
                     self.addPointer(node)
                     if !self.liveAnnotation {
                         for i in 0..<self.clickableImages.count {
@@ -126,11 +131,7 @@ extension AceARViewController {
                             material.diffuse.contents = self.createThumbnail(self.clickableImages[i])
                             let url = self.videoURLs[i]
                             let clickableNode = self.buildNode(material: material, scnVector3: self.imagePositions[i], url: url)
-                            let orientationNode = SCNNode()
-                            // inverse quat
-                            orientationNode.orientation = SCNVector4(x: -node.orientation.x, y: -node.orientation.y, z:-node.orientation.z, w: node.orientation.w)
-                            orientationNode.addChildNode(clickableNode)
-                            node.addChildNode(orientationNode)
+                            self.nodeFound?.addChildNode(clickableNode)
                         }
                     }
                 }
@@ -230,7 +231,7 @@ extension AceARViewController {
         if let node = self.nodeFound {
             let material = SCNMaterial()
             material.diffuse.contents = self.createThumbnail(UIImage(named: "Standby")!)
-            let placeholderNode = self.buildNode(material: material, scnVector3: SCNVector3(x: 0.0, y: 0.0, z: -0.1), url: nil)
+            let placeholderNode = self.buildNode(material: material, scnVector3: SCNVector3(x: -0.2, y: +0.4, z: +0.05), url: nil)
             node.addChildNode(placeholderNode)
         }
     }
@@ -260,7 +261,7 @@ extension AceARViewController {
                                     }
                                     let material = SCNMaterial()
                                     material.diffuse.contents = self.createThumbnail(recordingThumbnail!)
-                                    let thumbnailNode = self.buildNode(material: material, scnVector3: SCNVector3(x: 0.0, y: 0.0, z: -0.1), url: self.recordingUrl)
+                                    let thumbnailNode = self.buildNode(material: material, scnVector3: SCNVector3(x: -0.2, y: +0.4, z: +0.05), url: self.recordingUrl)
                                     node.addChildNode(thumbnailNode)
                                 }
                             }
@@ -287,7 +288,7 @@ extension AceARViewController {
     func addPointer(_ node:SCNNode) {
         let pointerNode = SCNNode(geometry: SCNPlane(width: 0.05, height: 0.05))
         pointerNode.geometry?.firstMaterial?.diffuse.contents = UIImage(named: "ObjectPointer")
-        pointerNode.position = SCNVector3(0, 0, -0.08)
+        pointerNode.position = SCNVector3(0, 0, 0)
         pointerNode.constraints = [SCNBillboardConstraint()]
         node.addChildNode(pointerNode)
     }

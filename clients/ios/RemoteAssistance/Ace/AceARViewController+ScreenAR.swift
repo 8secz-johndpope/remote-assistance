@@ -108,6 +108,16 @@ extension AceARViewController {
     }
     
     func enableScreenAR() {
+        guard let refImages = ARReferenceImage.referenceImages(inGroupNamed: "ScreenAR Resources", bundle: Bundle.main) else {
+            print("Missing expected asset catalog resources.")
+            return
+        }
+
+        self.arView.session.pause()
+
+        self.configuration.detectionObjects = []
+        self.configuration.detectionImages = refImages
+
         self.arView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
     }
 
