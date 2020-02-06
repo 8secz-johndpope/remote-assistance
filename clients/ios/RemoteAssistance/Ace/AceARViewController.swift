@@ -54,6 +54,7 @@ class AceARViewController : UIViewController {
     var clipReady = false
     var liveAnnotation = true
     var recordingUrl:URL?
+    var clipNode = [String:ObjectAnnotationNode]()
     
     // mode
     var mode = "none"

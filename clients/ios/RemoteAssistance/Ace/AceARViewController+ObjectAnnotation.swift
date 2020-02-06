@@ -33,7 +33,7 @@ extension AceARViewController {
     func initObjectDetection() {
         self.objectGroupName = "VariousPrinters"
         self.imageGroupName = "AR Resources"
-        self.liveAnnotation = true
+        self.liveAnnotation = false
         self.initSocket()
     }
     
@@ -95,6 +95,11 @@ extension AceARViewController {
         }
         if foundAllObjects {
             let options: ARSession.RunOptions = [.resetTracking, .removeExistingAnchors]
+            // remove all objects before reset
+            self.arView.scene.rootNode.enumerateChildNodes { (node, stop) in
+                node.removeFromParentNode()
+            }
+            clipNode = [String:ObjectAnnotationNode]()
             arView.session.run(self.configuration, options: options)
         }
     }
@@ -164,7 +169,7 @@ extension AceARViewController {
         return imgView.asImage()
     }
     
-    func buildNode(material: SCNMaterial, scnVector3: SCNVector3, url:URL?) -> SCNNode {
+    func buildNode(material: SCNMaterial, scnVector3: SCNVector3, url:URL?) -> ObjectAnnotationNode {
         let node = ObjectAnnotationNode(geometry: SCNPlane(width: 0.2, height: 0.2))
         node.url = url
         node.geometry?.firstMaterial = material
@@ -231,7 +236,8 @@ extension AceARViewController {
         if let node = self.nodeFound {
             let material = SCNMaterial()
             material.diffuse.contents = self.createThumbnail(UIImage(named: "Standby")!)
-            let placeholderNode = self.buildNode(material: material, scnVector3: SCNVector3(x: -0.2, y: +0.4, z: +0.05), url: nil)
+            let placeholderNode = self.buildNode(material: material, scnVector3: SCNVector3(x:+0.1, y: +0.1, z: +0.05), url: nil)
+            self.clipNode[self.recordingUuid ?? "none"] = placeholderNode
             node.addChildNode(placeholderNode)
         }
     }
@@ -254,15 +260,22 @@ extension AceARViewController {
                         AF.request(thumb_url_string).responseData { (response) in
                             if response.error == nil {
                                 print(response.result)
-                                if let data = response.data {
-                                    let recordingThumbnail = UIImage(data: data)
-                                    node.enumerateChildNodes { (nd, stop) in
-                                        nd.removeFromParentNode()
+                                if let data = response.data,
+                                    let recordingThumbnail = UIImage(data: data)  {
+//                                    node.enumerateChildNodes { (nd, stop) in
+//                                        nd.removeFromParentNode()
+//                                    }
+                                    
+                                    if let placeholderNode = self.clipNode[self.recordingUuid ?? "none"] {
+                                        placeholderNode.url = self.recordingUrl
+                                        placeholderNode.geometry?.firstMaterial?.diffuse.contents = self.createThumbnail(recordingThumbnail)
                                     }
-                                    let material = SCNMaterial()
-                                    material.diffuse.contents = self.createThumbnail(recordingThumbnail!)
-                                    let thumbnailNode = self.buildNode(material: material, scnVector3: SCNVector3(x: -0.2, y: +0.4, z: +0.05), url: self.recordingUrl)
-                                    node.addChildNode(thumbnailNode)
+//                                    let material = SCNMaterial()
+//                                    material.diffuse.contents = self.createThumbnail(recordingThumbnail!)
+//                                    let thumbnailNode = self.buildNode(material: material, scnVector3: SCNVector3(x:+0.1, y: +0.1, z: +0.05), url: self.recordingUrl)
+//                                    node.addChildNode(thumbnailNode)
+                                } else {
+                                    self.showMessage(title: "Get Thumbnail Error", message: "Invalid thumbnail data")
                                 }
                             }
                             else {
