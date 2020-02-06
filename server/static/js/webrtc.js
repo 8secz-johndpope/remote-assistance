@@ -160,10 +160,12 @@ function WebRTCClient(options) {
                             return pc.createAnswer(mediaConstraints);
                         })
                         .then(function(result) {
-                            answer = result;
-                            // force vp8 because safari doesn't handle h264 negotiation well
-                            answer.sdp = CodecsHandler.preferCodec(answer.sdp, 'vp8');
-                            return pc.setLocalDescription(answer);
+                            if (!answer) {
+                                answer = result;
+                                // force vp8 because safari doesn't handle h264 negotiation well
+                                answer.sdp = CodecsHandler.preferCodec(answer.sdp, 'vp8');
+                                return pc.setLocalDescription(answer);
+                            }
                         })
                         .then(function() {
                             socket.emit('webrtc', from, {

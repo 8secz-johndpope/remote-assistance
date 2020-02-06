@@ -464,6 +464,11 @@ function setMode(newMode) {
             $('#correctedcanvas').show();
             break;
         }
+
+        default: {
+            mode = newMode;
+            return;
+        }
     }
 
     mode = newMode;
