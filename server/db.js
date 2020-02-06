@@ -135,7 +135,7 @@ module.exports = {
 
 	updateAnchor: (res,insert,put,uuid,req,cb) => {
 		let fp = null;
-		if (req.files) {
+		if (req.files && (Object.entries(req.files).length > 0)) {
 			let fns = Object.keys(req.files)
 			let fo = req.files[fns[0]]
 			console.log(fo)
@@ -163,7 +163,6 @@ module.exports = {
 		else if (put) { qArr.push('url = ""'); }
 		if (insert) { qArr.push('uuid = ?'); arr.push(uuid); }
 		q += qArr.join(',');
-		console.log(q)
 		if (!insert) { q += ' where uuid = ?'; arr.push(uuid); }
 		if (qArr.length > 0) {
 			connection.query(q,
