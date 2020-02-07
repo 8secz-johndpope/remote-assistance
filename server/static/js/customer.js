@@ -40,10 +40,12 @@ function isMobile() {
 }
 
 // setup sample video
+var cameraMode = 'environment'; // `user` or `environment`
 var constraints = {
     video: {
         width: 1920,
-        height: 1080
+        height: 1080,
+        facingMode: { ideal: cameraMode }
     },
     audio: true
 }
@@ -52,9 +54,6 @@ if (isEpson()) {
     constraints.video.height = 240;
 }
 
-if (isMobile()) {
-    constraints.video.facingMode = { exact: 'environment' }
-}
 function toggleFullScreen() {
     if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen();
@@ -84,6 +83,28 @@ $('#mute').click(function() {
             t.enabled = !muted;
         });
     })
+});
+
+$('#camera').click(function() {
+    cameraMode = (cameraMode == 'user') ? 'environment' : 'user';
+    constraints.video.facingMode =  { ideal: cameraMode };
+    navigator.mediaDevices.getUserMedia(constraints).then(
+        function(stream) {
+            var video = $('#video')[0]
+            video.srcObject = stream;
+            video.autoplay = true;
+            video.muted = true;
+    
+            // set default mute
+            var tracks = stream.getAudioTracks();
+            tracks.forEach(function(t) {
+                t.enabled = !muted;
+            });
+
+            if (wrtc) {
+                wrtc.setStream(stream);
+            }
+        });
 });
 
 

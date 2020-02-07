@@ -241,6 +241,19 @@ function WebRTCClient(options) {
                 break;
         }
     }
+
+    WebRTCClient.prototype.setStream = function(stream) {
+        for (var key in this.pcs) {
+            var pc = wrtc.pcs[key];
+            stream.getVideoTracks().forEach(function(track) {
+                var sender = pc.getSenders().find(function(s) {
+                    return s.track.kind == track.kind;
+                });
+                sender.replaceTrack(track);
+           });
+        }
+        this.stream = stream;
+    }
 }
 
 

@@ -511,6 +511,13 @@ app.get('/expert', function (req, res) {
     res.render('dashboard.html', { rooms: roomArray });
 });
 
+// handle remote assistance basic urls
+
+app.get('/basic/expert', function (req, res) {
+    res.render('expert_basic.html', { roomid: 'basic' });
+});
+
+
 app.get('/:roomid', function (req, res) {
     var roomid = req.params.roomid;
     res.render('index.html', { roomid });
