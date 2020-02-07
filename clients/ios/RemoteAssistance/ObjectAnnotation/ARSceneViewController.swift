@@ -31,6 +31,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
     var recordingUuid:String?
     var clipThumbnailReady = false
     var clipReady = false
+    var remoteReferenceObject:ARReferenceObject?
     
     // Yulius - this is my mode switch
     var liveAnnotation = true
@@ -51,12 +52,13 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.searchForObjects()
+//        self.searchForObjects()
 
         let tap = UITapGestureRecognizer(target: self, action: #selector(onTap))
         self.view.addGestureRecognizer(tap)
         // TODO: Optionally load assets from API
-        self.loadInteralAssets()
+//        self.loadInteralAssets()
+        self.loadAnchorFromServer(anchorUuid: "demo_image_1")
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -89,24 +91,29 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
     }
     
     @objc func searchForObjects() {
+        let referenceObjects = ARReferenceObject.referenceObjects(inGroupNamed: self.objectGroupName, bundle: Bundle.main)
+        let referenceImages = ARReferenceImage.referenceImages(inGroupNamed: self.imageGroupName, bundle: Bundle.main)
+        self.searchForObjects(arReferenceObjects: referenceObjects, arReferenceImages: referenceImages)
+    }
+    
+    @objc func searchForObjects(arReferenceObjects:Set<ARReferenceObject>?, arReferenceImages:Set<ARReferenceImage>?) {
+        
         self.anchorFound = false
-        var foundAllObjects = true
-        if let referenceObjects = ARReferenceObject.referenceObjects(inGroupNamed: self.objectGroupName, bundle: Bundle.main) {
+        
+        var haveDetectionAssets = false
+        if let referenceObjects = arReferenceObjects {
+            haveDetectionAssets = true
             self.configuration.detectionObjects = referenceObjects
         }
-        else {
-            foundAllObjects = false
-            self.showMessage(title:"Assets Missing", message: "Missing expected assets in catalog: \(String(describing: self.objectGroupName))")
-        }
-        if let referenceImages = ARReferenceImage.referenceImages(inGroupNamed: self.imageGroupName, bundle: Bundle.main) {
+
+        if let referenceImages = arReferenceImages {
+            haveDetectionAssets = true
             self.configuration.detectionImages = referenceImages
         }
-        else {
-            foundAllObjects = false
-            self.showMessage(title:"Assets Missing", message: "Missing expected assets in catalog: \(String(describing: self.imageGroupName))")
-        }
-        if foundAllObjects {
+        
+        if haveDetectionAssets {
             let options: ARSession.RunOptions = [.resetTracking, .removeExistingAnchors]
+            self.configuration.automaticImageScaleEstimationEnabled = true
             sceneView.session.run(self.configuration, options: options)
         }
     }
@@ -256,9 +263,9 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
                         self.showToast(message: "getClip exception: \(err)")
                         return
                     }
-                    if let res = result {
-                        let thumb_url_string = store.ace.state.serverUrl + res.thumbnail_url!
-                        let mp4_url = store.ace.state.serverUrl + res.mp4_url!
+                    if let clip = result {
+                        let thumb_url_string = store.ace.state.serverUrl + clip.thumbnail_url!
+                        let mp4_url = store.ace.state.serverUrl + clip.mp4_url!
                         print(thumb_url_string)
                         print(mp4_url)
                         self.recordingUrl = URL(string: mp4_url)
@@ -286,6 +293,70 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
             }
             else {
                 self.showMessage(title: "tryAnnotateObjectWithRecording", message: "Either clip_uuid or discovered node was null")
+            }
+        }
+    }
+    
+    func searchForAndLoadAnchors(searchText:String) {
+        
+    }
+    
+    func loadAnchorFromServer(anchorUuid:String) {
+        self.api.getAnchor(anchorUuid) { result, error in
+            if let err = error {
+                self.showToast(message: "getAnchor exception: \(err)")
+                print("getAnchor exception: \(err)")
+                return
+            }
+            if let anchor = result {
+                let fileManager = FileManager.default
+                do {
+                    let documentDirectory = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor:nil, create:false)
+                    let remoteUrlString = store.ace.state.serverUrl + "/" + anchor.url
+                    let remoteUrl = URL(string: remoteUrlString)
+                    let fileName = remoteUrl?.lastPathComponent
+                    let fileURL = documentDirectory.appendingPathComponent(fileName!)
+                    AF.request(remoteUrlString).responseData { (response) in
+                        if response.error == nil {
+                            print(response.result)
+                            if let data = response.data {
+                                do {
+                                    if anchor.type == AceAPI.Anchor.AnchorType.object {
+                                        try data.write(to: fileURL)
+                                        if (anchor.type == AceAPI.Anchor.AnchorType.object) {
+                                            var referenceObject:ARReferenceObject?
+                                            try referenceObject = ARReferenceObject.init(archiveURL: fileURL)
+                                            if let refObj = referenceObject {
+                                                let refObjs:Set = [refObj]
+                                                self.searchForObjects(arReferenceObjects: refObjs, arReferenceImages: nil)
+                                            }
+                                        }
+                                    }
+                                    else if anchor.type == AceAPI.Anchor.AnchorType.image {
+                                        let uiImage = UIImage(data: data)
+                                        let ciImage = CIImage(image: uiImage!)
+                                        let context = CIContext(options: nil)
+                                        let cgImage = context.createCGImage(ciImage!, from: ciImage!.extent)
+                                        let referenceImage:ARReferenceImage = ARReferenceImage.init(cgImage!, orientation: CGImagePropertyOrientation.up, physicalWidth: 1.0)
+                                        referenceImage.name = anchorUuid
+                                        let refImgs:Set = [referenceImage]
+                                        self.searchForObjects(arReferenceObjects: nil, arReferenceImages: refImgs)
+                                    }
+                                }
+                                catch {
+                                    print(error)
+                                }
+                            }
+                        }
+                        else {
+                            self.showMessage(title: "Get arobject Error", message: "\(String(describing: response.error))")
+                            print(response.error ?? "Get arobject Error")
+                        }
+                    }
+                }
+                catch {
+                    print(error)
+                }
             }
         }
     }
