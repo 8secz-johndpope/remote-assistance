@@ -396,7 +396,6 @@ function setMode(newMode) {
     // reset hands
     if (mode == "hands" && newMode != "hands") {
         if (renderer) {
-            $(renderer.canvas).hide();
             renderer.domElement.removeEventListener('click', onMouseClick, false);
         }
     }
