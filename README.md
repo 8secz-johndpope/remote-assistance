@@ -1,7 +1,7 @@
 ACE remote assistance framework
 =================
 
-The unified Augmented Connected Enterprise (ACE) remote assistance framework project respository.
+The unified Augmented Connected Enterprise (ACE) remote assistance framework project repository.
 
 
 [Build and run the server](server/README.md)
