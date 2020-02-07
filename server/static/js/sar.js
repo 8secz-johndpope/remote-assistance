@@ -151,7 +151,7 @@ function sarAnimate(scopeCanvas2d)
       correctedctx.ellipse(fingerPosition.x,fingerPosition.y,8,8,0,0,2*Math.PI);
       correctedctx.fill();
     }
-    scopeCanvas2d.getContext('2d').drawImage(video,16,16,scopeCanvas2d.width-32,scopeCanvas2d.height-32,0,0,,scopeCanvas2d.width,scopeCanvas2d.height);
+    scopeCanvas2d.getContext('2d').drawImage(video,16,16,scopeCanvas2d.width-32,scopeCanvas2d.height-32,0,0,scopeCanvas2d.width,scopeCanvas2d.height);
   }
   else
     correctedcanvas.style.opacity = 0.1;
