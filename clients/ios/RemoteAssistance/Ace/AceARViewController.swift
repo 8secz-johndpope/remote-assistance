@@ -55,6 +55,7 @@ class AceARViewController : UIViewController {
     var liveAnnotation = true
     var recordingUrl:URL?
     var clipNode = [String:ObjectAnnotationNode]()
+    var objectTap:UITapGestureRecognizer?
     
     // mode
     var mode = "none"
@@ -88,8 +89,6 @@ class AceARViewController : UIViewController {
         // Pause the view's session
         self.arView.session.pause()
         
-        self.wrtc?.disconnect()
-
         self.objectAnnotationViewWillDisappear()
     }
     

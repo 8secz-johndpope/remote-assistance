@@ -65,12 +65,15 @@ extension AceARViewController {
     func objectAnnotationViewWillAppear() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(onTap))
         tap.delegate = self.parent as? UIGestureRecognizerDelegate
+        self.objectTap = tap
         self.parent?.view.addGestureRecognizer(tap)
         self.loadInteralAssets()
     }
     
     func objectAnnotationViewWillDisappear() {
-        self.parent?.view.removeGestureRecognizers()
+        if let tap = self.objectTap {
+            self.parent?.view.removeGestureRecognizer(tap)
+        }
         self.anchorFound = false
     }
     
@@ -199,8 +202,10 @@ extension AceARViewController {
         let player = AVPlayer(url: url)
         let playerViewController = AVKit.AVPlayerViewController()
         playerViewController.player = player
-        self.navigationController?.setNavigationBarHidden(false, animated: true)
-        self.navigationController?.pushViewController(playerViewController)
+        // show modal instead of nav controller for fullscreen view
+        self.present(playerViewController, animated: true, completion: nil)
+//        self.navigationController?.setNavigationBarHidden(false, animated: true)
+//        self.navigationController?.pushViewController(playerViewController)
     }
 
 
