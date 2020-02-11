@@ -25,7 +25,7 @@ html {
   justify-content: space-between;
   width: 100%;
   max-width: 867px;
-  margin: 25px 10px;
+  margin: 0px 0px;
   height: calc(100% - 50px);
   border: var(--border);
   border-radius: 5px;

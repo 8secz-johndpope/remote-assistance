@@ -112,6 +112,9 @@ function appendMessage(name, img, side, text, botResponseArr) {
 
   msgerChat.insertAdjacentHTML("beforeend", msgHTML);
   msgerChat.scrollTop += 500;
+  window.scrollTo(0,document.body.scrollHeight);
+  window.scrollTo(0,document.querySelector(".msger-chat").scrollHeight);
+
 }
 
 function saveResponse(item,r,rl) {
@@ -249,5 +252,4 @@ function loadUser() {
 let user_uuid = Cookies.get('customer_uuid');
 loadUser();
 botResponse(0);
-
 //appendMessage(BOT_NAME, BOT_IMG, "left", "Hello, how may I help you today?", []);
