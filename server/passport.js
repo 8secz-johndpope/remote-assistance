@@ -50,7 +50,7 @@ module.exports = function(passport) {
                                 email,
                                 u.password,
                                 uuid
-                            ]
+                            ],
                             function(err,rows){         
                                 return done(null, u)
                             })
