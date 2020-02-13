@@ -97,11 +97,12 @@ extension AceARViewController {
             self.showMessage(title:"Assets Missing", message: "Missing expected assets in catalog: \(String(describing: self.imageGroupName))")
         }
         if foundAllObjects {
-            let options: ARSession.RunOptions = [.resetTracking, .removeExistingAnchors]
+            let options: ARSession.RunOptions = [.resetTracking, .removeExistingAnchors, .stopTrackedRaycasts]
             // remove all objects before reset
-            self.arView.scene.rootNode.enumerateChildNodes { (node, stop) in
-                node.removeFromParentNode()
-            }
+            // prevent double free when using .removeExistingAnchors
+//            self.arView.scene.rootNode.enumerateChildNodes { (node, stop) in
+//                node.removeFromParentNode()
+//            }
             clipNode = [String:ObjectAnnotationNode]()
             arView.session.run(self.configuration, options: options)
         }

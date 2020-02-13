@@ -79,9 +79,9 @@ extension AceARViewController {
     }
     
     @IBAction func onResetScreenAR(_ sender: UIButton) {
-        DispatchQueue.main.async {
-            self.resetScreenAR()
-        }
+//        DispatchQueue.main.async {
+//            self.resetScreenAR()
+//        }
     }
     
     func screenAR(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
@@ -97,15 +97,15 @@ extension AceARViewController {
         }
     }
     
-    func resetScreenAR() {
-        self.arView.session.pause()
-        self.rectangleNodes.forEach({ $1.removeFromParentNode() })
-        self.rectangleNodes.removeAll()
-        self.arView.scene.rootNode.enumerateChildNodes { (node, stop) in
-            node.removeFromParentNode()
-        }
-        self.arView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
-    }
+    // func resetScreenAR() {
+    //     self.arView.session.pause()
+    //     self.rectangleNodes.forEach({ $1.removeFromParentNode() })
+    //     self.rectangleNodes.removeAll()
+    //     self.arView.scene.rootNode.enumerateChildNodes { (node, stop) in
+    //         node.removeFromParentNode()
+    //     }
+    //     self.arView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
+    // }
     
     func enableScreenAR() {
         guard let refImages = ARReferenceImage.referenceImages(inGroupNamed: "ScreenAR Resources", bundle: Bundle.main) else {
@@ -118,7 +118,7 @@ extension AceARViewController {
         self.configuration.detectionObjects = []
         self.configuration.detectionImages = refImages
 
-        self.arView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking])
+        self.arView.session.run(self.configuration, options: [.removeExistingAnchors, .resetTracking, .stopTrackedRaycasts])
     }
 
 }

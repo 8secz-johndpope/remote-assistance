@@ -129,7 +129,7 @@ class AceARViewController : UIViewController {
 //        self.searchForObjects()
 
         // Run the view's session
-        self.arView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+        self.arView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking, .stopTrackedRaycasts])
     }
         
     func initMediaStream() {
