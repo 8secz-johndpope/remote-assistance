@@ -33,20 +33,20 @@ var parser = new argparse.ArgumentParser({
     description: 'Remote Assistance Server'
 });
 
-parser.addArgument(
-    [ '-d', '--db_off' ],
-    {
-        action: 'storeConst',
-        constant: true,
-        defaultValue: false,
-        help: 'Do not connect to the database'
-    }
-);
+// parser.addArgument(
+//     [ '-d', '--db_off' ],
+//     {
+//         action: 'storeConst',
+//         constant: true,
+//         defaultValue: false,
+//         help: 'Do not connect to the database'
+//     }
+// );
 
 var args = parser.parseArgs();
 
 var db = null
-if (!args.db_off) {
+if (config.databaseUrl) {
     db = require('./db')
 }
 
