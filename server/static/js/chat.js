@@ -11,7 +11,9 @@ const BOT_MSG_UNKNOWN = "I'm sorry, I didn't understand your response.";
 const SERVER_API = "/api/";
 const NATIVE_UA = "ace";
 
-const CHAT_TREE = JSON.parse(CHAT_TREE_JSON);
+const CTJ = CHAT_TREE_JSON.replace(/(\r\n|\n|\r)/gm, "")
+console.log(CTJ);
+const CHAT_TREE = JSON.parse(CTJ);
 
 let convArchive = {}; convArchive.responses = []; 
 let currentIndex = 1;
