@@ -83,7 +83,7 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 14,
-    "q": "I see you are on a (mobile device). Do you want to print from:",
+    "q": "I see you are on a {{deviceDetection}}. Do you want to print from:",
     "next": [mobile,15,16,17],
     "nextLabels": ["A mobile device","A desktop"]
     },
@@ -102,7 +102,7 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 17,
-    "q": "Please visit <short link> on a desktop or email to {{userEmail}} to download.",
+    "q": "Please visit https://bit.ly/3c6Qs0w on a desktop or email to {{userEmail}} to download.",
     "next": [13],
     "nextLabels": ["Continue"]
     },

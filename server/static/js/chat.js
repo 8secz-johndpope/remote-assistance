@@ -18,7 +18,7 @@ const CHAT_TREE = JSON.parse(CTJ);
 let convArchive = {}; convArchive.responses = []; 
 let currentIndex = 1;
 let jbScanner;
-let qrScannerAction;
+let savedAction;
 
 msgerForm.addEventListener("submit", event => {
   event.preventDefault();
@@ -56,6 +56,28 @@ function launchRA() {
     })
 }
 
+function launchScanText(action) {
+  savedAction = action;
+  // Launch native text scanner
+
+  // DEBUG
+  let scannedText = "";
+  if (action == 5) {
+    scannedText = "ApeosPort-VII C7773";    
+  } else if (action == 7) {
+    scannedText = "32342";
+  }
+  // DEBUG
+
+  injectMsg(savedAction,scannedText);
+}
+
+function launchLink(action) {
+  savedAction = action;
+  window.open(${action},'_blank');
+  injectMsg(savedAction,"");
+}
+
 function launchEmail(msg) { 
   let body = "\n\nConversation archive copied below.\n\n---\n\n"
   body += JSON.stringify(convArchive);
@@ -65,6 +87,16 @@ function launchEmail(msg) {
 
 function launchPhoneCall(msg) {
   window.location.href = "tel:" + msg;
+}
+
+function validURL(str) {
+  var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+  return !!pattern.test(str);
 }
 
 function getButtonHTML(botResponseArr) {
@@ -79,8 +111,14 @@ function getButtonHTML(botResponseArr) {
       case "barcode":
        html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchQRScanner(${action})'><span class="fa fa-qrcode fa-2x"></span></button> `;
        break;
+      case "link":
+       html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchLink(${action})'><span class="fa fa-link fa-2x"></span></button> `;
+       break;
       case "ra":
        html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchRA()'><span class="fa fa-user fa-2x"></span></button> `;
+       break;
+      case "scanText":
+       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchScanText(${action})'><span class="fa fa-camera fa-2x"></span></button> `;
        break;
       case "email":
        html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchEmail(\"${action}\")'><span class="fa fa-envelope fa-2x"></span></button> `;
@@ -127,6 +165,29 @@ function saveResponse(item,r,rl) {
   console.log(JSON.stringify(convArchive));
 }
 
+function parseQuestion(q) {
+  let regexp = /\{\{([^{}]*)\}\}/g;
+  let arr = [...q.matchAll(regexp)];
+  for (let i=0; i<arr.length;i++) {
+    let replaceWith = "";
+    let toReplace = arr[i][1];
+    if (toReplace =="userEmail") {
+      // DEBUG
+      replaceWith = "test@fxpal.com";
+      // DEBUG
+    } else if (toReplace =="deviceType") {
+      // DEBUG
+      replaceWith = "Android";
+      convArchive["deviceType"] = replaceWith;
+      // DEBUG
+    } 
+    else if (toReplace in convArchive) {
+        replaceWith = convArchive[toReplace];
+    }
+    q.replace(toReplace,replaceWith);
+  }
+}
+
 function botResponse(msgText,msgLabel="") {
   //const r = random(0, BOT_MSGS.length - 1);
   let botMsgText = BOT_MSG_UNKNOWN;
@@ -135,7 +196,18 @@ function botResponse(msgText,msgLabel="") {
   let msgTextInt = parseInt(msgText);
 
   if (isNaN(msgTextInt)) {
-    currentIndex = CHAT_TREE.responses[currentIndex-1].next[1];
+    const regex = /[0-9]+m[0-9]+/g;
+    const found = paragraph.match(regex);
+    if (found.length > 0) {
+      const tmp = found[0].split("m");
+      if (convArchive["deviceType"] == "Android") {
+        currentIndex = parseInt(tmp[0]);
+      } else {
+        currentIndex = parseInt(tmp[1]);
+      }
+    } else {
+      currentIndex = CHAT_TREE.responses[currentIndex-1].next[1];      
+    }
   } else if (msgText == 0) { 
       currentIndex = 1;
   } else {
@@ -147,7 +219,8 @@ function botResponse(msgText,msgLabel="") {
     }
   }  
 
-  botMsgText = CHAT_TREE.responses[currentIndex-1].q; 
+  botMsgText = parseQuestion(CHAT_TREE.responses[currentIndex-1].q); 
+
   // + " " + runningNative();
 
   for (let i = 0; i < CHAT_TREE.responses[currentIndex-1].next.length; i++) {
@@ -160,12 +233,22 @@ function botResponse(msgText,msgLabel="") {
         nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
         botResponseArr.push(nextBtn);
         break;
+    } else if (t == "scanText") {
+        nextBtn.type = "scanText"; 
+        nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
+        botResponseArr.push(nextBtn);
+        break;
     } else if (t == "ra") {
           nextBtn.type = "ra"; nextBtn.action = "";
     } else if (t.match(eReg)) {
           nextBtn.type = "email"; nextBtn.action = t;
     } else if (t.match(pReg)) {
           nextBtn.type = "phone"; nextBtn.action = t;
+    } else if (validURL(t)) {
+        nextBtn.type = "link"; 
+        nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
+        botResponseArr.push(nextBtn);
+        break;
     } else {
       let tL = CHAT_TREE.responses[currentIndex-1].nextLabels ? CHAT_TREE.responses[currentIndex-1].nextLabels[i] : t;
       nextBtn.type = "response"; nextBtn.action = t; nextBtn.actionLabel = tL;
@@ -199,7 +282,7 @@ function onQRCodeScanned(scannedText)
   if (!runningNative()) {
     closeJSQRScanner();
   }
-  injectMsg(qrScannerAction,scannedText);
+  injectMsg(savedAction,scannedText);
 }
 
 function closeJSQRScanner() {
@@ -220,7 +303,7 @@ function JsQRScannerReady()
 }
 
 function launchQRScanner(action) {
-    qrScannerAction = action;
+    savedAction = action;
     if (runningNative()) {
       window.webkit.messageHandlers.launchQRScanner.postMessage(
       { 
