@@ -74,7 +74,7 @@ const CHAT_TREE_JSON = `
     {
     "id": 12,
     "q": "Sorry to hear that your {{printerName}} has a paper jam. Please point the phone at the device and follow the video attached to the problem area.",
-    "next": ["showARVideo",12]
+    "next": ["showARVideo",13]
     },
     {
     "id": 13,
@@ -90,7 +90,7 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 15,
-    "q": "You're on Android, so please download <a href='intent://example.com#Intent;scheme=app;package=my.package.name;end;'>this app</a> from the Google Play Store:",
+    "q": "You're on Android, so please download <a href='intent://example.com#Intent;scheme=app;package=my.package.name;end;'>this app</a> from the Google Play Store.",
     "next": [13],
     "nextLabels": ["Continue"]
     },
@@ -103,7 +103,7 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 17,
-    "q": "Please visit https://bit.ly/3c6Qs0w on a desktop or email to {{userEmail}} to download.",
+    "q": "Please visit <a href=https://bit.ly/3c6Qs0w>this link</a> on a desktop or email to {{userEmail}} to download.",
     "next": [13],
     "nextLabels": ["Continue"]
     },
@@ -131,7 +131,7 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 21,
-    "q": "Now that you've seen how, please try replacing your toner cartridge. <a href=#>link to video instruction</a> <a href=#>link to url self help</a>",
+    "q": "Now that you've seen how, please try replacing your toner cartridge. <a href=#>Find out more here.</a>",
     "next": [13],
     "nextLabels": ["Continue"]
     }

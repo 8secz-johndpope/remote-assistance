@@ -66,6 +66,16 @@ function launchARScene(action) {
   injectMsg(savedAction,"");
 }
 
+function launchARVideo(action) {
+  savedAction = action;
+
+  // DEBUG
+  // Launch AR scene
+  // DEBUG
+
+  injectMsg(savedAction,"");
+}
+
 function launchScanText(action) {
   savedAction = action;
   // Launch native text scanner
@@ -117,22 +127,25 @@ function getButtonHTML(botResponseArr) {
     switch (botResponseArr[i].type) {
       case "response":
        let actionLabel = botResponseArr[i].actionLabel;
-       html += `<button class="btn btn-primary" style="margin-top: 10px; margin-right: 25px" onclick='injectMsg(${action},\"${actionLabel}\")'>${actionLabel}</button> `;
+       html += `<button class="btn btn-primary" style="margin-top: 10px; margin-right: 25px" onclick='injectMsg(\"${action}\",\"${actionLabel}\")'>${actionLabel}</button> `;
        break;
       case "barcode":
-       html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchQRScanner(${action})'><span class="fa fa-qrcode fa-2x"></span></button> `;
+       html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchQRScanner(\"${action}\")'><span class="fa fa-qrcode fa-2x"></span></button> `;
        break;
       case "link":
-       html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchLink(\"${url}\",${action})'><span class="fa fa-link fa-2x"></span></button> `;
+       html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchLink(\"${url}\",\"${action}\")'><span class="fa fa-link fa-2x"></span></button> `;
        break;
       case "ra":
        html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchRA()'><span class="fa fa-user fa-2x"></span></button> `;
        break;
       case "showARScene":
-       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchARScene(${action})'><span class="fa fa-camera fa-2x"></span></button> `;
+       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchARScene(\"${action}\")'><span class="fa fa-camera fa-2x"></span></button> `;
+       break;
+      case "showARVideo":
+       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchARVideo(\"${action}\")'><span class="fa fa-camera fa-2x"></span></button> `;
        break;
       case "scanText":
-       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchScanText(${action})'><span class="fa fa-camera fa-2x"></span></button> `;
+       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchScanText(\"${action}\")'><span class="fa fa-camera fa-2x"></span></button> `;
        break;
       case "email":
        html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchEmail(\"${action}\")'><span class="fa fa-envelope fa-2x"></span></button> `;
@@ -176,7 +189,7 @@ function saveResponse(item,r,rl) {
   res.question = item.q; res.response = r; res.responseLabel = rl;
   if (item.setVar) { let sv = item.setVar; convArchive[sv] = rl; }
   convArchive.responses.push(res);
-  console.log(JSON.stringify(convArchive));
+  //console.log(JSON.stringify(convArchive));
 }
 
 function parseQuestion(q) {
@@ -215,20 +228,20 @@ function botResponse(msgText,msgLabel="") {
   let botResponseArr = [];
 
   let msgTextInt = parseInt(msgText);
+  console.log(msgText + " " + msgTextInt);
 
-  if (isNaN(msgTextInt)) {
-    const regex = /[0-9]+m[0-9]+/g;
-    const found = paragraph.match(regex);
-    if (found.length > 0) {
-      const tmp = found[0].split("m");
-      if (convArchive["deviceType"] == "Android") {
-        currentIndex = parseInt(tmp[0]);
-      } else {
-        currentIndex = parseInt(tmp[1]);
-      }
+  const regex = /[0-9]+m[0-9]+/g;
+  const found = msgText.match(regex);
+  console.log(msgText + " " + regex);
+  if ( found !== null ) {
+    const tmp = found[0].split("m");
+    if (convArchive["deviceType"] == "Android") {
+      currentIndex = parseInt(tmp[0]);
     } else {
-      currentIndex = CHAT_TREE.responses[currentIndex-1].next[1];      
+      currentIndex = parseInt(tmp[1]);
     }
+  } else if (isNaN(msgTextInt)) {
+      currentIndex = CHAT_TREE.responses[currentIndex-1].next[1];      
   } else if (msgText == 0) { 
       currentIndex = 1;
   } else if (CHAT_TREE.responses[currentIndex-1].next.length  == 0) {
@@ -263,6 +276,11 @@ function botResponse(msgText,msgLabel="") {
         break;
     } else if (t == "showARScene") {
         nextBtn.type = "showARScene"; 
+        nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
+        botResponseArr.push(nextBtn);
+        break;
+    } else if (t == "showARVideo") {
+        nextBtn.type = "showARVideo"; 
         nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
         botResponseArr.push(nextBtn);
         break;
@@ -365,5 +383,5 @@ function loadUser() {
 
 let user_uuid = Cookies.get('customer_uuid');
 loadUser();
-botResponse(0);
+botResponse("0");
 //appendMessage(BOT_NAME, BOT_IMG, "left", "Hello, how may I help you today?", []);
