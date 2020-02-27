@@ -1,3 +1,9 @@
+/*!
+ * Remote Asistance/ACE
+ * Copyright(c) 2020 FX Palo Lato Labs, Inc.
+ * License: contact ace@fxpal.com
+ */
+
 const express = require('express');
 const app = express();
 const http = require('http');
@@ -95,12 +101,12 @@ app.get('/expert', function (req, res) {
 });
 
 // handle remote assistance basic urls
+app.use('/basic', require('./basic'));
 
-app.get('/basic/expert', function (req, res) {
-    res.render('expert_basic.html', { roomid: 'basic' });
-});
+// API
+app.use('/api', require('./api'));
 
-
+// remote assistance url
 app.get('/:roomid', function (req, res) {
     var roomid = req.params.roomid;
     res.render('index.html', { roomid });
@@ -115,9 +121,6 @@ app.get('/:roomid/customer', function (req, res) {
     var roomid = req.params.roomid;
     res.render('customer.html', { roomid });
 });
-
-// API
-app.use('/api', require('./api'));
 
 // Setup http server
 var privateKey  = fs.readFileSync('ssl/wild.fxpal.net.key', 'utf8');

@@ -1,8 +1,15 @@
+/*!
+ * Remote Asistance/ACE
+ * Copyright(c) 2020 FX Palo Lato Labs, Inc.
+ * License: contact ace@fxpal.com
+ */
+
 const config = require('config');
 const express = require('express');
 
 var router = express.Router()
 
+// dat
 var db = null
 if (config.databaseUrl) {
     db = require('./db')
