@@ -63,8 +63,10 @@ app.get('/', function (req, res) {
     var roomid = util.generateRandomId();
     if (db !== null) {
         db.updateRoom(res,true,true,roomid,req.body,function(roomData) {
-            res.redirect('/' + roomid)
+            res.redirect('/' + roomid);
         });        
+    } else {
+        res.redirect('/' + roomid);
     }
 });
 
