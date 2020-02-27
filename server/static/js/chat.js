@@ -56,6 +56,16 @@ function launchRA() {
     })
 }
 
+function launchARScene(action) {
+  savedAction = action;
+
+  // DEBUG
+  // Launch AR scene
+  // DEBUG
+
+  injectMsg(savedAction,"");
+}
+
 function launchScanText(action) {
   savedAction = action;
   // Launch native text scanner
@@ -72,9 +82,9 @@ function launchScanText(action) {
   injectMsg(savedAction,scannedText);
 }
 
-function launchLink(action) {
+function launchLink(url,action) {
   savedAction = action;
-  window.open(${action},'_blank');
+  window.open(url,'_blank');
   injectMsg(savedAction,"");
 }
 
@@ -102,6 +112,7 @@ function validURL(str) {
 function getButtonHTML(botResponseArr) {
   let html = "";
   for (let i = 0; i < botResponseArr.length; i++) {
+    let url = botResponseArr[i].url;
     let action = botResponseArr[i].action;
     switch (botResponseArr[i].type) {
       case "response":
@@ -112,10 +123,13 @@ function getButtonHTML(botResponseArr) {
        html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchQRScanner(${action})'><span class="fa fa-qrcode fa-2x"></span></button> `;
        break;
       case "link":
-       html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchLink(${action})'><span class="fa fa-link fa-2x"></span></button> `;
+       html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchLink(\"${url}\",${action})'><span class="fa fa-link fa-2x"></span></button> `;
        break;
       case "ra":
        html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchRA()'><span class="fa fa-user fa-2x"></span></button> `;
+       break;
+      case "showARScene":
+       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchARScene(${action})'><span class="fa fa-camera fa-2x"></span></button> `;
        break;
       case "scanText":
        html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchScanText(${action})'><span class="fa fa-camera fa-2x"></span></button> `;
@@ -170,22 +184,29 @@ function parseQuestion(q) {
   let arr = [...q.matchAll(regexp)];
   for (let i=0; i<arr.length;i++) {
     let replaceWith = "";
+    let toReplaceRaw = arr[i][0];
     let toReplace = arr[i][1];
+    //console.log(toReplace + " " + convArchive[toReplace]);
     if (toReplace =="userEmail") {
       // DEBUG
       replaceWith = "test@fxpal.com";
       // DEBUG
+    } else if (toReplace =="partList") {
+      // DEBUG
+      replaceWith = "PT-234324, PT-112, PTx-232";
+      // DEBUG
     } else if (toReplace =="deviceType") {
       // DEBUG
       replaceWith = "Android";
-      convArchive["deviceType"] = replaceWith;
+      convArchive["deviceType"] = replaceWith; // When to set this?
       // DEBUG
     } 
     else if (toReplace in convArchive) {
         replaceWith = convArchive[toReplace];
     }
-    q.replace(toReplace,replaceWith);
+    q = q.replace(toReplaceRaw,replaceWith);
   }
+  return q;
 }
 
 function botResponse(msgText,msgLabel="") {
@@ -210,6 +231,8 @@ function botResponse(msgText,msgLabel="") {
     }
   } else if (msgText == 0) { 
       currentIndex = 1;
+  } else if (CHAT_TREE.responses[currentIndex-1].next.length  == 0) {
+    return;
   } else {
     for (let i = 0; i < CHAT_TREE.responses[currentIndex-1].next.length; i++) {
      if ((CHAT_TREE.responses[currentIndex-1].next.length == 1) || (msgTextInt == CHAT_TREE.responses[currentIndex-1].next[i])) {
@@ -238,6 +261,11 @@ function botResponse(msgText,msgLabel="") {
         nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
         botResponseArr.push(nextBtn);
         break;
+    } else if (t == "showARScene") {
+        nextBtn.type = "showARScene"; 
+        nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
+        botResponseArr.push(nextBtn);
+        break;
     } else if (t == "ra") {
           nextBtn.type = "ra"; nextBtn.action = "";
     } else if (t.match(eReg)) {
@@ -246,6 +274,7 @@ function botResponse(msgText,msgLabel="") {
           nextBtn.type = "phone"; nextBtn.action = t;
     } else if (validURL(t)) {
         nextBtn.type = "link"; 
+        nextBtn.url = t;
         nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
         botResponseArr.push(nextBtn);
         break;

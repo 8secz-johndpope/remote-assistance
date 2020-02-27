@@ -25,7 +25,7 @@ const CHAT_TREE_JSON = `
     "id": 3,
     "q": "What do you want help with?",
     "next": [4,18,11],
-    "nextLabels": ["Fix my printer","I need to replace my printer's toner","Speak to someone"]
+    "nextLabels": ["Fix my printer","I need to replace my printer toner","Speak to someone"]
     },
     {
     "id": 4,
@@ -59,6 +59,7 @@ const CHAT_TREE_JSON = `
     {
     "id": 9,
     "q": "Great, bye!",
+    "next": []
     },
     {
     "id": 10,
@@ -83,13 +84,13 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 14,
-    "q": "I see you are on a {{deviceDetection}}. Do you want to print from:",
-    "next": [mobile,15,16,17],
+    "q": "I see you are on a {{deviceType}}. Do you want to print from:",
+    "next": ["15m16",17],
     "nextLabels": ["A mobile device","A desktop"]
     },
     {
     "id": 15,
-    "q": "You're on Android, so please download <a href="intent://example.com#Intent;scheme=app;package=my.package.name;end;">this app</a> from the Google Play Store:",
+    "q": "You're on Android, so please download <a href='intent://example.com#Intent;scheme=app;package=my.package.name;end;'>this app</a> from the Google Play Store:",
     "next": [13],
     "nextLabels": ["Continue"]
     },
@@ -114,18 +115,18 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 19,
-    "q": "Here are the part numbers for tonor for your device {{partList}}. Here is the digital store for you to purchase: <shortened link>.
-          <p>
+    "q": "Here are the part numbers for toner for your device: {{partList}}. Please <a href=#>visit the digital store to purchase toner</a>.
+          <div style='padding:10px 0px 0px 0px'>
           Did you know that Fuji Xerox provides automated toner replenishment using smart remote service? 
           Would you like to know more about applying for eligibility? 
-          <a href=#>link to form</a> <a href=#>link to brochure</a> <a href=#>link to video</a>",
+          <a href=#>link to form</a> <a href=#>link to brochure</a> <a href=#>link to video</a></div>",
     "next": [13],
     "nextLabels": ["Continue"]
     },
     {
     "id": 20,
     "q": "You are ready to install toner. Please point your mobile at your printer and we'll show you how.",
-    "next": ["showARScene",21]
+    "next": ["showARScene",21],
     "nextLabels": ["Continue"]
     },
     {
@@ -133,7 +134,7 @@ const CHAT_TREE_JSON = `
     "q": "Now that you've seen how, please try replacing your toner cartridge. <a href=#>link to video instruction</a> <a href=#>link to url self help</a>",
     "next": [13],
     "nextLabels": ["Continue"]
-    },
+    }
  ]
 } `;
 
