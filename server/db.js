@@ -1,4 +1,10 @@
-const mysql = require('mysql')
+/*!
+ * Remote Asistance/ACE
+ * Copyright(c) 2020 FX Palo Lato Labs, Inc.
+ * License: contact ace@fxpal.com
+ */
+
+ const mysql = require('mysql')
 const config = require('config');
 const parseDbUrl = require("parse-database-url");
 const databaseConfig = parseDbUrl(config.databaseUrl);

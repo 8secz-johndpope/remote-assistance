@@ -92,13 +92,13 @@ class AceViewController : UIViewController {
             sketchVC?.view.isHidden = true
         }
         
-        if (mode != "pointer") {
-            arVC?.resetPointer()
-        }
+//         if (mode != "pointer") {
+//            arVC?.resetPointer()
+//         }
 
-        if (mode != "screenar") {
-            arVC?.resetScreenAR()
-        }
+//         if (mode != "screenar") {
+//            arVC?.resetScreenAR()
+//         }
                 
         switch (self.mode) {
             case "hands":

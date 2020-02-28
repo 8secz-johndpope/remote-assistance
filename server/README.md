@@ -28,7 +28,9 @@ Prerequisites
 
 * Install leapmotion
 
-  1. Download Leapmotion V2 software: https://developer.leapmotion.com/setup/desktop
+  1. Download Leapmotion software: https://developer.leapmotion.com/setup/desktop
+     * Windows users download V4 Orion version
+     * Mac and Linux users download V2 version
   2. Start the `Leapmotion Control Panel` app
   3. Check `Allow Web Apps` under the `General` panel
   4. Check `Allow Background Apps` under the `General` panel

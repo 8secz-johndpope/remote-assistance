@@ -202,6 +202,8 @@ Renderer = function ( parameters ) {
         // render video if exists
         if (scope.parameters.video_element && scope.parameters.video_element.videoWidth && scope.parameters.video_element.videoHeight) {
             var x,y,width,height;
+            var videoWidth = scope.parameters.video_element.videoWidth;
+            var videoHeight = scope.parameters.video_element.videoHeight;
             var aspectRatio = scope.parameters.video_element.videoWidth/scope.parameters.video_element.videoHeight;
 
             // try max height
@@ -218,7 +220,8 @@ Renderer = function ( parameters ) {
             }
 
             //console.log(x,y,width,height)
-            ctx.drawImage(scope.parameters.video_element, x, y, width, height);
+            var offset = 16;
+            ctx.drawImage(scope.parameters.video_element, offset, offset, videoWidth - 2*offset, videoHeight - 2*offset, x, y, width, height);
         }
 
         // render sketch canvas

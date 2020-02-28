@@ -11,12 +11,14 @@ const BOT_MSG_UNKNOWN = "I'm sorry, I didn't understand your response.";
 const SERVER_API = "/api/";
 const NATIVE_UA = "ace";
 
-const CHAT_TREE = JSON.parse(CHAT_TREE_JSON);
+const CTJ = CHAT_TREE_JSON.replace(/(\r\n|\n|\r)/gm, "")
+console.log(CTJ);
+const CHAT_TREE = JSON.parse(CTJ);
 
 let convArchive = {}; convArchive.responses = []; 
 let currentIndex = 1;
 let jbScanner;
-let qrScannerAction;
+let savedAction;
 
 msgerForm.addEventListener("submit", event => {
   event.preventDefault();
@@ -54,6 +56,48 @@ function launchRA() {
     })
 }
 
+function launchARScene(action) {
+  savedAction = action;
+
+  // DEBUG
+  // Launch AR scene
+  // DEBUG
+
+  injectMsg(savedAction,"");
+}
+
+function launchARVideo(action) {
+  savedAction = action;
+
+  // DEBUG
+  // Launch AR scene
+  // DEBUG
+
+  injectMsg(savedAction,"");
+}
+
+function launchScanText(action) {
+  savedAction = action;
+  // Launch native text scanner
+
+  // DEBUG
+  let scannedText = "";
+  if (action == 5) {
+    scannedText = "ApeosPort-VII C7773";    
+  } else if (action == 7) {
+    scannedText = "32342";
+  }
+  // DEBUG
+
+  injectMsg(savedAction,scannedText);
+}
+
+function launchLink(url,action) {
+  savedAction = action;
+  window.open(url,'_blank');
+  injectMsg(savedAction,"");
+}
+
 function launchEmail(msg) { 
   let body = "\n\nConversation archive copied below.\n\n---\n\n"
   body += JSON.stringify(convArchive);
@@ -65,20 +109,43 @@ function launchPhoneCall(msg) {
   window.location.href = "tel:" + msg;
 }
 
+function validURL(str) {
+  var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+  return !!pattern.test(str);
+}
+
 function getButtonHTML(botResponseArr) {
   let html = "";
   for (let i = 0; i < botResponseArr.length; i++) {
+    let url = botResponseArr[i].url;
     let action = botResponseArr[i].action;
     switch (botResponseArr[i].type) {
       case "response":
        let actionLabel = botResponseArr[i].actionLabel;
-       html += `<button class="btn btn-primary" style="margin-top: 10px; margin-right: 25px" onclick='injectMsg(${action},\"${actionLabel}\")'>${actionLabel}</button> `;
+       html += `<button class="btn btn-primary" style="margin-top: 10px; margin-right: 25px" onclick='injectMsg(\"${action}\",\"${actionLabel}\")'>${actionLabel}</button> `;
        break;
       case "barcode":
-       html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchQRScanner(${action})'><span class="fa fa-qrcode fa-2x"></span></button> `;
+       html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchQRScanner(\"${action}\")'><span class="fa fa-qrcode fa-2x"></span></button> `;
+       break;
+      case "link":
+       html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchLink(\"${url}\",\"${action}\")'><span class="fa fa-link fa-2x"></span></button> `;
        break;
       case "ra":
        html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchRA()'><span class="fa fa-user fa-2x"></span></button> `;
+       break;
+      case "showARScene":
+       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchARScene(\"${action}\")'><span class="fa fa-camera fa-2x"></span></button> `;
+       break;
+      case "showARVideo":
+       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchARVideo(\"${action}\")'><span class="fa fa-camera fa-2x"></span></button> `;
+       break;
+      case "scanText":
+       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchScanText(\"${action}\")'><span class="fa fa-camera fa-2x"></span></button> `;
        break;
       case "email":
        html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchEmail(\"${action}\")'><span class="fa fa-envelope fa-2x"></span></button> `;
@@ -112,6 +179,9 @@ function appendMessage(name, img, side, text, botResponseArr) {
 
   msgerChat.insertAdjacentHTML("beforeend", msgHTML);
   msgerChat.scrollTop += 500;
+  window.scrollTo(0,document.body.scrollHeight);
+  window.scrollTo(0,document.querySelector(".msger-chat").scrollHeight);
+
 }
 
 function saveResponse(item,r,rl) {
@@ -119,7 +189,37 @@ function saveResponse(item,r,rl) {
   res.question = item.q; res.response = r; res.responseLabel = rl;
   if (item.setVar) { let sv = item.setVar; convArchive[sv] = rl; }
   convArchive.responses.push(res);
-  console.log(JSON.stringify(convArchive));
+  //console.log(JSON.stringify(convArchive));
+}
+
+function parseQuestion(q) {
+  let regexp = /\{\{([^{}]*)\}\}/g;
+  let arr = [...q.matchAll(regexp)];
+  for (let i=0; i<arr.length;i++) {
+    let replaceWith = "";
+    let toReplaceRaw = arr[i][0];
+    let toReplace = arr[i][1];
+    //console.log(toReplace + " " + convArchive[toReplace]);
+    if (toReplace =="userEmail") {
+      // DEBUG
+      replaceWith = "test@fxpal.com";
+      // DEBUG
+    } else if (toReplace =="partList") {
+      // DEBUG
+      replaceWith = "PT-234324, PT-112, PTx-232";
+      // DEBUG
+    } else if (toReplace =="deviceType") {
+      // DEBUG
+      replaceWith = "Android";
+      convArchive["deviceType"] = replaceWith; // When to set this?
+      // DEBUG
+    } 
+    else if (toReplace in convArchive) {
+        replaceWith = convArchive[toReplace];
+    }
+    q = q.replace(toReplaceRaw,replaceWith);
+  }
+  return q;
 }
 
 function botResponse(msgText,msgLabel="") {
@@ -128,11 +228,24 @@ function botResponse(msgText,msgLabel="") {
   let botResponseArr = [];
 
   let msgTextInt = parseInt(msgText);
+  console.log(msgText + " " + msgTextInt);
 
-  if (isNaN(msgTextInt)) {
-    currentIndex = CHAT_TREE.responses[currentIndex-1].next[1];
+  const regex = /[0-9]+m[0-9]+/g;
+  const found = msgText.match(regex);
+  console.log(msgText + " " + regex);
+  if ( found !== null ) {
+    const tmp = found[0].split("m");
+    if (convArchive["deviceType"] == "Android") {
+      currentIndex = parseInt(tmp[0]);
+    } else {
+      currentIndex = parseInt(tmp[1]);
+    }
+  } else if (isNaN(msgTextInt)) {
+      currentIndex = CHAT_TREE.responses[currentIndex-1].next[1];      
   } else if (msgText == 0) { 
       currentIndex = 1;
+  } else if (CHAT_TREE.responses[currentIndex-1].next.length  == 0) {
+    return;
   } else {
     for (let i = 0; i < CHAT_TREE.responses[currentIndex-1].next.length; i++) {
      if ((CHAT_TREE.responses[currentIndex-1].next.length == 1) || (msgTextInt == CHAT_TREE.responses[currentIndex-1].next[i])) {
@@ -142,7 +255,8 @@ function botResponse(msgText,msgLabel="") {
     }
   }  
 
-  botMsgText = CHAT_TREE.responses[currentIndex-1].q; 
+  botMsgText = parseQuestion(CHAT_TREE.responses[currentIndex-1].q); 
+
   // + " " + runningNative();
 
   for (let i = 0; i < CHAT_TREE.responses[currentIndex-1].next.length; i++) {
@@ -155,12 +269,33 @@ function botResponse(msgText,msgLabel="") {
         nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
         botResponseArr.push(nextBtn);
         break;
+    } else if (t == "scanText") {
+        nextBtn.type = "scanText"; 
+        nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
+        botResponseArr.push(nextBtn);
+        break;
+    } else if (t == "showARScene") {
+        nextBtn.type = "showARScene"; 
+        nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
+        botResponseArr.push(nextBtn);
+        break;
+    } else if (t == "showARVideo") {
+        nextBtn.type = "showARVideo"; 
+        nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
+        botResponseArr.push(nextBtn);
+        break;
     } else if (t == "ra") {
           nextBtn.type = "ra"; nextBtn.action = "";
     } else if (t.match(eReg)) {
           nextBtn.type = "email"; nextBtn.action = t;
     } else if (t.match(pReg)) {
           nextBtn.type = "phone"; nextBtn.action = t;
+    } else if (validURL(t)) {
+        nextBtn.type = "link"; 
+        nextBtn.url = t;
+        nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
+        botResponseArr.push(nextBtn);
+        break;
     } else {
       let tL = CHAT_TREE.responses[currentIndex-1].nextLabels ? CHAT_TREE.responses[currentIndex-1].nextLabels[i] : t;
       nextBtn.type = "response"; nextBtn.action = t; nextBtn.actionLabel = tL;
@@ -194,7 +329,7 @@ function onQRCodeScanned(scannedText)
   if (!runningNative()) {
     closeJSQRScanner();
   }
-  injectMsg(qrScannerAction,scannedText);
+  injectMsg(savedAction,scannedText);
 }
 
 function closeJSQRScanner() {
@@ -215,7 +350,7 @@ function JsQRScannerReady()
 }
 
 function launchQRScanner(action) {
-    qrScannerAction = action;
+    savedAction = action;
     if (runningNative()) {
       window.webkit.messageHandlers.launchQRScanner.postMessage(
       { 
@@ -248,6 +383,5 @@ function loadUser() {
 
 let user_uuid = Cookies.get('customer_uuid');
 loadUser();
-botResponse(0);
-
+botResponse("0");
 //appendMessage(BOT_NAME, BOT_IMG, "left", "Hello, how may I help you today?", []);

@@ -1,3 +1,9 @@
+/*!
+ * Remote Asistance/ACE
+ * Copyright(c) 2020 FX Palo Lato Labs, Inc.
+ * License: contact ace@fxpal.com
+ */
+
 const os = require('os');
 const dns = require('dns');
 

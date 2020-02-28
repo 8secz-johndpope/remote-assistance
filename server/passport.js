@@ -1,4 +1,10 @@
-const LocalStrategy   = require('passport-local').Strategy;
+/*!
+ * Remote Asistance/ACE
+ * Copyright(c) 2020 FX Palo Lato Labs, Inc.
+ * License: contact ace@fxpal.com
+ */
+
+ const LocalStrategy   = require('passport-local').Strategy;
 const db = require('./db')
 const uuid = require('uuid');
 const bcrypt = require('bcrypt-nodejs');
@@ -50,7 +56,7 @@ module.exports = function(passport) {
                                 email,
                                 u.password,
                                 uuid
-                            ]
+                            ],
                             function(err,rows){         
                                 return done(null, u)
                             })

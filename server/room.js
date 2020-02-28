@@ -1,3 +1,9 @@
+/*!
+ * Remote Asistance/ACE
+ * Copyright(c) 2020 FX Palo Lato Labs, Inc.
+ * License: contact ace@fxpal.com
+ */
+
 const uuid = require('uuid');
 const config = require('config');
 const fs = require('fs');

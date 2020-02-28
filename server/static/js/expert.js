@@ -283,32 +283,32 @@ $('#lblLsStepsOnOff').click(function(e) {
     setLSOnOff();
 });
 
-// $('#lblSketchOnOff').click(function(e) {
-//     const checked = $('input', this).is(':checked');
-//     const c = document.getElementById("sketchCanvas");
-//     if (!checked) {
-//         sketch = true;
-//         c.style.zIndex = 3;        
-//         c.addEventListener('mousemove', drawSketch);
-//         c.addEventListener('mouseup', handleMouseUp);
-//         c.addEventListener('mousedown', handleMouseDown);
-//         c.addEventListener('mouseout', handleMouseUp);
-//         c.addEventListener('mouseenter', setPosition);
+$('#lblSketchOnOff').click(function(e) {
+    const checked = $('input', this).is(':checked');
+    const c = document.getElementById("sketchCanvas");
+    if (!checked) {
+        sketch = true;
+        c.style.zIndex = 3;        
+        c.addEventListener('mousemove', drawSketch);
+        c.addEventListener('mouseup', handleMouseUp);
+        c.addEventListener('mousedown', handleMouseDown);
+        c.addEventListener('mouseout', handleMouseUp);
+        c.addEventListener('mouseenter', setPosition);
 
-//         renderer.domElement.removeEventListener('click', onMouseClick, false);
-//     } else {
-//         sketch = false;
-//         c.style.zIndex = 1;        
-//         c.removeEventListener('mousemove', drawSketch);
-//         c.removeEventListener('mouseup', handleMouseUp);
-//         c.removeEventListener('mousedown', handleMouseDown);
-//         c.removeEventListener('mouseout', handleMouseUp);
-//         c.removeEventListener('mouseenter', setPosition);
+        renderer.domElement.removeEventListener('click', onMouseClick, false);
+    } else {
+        sketch = false;
+        c.style.zIndex = 1;        
+        c.removeEventListener('mousemove', drawSketch);
+        c.removeEventListener('mouseup', handleMouseUp);
+        c.removeEventListener('mousedown', handleMouseDown);
+        c.removeEventListener('mouseout', handleMouseUp);
+        c.removeEventListener('mouseenter', setPosition);
 
-//         renderer.domElement.addEventListener('click', onMouseClick, false);
-//     }
-//     setSketchOnOff();
-// });
+        renderer.domElement.addEventListener('click', onMouseClick, false);
+    }
+    setSketchOnOff();
+});
 
 var lmSocket;
 $('#leapmotion').click(function(e) {
@@ -396,7 +396,6 @@ function setMode(newMode) {
     // reset hands
     if (mode == "hands" && newMode != "hands") {
         if (renderer) {
-            $(renderer.canvas).hide();
             renderer.domElement.removeEventListener('click', onMouseClick, false);
         }
     }

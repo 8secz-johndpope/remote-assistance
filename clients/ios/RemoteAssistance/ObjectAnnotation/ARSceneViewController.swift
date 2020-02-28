@@ -113,7 +113,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
         }
         
         if haveDetectionAssets {
-            let options: ARSession.RunOptions = [.resetTracking, .removeExistingAnchors]
+            let options: ARSession.RunOptions = [.resetTracking, .removeExistingAnchors, .stopTrackedRaycasts]
             self.configuration.automaticImageScaleEstimationEnabled = true
             sceneView.session.run(self.configuration, options: options)
         }

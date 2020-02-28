@@ -97,11 +97,12 @@ extension AceARViewController {
             self.showMessage(title:"Assets Missing", message: "Missing expected assets in catalog: \(String(describing: self.imageGroupName))")
         }
         if foundAllObjects {
-            let options: ARSession.RunOptions = [.resetTracking, .removeExistingAnchors]
+            let options: ARSession.RunOptions = [.resetTracking, .removeExistingAnchors, .stopTrackedRaycasts]
             // remove all objects before reset
-            self.arView.scene.rootNode.enumerateChildNodes { (node, stop) in
-                node.removeFromParentNode()
-            }
+            // prevent double free when using .removeExistingAnchors
+//            self.arView.scene.rootNode.enumerateChildNodes { (node, stop) in
+//                node.removeFromParentNode()
+//            }
             clipNode = [String:ObjectAnnotationNode]()
             arView.session.run(self.configuration, options: options)
         }
@@ -213,9 +214,9 @@ extension AceARViewController {
         self.clickableImages = [UIImage(named: "PrinterThumb1")!, UIImage(named: "PrinterThumb2")!, UIImage(named: "PrinterThumb3")!]
         self.imagePositions = [SCNVector3(x: -0.2, y: +0.4, z: +0.05), SCNVector3(x: +0.1, y: +0.4, z: +0.05), SCNVector3(x: -0.2, y: +0.1, z: +0.05)]
         self.videoURLs = [
-            URL(fileURLWithPath: Bundle.main.path(forResource: "clip1", ofType: "mp4")!),
-            URL(fileURLWithPath: Bundle.main.path(forResource: "clip2", ofType: "mp4")!),
-            URL(fileURLWithPath: Bundle.main.path(forResource: "clip3", ofType: "mp4")!)
+            URL(string:"\(store.ace.state.serverUrl)/static/clipStor/demo1.mp4")!,
+            URL(string:"\(store.ace.state.serverUrl)/static/clipStor/demo2.mp4")!,
+            URL(string:"\(store.ace.state.serverUrl)/static/clipStor/demo3.mp4")!,
         ]
     }
     

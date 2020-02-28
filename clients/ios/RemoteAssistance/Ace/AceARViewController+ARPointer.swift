@@ -190,14 +190,17 @@ extension AceARViewController {
         }
     }
     
-    func resetPointer() {
-        self.arView.session.pause()
-        removeArrow()
-        self.arView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
-    }
+    // func resetPointer() {
+    //     self.arView.session.pause()
+    //     removeArrow()
+    //     self.arView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+    // }
     
     func enablePointer() {
-        self.arView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
+        self.arView.session.pause()
+        self.configuration.detectionObjects = []
+        self.configuration.detectionImages = []
+        self.arView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking, .stopTrackedRaycasts])
     }
     
 }
