@@ -26,6 +26,8 @@ class AceLandingViewController : UIViewController {
     @IBAction func onQRCodeBtn(_ sender: Any) {
         let vc  = QRCodeSCanner()
         vc.delegate = self
+//        let vc  = OCRScanner()
+//        vc.delegate = self
         self.navigationController?.pushViewController(vc)
     }
     @IBAction func onARBtn(_ sender: Any) {
@@ -37,6 +39,13 @@ class AceLandingViewController : UIViewController {
         self.navigationController?.pushViewController(vc)
     }
 }
+
+extension AceLandingViewController : OCRDelegate {
+    func ocrResponse(code: String) {
+        print("ocr: \(code)")
+    }
+}
+
 
 extension AceLandingViewController : QRCodeScannerDelegate {
    
