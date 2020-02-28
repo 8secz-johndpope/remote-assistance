@@ -44,6 +44,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
         self.navigationItem.title = "Search Scene"
         //self.sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin]
         self.sceneView.delegate = self
+        self.configuration.automaticImageScaleEstimationEnabled = true
         // TODO: This should be pulled from previous activity in other sections of the app
         self.objectGroupName = "VariousPrinters"
         self.imageGroupName = "AR Resources"
@@ -130,7 +131,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
             if let _ = anchor as? ARImageAnchor {
                 self.anchorFound = true
                 print("ObjectAnnotation found imageAnchor!")
-                self.showToast(message: "Found image anchor: \(String(describing: node.name))")
+                self.showToast(message: "Found image anchor: \(String(describing: anchor.name))")
                 DispatchQueue.main.async {
                     self.nodeFound = node
                     if !self.liveAnnotation {
@@ -298,7 +299,16 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func searchForAndLoadAnchors(searchText:String) {
-        
+        self.api.getAllAnchors(searchText) { result, error in
+            if let err = error {
+                self.showToast(message: "getAllAnchors exception: \(err)")
+                print("getAllAnchors exception: \(err)")
+                return
+            }
+            if let anchors = result {
+                
+            }
+        }
     }
     
     func loadAnchorFromServer(anchorUuid:String) {
@@ -337,7 +347,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
                                         let ciImage = CIImage(image: uiImage!)
                                         let context = CIContext(options: nil)
                                         let cgImage = context.createCGImage(ciImage!, from: ciImage!.extent)
-                                        let referenceImage:ARReferenceImage = ARReferenceImage.init(cgImage!, orientation: CGImagePropertyOrientation.up, physicalWidth: 1.0)
+                                        let referenceImage:ARReferenceImage = ARReferenceImage.init(cgImage!, orientation: CGImagePropertyOrientation.up, physicalWidth:1.0)
                                         referenceImage.name = anchorUuid
                                         let refImgs:Set = [referenceImage]
                                         self.searchForObjects(arReferenceObjects: nil, arReferenceImages: refImgs)
