@@ -53,13 +53,13 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        self.searchForObjects()
+        self.searchForObjects()
 
         let tap = UITapGestureRecognizer(target: self, action: #selector(onTap))
         self.view.addGestureRecognizer(tap)
         // TODO: Optionally load assets from API
-//        self.loadInteralAssets()
-        self.loadAnchorFromServer(anchorUuid: "demo_image_1")
+        self.loadInteralAssets()
+//        self.loadAnchorFromServer(anchorUuid: "demo_image_1")
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -148,7 +148,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
             if let _ = anchor as? ARObjectAnchor {
                 self.anchorFound = true
                 print("ObjectAnnotation found objectAnchor!")
-                self.showToast(message: "Found object anchor: \(String(describing: node.name))")
+                self.showToast(message: "Found object anchor: \(String(describing: anchor.name))")
                 DispatchQueue.main.async {
                     self.nodeFound = node
                     if !self.liveAnnotation {
