@@ -78,6 +78,7 @@ class AceViewController : UIViewController {
                 self.setMode(mode)
             }
         }
+        setMode("sketch")
     }
     
     func setMode(_ mode:String) {
