@@ -67,7 +67,8 @@ extension AceARViewController {
         tap.delegate = self.parent as? UIGestureRecognizerDelegate
         self.objectTap = tap
         self.parent?.view.addGestureRecognizer(tap)
-        self.loadInteralAssets()
+        // Postponing this until we have the detected object/image name - we will determine which assets to load depending
+//        self.loadInteralAssets()
     }
     
     func objectAnnotationViewWillDisappear() {
@@ -125,9 +126,9 @@ extension AceARViewController {
 
                 self.anchorFound = true
                 print("ObjectAnnotation found imageAnchor!")
+                self.loadInteralAssets(detectedName: anchor.name ?? "Unknown")
                 DispatchQueue.main.async {
                     self.view.makeToast("Found image anchor \(anchor.name ?? "Unknown")", position: .center)
-                    
                     let orientationNode = SCNNode()
                     orientationNode.eulerAngles = SCNVector3(x:-Float.pi/2, y:0, z:0)
                     node.addChildNode(orientationNode)
@@ -149,6 +150,7 @@ extension AceARViewController {
             if let _ = anchor as? ARObjectAnchor {
                 self.anchorFound = true
                 print("ObjectAnnotation found objectAnchor!")
+                self.loadInteralAssets(detectedName: anchor.name ?? "Unknown")
                 DispatchQueue.main.async {
                     self.view.makeToast("Found object anchor \(anchor.name ?? "Unknown")", position: .center)
                     self.nodeFound = node
@@ -210,14 +212,28 @@ extension AceARViewController {
     }
 
 
-    func loadInteralAssets() {
-        self.clickableImages = [UIImage(named: "PrinterThumb1")!, UIImage(named: "PrinterThumb2")!, UIImage(named: "PrinterThumb3")!]
-        self.imagePositions = [SCNVector3(x: -0.2, y: +0.4, z: +0.05), SCNVector3(x: +0.1, y: +0.4, z: +0.05), SCNVector3(x: -0.2, y: +0.1, z: +0.05)]
-        self.videoURLs = [
-            URL(string:"\(store.ace.state.serverUrl)/static/clipStor/demo1.mp4")!,
-            URL(string:"\(store.ace.state.serverUrl)/static/clipStor/demo2.mp4")!,
-            URL(string:"\(store.ace.state.serverUrl)/static/clipStor/demo3.mp4")!,
-        ]
+    func loadInteralAssets(detectedName: String) {
+        
+        switch detectedName.uppercased() {
+        case "FAKEPRINTER":
+            self.clickableImages = [UIImage(named: "PrinterThumb1")!, UIImage(named: "PrinterThumb2")!, UIImage(named: "PrinterThumb3")!]
+            self.imagePositions = [SCNVector3(x: -0.2, y: +0.4, z: +0.05), SCNVector3(x: +0.1, y: +0.4, z: +0.05), SCNVector3(x: -0.2, y: +0.1, z: +0.05)]
+            self.videoURLs = [
+                URL(string:"\(store.ace.state.serverUrl)/static/clipStor/demo1.mp4")!,
+                URL(string:"\(store.ace.state.serverUrl)/static/clipStor/demo2.mp4")!,
+                URL(string:"\(store.ace.state.serverUrl)/static/clipStor/demo3.mp4")!,
+            ]
+        case "3DPRINTER":
+            self.clickableImages = [UIImage(named: "3DPrinterThumb1")!, UIImage(named: "3DPrinterThumb2")!, UIImage(named: "3DPrinterThumb3")!]
+            self.imagePositions = [SCNVector3(x: -0.2, y: +0.4, z: +0.05), SCNVector3(x: +0.1, y: +0.4, z: +0.05), SCNVector3(x: -0.2, y: +0.1, z: +0.05)]
+            self.videoURLs = [
+                URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter1", ofType: "mp4")!),
+                URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter2", ofType: "mp4")!),
+                URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter3", ofType: "mp4")!)
+            ]
+        default:
+            print("we don't have assets for \(detectedName)")
+        }
     }
     
     @objc func onTap(_ gesture: UITapGestureRecognizer) {
