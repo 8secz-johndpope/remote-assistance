@@ -231,6 +231,14 @@ extension AceARViewController {
                 URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter2", ofType: "mp4")!),
                 URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter3", ofType: "mp4")!)
             ]
+        case "DOCUCOLORTONER":
+            self.clickableImages = [UIImage(named: "3DPrinterThumb1")!, UIImage(named: "3DPrinterThumb2")!, UIImage(named: "3DPrinterThumb3")!]
+            self.imagePositions = [SCNVector3(x: -0.2, y: +0.4, z: +0.05), SCNVector3(x: +0.1, y: +0.4, z: +0.05), SCNVector3(x: -0.2, y: +0.1, z: +0.05)]
+            self.videoURLs = [
+                URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter1", ofType: "mp4")!),
+                URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter2", ofType: "mp4")!),
+                URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter3", ofType: "mp4")!)
+            ]
         default:
             print("we don't have assets for \(detectedName)")
         }
