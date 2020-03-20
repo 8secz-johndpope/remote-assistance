@@ -39,7 +39,7 @@ navigator.mediaDevices.getUserMedia(constraints).then(
 
         user_uuid = localStorage.getItem('expert_uuid');
         if (user_uuid === null) {
-            $.post(SERVER_API + "user", {"type": "expert"}).then( 
+            $.post(SERVER_API + "user", {"type": "expert"}).then(
              function(data) {
                     console.log('Created expert', data);
                     localStorage.setItem('expert_uuid',data.uuid);
@@ -49,22 +49,22 @@ navigator.mediaDevices.getUserMedia(constraints).then(
         } else {
             console.log('Got expert', user_uuid);
             addUserToRoom(user_uuid);
-        } 
+        }
 
         wrtc.on('stream', function(id, stream) {
             var video = $('#video').show().get(0)
             video.srcObject = stream;
             video.autoplay = true;
             $('#qrcode-modal').modal('hide');
-            connected = true; 
+            connected = true;
             stream.getVideoTracks().forEach(function(t) {
                 t.addEventListener('ended', function() {
                     $('#video').hide();
-                    connected = false; 
+                    connected = false;
                     onReset();
                 });
             });
-            
+
             wrtc.on('connect', function() {
                 wrtc.emit('set_mode', {mode});
             });
@@ -72,22 +72,22 @@ navigator.mediaDevices.getUserMedia(constraints).then(
         wrtc.on('gyro', function(data) {
             // console.log('gyro', data);
             //document.getElementById("info").innerHTML = data.alpha.toFixed(2)+" "+data.beta.toFixed(2)+" "+data.gamma.toFixed(2)+" "+data.absolute;
-            
+
             renderer.rotateCameraBody(data.alpha, data.beta, data.gamma);
             renderer.alignLeapmotionSpace();
             renderer.updateCamera();
-            wrtc.emit('camera_update', {msg: 'from_expert', 
-                                position: renderer.camera.position, 
+            wrtc.emit('camera_update', {msg: 'from_expert',
+                                position: renderer.camera.position,
                                 quaternion: renderer.camera.quaternion});
-                                
+
         });
         wrtc.on('add_clip_to_anchor', function(clipData) {
-            $.post(SERVER_API + "clipAnchor", {"clip_uuid":recordingClipUUID,"anchor_uuid":clipData.anchor_uuid,"position":clipData.position}).then( 
+            $.post(SERVER_API + "clipAnchor", {"clip_uuid":recordingClipUUID,"anchor_uuid":clipData.anchor_uuid,"position":clipData.position}).then(
              function(data) {
                 console.log('Added clip marker',data);
              }
             )
-        });        
+        });
         wrtc.on('conversation_archive', function(data) {
             document.getElementById("chat").style.display = 'inline';
             if (typeof(data) == "string") {
@@ -96,7 +96,7 @@ navigator.mediaDevices.getUserMedia(constraints).then(
             }
             console.log(data);
             let ca = document.getElementById("conversationArchive");
-            
+
             for (let i=0; i<data.responses.length;i++) {
                 let row = ca.insertRow(ca.rows.length);
                 let c1 = row.insertCell(0);
@@ -109,10 +109,10 @@ navigator.mediaDevices.getUserMedia(constraints).then(
         });
 
         // Create renderer after wrtc because it shares the same socket
-        renderer = new Renderer( 
+        renderer = new Renderer(
             {add_interaction_box: true,
-             add_line_object: false, 
-             add_leapmotion_device: false, 
+             add_line_object: false,
+             add_leapmotion_device: false,
              sio_connection: SIOConnection,
              dom_element: document.getElementById('container'),
              sketch_canvas: document.getElementById('sketchCanvas'),
@@ -128,44 +128,44 @@ navigator.mediaDevices.getUserMedia(constraints).then(
     }
 );
 
-function onKeyDown( event ) {    
-    var charcode = String.fromCharCode(event.keyCode);    
+function onKeyDown( event ) {
+    var charcode = String.fromCharCode(event.keyCode);
     var d_trans = 10;
     var d_rot = 1;
     switch(charcode)
     {
         case 'O':
-            renderer.updateCameraType('O');            
+            renderer.updateCameraType('O');
             break;
         case 'P':
-            renderer.updateCameraType('P'); 
+            renderer.updateCameraType('P');
             break;
         case 'R':
-            renderer.resetCameraParam();            
+            renderer.resetCameraParam();
             break;
         case 'Q':
-            renderer.rotateLeapmotionSpace(d_rot);            
+            renderer.rotateLeapmotionSpace(d_rot);
             break;
         case 'E':
-            renderer.rotateLeapmotionSpace(-d_rot);  
+            renderer.rotateLeapmotionSpace(-d_rot);
             break;
         case 'W':
             renderer.moveLeapmotionSpace(0,0,d_trans);
             break;
         case 'S':
-            renderer.moveLeapmotionSpace(0,0,-d_trans);            
+            renderer.moveLeapmotionSpace(0,0,-d_trans);
             break;
         case 'A':
             renderer.moveLeapmotionSpace(d_trans,0,0);
             break;
         case 'D':
-            renderer.moveLeapmotionSpace(-d_trans,0,0);            
+            renderer.moveLeapmotionSpace(-d_trans,0,0);
             break;
         case 'Z':
             renderer.moveLeapmotionSpace(0,-d_trans,0);
             break;
         case 'X':
-            renderer.moveLeapmotionSpace(0,d_trans,0);            
+            renderer.moveLeapmotionSpace(0,d_trans,0);
             break;
         case 'T':
             renderer.toggleTrackingMode();
@@ -175,38 +175,38 @@ function onKeyDown( event ) {
             break;
         case 'G':
             renderer.toggleGestureMode();
-            break;        
+            break;
     }
     renderer.updateCamera();
-    wrtc.emit('camera_update', {msg: 'from_expert', 
-                                position: renderer.camera.position, 
+    wrtc.emit('camera_update', {msg: 'from_expert',
+                                position: renderer.camera.position,
                                 quaternion: renderer.camera.quaternion});
 }
 
 window.addEventListener('keydown', onKeyDown, false);
 
-function onWheel( event ) 
-{    
+function onWheel( event )
+{
     var delta = 20;
     if (event.deltaY > 0)
     {
-        renderer.zoominoutCamera(delta);        
+        renderer.zoominoutCamera(delta);
     }
     else
     {
-        renderer.zoominoutCamera(-delta);      
+        renderer.zoominoutCamera(-delta);
     }
     renderer.updateCamera();
 
-    wrtc.emit('camera_update', {msg: 'from_expert', 
-                                position: renderer.camera.position, 
+    wrtc.emit('camera_update', {msg: 'from_expert',
+                                position: renderer.camera.position,
                                 quaternion: renderer.camera.quaternion});
 }
 
 window.addEventListener('wheel', onWheel, false);
 
 function onMouseClick(event)
-{   
+{
     if (!connected) {
         return;
     }
@@ -215,8 +215,8 @@ function onMouseClick(event)
     renderer.moveLeapmotionSpaceByClick(event.clientX, event.clientY);
     renderer.updateCamera();
 
-    wrtc.emit('camera_update', {msg: 'from_expert', 
-                                position: renderer.camera.position, 
+    wrtc.emit('camera_update', {msg: 'from_expert',
+                                position: renderer.camera.position,
                                 quaternion: renderer.camera.quaternion});
 }
 
@@ -225,8 +225,8 @@ $('#zoom-small').click(function(e) {
     console.log('zoom-small');
     renderer.setCameraDistance(500);
     renderer.updateCamera();
-    wrtc.emit('camera_update', {msg: 'from_expert', 
-                                position: renderer.camera.position, 
+    wrtc.emit('camera_update', {msg: 'from_expert',
+                                position: renderer.camera.position,
                                 quaternion: renderer.camera.quaternion});
 });
 
@@ -234,8 +234,8 @@ $('#zoom-medium').click(function(e) {
     console.log('zoom-medium');
     renderer.setCameraDistance(300);
     renderer.updateCamera();
-    wrtc.emit('camera_update', {msg: 'from_expert', 
-                                position: renderer.camera.position, 
+    wrtc.emit('camera_update', {msg: 'from_expert',
+                                position: renderer.camera.position,
                                 quaternion: renderer.camera.quaternion});
 });
 
@@ -243,8 +243,8 @@ $('#zoom-large').click(function(e) {
     console.log('zoom-large');
     renderer.setCameraDistance(100);
     renderer.updateCamera();
-    wrtc.emit('camera_update', {msg: 'from_expert', 
-                                position: renderer.camera.position, 
+    wrtc.emit('camera_update', {msg: 'from_expert',
+                                position: renderer.camera.position,
                                 quaternion: renderer.camera.quaternion});
 });
 
@@ -257,8 +257,8 @@ function onReset() {
 
 $('#reset').click(function(e) {
     onReset();
-    wrtc.emit('camera_update', {msg: 'from_expert', 
-                                position: renderer.camera.position, 
+    wrtc.emit('camera_update', {msg: 'from_expert',
+                                position: renderer.camera.position,
                                 quaternion: renderer.camera.quaternion});
 });
 
@@ -288,7 +288,7 @@ $('#lblSketchOnOff').click(function(e) {
     const c = document.getElementById("sketchCanvas");
     if (!checked) {
         sketch = true;
-        c.style.zIndex = 3;        
+        c.style.zIndex = 3;
         c.addEventListener('mousemove', drawSketch);
         c.addEventListener('mouseup', handleMouseUp);
         c.addEventListener('mousedown', handleMouseDown);
@@ -298,7 +298,7 @@ $('#lblSketchOnOff').click(function(e) {
         renderer.domElement.removeEventListener('click', onMouseClick, false);
     } else {
         sketch = false;
-        c.style.zIndex = 1;        
+        c.style.zIndex = 1;
         c.removeEventListener('mousemove', drawSketch);
         c.removeEventListener('mouseup', handleMouseUp);
         c.removeEventListener('mousedown', handleMouseDown);
@@ -328,22 +328,22 @@ function setLSOnOff() {
 function updateVideoStack(dir,play=true) {
     let sv = document.getElementById('stepVideo');
     videoStackIndex += dir;
-    if ( (videoStackIndex < 0) || (videoStackIndex == 0) ) { 
+    if ( (videoStackIndex < 0) || (videoStackIndex == 0) ) {
         videoStackIndex = 0;
         document.getElementById("lsUpIcon").style.color = "gray";
-    } else {        
+    } else {
         document.getElementById("lsUpIcon").style.color = "#DC3545";
     }
     if (videoStackIndex >= videoStack.length-1) {
         videoStackIndex = videoStack.length-1;
         document.getElementById("lsDownIcon").style.color = "gray";
-    } else {        
+    } else {
         document.getElementById("lsDownIcon").style.color = "#DC3545";
     }
 
     if (play && (sv.src !== videoStack[videoStackIndex])) {
         sv.src = videoStack[videoStackIndex];
-        sv.play();        
+        sv.play();
     }
 }
 
@@ -361,7 +361,7 @@ $('#fullscreen').click(function() {
 });
 
 function addUserToRoom(user_uuid) {
-    $.post(SERVER_API + "userRoom", {"user_uuid":user_uuid,"room_uuid":config.roomid}).then( 
+    $.post(SERVER_API + "userRoom", {"user_uuid":user_uuid,"room_uuid":config.roomid}).then(
         function(data) {
             console.log('Added user to room', data);
         }
@@ -373,12 +373,12 @@ function removeUserFromRoom() {
       dataType: "json",
       type: "DELETE",
       url: SERVER_API + "userRoom/" + user_uuid + "/" + config.roomid,
-      async: false, 
+      async: false,
       success: function(data) {
            console.log('Removed user from room', data);
       }
     });
-    //$.getJSON(SERVER_API + "removeUserFromRoom/" + config.roomid + "/" + user_uuid).then( 
+    //$.getJSON(SERVER_API + "removeUserFromRoom/" + config.roomid + "/" + user_uuid).then(
     //   function(data) {
     //       console.log('Removed user from room', data);
     //   }
@@ -484,6 +484,13 @@ $('#toolbar-tab a').on('click', function (e) {
 
     $(this).tab('show');
 });
+
+$('.dropdown-menu a').click( function() {
+    var selected = $(this).text();
+    selectedPointer = selected
+    pointerLabel.innerText = selected;
+});
+
 // default is hands for now
 setMode('hands')
 // ----- END: Toolbar -----
@@ -492,8 +499,8 @@ setMode('hands')
 let ls = false;
 let mediaRecorder;
 let recordingLS = false;
-let videoStack = []; 
-//videoStack.push("http://showhow.fxpal.com/misc/test.mp4"); 
+let videoStack = [];
+//videoStack.push("http://showhow.fxpal.com/misc/test.mp4");
 //videoStack.push("http://showhow.fxpal.com/misc/wcDocHandles.mp4");
 
 let videoStackIndex = 0;
@@ -509,16 +516,17 @@ const LS_TIMEOUT = 3000;
 const SKETCH_TIMEOUT = 3000;
 const pos = { x: 0, y: 0 };
 let sketch = false;
+let selectedPointer = "";
 
 
 function registerActivityLS() {
     if (!ls) return;
     if (!recordingLS) {
         recordingLS = true;
-        toggleDots(true); 
-        wrtc.emit('recording_started',{"clip_uuid":recordingClipUUID}); 
+        toggleDots(true);
+        wrtc.emit('recording_started',{"clip_uuid":recordingClipUUID});
         startRecording();
-    } 
+    }
     clearTimeout(clearCtxInterval);
     clearCtxInterval = setTimeout(stepDone,LS_TIMEOUT);
 }
@@ -548,7 +556,7 @@ function startRecording() {
     }
     console.log('Created MediaRecorder', mediaRecorder, 'with options', options);
 
-    $.post(SERVER_API + "clip", {"name": "lsClip","user_uuid":user_uuid,"room_uuid":config.roomid}).then( 
+    $.post(SERVER_API + "clip", {"name": "lsClip","user_uuid":user_uuid,"room_uuid":config.roomid}).then(
         function(data) {
             recordingClipUUID = data.uuid;
             wrtc.emit('recording_started', {"clip_uuid":recordingClipUUID});
@@ -581,13 +589,13 @@ function handleDataAvailable(event) {
 }
 
 function stepDone() {
-  if (recordingLS) { 
-    recordingLS = false; 
-    stopRecording(); 
-    wrtc.emit('recording_stopped',{"clip_uuid":recordingClipUUID}); 
+  if (recordingLS) {
+    recordingLS = false;
+    stopRecording();
+    wrtc.emit('recording_stopped',{"clip_uuid":recordingClipUUID});
   }
   clearTimeout(clearCtxInterval);
-  toggleDots(false); 
+  toggleDots(false);
 }
 
 function toggleDots(down) {
@@ -611,8 +619,8 @@ function toggleDots(down) {
 function updateStepCount() {
     let stackTxt = 'step';
     if (videoStack.length>0) { stackTxt += "s " + videoStack.length }
-    $('#lsStepsCountSpan').text(stackTxt); 
-    console.log(stackTxt);     
+    $('#lsStepsCountSpan').text(stackTxt);
+    console.log(stackTxt);
 }
 
 function addStep(url) {
@@ -662,7 +670,7 @@ function clearSketchCanvas() {
   let sCanvas = document.getElementById("sketchCanvas");
   let sCanvasCtx = sCanvas.getContext('2d');
   sCanvasCtx.clearRect(0, 0, sCanvas.width, sCanvas.height);
-  wrtc.emit('sketch_clear', {}); 
+  wrtc.emit('sketch_clear', {});
 }
 
 function setPosition(e) {
@@ -672,9 +680,9 @@ function setPosition(e) {
 
 function handleMouseUp(e) {
   if (ls) {
-    clearCtxInterval = setTimeout(stepDone,LS_TIMEOUT);     
+    clearCtxInterval = setTimeout(stepDone,LS_TIMEOUT);
   }
-  clearSketchInterval = setTimeout(clearSketchCanvas,SKETCH_TIMEOUT);  
+  clearSketchInterval = setTimeout(clearSketchCanvas,SKETCH_TIMEOUT);
 }
 
 function handleMouseDown(e) {
@@ -804,7 +812,9 @@ function handlePointerClick(e) {
         x: e.clientX,
         y: e.clientY,
         w: canvas.width,
-        h: canvas.height
+        h: canvas.height,
+        pointer: selectedPointer,
+        message: document.getElementById("floatingMessage").value
     });
     return false;
 }
