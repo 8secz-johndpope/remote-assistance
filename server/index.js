@@ -114,7 +114,14 @@ app.get('/:roomid', function (req, res) {
 
 app.get('/:roomid/expert', function (req, res) {
     var roomid = req.params.roomid;
-    res.render('expert.html', { roomid });
+    var mode = req.query.mode;
+    if (mode == 'basic') {
+        res.render('expert_basic.html', { roomid });
+    } else if (mode == 'fxa') {
+        res.render('expert_fxa.html', { roomid });
+    } else {
+        res.render('expert.html', { roomid });
+    }
 });
 
 app.get('/:roomid/customer', function (req, res) {

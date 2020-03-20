@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% block title %}ACE expert portal{% endblock %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="/static/css/expert.css">
+{% endblock %}
+{% block header %}{% endblock %}
+{% block content %}
+<div id="container" class="container">
+    <h1>FXA Expert View</h2>
+    <video id="video" style="opacity:0" autoplay="1"></video>
+    <canvas id='sketchCanvas' draggable="false"></canvas>
+</div>
+<div id="chat">
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseChat" aria-expanded="false" aria-controls="collapseChat"> <i class="fa fa-comments"></i>  </button>
+</div>
+<div class="collapse" id="collapseChat">
+  <b>Customer chat</b>
+  <div class="card card-body">
+    <table border="1" frame=void rules=rows id="conversationArchive" cellpadding="5px" style="font-size:75%">
+    </table>
+  </div>
+</div>
+<div id="toolbar">
+    <div class="row ml-1">
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-hands" role="tabpanel" aria-labelledby="pills-hands-tab">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-primary btn-lg" id="zoom-small">
+                        <input type="radio" name="options" autocomplete="off" checked> <i class="fa fa-search-minus"></i>
+                    </label>
+                    <label class="btn btn-primary btn-lg active" id="zoom-medium">
+                        <input type="radio" name="options" autocomplete="off"> <i class="fa fa-search"></i>
+                    </label>
+                    <label class="btn btn-primary btn-lg" id="zoom-large">
+                        <input type="radio" name="options" autocomplete="off"> <i class="fa fa-search-plus"></i>
+                    </label>
+                </div>
+                <button class="btn btn-primary btn-lg" id="reset" data-trigger="hover" data-placement="top" data-content="Reset camera orientation"> reset </button>
+                <button class="btn btn-lg btn-danger" id="leapmotion" data-trigger="hover" data-placement="top" data-content="Leapmotion Websocket Connection. Click to reconnect."> connect to leapmotion </button>
+            </div>
+            <div class="tab-pane fade" id="pills-pen" role="tabpanel" aria-labelledby="pills-pen-tab">
+                <!-- <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-primary btn-lg" id="lblSketchOnOff" >
+                    <input type="checkbox" id="sketchOnOff" /><i style="color:orange" id="sketchOnOffIcon" class="fa fa-pencil"></i>
+                    </label>
+                </div> -->
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label id="lblLsStepsOnOff" class="btn btn-primary btn-lg">
+                    <input type="checkbox" id="lsStepsOnOff" /><span> <i style="color:#DC3545" id="lsStepsOnOffIcon" class="fa fa-video-camera"></i> </span>
+                    </label>
+                </div>
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label id="lblLsStepsCount" class="btn btn-primary btn-lg">
+                    <input type="checkbox" id="lsStepsCount" /><span id="lsStepsCountSpan">steps &nbsp</span>
+                    </label>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-pointer" role="tabpanel" aria-labelledby="pills-pointer-tab">
+                <!-- <div class="btn-group btn-group-toggle" data-toggle="buttons" data-trigger="hover" data-placement="top" data-content="Enable AR pointer">
+                    <label id="pointerSet" class="btn btn-lg btn-primary">
+                    <input type="checkbox" autocomplete="off">
+                    <i class="fa fa-arrow-circle-down"></i>
+                    </label>
+                </div> -->
+            </div>
+            <div class="tab-pane fade" id="pills-screenar" role="tabpanel" aria-labelledby="pills-screenar-tab">
+                <!-- <div class="btn-group btn-group-toggle" data-toggle="buttons" data-trigger="hover" data-placement="top" data-content="Enable ScreenAR">
+                    <label id="toggleScreenAR" class="btn btn-lg btn-primary">
+                    <input type="checkbox" autocomplete="off">
+                    <i class="fa fa-pencil-square-o"></i>
+                    </label>
+                </div> -->
+            </div>
+            <div class="tab-pane fade" id="pills-debug" role="tabpanel" aria-labelledby="pills-debug-tab">
+                <!--- DEBUG: Remove me later after iOS side is working-->
+                <button class="btn btn-lg btn-primary" id="dbg-send-recording_started" data-trigger="hover" data-placement="top" data-content="Debug"> DBG: Send recording_started </button>
+                <button class="btn btn-lg btn-primary" id="dbg-send-clip_ready" data-trigger="hover" data-placement="top" data-content="Debug">DBG:  Send clip_ready </button>
+                <button class="btn btn-lg btn-primary" id="dbg-send-clip_thumbnail_ready" data-trigger="hover" data-placement="top" data-content="Debug"> DBG: Send clip_thumbnail_ready </button>
+            </div>
+          </div>
+    </div>
+    <div class="row mx-1 mt-2">
+        <ul class="nav nav-pills mx-2" id="toolbar-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="pills-hands-tab" data-tab="hands" data-toggle="pill" href="#pills-hands" role="tab" aria-controls="pills-hands" aria-selected="true"
+                    data-trigger="hover" data-placement="top" data-content="Hands">
+                    <i class="fa fa-hand-o-up"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-pen-tab" data-tab="sketch" data-toggle="pill" href="#pills-pen" role="tab" aria-controls="pills-pen" aria-selected="false"
+                    data-trigger="hover" data-placement="top" data-content="Sketch">
+                <i class="fa fa-pencil"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-pointer-tab" data-tab="pointer" data-toggle="pill" href="#pills-pointer" role="tab" aria-controls="pills-pointer" aria-selected="false"
+                    data-trigger="hover" data-placement="top" data-content="Pointer">
+                    <i class="fa fa-arrow-circle-down"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-screenar-tab" data-tab="screenar" data-toggle="pill" href="#pills-screenar" role="tab" aria-controls="pills-screenar" aria-selected="false"
+                    data-trigger="hover" data-placement="top" data-content="ScreenAR">
+                    <i class="fa fa-pencil-square-o"></i>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="pills-debug-tab" data-tab="debug"  data-toggle="pill" href="#pills-debug" role="tab" aria-controls="pills-debug" aria-selected="false"
+                    data-trigger="hover" data-placement="top" data-content="Debug">
+                <i class="fa fa-bug"></i></a>
+            </li>
+        </ul>
+        <div>
+            <a class="btn btn-primary text-white p-2" id="fullscreen" data-trigger="hover" data-placement="top"  data-content="Toggle fullscreen"><i class="fa fa-fw fa-window-maximize"></i></a>
+            <a class="btn btn-primary text-white p-2" id="qr" data-toggle="modal" data-target="#qrcode-modal" data-trigger="hover" data-placement="top" data-content="Show QR Code"> <i class="fa fa-fw fa-qrcode"></i> </a>
+        </div>
+    </div>
+    <div class="row mx-1 mt-2">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="pointerPicker" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Select
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#">Arrow</a>
+                <a class="dropdown-item" href="#">Warning</a>
+            </div>
+        </div>
+        <div class = "btn-xlg">
+            <h5 id="pointerLabel">None</h5>
+        </div>
+        <div class = "btn-xlg">
+            <input id="floatingMessage" class="form-control" placeholder="Message to display"/>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="qrcode-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Customer QRCode Link</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h3 id="url" class="mb-5"></h3>
+                    <div id="qrcode"></div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+    <video id='stepVideo' style='display:none;margin:0;position:fixed;top:0;left:0;width:100vw;height:100vh;object-fit:contain;background-color: #fff'></video>
+    <div id="stepVideoOverlay" style='display:none;margin:0;position:absolute;top:0;left:0;width:100vw;height:100vh;object-fit:contain'>
+        <i class="fa fa-arrow-circle-up fa-5x" style="color:#DC3545;position:absolute;top:10px;left:50%;transform: translate(-50%, 0%)" id="lsUpIcon" onClick="updateVideoStack(-1)"></i>
+        <i class="fa fa-arrow-circle-down fa-5x" style="color:#DC3545;position:absolute;bottom:10px;left:50%;transform: translate(-50%, 0%)" id="lsDownIcon" onClick="updateVideoStack(1)"></i>
+        <i class="fa fa-times-circle fa-5x" style="color:#DC3545;position:absolute;top:10px;right:10px" onClick="toggleStepsView(0)"></i>
+
+    </div>
+
+
+<canvas id="correctedcanvas" width="480" height="320" style="opacity: 0.1;"></canvas>
+{% endblock %}
+
+{% block js %}
+<div id="info"></div>
+<script>
+window.config = {
+    roomid: "{{ roomid }}"
+}
+</script>
+<script src="/static/ext/jquery.qrcode/1.0/jquery.qrcode.min.js"></script>
+<script src="/static/ext/three.js/70/three.min.js"></script>
+<script src="/static/ext/socket.io/2.2.0/socket.io.js"></script>
+<script src="/static/ext/lodash.js/4.17.11/lodash.min.js"></script>
+<script src="/static/ext/three.js/OBJLoader.js"></script>
+<script src="/static/ext/three.js/MTLLoader.js"></script>
+<script src="/static/ext/three.js/OBJMTLLoader.js"></script>
+<script src="/static/ext/leap.js/leap-0.6.4.js"></script>
+<script src="/static/ext/leap.js/leap-plugins-0.1.12.js"></script>
+<script src="/static/ext/leap.js/leap-rigged-handle-0.1.7.js"></script>
+<script src="/static/ext/glfx/glfx.js"></script>
+<script src="/static/js/sioconnection.js"></script>
+<script src="/static/js/webrtc.js"></script>
+<script src="/static/ext/leap.js/leapmotionTrans.js"></script>
+<script src="/static/js/Renderer.js"></script>
+<script src="/static/js/expert.js"></script>
+<script src="/static/js/sar.js"></script>
+{% endblock%}
