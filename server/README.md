@@ -310,3 +310,20 @@ delete /api/userRoom/:user_uuid/:room_uuid
 return {"uuid":"string"}
 ```
 
+Get error code details
+```
+get /api/errorCode/:uuid
+return {"id":int,url":"url_string","code":"string"}
+```
+
+Get all error codes
+```
+get /api/errorCode
+return [{"id":int,url":"url_string","code":"string"}]
+```
+
+Get all printer names
+```
+get /api/printerName
+return [{"id":int,name":"string"}]
+```

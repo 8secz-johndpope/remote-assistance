@@ -20,6 +20,28 @@ if (db !== null) {
 
     // API
 
+    // Error code
+    router.get('/errorCode/:code', function (req, res) {
+        db.getErrorCode(res,req.params.code,function(data) {
+            if (data.code) { res.json(data); }
+            else { res.status(404).json({}); }
+        })
+    });
+
+    router.get('/errorCode/', function (req, res) {
+        db.getErrorCode(res,null,function(data) {
+            res.json(data);
+        })
+    });
+
+    // Printer name
+
+    router.get('/printerName/', function (req, res) {
+        db.getPrinterName(res,function(data) {
+            res.json(data);
+        })
+    });
+
     // Room
     router.post('/room', function(req, res) {
         db.updateRoom(res,true,true,util.generateRandomId(),req.body,function(roomData) {

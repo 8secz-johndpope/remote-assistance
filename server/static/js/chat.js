@@ -76,19 +76,31 @@ function launchARVideo(action) {
   injectMsg(savedAction,"");
 }
 
-function launchScanText(action) {
+function launchOCRScanner(action) {
   savedAction = action;
   // Launch native text scanner
+  if (runningNative()) {
+      window.webkit.messageHandlers.launchOCRScanner.postMessage(
+      { 
+      });                
+      } else {
+        // DEBUG
+        let scannedText = "";
+        if (action == 5) {
+          scannedText = "ApeosPort-VII C7773";    
+        } else if (action == 7) {
+          scannedText = "32342";
+        }
+        injectMsg(savedAction,scannedText);
+        // DEBUG
+      }
+}
 
-  // DEBUG
-  let scannedText = "";
-  if (action == 5) {
-    scannedText = "ApeosPort-VII C7773";    
-  } else if (action == 7) {
-    scannedText = "32342";
+function onOCRScanned(scannedText)
+{
+  if (!runningNative()) {
+    //
   }
-  // DEBUG
-
   injectMsg(savedAction,scannedText);
 }
 
@@ -110,7 +122,7 @@ function launchPhoneCall(msg) {
 }
 
 function validURL(str) {
-  var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+  var pattern = new RegExp('^(http(s)?:\\/\\/)?'+ // protocol
     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
     '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
     '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
@@ -145,7 +157,7 @@ function getButtonHTML(botResponseArr) {
        html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchARVideo(\"${action}\")'><span class="fa fa-camera fa-2x"></span></button> `;
        break;
       case "scanText":
-       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchScanText(\"${action}\")'><span class="fa fa-camera fa-2x"></span></button> `;
+       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchOCRScanner(\"${action}\")'><span class="fa fa-camera fa-2x"></span></button> `;
        break;
       case "email":
        html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchEmail(\"${action}\")'><span class="fa fa-envelope fa-2x"></span></button> `;
