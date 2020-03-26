@@ -17,7 +17,7 @@ class AceUIViewController : UIViewController {
     
     var timer: Timer?
     weak var wrtc:WRTCClient?
-    var delegate:AceUIViewDelegate?
+    weak var delegate:AceUIViewDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -153,7 +153,7 @@ class AceUIViewController : UIViewController {
     }
 }
 
-protocol AceUIViewDelegate {
+protocol AceUIViewDelegate: class {
     func onResetScreenAR(_ btn:UIButton)
     func onSettings(_ btn:UIButton)
     func onToggleVR(_ btn:UIButton)

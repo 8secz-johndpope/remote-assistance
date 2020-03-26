@@ -100,6 +100,12 @@ extension AceARViewController {
         }
 
     }
+    
+    func arPointerVieWillDisappear() {
+        let socket = SocketIOManager.sharedInstance
+        socket.off("pointer_set")
+        socket.off("pointer_clear")
+    }
 
     func setArrow(_ point:CGPoint) {
         if let object = self.arrowObject {

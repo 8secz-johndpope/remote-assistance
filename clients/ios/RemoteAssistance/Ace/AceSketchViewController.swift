@@ -107,6 +107,12 @@ class AceSketchViewController: UIViewController {
         }
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        let socket = SocketIOManager.sharedInstance
+        socket.off("sketch_draw")
+        socket.off("sketch_clear")
+    }
+    
     func drawLine(from fromPoint: CGPoint, to toPoint: CGPoint) {
       // 1
       UIGraphicsBeginImageContext(view.frame.size)
