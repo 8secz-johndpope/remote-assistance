@@ -9,6 +9,10 @@ Prerequisites
   *Mac:*
   ```bash
   $ brew install nvm
+  $ cat << EOF >> ~/.bash_profile
+  export NVM_DIR="$HOME/.nvm"
+  . "/usr/local/opt/nvm/nvm.sh"
+  EOF
   ```
 
   *Windows:*
