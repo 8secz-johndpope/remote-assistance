@@ -15,7 +15,7 @@ class AceUIViewController : UIViewController {
     @IBOutlet weak var menuView: UIView!
     @IBOutlet weak var infoLabel: UILabel!
     
-    weak var timer: Timer?
+    var timer: Timer?
     weak var wrtc:WRTCClient?
     var delegate:AceUIViewDelegate?
     
@@ -82,7 +82,7 @@ class AceUIViewController : UIViewController {
     @IBAction func onHangupClick(_ sender: UIButton) {
         delegate?.onHangup(sender)
         onCloseMenu(sender)
-        resetTimer()
+        timer?.invalidate()
         SocketIOManager.sharedInstance.disconnect()
     }
 
