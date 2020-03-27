@@ -19,8 +19,6 @@ class AceARViewController : UIViewController {
     var capturer:WRTCCustomCapturer!
     var videoSource:RTCVideoSource!
     var socketManager:SocketIOManager = SocketIOManager.sharedInstance
-    var pcs:[String:RTCPeerConnection] = [String:RTCPeerConnection]()
-    var iceCandidates:[String:[RTCIceCandidate]] = [String:[RTCIceCandidate]]()
     var sid:String = ""
     var stream:RTCMediaStream!
     weak var wrtc:WRTCClient?
@@ -65,12 +63,12 @@ class AceARViewController : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        initWebRTCClient()
-        initMediaStream()
-        initARKit()
-        //initScreenAR()
-        initARPointer()
-        initObjectDetection()
+       initWebRTCClient()
+       initMediaStream()
+       initARKit()
+       initScreenAR()
+       initARPointer()
+       initObjectDetection()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -78,8 +76,8 @@ class AceARViewController : UIViewController {
 
         super.viewWillAppear(animated)
         self.setupAR()
-        self.wrtc?.connect()
-        self.objectAnnotationViewWillAppear()
+       self.wrtc?.connect()
+       self.objectAnnotationViewWillAppear()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -92,6 +90,7 @@ class AceARViewController : UIViewController {
         self.arView.session.pause()
         
         self.objectAnnotationViewWillDisappear()
+        self.arPointerVieWillDisappear()
     }
     
     func setupAR() {

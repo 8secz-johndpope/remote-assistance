@@ -9,7 +9,7 @@
 import UIKit
 import AVFoundation
 
-protocol QRCodeScannerDelegate
+protocol QRCodeScannerDelegate: class
 {
     func qrCodeScannerResponse(code: String)
 }
@@ -18,7 +18,7 @@ class QRCodeSCanner: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
 
-    var delegate: QRCodeScannerDelegate?
+    weak var delegate: QRCodeScannerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()

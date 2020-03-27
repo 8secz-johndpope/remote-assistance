@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 import Vision
 
-protocol OCRDelegate
+protocol OCRDelegate: class
 {
     func ocrResponse(code: String)
 }
@@ -19,7 +19,7 @@ class OCRScanner: UIViewController {
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
 
-    var delegate: OCRDelegate?
+    weak var delegate: OCRDelegate?
     private var requests = [VNRequest]()
     
     override func viewDidLoad() {

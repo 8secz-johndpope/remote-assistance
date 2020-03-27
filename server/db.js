@@ -4,7 +4,7 @@
  * License: contact ace@fxpal.com
  */
 
- const mysql = require('mysql')
+const mysql = require('mysql')
 const config = require('config');
 const parseDbUrl = require("parse-database-url");
 const databaseConfig = parseDbUrl(config.databaseUrl);
@@ -39,6 +39,54 @@ module.exports = {
 	
 	getConnection: () => {
 		return connection
+	},
+
+	getErrorCode: (res,code,cb) => {
+		let q = ''; let arr = [];
+		if (code !== null) {
+			q = 'select * from errorCode where code = ?';
+			arr.unshift(code);
+		} else {
+			q = 'select * from errorCode';
+		}
+		connection.query(q,arr,
+			function (err, rows, fields) {
+				if (err) throw err
+				if (code !== null) {
+					let ret = {};
+					if (rows.length > 0) {
+						ret = { code: rows[0].code, url: rows[0].url, id: rows[0].id };						
+					}
+					cb(ret);
+				} else {
+					let ret = [];
+					for (let i = 0; i < rows.length; i++) {
+						if (rows.length > 0) {
+							let obj = { code: rows[i].code, url: rows[i].url, id: rows[i].id };
+							ret.unshift(obj);
+						}
+					}					
+					cb(ret);
+				}
+
+			})		
+	},
+
+	getPrinterName: (res,cb) => {
+		connection.query('select * from printerName',
+			[
+			],
+			function (err, rows, fields) {
+				let ret = [];
+				if (err) throw err
+				for (let i = 0; i < rows.length; i++) {
+					if (rows.length > 0) {
+						let obj = { name: rows[i].name, id: rows[i].id };
+						ret.unshift(obj);
+					}
+				}
+				cb(ret);
+			})		
 	},
 
 	getRoom: (res,uuid,cb) => {

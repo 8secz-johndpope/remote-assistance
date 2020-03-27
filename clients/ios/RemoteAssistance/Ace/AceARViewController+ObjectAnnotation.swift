@@ -75,6 +75,12 @@ extension AceARViewController {
         if let tap = self.objectTap {
             self.parent?.view.removeGestureRecognizer(tap)
         }
+        
+        let socket = SocketIOManager.sharedInstance
+        socket.off("recording_started")
+        socket.off("clip_ready")
+        socket.off("clip_thumbnail_ready")
+
         self.anchorFound = false
     }
     

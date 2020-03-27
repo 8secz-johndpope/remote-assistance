@@ -9,8 +9,14 @@
 import UIKit
 
 class AceLandingViewController : UIViewController {
+    @IBOutlet weak var versionLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+            versionLabel.text = "Version: \(version)"
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -108,6 +108,12 @@ extension AceARViewController {
             self.removeArrow(identifer:identifier)
         }
     }
+
+    func arPointerVieWillDisappear() {
+        let socket = SocketIOManager.sharedInstance
+        socket.off("pointer_set")
+        socket.off("pointer_clear")
+    }
     
     func initArrowAndTextObjects(pointerName:String, identifier:String, message:String) {
         

@@ -16,7 +16,7 @@ class WRTCClient : NSObject {
     private var sid:String = ""
     public var factory:RTCPeerConnectionFactory
     public var stream:RTCMediaStream?
-    public var delegate:WRTCClientDelegate?
+    public weak var delegate:WRTCClientDelegate?
     private var remoteDataChannel: RTCDataChannel?
     private let rtcAudioSession =  RTCAudioSession.sharedInstance()
     private let audioQueue = DispatchQueue(label: "audio")

@@ -26,7 +26,7 @@ class AceViewController : UIViewController {
         
         self.navigationController?.navigationBar.tintColor = #colorLiteral(red: 0, green: 0.4784313725, blue: 1, alpha: 1)
         
-        initSetMode()
+       initSetMode()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -34,6 +34,11 @@ class AceViewController : UIViewController {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         
         self.view.makeToast("Joined room \(store.ace.state.roomName)", duration: 2.0, position: .center)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        let socket = SocketIOManager.sharedInstance
+        socket.off("set_mode")
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -78,7 +83,7 @@ class AceViewController : UIViewController {
                 self.setMode(mode)
             }
         }
-        setMode("sketch")
+       setMode("sketch")
     }
     
     func setMode(_ mode:String) {
@@ -138,6 +143,8 @@ extension AceViewController : AceUIViewDelegate {
     }
     
     func onHangup(_ btn: UIButton) {
+        let socket = SocketIOManager.sharedInstance
+        socket.off("set_mode")
         self.wrtc.disconnect()
         self.navigationController?.popViewController()
     }
