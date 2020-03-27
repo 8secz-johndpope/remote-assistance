@@ -35,7 +35,9 @@ class AceARViewController : UIViewController {
     let updateQueue = DispatchQueue(label: "com.fxpal.ace")
     
     // AR Pointer
-    var arrowObject:AceVirtualObject?
+    var poinerIdentifier:String = ""
+    var arrowObjects:[String:AceVirtualObject] = [:]
+    var textObjects:[String:AceVirtualText] = [:]
     
     // VR
     var vrVC:AceVRViewController?
@@ -66,7 +68,7 @@ class AceARViewController : UIViewController {
         initWebRTCClient()
         initMediaStream()
         initARKit()
-        initScreenAR()
+        //initScreenAR()
         initARPointer()
         initObjectDetection()
     }

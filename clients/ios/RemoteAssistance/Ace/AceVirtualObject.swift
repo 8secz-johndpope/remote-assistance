@@ -58,6 +58,8 @@ class AceVirtualObject: SCNReferenceNode {
     /// at the end of a pan gesture or when the object is repositioned.
     var shouldUpdateAnchor = false
     
+    var identifier:String = ""
+    
     /// Stops tracking the object's position and orientation.
     /// - Tag: StopTrackedRaycasts
     func stopTrackedRaycast() {

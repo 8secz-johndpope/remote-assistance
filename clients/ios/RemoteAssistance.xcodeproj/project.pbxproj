@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2903F781242D2DBD00226392 /* AceVirtualText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2903F780242D2DBD00226392 /* AceVirtualText.swift */; };
 		2941BECB23C9165F00AE3A4F /* clip3.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2941BEC823C9165F00AE3A4F /* clip3.mp4 */; };
 		2941BECC23C9165F00AE3A4F /* clip1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2941BEC923C9165F00AE3A4F /* clip1.mp4 */; };
 		2941BECD23C9165F00AE3A4F /* clip2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2941BECA23C9165F00AE3A4F /* clip2.mp4 */; };
@@ -21,7 +22,6 @@
 		D7249D4423D9804B004BDD71 /* AceAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7249D4323D9804B004BDD71 /* AceAPITests.swift */; };
 		D7455DB82368BE77001594FA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7455DB72368BE77001594FA /* AppDelegate.swift */; };
 		D7455DBA2368BE77001594FA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7455DB92368BE77001594FA /* ViewController.swift */; };
-		D7455DBC2368BE77001594FA /* Experience.rcproject in Sources */ = {isa = PBXBuildFile; fileRef = D7455DBB2368BE77001594FA /* Experience.rcproject */; };
 		D7455DBF2368BE77001594FA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7455DBD2368BE77001594FA /* Main.storyboard */; };
 		D7455DC12368BE7F001594FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7455DC02368BE7F001594FA /* Assets.xcassets */; };
 		D7455DC42368BE7F001594FA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7455DC22368BE7F001594FA /* LaunchScreen.storyboard */; };
@@ -105,6 +105,7 @@
 
 /* Begin PBXFileReference section */
 		13B86974C1A2796697CDFACD /* Pods_RemoteAssistance.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RemoteAssistance.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2903F780242D2DBD00226392 /* AceVirtualText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceVirtualText.swift; sourceTree = "<group>"; };
 		2941BEC823C9165F00AE3A4F /* clip3.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = clip3.mp4; sourceTree = "<group>"; };
 		2941BEC923C9165F00AE3A4F /* clip1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = clip1.mp4; sourceTree = "<group>"; };
 		2941BECA23C9165F00AE3A4F /* clip2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = clip2.mp4; sourceTree = "<group>"; };
@@ -123,7 +124,6 @@
 		D7455DB42368BE77001594FA /* RemoteAssistance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RemoteAssistance.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7455DB72368BE77001594FA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D7455DB92368BE77001594FA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		D7455DBB2368BE77001594FA /* Experience.rcproject */ = {isa = PBXFileReference; lastKnownFileType = file.rcproject; path = Experience.rcproject; sourceTree = "<group>"; };
 		D7455DBE2368BE77001594FA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D7455DC02368BE7F001594FA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D7455DC32368BE7F001594FA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -269,7 +269,6 @@
 				D7455DB72368BE77001594FA /* AppDelegate.swift */,
 				D7455DC02368BE7F001594FA /* Assets.xcassets */,
 				D7EAD85A23D66ABC00EE1A56 /* Models.scnassets */,
-				D7455DBB2368BE77001594FA /* Experience.rcproject */,
 				D7455DC52368BE7F001594FA /* Info.plist */,
 				D7455DC22368BE7F001594FA /* LaunchScreen.storyboard */,
 				D7455DBD2368BE77001594FA /* Main.storyboard */,
@@ -322,6 +321,7 @@
 				D7AF6A0323C8FD8D005B67D8 /* AceUIViewController.swift */,
 				D7AF6A0023C8F4FD005B67D8 /* AceViewController.swift */,
 				D7EAD85823D6684800EE1A56 /* AceVirtualObject.swift */,
+				2903F780242D2DBD00226392 /* AceVirtualText.swift */,
 				D76C1CCB23D78BD600208511 /* AceVRViewController.swift */,
 				D7167ED223D8CDA900655A42 /* AceLandingViewController.swift */,
 				D753162923D926C200D686EC /* AceAPI.swift */,
@@ -639,11 +639,11 @@
 				D7DB6A0E236DE91D00D7C367 /* SettingsViewController.swift in Sources */,
 				D7DB6A02236DE67000D7C367 /* TSLeapMotion.swift in Sources */,
 				D7DA31EE239ECFCE00D1B73F /* Collection+Extensions.swift in Sources */,
-				D7455DBC2368BE77001594FA /* Experience.rcproject in Sources */,
 				D7DB6A01236DE67000D7C367 /* TSViewController.swift in Sources */,
 				D753162A23D926C200D686EC /* AceAPI.swift in Sources */,
 				D7AF6A0623C90F91005B67D8 /* AceHandsViewController.swift in Sources */,
 				D753162E23DA47AB00D686EC /* AceARViewController+ARPointer.swift in Sources */,
+				2903F781242D2DBD00226392 /* AceVirtualText.swift in Sources */,
 				D7DA31EB239ECFCE00D1B73F /* SCNVector3+Extensions.swift in Sources */,
 				D7DA31F2239ECFCE00D1B73F /* Message.swift in Sources */,
 				D7DB69F8236DE35100D7C367 /* MathExtension.swift in Sources */,

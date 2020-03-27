@@ -274,7 +274,7 @@ extension AceARViewController {
     
     func tryAnnotateObjectWithRecording() {
         if self.clipThumbnailReady && self.clipReady {
-            if let recUuid = self.recordingUuid, let node = self.nodeFound {
+            if let recUuid = self.recordingUuid, let _ = self.nodeFound {
                 let api = AceAPI.sharedInstance
                 api.getClip(recUuid) { result, error in
                     if let err = error {
