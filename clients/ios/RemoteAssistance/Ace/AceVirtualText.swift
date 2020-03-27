@@ -13,7 +13,6 @@ import ARKit
 class AceVirtualText:SCNNode {
     
     var identifier:String = ""
-    
 }
 
 extension AceVirtualText {
@@ -27,7 +26,7 @@ extension AceVirtualText {
         obj.scale = SCNVector3(x:0.002, y:0.002, z:0.002)
         obj.position = SCNVector3(x:-(0.005 * Float(message.count)), y:0.08, z:0.0)
         obj.geometry = text
-//        obj.text = message
+        obj.name = "Message"
         return obj
     }
 

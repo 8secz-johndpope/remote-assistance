@@ -128,16 +128,6 @@ navigator.mediaDevices.getUserMedia(constraints).then(
     }
 );
 
-function create_UUID(){
-    var dt = new Date().getTime();
-    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = (dt + Math.random()*16)%16 | 0;
-        dt = Math.floor(dt/16);
-        return (c=='x' ? r :(r&0x3|0x8)).toString(16);
-    });
-    return uuid;
-}
-
 function onKeyDown( event ) {
     var charcode = String.fromCharCode(event.keyCode);
     var d_trans = 10;
@@ -526,7 +516,6 @@ const LS_TIMEOUT = 3000;
 const SKETCH_TIMEOUT = 3000;
 const pos = { x: 0, y: 0 };
 let sketch = false;
-let selectedPointer = "";
 
 
 function registerActivityLS() {
@@ -814,10 +803,13 @@ reconnectLeapmotion();
 
 // ----- START: AR Pointer
 var enablePointer = false;
+let selectedPointer = "";
+var pointerCounter = 0;
 
-function handlePointerClick(e) {
+    function handlePointerClick(e) {
     console.log('pointer_set', e.clientX, e.clientY);
     let canvas = document.getElementById("sketchCanvas");
+    pointerCounter += 1;
     wrtc.emit('pointer_set', {
         x: e.clientX,
         y: e.clientY,
@@ -825,7 +817,7 @@ function handlePointerClick(e) {
         h: canvas.height,
         pointer: selectedPointer,
         message: document.getElementById("floatingMessage").value,
-        identifier: create_UUID()
+        identifier: "pointerId" + pointerCounter.toString()
     });
     return false;
 }

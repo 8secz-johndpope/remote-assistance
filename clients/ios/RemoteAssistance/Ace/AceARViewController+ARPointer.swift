@@ -120,11 +120,15 @@ extension AceARViewController {
         let textObject = AceVirtualText.object(withMessage: message)
         self.textObjects[identifier] = textObject
         self.textObjects[identifier]?.identifier = identifier
+        var arrowObject = AceVirtualObject.object(byName: "\(pointerName).scn")
 
-        let arrowObject = AceVirtualObject.object(byName: "\(pointerName).scn")
+        if self.arrowObjects.count > 0 && !self.arrowObjects.has(key: identifier) {
+            arrowObject = arrowObject?.clone()
+        }
+
         self.arrowObjects[identifier] = arrowObject
         self.arrowObjects[identifier]?.identifier = identifier
-        
+
         // animate
 //        let animation = CABasicAnimation(keyPath: "rotation")
 //        animation.fromValue = NSValue(scnVector4: SCNVector4(x: 0, y: 1, z: 0, w: 0))
@@ -216,6 +220,9 @@ extension AceARViewController {
         arView.session.add(anchor: newAnchor)
 
         if let textObject = self.textObjects[arrowObject.identifier] {
+            
+            arrowObject.childNodes.filter({ $0.name == "Message" }).forEach({ $0.removeFromParentNode() })
+            
             arrowObject.addChildNode(textObject)
         }
         

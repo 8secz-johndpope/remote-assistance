@@ -13,6 +13,7 @@ import ARKit
 class AceVirtualObject: SCNReferenceNode {
     
     /// The model name derived from the `referenceURL`.
+        
     var modelName: String {
         return referenceURL.lastPathComponent
         //.replacingOccurrences(of: ".reality", with: "")
@@ -83,6 +84,7 @@ extension AceVirtualObject {
 
             let object = AceVirtualObject(url: url)
             object?.load()
+            object?.name = "Marker"
             return object
         }
     }()
