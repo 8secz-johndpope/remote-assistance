@@ -61,7 +61,7 @@ Connect with browser
 --------------------
 
 1. Customer uses iOS app or connects with a browser
-2. Expert opens https://[ip-address]:5443/ and clicks on expert
+2. Expert opens https://[ip-address]:5443/basic/ and clicks on expert
 
 
 Chat UI
