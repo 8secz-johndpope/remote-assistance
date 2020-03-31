@@ -76,8 +76,8 @@ class AceARViewController : UIViewController {
 
         super.viewWillAppear(animated)
         self.setupAR()
-       self.wrtc?.connect()
-       self.objectAnnotationViewWillAppear()
+        self.wrtc?.connect()
+        self.objectAnnotationViewWillAppear()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
