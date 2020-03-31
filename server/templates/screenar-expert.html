@@ -247,6 +247,22 @@ function drawVideo()
   setTimeout(drawVideo,1000/10);
 }
 
+/*function captureFritzImage()
+{
+  let imgData = ctx.getImageData(0,0,canvasw,canvash);
+  let data = imgData.data;
+  let n = canvasw * canvash;
+  let idx = 0;
+  for (let i=0;i<n;i++)
+  {
+    if (data[idx] < 100 && data[idx+1] >= 250 && data[idx+2] < 100)
+    {
+      data[idx+3] = 0;
+    }
+    idx += 4;
+  }
+}*/
+
 let currentAnchor = null;
 function stopSession()
 {
@@ -308,7 +324,7 @@ function captureImage()
   {
     //wrtc.sendChannel.send('captureImage' + lastImageSrc);
     let base64url = lastImageSrc.substring("data:image/jpeg;base64,".length);
-    console.log(base64url);
+    //console.log(base64url);
     wrtc.sendChannel.send(base64url);
   }
 

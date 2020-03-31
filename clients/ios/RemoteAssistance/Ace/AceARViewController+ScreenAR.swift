@@ -37,41 +37,53 @@ extension AceARViewController {
         return ""
     }
     
-    func imageWithBorderPoints(image: UIImage, points: [CGPoint]) -> UIImage?
+    func drawCornerPoints(context: CGContext?, rect: CGRect, points: [CGPoint])
     {
-        let size = CGSize(width: image.size.width, height: image.size.height)
-        UIGraphicsBeginImageContext(size)
-        let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-        image.draw(in: rect, blendMode: .normal, alpha: 1.0)
-        let context = UIGraphicsGetCurrentContext()
-        context?.setStrokeColor(red: 0, green: 0, blue: 0, alpha: 1)
-        //context?.setLineWidth(8)
-        context?.stroke(rect, width: 16)
-        context?.setFillColor(red: 255, green: 255, blue: 255, alpha: 1)
+        let markSize: CGFloat = 8
+        
+        // draw an outline in BLACK around the frame
+        // to make sure the WHITE blocks will be detected
+        context?.setFillColor(red: 0, green: 0, blue: 0, alpha: 1)
+        // top border black
+        context?.fill(CGRect(x: 0, y: 0, width: rect.width, height: markSize))
+        // bottom border black
+        context?.fill(CGRect(x: 0, y: rect.height-markSize, width: rect.width, height: markSize))
+        // left border black
+        context?.fill(CGRect(x: 0, y: 0, width: markSize, height: rect.height))
+        // right border black
+        context?.fill(CGRect(x: rect.width-markSize, y: 0, width: markSize, height: rect.height))
 
-        /*let tl = points[0]
-        let tr = points[1]
-        let bl = points[2]
-        let br = points[3]*/
+        // now use WHITE to draw the blocks encoding the 4 points
+        context?.setFillColor(red: 255, green: 255, blue: 255, alpha: 1)
 
         let tl = points[2]
         let tr = points[3]
         let bl = points[0]
         let br = points[1]
 
-        let barheight: CGFloat = 16
         // encode x positions of tl and tr on the top border
-        context?.fill(CGRect(x: tl.x-4, y: 0, width: 8, height: barheight))
-        context?.fill(CGRect(x: tr.x-4, y: 0, width: 8, height: barheight))
+        context?.fill(CGRect(x: tl.x-4, y: 0, width: 8, height: markSize))
+        context?.fill(CGRect(x: tr.x-4, y: 0, width: 8, height: markSize))
         // encode x positions of bl and br on the bottom border
-        context?.fill(CGRect(x: bl.x-4, y: size.height, width: 8, height: -barheight))
-        context?.fill(CGRect(x: br.x-4, y: size.height, width: 8, height: -barheight))
+        context?.fill(CGRect(x: bl.x-4, y: rect.size.height, width: 8, height: -markSize))
+        context?.fill(CGRect(x: br.x-4, y: rect.size.height, width: 8, height: -markSize))
         // encode y positions of tl and bl on the left border
-        context?.fill(CGRect(x: 0, y: tl.y-4, width: barheight, height: 8))
-        context?.fill(CGRect(x: 0, y: bl.y-4, width: barheight, height: 8))
+        context?.fill(CGRect(x: 0, y: tl.y-4, width: markSize, height: 8))
+        context?.fill(CGRect(x: 0, y: bl.y-4, width: markSize, height: 8))
         // encode y positions of tr and br on the right border
-        context?.fill(CGRect(x: size.width, y: tr.y-4, width: -barheight, height: 8))
-        context?.fill(CGRect(x: size.width, y: br.y-4, width: -barheight, height: 8))
+        context?.fill(CGRect(x: rect.size.width, y: tr.y-4, width: -markSize, height: 8))
+        context?.fill(CGRect(x: rect.size.width, y: br.y-4, width: -markSize, height: 8))
+    }
+
+    func imageWithBorderPoints(image: UIImage, points: [CGPoint]) -> UIImage?
+    {
+        let size = CGSize(width: image.size.width, height: image.size.height)
+        UIGraphicsBeginImageContext(size)
+        let rect = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+        image.draw(in: rect, blendMode: .normal, alpha: 1.0)
+
+        let context = UIGraphicsGetCurrentContext()
+        self.drawCornerPoints(context: context, rect: rect, points: points)
 
         let newImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()

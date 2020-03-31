@@ -1,6 +1,6 @@
 PODS:
-  - Alamofire (5.0.0-rc.3)
-  - GoogleWebRTC (1.1.27828)
+  - Alamofire (5.0.5)
+  - GoogleWebRTC (1.1.29400)
   - IconFontKit/Core (2.1.2)
   - IconFontKit/MaterialDesignIcons (2.1.2):
     - IconFontKit/Core
@@ -60,8 +60,8 @@ SPEC REPOS:
     - Toast-Swift
 
 SPEC CHECKSUMS:
-  Alamofire: ca8c0de6906873be89d6deec5c8de279e00bf872
-  GoogleWebRTC: 55e46bee9ac2a4961542e9571bea589b64493f45
+  Alamofire: df2f8f826963b08b9a870791ad48e07a10090b2e
+  GoogleWebRTC: cfb83bc346435a17fe06bb05f04ad826b858a7fb
   IconFontKit: 3ce6ef3f532016042405819cf983fed8d649dff7
   RestEssentials: e91de7d7b97329128761de8c40abf93fba64b764
   ReSwift: 628f1a9b3ee52e3b3ca2a644435472fd77afafe1
@@ -73,4 +73,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: e2fcb94f8a7ab7f1d66851e9fcb720f9343e4a7d
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.1

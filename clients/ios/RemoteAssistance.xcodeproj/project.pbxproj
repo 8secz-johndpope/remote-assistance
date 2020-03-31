@@ -15,7 +15,6 @@
 		2984E5112418216D00AA0B9C /* 3DPrinter2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2984E50E2418216B00AA0B9C /* 3DPrinter2.mp4 */; };
 		2984E5122418216D00AA0B9C /* 3DPrinter1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2984E50F2418216C00AA0B9C /* 3DPrinter1.mp4 */; };
 		2984E5132418216D00AA0B9C /* 3DPrinter3.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2984E5102418216D00AA0B9C /* 3DPrinter3.mp4 */; };
-		A539AF265FD05F5E8642A27C /* Pods_RemoteAssistance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13B86974C1A2796697CDFACD /* Pods_RemoteAssistance.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		AD43D0CE23C68E5500AA4D24 /* QRCodeScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD43D0CD23C68E5500AA4D24 /* QRCodeScanner.swift */; };
 		D7031AFA23E8EED80062A637 /* AceClipThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7031AF923E8EED80062A637 /* AceClipThumbnail.swift */; };
 		D7167ED323D8CDA900655A42 /* AceLandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7167ED223D8CDA900655A42 /* AceLandingViewController.swift */; };
@@ -69,6 +68,7 @@
 		D7EAD85923D6684800EE1A56 /* AceVirtualObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7EAD85823D6684800EE1A56 /* AceVirtualObject.swift */; };
 		D7EAD85B23D66ABC00EE1A56 /* Models.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = D7EAD85A23D66ABC00EE1A56 /* Models.scnassets */; };
 		D7F39EC924099CC600911934 /* OCRScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F39EC824099CC600911934 /* OCRScanner.swift */; };
+		EEAD9CEAB1D2D56D6FE29BC5 /* Pods_RemoteAssistance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33CD05DAC9A4FFE0F7D651A9 /* Pods_RemoteAssistance.framework */; };
 		F9A7B77B23D0F39300F518C0 /* overlay.html in Resources */ = {isa = PBXBuildFile; fileRef = F9A7B77A23D0F39300F518C0 /* overlay.html */; };
 /* End PBXBuildFile section */
 
@@ -104,7 +104,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		13B86974C1A2796697CDFACD /* Pods_RemoteAssistance.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RemoteAssistance.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2903F780242D2DBD00226392 /* AceVirtualText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceVirtualText.swift; sourceTree = "<group>"; };
 		2941BEC823C9165F00AE3A4F /* clip3.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = clip3.mp4; sourceTree = "<group>"; };
 		2941BEC923C9165F00AE3A4F /* clip1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = clip1.mp4; sourceTree = "<group>"; };
@@ -114,10 +113,10 @@
 		2984E50E2418216B00AA0B9C /* 3DPrinter2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3DPrinter2.mp4; sourceTree = "<group>"; };
 		2984E50F2418216C00AA0B9C /* 3DPrinter1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3DPrinter1.mp4; sourceTree = "<group>"; };
 		2984E5102418216D00AA0B9C /* 3DPrinter3.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3DPrinter3.mp4; sourceTree = "<group>"; };
-		60AD71138BC3828FE41B6BA1 /* Pods-RemoteAssistance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.debug.xcconfig"; sourceTree = "<group>"; };
-		9AD6A81BBB56BA422FCA4EEC /* Pods-RemoteAssistance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.debug.xcconfig"; path = "Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.debug.xcconfig"; sourceTree = "<group>"; };
+		33CD05DAC9A4FFE0F7D651A9 /* Pods_RemoteAssistance.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RemoteAssistance.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		53D42A241ED05FFC83CEF12E /* Pods-RemoteAssistance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.debug.xcconfig"; path = "Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.debug.xcconfig"; sourceTree = "<group>"; };
+		55C9CD29027533AEC28E2B0C /* Pods-RemoteAssistance.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.release.xcconfig"; path = "Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.release.xcconfig"; sourceTree = "<group>"; };
 		AD43D0CD23C68E5500AA4D24 /* QRCodeScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeScanner.swift; sourceTree = "<group>"; };
-		D009BE9F825C404208D2D25A /* Pods-RemoteAssistance.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.release.xcconfig"; path = "Pods/Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.release.xcconfig"; sourceTree = "<group>"; };
 		D7031AF923E8EED80062A637 /* AceClipThumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceClipThumbnail.swift; sourceTree = "<group>"; };
 		D7167ED223D8CDA900655A42 /* AceLandingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceLandingViewController.swift; sourceTree = "<group>"; };
 		D7249D4323D9804B004BDD71 /* AceAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceAPITests.swift; sourceTree = "<group>"; };
@@ -176,7 +175,6 @@
 		D7EAD85823D6684800EE1A56 /* AceVirtualObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceVirtualObject.swift; sourceTree = "<group>"; };
 		D7EAD85A23D66ABC00EE1A56 /* Models.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Models.scnassets; sourceTree = "<group>"; };
 		D7F39EC824099CC600911934 /* OCRScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRScanner.swift; sourceTree = "<group>"; };
-		E2F10D05D152079F7937DA3B /* Pods-RemoteAssistance.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.release.xcconfig"; path = "Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.release.xcconfig"; sourceTree = "<group>"; };
 		F9A7B77A23D0F39300F518C0 /* overlay.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = overlay.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -185,8 +183,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A539AF265FD05F5E8642A27C /* Pods_RemoteAssistance.framework in Frameworks */,
 				D7DA20D723AAE7CA005B1357 /* WA3DLib.framework in Frameworks */,
+				EEAD9CEAB1D2D56D6FE29BC5 /* Pods_RemoteAssistance.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,10 +230,8 @@
 		2C3A091D90FD40735D9A68FB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				9AD6A81BBB56BA422FCA4EEC /* Pods-RemoteAssistance.debug.xcconfig */,
-				E2F10D05D152079F7937DA3B /* Pods-RemoteAssistance.release.xcconfig */,
-				60AD71138BC3828FE41B6BA1 /* Pods-RemoteAssistance.debug.xcconfig */,
-				D009BE9F825C404208D2D25A /* Pods-RemoteAssistance.release.xcconfig */,
+				53D42A241ED05FFC83CEF12E /* Pods-RemoteAssistance.debug.xcconfig */,
+				55C9CD29027533AEC28E2B0C /* Pods-RemoteAssistance.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -419,7 +415,7 @@
 			children = (
 				297D37C623EB7E7200499CFA /* AVFoundation.framework */,
 				D7DA20CD23AAE255005B1357 /* WA3DLib.framework */,
-				13B86974C1A2796697CDFACD /* Pods_RemoteAssistance.framework */,
+				33CD05DAC9A4FFE0F7D651A9 /* Pods_RemoteAssistance.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -431,12 +427,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D7455DDE2368BE80001594FA /* Build configuration list for PBXNativeTarget "RemoteAssistance" */;
 			buildPhases = (
-				C0BD49F8A052324F8F7987CF /* [CP] Check Pods Manifest.lock */,
+				963D1D6D314BEE3384ABF132 /* [CP] Check Pods Manifest.lock */,
 				D7455DB02368BE77001594FA /* Sources */,
 				D7455DB12368BE77001594FA /* Frameworks */,
 				D7455DB22368BE77001594FA /* Resources */,
-				992F350A43BF95EC7DFD2CB5 /* [CP] Embed Pods Frameworks */,
 				D7DA20D923AAE7CA005B1357 /* Embed Frameworks */,
+				D06192CCA272AF7EB28AEC10 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -567,24 +563,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		992F350A43BF95EC7DFD2CB5 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C0BD49F8A052324F8F7987CF /* [CP] Check Pods Manifest.lock */ = {
+		963D1D6D314BEE3384ABF132 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -604,6 +583,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D06192CCA272AF7EB28AEC10 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -827,7 +823,7 @@
 		};
 		D7455DDF2368BE80001594FA /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9AD6A81BBB56BA422FCA4EEC /* Pods-RemoteAssistance.debug.xcconfig */;
+			baseConfigurationReference = 53D42A241ED05FFC83CEF12E /* Pods-RemoteAssistance.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -854,7 +850,7 @@
 		};
 		D7455DE02368BE80001594FA /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E2F10D05D152079F7937DA3B /* Pods-RemoteAssistance.release.xcconfig */;
+			baseConfigurationReference = 55C9CD29027533AEC28E2B0C /* Pods-RemoteAssistance.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

@@ -286,11 +286,25 @@ extension AceARViewController: ARSessionDelegate {
             
             if let coords = self.getPoints2D(imageSize: image.size) {
                 if let borderedImage = self.imageWithBorderPoints(image: image, points: coords) {
-                    self.capturer.captureFrame(borderedImage)
+                    let newSize: CGSize
+                    // resize frame to a multiple of 32 pixels
+                    // otherwise WebRTC seems to crop the frame
+                    // making us lose the encoded corner points
+                    if borderedImage.size.width > borderedImage.size.height {
+                        newSize = CGSize(width:768, height:320)
+                    }
+                    else
+                    {
+                        newSize = CGSize(width:320,height:768)
+                    }
+                    if let resized = borderedImage.resize(to: newSize) {
+                        self.capturer.captureFrame(resized)
+                    }
                 }
             } else {
                 self.capturer.captureFrame(image)
             }
+
             self.lastTimeStamp = now
         }
     }
