@@ -90,6 +90,9 @@ class TSRemoteHands {
     
     func disconnect() {
         store.ace.unsubscribe(self)
+        let socket = SocketIOManager.sharedInstance
+        socket.off("frame")
+        socket.off("camera_update")
     }
     
     func initSocket() {
