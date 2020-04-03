@@ -47,8 +47,8 @@ class AceLandingViewController : UIViewController {
 }
 
 extension AceLandingViewController : OCRDelegate {
-    func ocrResponse(code: String) {
-        print("ocr: \(code)")
+    func ocrResponse(text: String) {
+        print("ocr: \(text)")
     }
 }
 
