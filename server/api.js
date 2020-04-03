@@ -35,7 +35,6 @@ if (db !== null) {
     });
 
     // Printer name
-
     router.get('/printerName/', function (req, res) {
         db.getPrinterName(res,function(data) {
             res.json(data);

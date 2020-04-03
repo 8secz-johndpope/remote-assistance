@@ -76,13 +76,16 @@ function launchARVideo(action) {
   injectMsg(savedAction,"");
 }
 
-function launchOCRScanner(action) {
+function launchOCRScanner(action,url) {
   savedAction = action;
   // Launch native text scanner
   if (runningNative()) {
-      window.webkit.messageHandlers.launchOCRScanner.postMessage(
+    let options = getURL(url).then(function(data){ console.log(data); });
+    console.log(options);
+    window.webkit.messageHandlers.launchOCRScanner.postMessage(
       { 
-      });                
+          options: options
+      }); 
       } else {
         // DEBUG
         let scannedText = "";
@@ -134,7 +137,7 @@ function validURL(str) {
 function getButtonHTML(botResponseArr) {
   let html = "";
   for (let i = 0; i < botResponseArr.length; i++) {
-    let url = botResponseArr[i].url;
+    let url = botResponseArr[i].url; 
     let action = botResponseArr[i].action;
     switch (botResponseArr[i].type) {
       case "response":
@@ -157,7 +160,7 @@ function getButtonHTML(botResponseArr) {
        html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchARVideo(\"${action}\")'><span class="fa fa-camera fa-2x"></span></button> `;
        break;
       case "scanText":
-       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchOCRScanner(\"${action}\")'><span class="fa fa-camera fa-2x"></span></button> `;
+       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchOCRScanner(\"${action}\",\"${url}\")'><span class="fa fa-camera fa-2x"></span></button> `;
        break;
       case "email":
        html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchEmail(\"${action}\")'><span class="fa fa-envelope fa-2x"></span></button> `;
@@ -283,6 +286,7 @@ function botResponse(msgText,msgLabel="") {
         break;
     } else if (t == "scanText") {
         nextBtn.type = "scanText"; 
+        nextBtn.url = CHAT_TREE.responses[currentIndex-1].url;
         nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
         botResponseArr.push(nextBtn);
         break;
@@ -323,6 +327,16 @@ function botResponse(msgText,msgLabel="") {
 // Utils
 function get(selector, root = document) {
   return root.querySelector(selector);
+}
+
+function getURL(url) {
+  url = SERVER_API + url; console.log(url);
+  return $.getJSON(url)
+    .then(function(data){
+      return {
+        data
+    }
+  });
 }
 
 function formatDate(date) {

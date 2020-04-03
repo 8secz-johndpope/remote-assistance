@@ -12,13 +12,24 @@ import Vision
 
 protocol OCRDelegate: class
 {
-    func ocrResponse(code: String)
+    func ocrResponse(text: String)
 }
 
 class OCRScanner: UIViewController {
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
 
+    let options : [String]
+
+    init(options: [String]) {
+        self.options = options
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) is not supported")
+    }
+    
     weak var delegate: OCRDelegate?
     private var requests = [VNRequest]()
     
@@ -113,12 +124,18 @@ class OCRScanner: UIViewController {
     func textDetectionHandler(request: VNRequest, error: Error?) {
         guard let observations = request.results else {print("no result"); return}
         
-        
         if #available(iOS 13.0, *) {
             for o in observations {
                 if let result = o as? VNRecognizedTextObservation {
-                    let text = result.topCandidates(1)
-                    print(text[0].string)
+                    var text = result.topCandidates(1)[0].string
+                    text = text.replacingOccurrences(of: "\\s",with:"",options:.regularExpression).lowercased()
+                    for string in options {
+                        let rString = string.replacingOccurrences(of: "\\s",with:"",options:.regularExpression).lowercased()
+                        if rString == text {
+                            print(text)
+                            self.delegate?.ocrResponse(text: text)
+                        }
+                    }
                 }
             }
         }
