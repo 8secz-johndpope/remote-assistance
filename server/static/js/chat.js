@@ -84,7 +84,7 @@ function launchOCRScanner(action,url) {
       window.webkit.messageHandlers.launchOCRScanner.postMessage(
       { 
           options: options
-      });                
+      }); 
       } else {
         // DEBUG
         let scannedText = "";
@@ -328,7 +328,7 @@ function get(selector, root = document) {
   return root.querySelector(selector);
 }
 
-function loadURL(url) {
+function getURL(url) {
   $.getJSON(SERVER_API + url).then(
     function(data) {
       return data;
