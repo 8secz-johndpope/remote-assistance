@@ -34,7 +34,7 @@ class AceARViewController : UIViewController {
     
     // AR Pointer
     var poinerIdentifier:String = ""
-    var arrowObjects:[String:AceVirtualObject] = [:]
+    var pointerObjects:[String:AceVirtualObject] = [:]
     var textObjects:[String:AceVirtualText] = [:]
     
     // VR

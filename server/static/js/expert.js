@@ -805,21 +805,77 @@ reconnectLeapmotion();
 var enablePointer = false;
 let selectedPointer = "";
 var pointerCounter = 0;
+var pointers = [];
 
-    function handlePointerClick(e) {
+class PointerInfo {
+    constructor(x, y, w, h, pointer, message, identifier) {
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
+        this.pointer = pointer;
+        this.message = message;
+        this.identifier = identifier;
+    }
+}
+
+function handlePointerClick(e) {
     console.log('pointer_set', e.clientX, e.clientY);
     let canvas = document.getElementById("sketchCanvas");
     pointerCounter += 1;
-    wrtc.emit('pointer_set', {
-        x: e.clientX,
-        y: e.clientY,
-        w: canvas.width,
-        h: canvas.height,
-        pointer: selectedPointer,
-        message: document.getElementById("floatingMessage").value,
-        identifier: "pointerId" + pointerCounter.toString()
-    });
+    //let pointerInfo = new PointerInfo(e.clientX, e.clientY, canvas.width, canvas.height, selectedPointer, document.getElementById("floatingMessage").value, "pointerId" + pointerCounter.toString());
+    let pointerInfo = [selectedPointer, document.getElementById("floatingMessage").value, "<button>Del</button>", e.clientX, e.clientY, canvas.width, canvas.height, "pointerId" + pointerCounter.toString()];
+    pointers.push(pointerInfo);
+    emitPointerSet(pointerInfo);
+    setPointerTable();
     return false;
+}
+
+function emitPointerSet(pointerInfo) {
+    wrtc.emit('pointer_set', {
+        pointer: pointerInfo[0],
+        message: pointerInfo[1],
+        x: pointerInfo[3],
+        y: pointerInfo[4],
+        w: pointerInfo[5],
+        h: pointerInfo[6],
+        identifier: pointerInfo[7]
+    });
+}
+
+function emitPointerClear(pointerInfo) {
+    wrtc.emit('pointer_clear', {
+        identifier: pointerInfo[7]
+    });
+}
+
+function setPointerTable() {
+    var table = $('#PointerTable').DataTable( {
+        paging: false,
+        searching: false,
+        destroy: true,
+        ordering: false,
+        data: pointers,
+        columns: [
+            { title: "-- Pointer --" },
+            { title: "-- Message --" },
+            { title: "" }
+        ]
+    } );
+
+    $('#PointerTable tbody').on( 'click', 'button', function () {
+        var index = $(this).parents('tr').index()
+        if (index < pointers.length && index > -1) {
+            emitPointerClear(pointers[index])
+            pointers.splice(index, 1)
+            setPointerTable()
+        }
+        // alert('You clicked row '+ ($(this).parents('tr').index()+1) );
+    } );
+}
+
+function redrawPointerTable() {
+    // $('#PointerTable').drw
 }
 
 // $('#pointerSet').click(function(e) {

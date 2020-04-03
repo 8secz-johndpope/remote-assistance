@@ -99,13 +99,22 @@ extension AceARViewController {
 
                 self.initArrowAndTextObjects(pointerName: msg.pointer, identifier: msg.identifier, message: msg.message)
                 
-                self.setArrow(point:msg.pos, identifier:msg.identifier)
+                self.setPointerObject(point:msg.pos, identifier:msg.identifier)
             }
         }
 
         socket.on("pointer_clear") { data, ack in
-            let identifier:String = "TODO"
-            self.removeArrow(identifer:identifier)
+            for line in data {
+                let msg = PointerSet().parse(line as! [String:AnyObject])
+                let identifier:String = msg.identifier
+                self.removePointerObject(identifer:identifier)
+                if self.pointerObjects.has(key: identifier) {
+                    self.pointerObjects.removeValue(forKey: identifier)
+                }
+                if self.textObjects.has(key: identifier) {
+                    self.textObjects.removeValue(forKey: identifier)
+                }
+            }
         }
     }
 
@@ -120,14 +129,18 @@ extension AceARViewController {
         let textObject = AceVirtualText.object(withMessage: message)
         self.textObjects[identifier] = textObject
         self.textObjects[identifier]?.identifier = identifier
-        var arrowObject = AceVirtualObject.object(byName: "\(pointerName).scn")
+        var pointerObject = AceVirtualObject.object(byName: "\(pointerName).scn")
 
-        if self.arrowObjects.count > 0 && !self.arrowObjects.has(key: identifier) {
-            arrowObject = arrowObject?.clone()
+        if self.pointerObjects.count > 0 && !self.pointerObjects.has(key: identifier) {
+            pointerObject = pointerObject?.clone()
+            print("new object")
+        }
+        else {
+            print("update object")
         }
 
-        self.arrowObjects[identifier] = arrowObject
-        self.arrowObjects[identifier]?.identifier = identifier
+        self.pointerObjects[identifier] = pointerObject
+        self.pointerObjects[identifier]?.identifier = identifier
 
         // animate
 //        let animation = CABasicAnimation(keyPath: "rotation")
@@ -136,104 +149,105 @@ extension AceARViewController {
 //        animation.duration = 3.0
 //        animation.autoreverses = false
 //        animation.repeatCount = .infinity
-//        self.arrowObjects[identifier]!.addAnimation(animation, forKey: "spinAround")
+//        self.pointerObjects[identifier]!.addAnimation(animation, forKey: "spinAround")
     }
     
-    func setArrow(point:CGPoint, identifier:String) {
-        if let arrowObject = self.arrowObjects[identifier] {
-            arrowObject.stopTrackedRaycast()
+    func setPointerObject(point:CGPoint, identifier:String) {
+        if let pointerObject = self.pointerObjects[identifier] {
+            pointerObject.stopTrackedRaycast()
             
             // Prepare to update the object's anchor to the current location.
-            arrowObject.shouldUpdateAnchor = true
+            pointerObject.shouldUpdateAnchor = true
             
             // Attempt to create a new tracked raycast from the current location.
-            if let query = arView.raycastQuery(from: point, allowing: .estimatedPlane, alignment: arrowObject.allowedAlignment),
-                let raycast = self.createTrackedRaycastAndSet3DPosition(of: arrowObject, from: query) {
-                arrowObject.raycast = raycast
+            if let query = arView.raycastQuery(from: point, allowing: .estimatedPlane, alignment: pointerObject.allowedAlignment),
+                let raycast = self.createTrackedRaycastAndSet3DPosition(of: pointerObject, from: query) {
+                pointerObject.raycast = raycast
             } else {
                 // If the tracked raycast did not succeed, simply update the anchor to the object's current position.
-                arrowObject.shouldUpdateAnchor = false
+                pointerObject.shouldUpdateAnchor = false
                 self.updateQueue.async {
-                    self.addOrUpdateAnchor(for: arrowObject)
+                    self.addOrUpdateAnchor(for: pointerObject)
                 }
             }
         }
     }
     
-    func removeArrow(identifer:String) {
-        if let object = self.arrowObjects[identifer] {
-            removeAnchor(object)
+    func removePointerObject(identifer:String) {
+        if let pointerObject = self.pointerObjects[identifer] {
+            pointerObject.stopTrackedRaycast()
+            if let anchor = pointerObject.anchor {
+                arView.session.remove(anchor: anchor)
+            }
+            pointerObject.childNodes.filter({ $0.name == "Message" }).forEach({ $0.removeFromParentNode() })
+            pointerObject.removeFromParentNode()
         }
     }
     
-    func createTrackedRaycastAndSet3DPosition(of virtualObject: AceVirtualObject, from query: ARRaycastQuery,
+    func createTrackedRaycastAndSet3DPosition(of pointerObject: AceVirtualObject, from query: ARRaycastQuery,
                                               withInitialResult initialResult: ARRaycastResult? = nil) -> ARTrackedRaycast? {
         if let initialResult = initialResult {
-            self.setTransform(of: virtualObject, with: initialResult)
+            self.setTransform(of: pointerObject, with: initialResult)
         }
         
         return arView.session.trackedRaycast(query) { (results) in
-            self.setVirtualObject3DPosition(results, with: virtualObject)
+            self.setVirtualObject3DPosition(results, with: pointerObject)
         }
     }
     
     // - Tag: ProcessRaycastResults
-    private func setVirtualObject3DPosition(_ results: [ARRaycastResult], with arrowObject: AceVirtualObject) {
+    private func setVirtualObject3DPosition(_ results: [ARRaycastResult], with pointerObject: AceVirtualObject) {
+        
+        print("setVirtualObject3DPosition")
         
         guard let result = results.first else {
             print("ERROR: Unexpected case: the update handler is always supposed to return at least one result.")
             return
         }
         
-        self.setTransform(of: arrowObject, with: result)
+        self.setTransform(of: pointerObject, with: result)
         
         // If the virtual object is not yet in the scene, add it.
-        if arrowObject.parent == nil {
-            self.arView.scene.rootNode.addChildNode(arrowObject)
-            arrowObject.shouldUpdateAnchor = true
-            if let textObject = self.textObjects[arrowObject.identifier] {
+        if pointerObject.parent == nil {
+            self.arView.scene.rootNode.addChildNode(pointerObject)
+            pointerObject.shouldUpdateAnchor = true
+            if let textObject = self.textObjects[pointerObject.identifier] {
                 self.arView.scene.rootNode.addChildNode(textObject)
             }
         }
         
-        if arrowObject.shouldUpdateAnchor {
-            arrowObject.shouldUpdateAnchor = false
+        if pointerObject.shouldUpdateAnchor {
+            pointerObject.shouldUpdateAnchor = false
             self.updateQueue.async {
-                self.addOrUpdateAnchor(for: arrowObject)
+                self.addOrUpdateAnchor(for: pointerObject)
             }
         }
     }
     
-    func setTransform(of arrowObject: AceVirtualObject, with result: ARRaycastResult) {
-        arrowObject.simdWorldTransform = result.worldTransform
+    func setTransform(of pointerObject: AceVirtualObject, with result: ARRaycastResult) {
+        pointerObject.simdWorldTransform = result.worldTransform
     }
     
-    func addOrUpdateAnchor(for arrowObject: AceVirtualObject) {
+    func addOrUpdateAnchor(for pointerObject: AceVirtualObject) {
         // If the anchor is not nil, remove it from the session.
-        if let anchor = arrowObject.anchor {
+        if let anchor = pointerObject.anchor {
             arView.session.remove(anchor: anchor)
         }
         
         // Create a new anchor with the object's current transform and add it to the session
-        let newAnchor = ARAnchor(transform: arrowObject.simdWorldTransform)
-        arrowObject.anchor = newAnchor
+        let newAnchor = ARAnchor(transform: pointerObject.simdWorldTransform)
+        pointerObject.anchor = newAnchor
         arView.session.add(anchor: newAnchor)
 
-        if let textObject = self.textObjects[arrowObject.identifier] {
+        if let textObject = self.textObjects[pointerObject.identifier] {
             
-            arrowObject.childNodes.filter({ $0.name == "Message" }).forEach({ $0.removeFromParentNode() })
+            pointerObject.childNodes.filter({ $0.name == "Message" }).forEach({ $0.removeFromParentNode() })
             
-            arrowObject.addChildNode(textObject)
+            pointerObject.addChildNode(textObject)
+            print("reset textObject")
         }
         
-        print("updated anchor")
-    }
-
-    func removeAnchor(_ object: AceVirtualObject) {
-        if let anchor = object.anchor {
-            arView.session.remove(anchor: anchor)
-            object.removeFromParentNode()
-        }
+        print("set anchor")
     }
     
     // func resetPointer() {
