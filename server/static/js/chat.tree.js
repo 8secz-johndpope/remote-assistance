@@ -31,6 +31,7 @@ const CHAT_TREE_JSON = `
     "id": 4,
     "q": "OK, great! We need to know your printer model. Please press the button below then frame your device's model name in the camera window.",
     "next": ["scanText",5],
+    "url": "/api/printerName",
     "setVar":"printerName"
     },
     {
@@ -43,6 +44,7 @@ const CHAT_TREE_JSON = `
     "id": 6,
     "q": "Sorry to hear that your {{printerName}} has faulted. So we can help you best, please scan your fault code.",
     "next": ["scanText",7],
+    "url": "/api/errorCode",
     "setVar":"faultCode"
     },
     {

@@ -76,12 +76,14 @@ function launchARVideo(action) {
   injectMsg(savedAction,"");
 }
 
-function launchOCRScanner(action) {
+function launchOCRScanner(action,url) {
   savedAction = action;
+  let options = getURL(url);
   // Launch native text scanner
   if (runningNative()) {
       window.webkit.messageHandlers.launchOCRScanner.postMessage(
       { 
+          options: options
       });                
       } else {
         // DEBUG
@@ -283,6 +285,7 @@ function botResponse(msgText,msgLabel="") {
         break;
     } else if (t == "scanText") {
         nextBtn.type = "scanText"; 
+        nextBtn.url = CHAT_TREE.responses[currentIndex-1].url;
         nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
         botResponseArr.push(nextBtn);
         break;
@@ -323,6 +326,14 @@ function botResponse(msgText,msgLabel="") {
 // Utils
 function get(selector, root = document) {
   return root.querySelector(selector);
+}
+
+function loadURL(url) {
+  $.getJSON(SERVER_API + url).then(
+    function(data) {
+      return data;
+    }
+  );
 }
 
 function formatDate(date) {
