@@ -3,12 +3,16 @@
 {% block css %}
 <link rel="stylesheet" type="text/css" href="/static/css/main.css">
 <link rel="stylesheet" type="text/css" href="/static/css/screenar.css">
+<style>
+.title{margin:16px;color:var(--blue);font-size:32px;}
+</style>
 {% endblock %}
 {% block header %}{% endblock %}
 {% block content %}
 
-<button onclick='stopSession()'>STOP</button>
-<div style="margin:16px;color:var(--blue);font-size:32px;line-height:64px"><!--img style="vertical-align:bottom;height:64px;" src='static/images/artutor-icon.png'/--> ScreenAR</div>
+<div class='title'>ScreenAR</div>
+<button onclick='stopSession()'>Stop Session</button>
+
 <video id='video'></video>
 <div id='screenarcontainer'>
   <canvas id='sourcecanvas'></canvas>
@@ -477,30 +481,30 @@ function detectCorners(ctx)
 
   // top gives x positions of tl and tr corners
 
-  let nDarkPixels = 0;
   let tl = {x:-1,y:-1};
   let tr = {x:-1,y:-1};
 
-  // check that top 2 rows are mostly dark
-  const ROWS = 1;
-  window.d = data;
+  /*// check that top 2 rows are mostly dark
+  let nDarkPixels = 0;
+  const ROWS = 2;
+  idx = 0;
   for (let j=0;j<ROWS;j++)
   {
       for (let i=0;i<canvasw;i++)
       {
-        let index = 4*(i*canvasw + j);
-        if (darkPixel(data,index))
+        if (darkPixel(data,idx))
           nDarkPixels++;
+        idx += 4;
       }
   }
 
-  if (nDarkPixels < ROWS * canvasw * 30 /100)
+  if (nDarkPixels < ROWS * canvasw * 90 /100)
   {
-    console.error('nDarkPixels=',nDarkPixels,canvasw,ROWS);
+    console.error('nDarkPixels too few on first 2 ROWS=',nDarkPixels,canvasw,ROWS);
     return null;
-  }
+  }*/
 
-    nDarkPixels = 0;
+  /*nDarkPixels = 0;
   // check that bottom 2 rows are mostly dark
   for (let j=canvash-ROWS;j<canvash;j++)
   {
@@ -515,7 +519,7 @@ function detectCorners(ctx)
   {
     console.error('nDarkPixels=',nDarkPixels,canvasw,ROWS);
     return null;
-  }
+  }*/
 
   idx = 0;
   for (let i=0;i<canvasw;i++)
