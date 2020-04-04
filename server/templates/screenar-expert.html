@@ -8,8 +8,7 @@
 {% block content %}
 
 <button onclick='stopSession()'>STOP</button>
-<div style="margin:16px;color:var(--blue);font-size:32px;line-height:64px"><img style="vertical-align:bottom;height:64px;" src='static/images/artutor-icon.png'/> ARTutor</div>
-<canvas id='correctedcanvas'></canvas>
+<div style="margin:16px;color:var(--blue);font-size:32px;line-height:64px"><!--img style="vertical-align:bottom;height:64px;" src='static/images/artutor-icon.png'/--> ScreenAR</div>
 <video id='video'></video>
 <div id='screenarcontainer'>
   <canvas id='sourcecanvas'></canvas>
@@ -23,6 +22,7 @@
 <img class='snapshot' src='https://www.google.com/logos/google.jpg'>
 <img class='snapshot' src='https://www.google.com/logos/google.jpg'-->
 </div>
+<canvas id='correctedcanvas'></canvas>
 {% endblock %}
 {% block js %}
 <script src="/static/ext/socket.io/2.2.0/socket.io.js"></script>
@@ -212,7 +212,7 @@ function drawVideo()
     if (fingerPosition)
     {
       currentAnchor.points.push(fingerPosition);
-      clearTimeout(captureTimeout);      
+      clearTimeout(captureTimeout);
       captureTimeout = null;
       correctedctx.fillStyle = 'yellow';
       correctedctx.font = '24px Arial';
@@ -319,7 +319,7 @@ function captureImage()
   console.log('captureImage');
   currentAnchor = {points:[],src:lastImageSrc,timestamp:new Date().getTime()/1000}
   anchorPoints.push(currentAnchor);
-  
+
   if (wrtc && wrtc.sendChannel)
   {
     //wrtc.sendChannel.send('captureImage' + lastImageSrc);
@@ -335,17 +335,17 @@ function OneEuroFilter(freq, mincutoff, beta, dcutoff){
 	var x = LowPassFilter(alpha(mincutoff));
 	var dx = LowPassFilter(alpha(dcutoff));
 	var lastTime = undefined;
-	
+
 	mincutoff = mincutoff || 1;
 	beta = beta || 0;
 	dcutoff = dcutoff || 1;
-	
+
 	function alpha(cutoff){
 		var te = 1 / freq;
 		var tau = 1 / (2 * Math.PI * cutoff);
 		return 1 / (1 + tau / te);
 	}
-	
+
 	that.filter = function(v, timestamp){
 		if(lastTime !== undefined && timestamp !== undefined)
 			freq = 1 / (timestamp - lastTime);
@@ -355,7 +355,7 @@ function OneEuroFilter(freq, mincutoff, beta, dcutoff){
 		var cutoff = mincutoff + beta * Math.abs(edvalue);
 		return x.filterWithAlpha(v, alpha(cutoff));
 	}
-	
+
 	return that;
 }
 
@@ -363,33 +363,33 @@ function LowPassFilter(alpha, initval){
 	var that = {};
 	var y = initval || 0;
 	var s = y;
-	
+
 	function lowpass(v){
 		y = v;
 		s = alpha * v + (1 - alpha) * s;
 		return s;
 	}
-	
+
 	that.filter = function(v){
 		y = v;
 		s = v;
 		that.filter = lowpass;
 		return s;
 	}
-	
+
 	that.filterWithAlpha = function(v, a){
 		alpha = a;
 		return that.filter(v);
 	}
-	
+
 	that.hasLastRawValue = function(){
 		return that.filter === lowpass;
 	}
-	
+
 	that.lastRawValue = function(){
 		return y;
 	}
-	
+
 	return that;
 }
 
@@ -456,6 +456,14 @@ function detectFingerTip(imgData) {
     return null;
 }
 
+const th = 200;
+const blackth = 100;
+
+function darkPixel(data,idx)
+{
+  return data[idx] < blackth && data[idx+1] < blackth && data[idx+2] < blackth;
+}
+
 function detectCorners(ctx)
 {
   if (canvasw === 0 || canvash === 0)
@@ -466,15 +474,50 @@ function detectCorners(ctx)
   let imgData = ctx.getImageData(0,0,canvasw,canvash);
   let data = imgData.data;
   let idx = 0;
-  
-  // top gives x positions of tl and tr corners
-  const th = 200;
-  const blackth = 20;
 
-  let nblack = 0;
+  // top gives x positions of tl and tr corners
+
+  let nDarkPixels = 0;
   let tl = {x:-1,y:-1};
   let tr = {x:-1,y:-1};
 
+  // check that top 2 rows are mostly dark
+  const ROWS = 1;
+  window.d = data;
+  for (let j=0;j<ROWS;j++)
+  {
+      for (let i=0;i<canvasw;i++)
+      {
+        let index = 4*(i*canvasw + j);
+        if (darkPixel(data,index))
+          nDarkPixels++;
+      }
+  }
+
+  if (nDarkPixels < ROWS * canvasw * 30 /100)
+  {
+    console.error('nDarkPixels=',nDarkPixels,canvasw,ROWS);
+    return null;
+  }
+
+    nDarkPixels = 0;
+  // check that bottom 2 rows are mostly dark
+  for (let j=canvash-ROWS;j<canvash;j++)
+  {
+      for (let i=0;i<canvasw;i++)
+      {
+        let index = 4*(i*canvasw + j);
+        if (darkPixel(data,index))
+          nDarkPixels++;
+      }
+  }
+  if (nDarkPixels < ROWS * canvasw * 30 /100)
+  {
+    console.error('nDarkPixels=',nDarkPixels,canvasw,ROWS);
+    return null;
+  }
+
+  idx = 0;
   for (let i=0;i<canvasw;i++)
   {
     if (data[idx] >= th && data[idx+1] >= th && data[idx+2] >= th)
@@ -485,14 +528,8 @@ function detectCorners(ctx)
         tl.x = i;
       //break;
     }
-    else if (data[idx] <= blackth && data[idx+1] <= blackth && data[idx+2] <= blackth)
-      nblack++;
     idx += 4;
   }
-
-  /*// don't count this frame if less than 94 percent of the pixels were not black
-  if (nblack * 100 / canvasw < 94)
-    return null;*/
 
   // bottom gives x positions of bl and br corners
   let bl = {x:-1,y:-1};
@@ -518,7 +555,7 @@ function detectCorners(ctx)
     }
     idx -= 4;
   }
-  
+
   // left gives y positions of tl and bl corners
   idx = 0;
   for (let i=0;i<canvash;i++)
@@ -570,7 +607,10 @@ function detectCorners(ctx)
   if (ok)
     return {tl:tl,tr:tr,bl:bl,br:br};
   else
+  {
+    //console.error('not good points',tl,tr,bl,br);
     return null;
+  }
 }
 
 function goodPoint(pt)
