@@ -76,13 +76,13 @@ function launchARVideo(action) {
   injectMsg(savedAction,"");
 }
 
-function launchOCRScanner(action,url) {
+async function launchOCRScanner(action,url) {
   savedAction = action;
   // Launch native text scanner
+  let options = await getURL(url);
+  console.log(options);
   if (runningNative()) {
-    let options = getURL(url).then(function(data){ console.log(data); });
-    console.log(options);
-    window.webkit.messageHandlers.launchOCRScanner.postMessage(
+      window.webkit.messageHandlers.launchOCRScanner.postMessage(
       { 
           options: options
       }); 
