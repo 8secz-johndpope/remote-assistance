@@ -93,7 +93,7 @@ extension ChatViewController : OCRDelegate {
 
         func ocrResponse(text: String) {
             self.webView.evaluateJavaScript("onOCRScanned('\(text)')", completionHandler: nil)
-            self.navigationController?.popViewController(animated: true)
+            //self.navigationController?.popViewController(animated: true)
     }
     
 }

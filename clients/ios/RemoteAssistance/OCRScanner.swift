@@ -20,6 +20,7 @@ class OCRScanner: UIViewController {
     var previewLayer: AVCaptureVideoPreviewLayer!
 
     let options : [String]
+    var foundMatch = false
 
     init(options: [String]) {
         self.options = options
@@ -131,9 +132,12 @@ class OCRScanner: UIViewController {
                     let rText = text.replacingOccurrences(of: "\\s",with:"",options:.regularExpression).lowercased()
                     for string in options {
                         let rString = string.replacingOccurrences(of: "\\s",with:"",options:.regularExpression).lowercased()
-                        if rString == rText {
+                        if ((rString == rText) && !foundMatch) {
+                            foundMatch = true
                             print("match")
                             DispatchQueue.main.async {
+                                self.captureSession.stopRunning()
+                                self.navigationController?.popViewController(animated:true)
                                 self.delegate?.ocrResponse(text: text)
                             }
                         }
