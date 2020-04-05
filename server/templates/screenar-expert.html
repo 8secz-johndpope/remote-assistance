@@ -458,13 +458,10 @@ function downloadARAnnotations(e)
       var dlAnchorElem = document.createElement('a');
       dlAnchorElem.textContent = 'download zip file';
       dlAnchorElem.setAttribute('href',URL.createObjectURL(blob));
-      dlAnchorElem.setAttribute('download', uuid + '.zip');
+      dlAnchorElem.setAttribute('download', 'screenar.zip');
       dlAnchorElem.click();
     });
  });
- /*anchorPoints.forEach((obj,idx) => {
-    console.log(obj);
- });*/
 }
 
 function captureImage()
