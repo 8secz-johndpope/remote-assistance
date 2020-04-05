@@ -19,6 +19,7 @@ class ChatViewController: UIViewController {
         let request = URLRequest(url: chatUrl!)
         webView.configuration.userContentController.add(self, name: "launchRA")
         webView.configuration.userContentController.add(self, name: "launchQRScanner")
+        webView.configuration.userContentController.add(self, name: "launchOCRScanner")
         webView.load(request)
         webView.navigationDelegate = self
     }
@@ -62,11 +63,13 @@ class ChatViewController: UIViewController {
     
     func launchOCRScanner(dict: NSDictionary) {
         var options = [String]()
-        if let array = dict["options"] as? [Any] {
-            for object in array {
-                if let item = object as? [String: Any] {
-                    if let itemName = item["name"] as? String {
-                        options.append(itemName)
+        if let arr1 = dict["options"] as? [String:Any] {
+            if let arr2 = arr1["data"] as? [Any] {
+                for object in arr2 {
+                    if let item = object as? [String: Any] {
+                        if let itemName = item["name"] as? String {
+                            options.append(itemName)
+                        }
                     }
                 }
             }
@@ -88,10 +91,11 @@ extension ChatViewController : QRCodeScannerDelegate {
 
 extension ChatViewController : OCRDelegate {
 
-    func ocrResponse(text: String) {
-        webView.evaluateJavaScript("onOCRScanned('\(text)')", completionHandler: nil)
+        func ocrResponse(text: String) {
+            self.webView.evaluateJavaScript("onOCRScanned('\(text)')", completionHandler: nil)
+            self.navigationController?.popViewController(animated: true)
     }
-
+    
 }
 
 

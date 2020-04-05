@@ -132,8 +132,10 @@ class OCRScanner: UIViewController {
                     for string in options {
                         let rString = string.replacingOccurrences(of: "\\s",with:"",options:.regularExpression).lowercased()
                         if rString == text {
-                            print(text)
-                            self.delegate?.ocrResponse(text: text)
+                            print("match")
+                            DispatchQueue.main.async {
+                                self.delegate?.ocrResponse(text: text)
+                            }
                         }
                     }
                 }
