@@ -2,9 +2,10 @@
 <head>
 <meta charset="utf-8">
 <title>ScreenAR</title>
-<meta name="description" content="">
-<meta name="author" content="">
+<meta name="description" content="ScreenAR from FXPAL">
+<meta name="author" content="FXPAL">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
 body,
 html {
@@ -24,6 +25,7 @@ html {
 
 :root{
 --blue:#3d73d3;
+--darkblue:#2d43c3;
 --font:'Open Sans',-apple-system,sans-serif;
 }
 
@@ -128,27 +130,33 @@ transition:opacity 0.3s ease-in-out;
   text-align:center;
 }
 
-button {
+.button {
   outline:none;
-  padding: 0px 16px;
+  padding: 8px 16px;
+  margin-left:16px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 100%;
+  font-size: 13pt;
   font-family:var(--font);
   border:0;
   background-color:var(--blue);
   color:white;
-  border-radius:0px;
+  border-radius:3px;
   cursor:pointer;
+  transition:background-color 0.2s;
 }
-button:hover{opacity:0.8}
+.button:hover{background-color:var(--darkblue)}
 
+body.swal2-shown {display:flex!important;padding:0!important;}
 </style>
 <div class='header'>
   <mytitle>ScreenAR</mytitle>
   <audio id='audioElement' controls></audio>
-  <button  onclick='stopSession()'>Stop Session</button>
+  <div>
+    <button class='button'  onclick='stopSession()'>Stop Session</button>
+    <button class='button' onclick='downloadARAnnotations(event)'>Download</button>
+  </div>
 </div>
 <div id='screenarcontainer'>
   <canvas id='sourcecanvas'></canvas>
@@ -172,6 +180,8 @@ button:hover{opacity:0.8}
 <script src="/static/ext/socket.io/2.2.0/socket.io.js"></script>
 <script src="/static/ext/glfx/glfx.js"></script>
 <script src="/static/js/webrtc.js"></script>
+<script src="/static/ext/js-zip/jszip.min.js"></script>
+<script src="/static/ext/sweetalert/sweetalert2.js"></script>
 <script>
 window.config = { room: 'fxpal' }
 
@@ -234,29 +244,6 @@ var sessionStarted = false;
 var sessionStopped = false;
 var stopSessionTimeout = null;
 
-/*function startCroppedMediaRecorder(canvasstream)
-{
-    //let options =  {mimeType: 'video/webm;videoBitsPerSecond:2500000;ignoreMutedMedia:true'};
-    croppedMediaRecorder = new MediaRecorder(canvasstream);
-    croppedMediaRecorder.addEventListener('dataavailable', function(e) {
-      if (e.data.size > 0) {
-        recordedCroppedChunks.push(e.data);
-      }
-    });
-
-    croppedMediaRecorder.addEventListener('stop', function() {
-      console.log('stopped');
-      var download = document.createElement('a');
-      download.textContent = 'download video';
-      let blob = new Blob(recordedCroppedChunks);
-      download.href = URL.createObjectURL(blob);
-      download.download = 'test.webm';
-      results.appendChild(download);
-      recordedCroppedChunks = [];
-    });
-    croppedMediaRecorder.start();
-}*/
-
 function initAudioRecorder(audiostream)
 {
     mediaRecorder = new MediaRecorder(audiostream);
@@ -278,7 +265,7 @@ navigator.mediaDevices.getUserMedia(constraints).then(
     function(stream) {
         wrtc = new WebRTCClient({ stream: stream, dataChannel:'ScreenAR', dataChannelCallback: dataChannelCallback, room: config.room });
         wrtc.on('stream', function(id, stream) {
-            var video = $('#video')[0];
+            var video = document.querySelector('#video');
             video.srcObject = stream;
             var audioTracks = stream.getAudioTracks();
             if (audioTracks && audioTracks.length > 0)
@@ -317,11 +304,8 @@ function drawVideo()
     {
       console.log('started audio recording');
       sessionStarted = true;
-      //startCroppedMediaRecorder(correctedcanvas.captureStream());
       mediaRecorder.start();
     }
-    if (correctedcanvas.style.opacity !== 1)
-      correctedcanvas.style.opacity = 1;
 
     let texture = fxcanvas.texture(canvas);
     fxcanvas.draw(texture).perspective(
@@ -358,7 +342,9 @@ function drawVideo()
       sessionStopped = true;
       stopSessionTimeout = setTimeout(stopSession,2000);
     }*/
-    correctedcanvas.style.opacity = 0.1;
+    //correctedcanvas.style.opacity = 0.1;
+    correctedctx.fillStyle = 'black';
+    correctedctx.fillRect(0,0,correctedcanvas.width,correctedcanvas.height);
   }
 
   //const border = 16;
@@ -385,14 +371,6 @@ function drawVideo()
 }*/
 
 let currentAnchor = null;
-function stopSession()
-{
-  if (currentAnchor !== null)
-    addARAnnotation(anchorPoints.length-1);
-  sessionStopped = true;
-  console.log('stopSession');
-  mediaRecorder.stop();
-}
 
 function addARAnnotation(idx)
 {
@@ -428,12 +406,62 @@ function addARAnnotation(idx)
   img.src = anchorPoints[idx].src;
 }
 
-/*function buildARAnnotations()
+function uuidv4() {
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+}
+
+function stopSession()
 {
-  anchorPoints.forEach((obj,idx) => {
-    addARAnnotation(idx);
-  });
-}*/
+  if (mediaRecorder === null)
+  {
+    return Swal.fire({title:'No data',text:'The session has not yet started'});
+  }
+  if (currentAnchor !== null)
+    addARAnnotation(anchorPoints.length-1);
+  sessionStopped = true;
+  console.log('stopSession');
+  mediaRecorder.stop();
+}
+
+function downloadARAnnotations(e)
+{
+  e.preventDefault();
+  let button = e.target;
+  button.innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i> Zipping';
+  button.disabled = true;
+  if (anchorPoints.length === 0)
+  {
+    Swal.fire({title:'Nothing to Zip',text:'No anchor points were added yet'}).then(e => {button.textContent = 'Download';
+    button.disabled = false;}).catch();
+    return;
+  }
+
+  var zip = new JSZip();
+  let uuid = uuidv4();
+  var img = zip.folder(uuid);
+  img.file("rec.json", JSON.stringify(anchorPoints));
+  zip.generateAsync({type:"base64"}).then(function (base64) {
+    let baseurl = "data:application/zip;base64," + base64;
+    fetch(baseurl)
+    .then(res => res.blob())
+    .then(blob => {
+      setTimeout( function () {
+        button.textContent = 'Download';
+        button.disabled = false;
+      },2000);
+      var dlAnchorElem = document.createElement('a');
+      dlAnchorElem.textContent = 'download zip file';
+      dlAnchorElem.setAttribute('href',URL.createObjectURL(blob));
+      dlAnchorElem.setAttribute('download', uuid + '.zip');
+      dlAnchorElem.click();
+    });
+ });
+ /*anchorPoints.forEach((obj,idx) => {
+    console.log(obj);
+ });*/
+}
 
 function captureImage()
 {
@@ -444,14 +472,11 @@ function captureImage()
   currentAnchor = {points:[],src:lastImageSrc,timestamp:new Date().getTime()/1000}
   anchorPoints.push(currentAnchor);
 
-  if (wrtc && wrtc.sendChannel)
+  /*if (wrtc && wrtc.sendChannel)
   {
-    //wrtc.sendChannel.send('captureImage' + lastImageSrc);
     let base64url = lastImageSrc.substring("data:image/jpeg;base64,".length);
-    //console.log(base64url);
     wrtc.sendChannel.send(base64url);
-  }
-
+  }*/
 }
 
 function OneEuroFilter(freq, mincutoff, beta, dcutoff){
