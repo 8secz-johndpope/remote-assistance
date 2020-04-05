@@ -1,37 +1,191 @@
-{% extends 'base.html' %}
-{% block title %}ScreenAR Expert{% endblock %}
-{% block css %}
-<link rel="stylesheet" type="text/css" href="/static/css/main.css">
-<link rel="stylesheet" type="text/css" href="/static/css/screenar.css">
+<!doctype html>
+<head>
+<meta charset="utf-8">
+<title>ScreenAR</title>
+<meta name="description" content="ScreenAR from FXPAL">
+<meta name="author" content="FXPAL">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
-.title{margin:16px;color:var(--blue);font-size:32px;}
+body,
+html {
+    margin: 0;
+    padding: 0;
+}
+
+* {
+    touch-action: manipulation;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+:root{
+--blue:#3d73d3;
+--darkblue:#2d43c3;
+--font:'Open Sans',-apple-system,sans-serif;
+}
+
+body{
+  font-family:var(--font);
+  display:flex;
+  flex-direction:column;
+  height:100vh;
+  width:100vw;
+}
+
+
+#sourcecanvas{
+  object-fit:contain;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background-color:#222;
+}
+
+#correctedcanvas{
+  position:absolute;
+  right:16px;
+  bottom:16px;
+  background-color:black;
+  width:320px;
+  height:auto;
+}
+
+/* first row of our flex */
+.header{
+  display:flex;
+  flex-direction:row;
+  justify-content:space-between;
+  margin:16px;
+  flex-grow:0;
+  line-height:3rem;
+}
+
+/* second row of our flex where the main canvas and correctedcanvas are shown */
+#screenarcontainer
+{
+  background-color:red;
+  width:100%;height:100%;
+  display:block;
+  overflow:hidden;
+  flex-grow:1; /* use all available height */
+  position:relative;
+}
+
+/* last row of our flex where the indexed frames are shown */
+#results{
+  margin:0;
+  overflow-x:auto;
+  overflow-y:hidden;
+  display:flex;
+  flex-direction:row;
+  width:100%;
+  min-height:200px;
+  border:0px solid black;
+  flex-grow:0;
+  position:relative;
+}
+#results:before{
+  color:lightgray;
+  margin:16px;
+  font-size:13pt;z-index:0;
+  content:'Analysis Results';
+}
+
+.snapshot{
+  z-index:2;
+  cursor:pointer;
+  padding:0 16px;
+  object-fit:contain;
+  background-color:white;
+  width:calc(100% / 6);height:100%;
+}
+
+mytitle{color:var(--blue);font-size:18pt;}
+
+#video{display:none}
+
+.mark{
+padding:0.3%;
+color:white;
+font-size:30%;
+opacity:0;
+transform-origin:0 0;
+position:absolute;
+width:20%;height:20%;
+transform:translate(-50%,-50%);
+border:0px solid #ccc;
+border-radius:2px;
+background-color:rgba(0,0,255,0.3);
+transition:opacity 0.3s ease-in-out;
+}
+.mark > span {
+  background-color:rgba(0,0,0,0.2);
+  position:absolute;left:0;top:0;
+  width:100%;
+  text-align:center;
+}
+
+.button {
+  outline:none;
+  padding: 8px 16px;
+  margin-left:16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 13pt;
+  font-family:var(--font);
+  border:0;
+  background-color:var(--blue);
+  color:white;
+  border-radius:3px;
+  cursor:pointer;
+  transition:background-color 0.2s;
+}
+.button:hover{background-color:var(--darkblue)}
+
+/* prevents Swal from removing the flex and height */
+.swal2-shown {
+  display:flex;
+  height:100vh;
+}
 </style>
-{% endblock %}
-{% block header %}{% endblock %}
-{% block content %}
-
-<div class='title'>ScreenAR</div>
-<button onclick='stopSession()'>Stop Session</button>
-
-<video id='video'></video>
+<div class='header'>
+  <mytitle>ScreenAR</mytitle>
+  <audio id='audioElement' controls></audio>
+  <div>
+    <button class='button'  onclick='stopSession()'>Stop Session</button>
+    <button class='button' onclick='downloadARAnnotations(event)'>Download</button>
+  </div>
+</div>
 <div id='screenarcontainer'>
   <canvas id='sourcecanvas'></canvas>
-  <div id='overlay'></div>
+  <canvas id='correctedcanvas'></canvas>
 </div>
 <div id='results'>
-<audio id='audio' controls></audio>
-<!--img class='snapshot' src='https://www.google.com/logos/google.jpg'>
-<img class='snapshot' src='https://www.google.com/logos/google.jpg'>
-<img class='snapshot' src='https://www.google.com/logos/google.jpg'>
-<img class='snapshot' src='https://www.google.com/logos/google.jpg'>
-<img class='snapshot' src='https://www.google.com/logos/google.jpg'-->
+  <!--img class='snapshot' src='https://www.google.com/logos/google.jpg'>
+  <img class='snapshot' src='https://www.google.com/logos/google.jpg'>
+  <img class='snapshot' src='https://www.google.com/logos/google.jpg'>
+  <img class='snapshot' src='https://www.google.com/logos/google.jpg'>
+  <img class='snapshot' src='https://www.google.com/logos/google.jpg'>
+  <img class='snapshot' src='https://www.google.com/logos/google.jpg'>
+  <img class='snapshot' src='https://www.google.com/logos/google.jpg'>
+  <img class='snapshot' src='https://www.google.com/logos/google.jpg'>
+  <img class='snapshot' src='https://www.google.com/logos/google.jpg'>
+  <img class='snapshot' src='https://www.google.com/logos/google.jpg'-->
 </div>
-<canvas id='correctedcanvas'></canvas>
-{% endblock %}
-{% block js %}
+<div style='display:none'>
+  <video id='video'></video>
+</div>
 <script src="/static/ext/socket.io/2.2.0/socket.io.js"></script>
 <script src="/static/ext/glfx/glfx.js"></script>
 <script src="/static/js/webrtc.js"></script>
+<script src="/static/ext/js-zip/jszip.min.js"></script>
+<script src="/static/ext/sweetalert/sweetalert2.js"></script>
 <script>
 window.config = { room: 'fxpal' }
 
@@ -94,29 +248,6 @@ var sessionStarted = false;
 var sessionStopped = false;
 var stopSessionTimeout = null;
 
-/*function startCroppedMediaRecorder(canvasstream)
-{
-    //let options =  {mimeType: 'video/webm;videoBitsPerSecond:2500000;ignoreMutedMedia:true'};
-    croppedMediaRecorder = new MediaRecorder(canvasstream);
-    croppedMediaRecorder.addEventListener('dataavailable', function(e) {
-      if (e.data.size > 0) {
-        recordedCroppedChunks.push(e.data);
-      }
-    });
-
-    croppedMediaRecorder.addEventListener('stop', function() {
-      console.log('stopped');
-      var download = document.createElement('a');
-      download.textContent = 'download video';
-      let blob = new Blob(recordedCroppedChunks);
-      download.href = URL.createObjectURL(blob);
-      download.download = 'test.webm';
-      results.appendChild(download);
-      recordedCroppedChunks = [];
-    });
-    croppedMediaRecorder.start();
-}*/
-
 function initAudioRecorder(audiostream)
 {
     mediaRecorder = new MediaRecorder(audiostream);
@@ -128,16 +259,9 @@ function initAudioRecorder(audiostream)
 
     mediaRecorder.addEventListener('stop', function() {
       console.log('stopped');
-      //var audioElement = document.createElement('audio');
-      //audioElement.controls = true;
-      //audioElement.id = 'audio';
       let blob = new Blob(recordedChunks);
-      //audioElement.src = URL.createObjectURL(blob);
-      audio.src = URL.createObjectURL(blob);
-      //results.appendChild(audioElement);
-      //buildARAnnotations();
+      audioElement.src = URL.createObjectURL(blob);
       recordedChunks = [];
-      //mediaRecorder.start();
     });
 }
 
@@ -145,7 +269,7 @@ navigator.mediaDevices.getUserMedia(constraints).then(
     function(stream) {
         wrtc = new WebRTCClient({ stream: stream, dataChannel:'ScreenAR', dataChannelCallback: dataChannelCallback, room: config.room });
         wrtc.on('stream', function(id, stream) {
-            var video = $('#video')[0];
+            var video = document.querySelector('#video');
             video.srcObject = stream;
             var audioTracks = stream.getAudioTracks();
             if (audioTracks && audioTracks.length > 0)
@@ -158,22 +282,6 @@ navigator.mediaDevices.getUserMedia(constraints).then(
         });
     }
 );
-
-function showMark(x,y,text)
-{
-    let div = document.createElement('div');
-    div.className = 'mark';
-    div.style.left = x + '%';
-    div.style.top = y + '%';
-    let w = 20;
-    let h = 15;
-    div.style.width = w + '%';
-    div.style.height = h + '%';
-    div.innerHTML = `<span>${text}</span>`;
-    div.querySelector('span').style.fontSize = (overlay.offsetHeight / 30) + 'px'
-    overlay.appendChild(div);
-    setTimeout(function () {div.style.opacity = 1;},0);
-}
 
 function drawVideo()
 {
@@ -200,11 +308,8 @@ function drawVideo()
     {
       console.log('started audio recording');
       sessionStarted = true;
-      //startCroppedMediaRecorder(correctedcanvas.captureStream());
       mediaRecorder.start();
     }
-    if (correctedcanvas.style.opacity !== 1)
-      correctedcanvas.style.opacity = 1;
 
     let texture = fxcanvas.texture(canvas);
     fxcanvas.draw(texture).perspective(
@@ -241,7 +346,9 @@ function drawVideo()
       sessionStopped = true;
       stopSessionTimeout = setTimeout(stopSession,2000);
     }*/
-    correctedcanvas.style.opacity = 0.1;
+    //correctedcanvas.style.opacity = 0.1;
+    correctedctx.fillStyle = 'black';
+    correctedctx.fillRect(0,0,correctedcanvas.width,correctedcanvas.height);
   }
 
   //const border = 16;
@@ -268,14 +375,6 @@ function drawVideo()
 }*/
 
 let currentAnchor = null;
-function stopSession()
-{
-  if (currentAnchor !== null)
-    addARAnnotation(anchorPoints.length-1);
-  sessionStopped = true;
-  console.log('stopSession');
-  mediaRecorder.stop();
-}
 
 function addARAnnotation(idx)
 {
@@ -301,19 +400,69 @@ function addARAnnotation(idx)
       }
       ctx.stroke();
     }
-    canvas.addEventListener('click',function () {audio.currentTime = +this.dataset.timestamp; audio.play(); });
+    canvas.addEventListener('click',function () {
+      audioElement.currentTime = +this.dataset.timestamp;
+      audioElement.play();
+    });
     results.appendChild(canvas);
   }
   img.dataset.index = idx;
   img.src = anchorPoints[idx].src;
 }
 
-/*function buildARAnnotations()
+function uuidv4() {
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+}
+
+function stopSession()
 {
-  anchorPoints.forEach((obj,idx) => {
-    addARAnnotation(idx);
-  });
-}*/
+  if (mediaRecorder === null)
+  {
+    return Swal.fire({title:'No data',text:'The session has not yet started'});
+  }
+  if (currentAnchor !== null)
+    addARAnnotation(anchorPoints.length-1);
+  sessionStopped = true;
+  console.log('stopSession');
+  mediaRecorder.stop();
+}
+
+function downloadARAnnotations(e)
+{
+  e.preventDefault();
+  let button = e.target;
+  button.innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i> Zipping';
+  button.disabled = true;
+  if (anchorPoints.length === 0)
+  {
+    Swal.fire({title:'Nothing to Zip',text:'No anchor points were added yet'}).then(e => {button.textContent = 'Download';
+    button.disabled = false;}).catch();
+    return;
+  }
+
+  var zip = new JSZip();
+  let uuid = uuidv4();
+  var img = zip.folder(uuid);
+  img.file("rec.json", JSON.stringify(anchorPoints));
+  zip.generateAsync({type:"base64"}).then(function (base64) {
+    let baseurl = "data:application/zip;base64," + base64;
+    fetch(baseurl)
+    .then(res => res.blob())
+    .then(blob => {
+      setTimeout( function () {
+        button.textContent = 'Download';
+        button.disabled = false;
+      },2000);
+      var dlAnchorElem = document.createElement('a');
+      dlAnchorElem.textContent = 'download zip file';
+      dlAnchorElem.setAttribute('href',URL.createObjectURL(blob));
+      dlAnchorElem.setAttribute('download', 'screenar.zip');
+      dlAnchorElem.click();
+    });
+ });
+}
 
 function captureImage()
 {
@@ -324,14 +473,11 @@ function captureImage()
   currentAnchor = {points:[],src:lastImageSrc,timestamp:new Date().getTime()/1000}
   anchorPoints.push(currentAnchor);
 
-  if (wrtc && wrtc.sendChannel)
+  /*if (wrtc && wrtc.sendChannel)
   {
-    //wrtc.sendChannel.send('captureImage' + lastImageSrc);
     let base64url = lastImageSrc.substring("data:image/jpeg;base64,".length);
-    //console.log(base64url);
     wrtc.sendChannel.send(base64url);
-  }
-
+  }*/
 }
 
 function OneEuroFilter(freq, mincutoff, beta, dcutoff){
@@ -643,8 +789,6 @@ correctedcanvas.addEventListener('click',function (evt) {
     x = (x * 100 / correctedcanvas.offsetWidth) | 0;
     y = (y * 100 / correctedcanvas.offsetHeight) | 0;
     console.log(x,y);
-    //showMark(x,y,'Tap');
     sendClick(x,y,30,15,'Tap');
 });
 </script>
-{% endblock%}
