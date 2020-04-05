@@ -127,13 +127,15 @@ class OCRScanner: UIViewController {
         if #available(iOS 13.0, *) {
             for o in observations {
                 if let result = o as? VNRecognizedTextObservation {
-                    var text = result.topCandidates(1)[0].string
-                    text = text.replacingOccurrences(of: "\\s",with:"",options:.regularExpression).lowercased()
+                    let text = result.topCandidates(1)[0].string
+                    let rText = text.replacingOccurrences(of: "\\s",with:"",options:.regularExpression).lowercased()
                     for string in options {
                         let rString = string.replacingOccurrences(of: "\\s",with:"",options:.regularExpression).lowercased()
-                        if rString == text {
-                            print(text)
-                            self.delegate?.ocrResponse(text: text)
+                        if rString == rText {
+                            print("match")
+                            DispatchQueue.main.async {
+                                self.delegate?.ocrResponse(text: text)
+                            }
                         }
                     }
                 }
