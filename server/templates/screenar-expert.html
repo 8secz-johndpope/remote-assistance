@@ -148,7 +148,11 @@ transition:opacity 0.3s ease-in-out;
 }
 .button:hover{background-color:var(--darkblue)}
 
-body.swal2-shown {display:flex!important;padding:0!important;}
+/* prevents Swal from removing the flex and height */
+.swal2-shown {
+  display:flex;
+  height:100vh;
+}
 </style>
 <div class='header'>
   <mytitle>ScreenAR</mytitle>
