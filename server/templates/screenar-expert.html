@@ -177,6 +177,7 @@ transition:opacity 0.3s ease-in-out;
 <div id='screenarcontainer'>
   <canvas id='sourcecanvas'></canvas>
   <canvas id='correctedcanvas'></canvas>
+  <div id='currentmarkdiv'></div>
 </div>
 <div id='results'>
   <!--img class='snapshot' src='https://www.google.com/logos/google.jpg'>
@@ -368,6 +369,12 @@ function drawVideo()
       [0,0,canvasw,0,canvasw,canvash,0,canvash]).update();
     correctedctx.drawImage(fxcanvas,0,0,correctedcanvas.width,correctedcanvas.height);
 
+    if (currentMark)
+    {
+      correctedctx.strokeStyle = 'yellow';
+      correctedctx.lineWidth = 3;
+      correctedctx.strokeRect(currentMark.x,currentMark.y,currentMark.w,currentMark.h);
+    }
     let fingerPosition = detectFingerTip(correctedctx.getImageData(0,0,correctedcanvas.width,correctedcanvas.height));
     if (fingerPosition)
     {
@@ -402,11 +409,32 @@ function drawVideo()
     correctedctx.fillRect(0,0,correctedcanvas.width,correctedcanvas.height);
   }
 
+  if (currentMark)
+  {
+    drawCurrentMark();
+  }
+
   setTimeout(drawVideo,1000/10);
 }
 
 let currentAnchor = null;
 
+function drawCurrentMark()
+{
+  //correctedctx.fillStyle = 'black';
+  //correctedctx.fillRect(0,0,correctedcanvas.width,correctedcanvas.height);
+  correctedctx.strokeStyle = 'yellow';
+  correctedctx.lineWidth = 6;
+  let x1 = Math.min(currentMark.px,currentMark.cx);
+  let y1 = Math.min(currentMark.py,currentMark.cy);
+  let x2 = Math.max(currentMark.px,currentMark.cx);
+  let y2 = Math.max(currentMark.py,currentMark.cy);
+  let w = x2 - x1;
+  let h = y2 - y1;
+  correctedctx.strokeRect(x1,y1,w,h);
+
+
+}
 function addARAnnotation(idx)
 {
   let img = document.createElement('img');
@@ -826,11 +854,14 @@ function goodPoint(pt)
 
 function sendClick(x,y,w,h,text)
 {
+  console.log('sendClick',x,y,w,h,text);
   if (wrtc && wrtc.sendChannel)
     wrtc.sendChannel.send(`${x},${y},${w},${h},text`);
 }
 
-correctedcanvas.addEventListener('click',function (evt) {
+let currentMark = null;
+
+/*correctedcanvas.addEventListener('click',function (evt) {
     evt.preventDefault();
     evt.stopPropagation();
     let x = evt.pageX;
@@ -842,6 +873,61 @@ correctedcanvas.addEventListener('click',function (evt) {
     y = (y * 100 / correctedcanvas.offsetHeight) | 0;
     console.log(x,y);
     sendClick(x,y,30,15,'Tap');
+});*/
+
+correctedcanvas.addEventListener('mousedown',function (evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    let x = evt.pageX;
+    let y = evt.pageY;
+    let rect = correctedcanvas.getBoundingClientRect();
+    x -= rect.left;
+    y -= rect.top;
+    x *= correctedcanvas.width / rect.width;
+    y *= correctedcanvas.height / rect.height;
+    currentMark = {px:x,py:y,cx:x+2,cy:y+2};
+    //drawCurrentMark();
+});
+
+correctedcanvas.addEventListener('mouseup',function (evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    if (!currentMark)
+      return;
+    let x1 = Math.min(currentMark.px,currentMark.cx);
+    let y1 = Math.min(currentMark.py,currentMark.cy);
+    let x2 = Math.max(currentMark.px,currentMark.cx);
+    let y2 = Math.max(currentMark.py,currentMark.cy);
+
+
+    x1 = (x1 * 100 / correctedcanvas.width) | 0;
+    y1 = (y1 * 100 / correctedcanvas.height) | 0;
+    x2 = (x2 * 100 / correctedcanvas.width) | 0;
+    y2 = (y2 * 100 / correctedcanvas.height) | 0;
+
+    let w = x2 - x1;
+    let h = y2 - y1;
+
+    currentMark = null;
+
+    sendClick(x1,y1,w,h,'Tap');
+});
+
+correctedcanvas.addEventListener('mousemove',function (evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    if (!currentMark)
+      return;
+    let x = evt.pageX;
+    let y = evt.pageY;
+    let rect = correctedcanvas.getBoundingClientRect();
+    x -= rect.left;
+    y -= rect.top;
+    x *= correctedcanvas.width / rect.width;
+    y *= correctedcanvas.height / rect.height;
+    currentMark.cx = x;
+    currentMark.cy = y;
+    drawCurrentMark();
 });
 
 document.querySelector('#video').addEventListener('loadedmetadata',function (evt) {
