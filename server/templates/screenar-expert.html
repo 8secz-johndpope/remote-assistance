@@ -334,6 +334,7 @@ else {
   );
 }
 
+let boxes = [];
 function drawVideo()
 {
   if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight)
@@ -372,7 +373,7 @@ function drawVideo()
     correctedctx.drawImage(fxcanvas,0,0,correctedcanvas.width,correctedcanvas.height);
 
     //binarize(correctedcanvas);
-    canny(correctedcanvas);
+    boxes = canny(correctedcanvas,false,true);
 
     let fingerPosition = detectFingerTip(correctedctx.getImageData(0,0,correctedcanvas.width,correctedcanvas.height));
     if (fingerPosition)
@@ -420,10 +421,8 @@ let currentAnchor = null;
 
 function drawCurrentMark()
 {
-  //correctedctx.fillStyle = 'black';
-  //correctedctx.fillRect(0,0,correctedcanvas.width,correctedcanvas.height);
-  correctedctx.strokeStyle = 'yellow';
-  correctedctx.lineWidth = 6;
+  correctedctx.strokeStyle = '#2d43c3';
+  correctedctx.lineWidth = 12;
   let x1 = Math.min(currentMark.px,currentMark.cx);
   let y1 = Math.min(currentMark.py,currentMark.cy);
   let x2 = Math.max(currentMark.px,currentMark.cx);
@@ -859,80 +858,109 @@ function sendClick(x,y,w,h,text)
 }
 
 let currentMark = null;
+const DRAW_MARK = false;
+if (DRAW_MARK)
+{
+  correctedcanvas.addEventListener('mousedown',function (evt) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      let x = evt.pageX;
+      let y = evt.pageY;
+      let rect = correctedcanvas.getBoundingClientRect();
+      x -= rect.left;
+      y -= rect.top;
+      x *= correctedcanvas.width / rect.width;
+      y *= correctedcanvas.height / rect.height;
+      currentMark = {px:x,py:y,cx:x+2,cy:y+2};
+  });
 
-/*correctedcanvas.addEventListener('click',function (evt) {
-    evt.preventDefault();
-    evt.stopPropagation();
-    let x = evt.pageX;
-    let y = evt.pageY;
-    let rect = correctedcanvas.getBoundingClientRect();
-    x -= rect.left;
-    y -= rect.top;
-    x = (x * 100 / correctedcanvas.offsetWidth) | 0;
-    y = (y * 100 / correctedcanvas.offsetHeight) | 0;
-    console.log(x,y);
-    sendClick(x,y,30,15,'Tap');
-});*/
-
-correctedcanvas.addEventListener('mousedown',function (evt) {
-    evt.preventDefault();
-    evt.stopPropagation();
-    let x = evt.pageX;
-    let y = evt.pageY;
-    let rect = correctedcanvas.getBoundingClientRect();
-    x -= rect.left;
-    y -= rect.top;
-    x *= correctedcanvas.width / rect.width;
-    y *= correctedcanvas.height / rect.height;
-    currentMark = {px:x,py:y,cx:x+2,cy:y+2};
-});
-
-correctedcanvas.addEventListener('mouseup',function (evt) {
-    evt.preventDefault();
-    evt.stopPropagation();
-    if (!currentMark)
-      return;
-    let x1 = Math.min(currentMark.px,currentMark.cx);
-    let y1 = Math.min(currentMark.py,currentMark.cy);
-    let x2 = Math.max(currentMark.px,currentMark.cx);
-    let y2 = Math.max(currentMark.py,currentMark.cy);
+  correctedcanvas.addEventListener('mouseup',function (evt) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      if (!currentMark)
+        return;
+      let x1 = Math.min(currentMark.px,currentMark.cx);
+      let y1 = Math.min(currentMark.py,currentMark.cy);
+      let x2 = Math.max(currentMark.px,currentMark.cx);
+      let y2 = Math.max(currentMark.py,currentMark.cy);
 
 
-    x1 = (x1 * 100 / correctedcanvas.width) | 0;
-    y1 = (y1 * 100 / correctedcanvas.height) | 0;
-    x2 = (x2 * 100 / correctedcanvas.width) | 0;
-    y2 = (y2 * 100 / correctedcanvas.height) | 0;
+      x1 = (x1 * 100 / correctedcanvas.width) | 0;
+      y1 = (y1 * 100 / correctedcanvas.height) | 0;
+      x2 = (x2 * 100 / correctedcanvas.width) | 0;
+      y2 = (y2 * 100 / correctedcanvas.height) | 0;
 
-    let w = x2 - x1;
-    let h = y2 - y1;
+      let w = x2 - x1;
+      let h = y2 - y1;
 
-    currentMark = null;
+      currentMark = null;
 
-    sendClick(x1,y1,w,h,'Tap');
-});
+      sendClick(x1,y1,w,h,'Tap');
+  });
 
-correctedcanvas.addEventListener('mouseout',function (evt) {
-    evt.preventDefault();
-    evt.stopPropagation();
-    currentMark = null;
-});
-correctedcanvas.addEventListener('mousemove',function (evt) {
-    evt.preventDefault();
-    evt.stopPropagation();
-    if (!currentMark)
-      return;
-    let x = evt.pageX;
-    let y = evt.pageY;
-    let rect = correctedcanvas.getBoundingClientRect();
-    x -= rect.left;
-    y -= rect.top;
-    x *= correctedcanvas.width / rect.width;
-    y *= correctedcanvas.height / rect.height;
-    currentMark.cx = x;
-    currentMark.cy = y;
-    //drawCurrentMark();
-});
+  correctedcanvas.addEventListener('mouseout',function (evt) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      currentMark = null;
+  });
+  correctedcanvas.addEventListener('mousemove',function (evt) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      if (!currentMark)
+        return;
+      let x = evt.pageX;
+      let y = evt.pageY;
+      let rect = correctedcanvas.getBoundingClientRect();
+      x -= rect.left;
+      y -= rect.top;
+      x *= correctedcanvas.width / rect.width;
+      y *= correctedcanvas.height / rect.height;
+      currentMark.cx = x;
+      currentMark.cy = y;
+  });
+}
+else {
+  correctedcanvas.addEventListener('click',function (evt) {
+      evt.preventDefault();
+      evt.stopPropagation();
+      let x = evt.pageX;
+      let y = evt.pageY;
+      let rect = correctedcanvas.getBoundingClientRect();
+      x -= rect.left;
+      y -= rect.top;
+      // convert from displayed size (rect) to pixel size (canvas.width/height)
+      x *= correctedcanvas.width / rect.width;
+      y *= correctedcanvas.height / rect.height;
+      if (boxes)
+      {
+        let b2 = {x1:x,y1:y,x2:x+1,y2:y+1};
+        let matchingBox = [];
+        boxes.forEach((item, i) => {
+          if (b1ContainsBox2(item,b2))
+            matchingBox = item;
+        });
+        if (matchingBox)
+        {
+          currentMark = {px:matchingBox.x1,py:matchingBox.y1,cx:matchingBox.x2,cy:matchingBox.y2};
+          let x1 = Math.min(currentMark.px,currentMark.cx);
+          let y1 = Math.min(currentMark.py,currentMark.cy);
+          let x2 = Math.max(currentMark.px,currentMark.cx);
+          let y2 = Math.max(currentMark.py,currentMark.cy);
 
+
+          x1 = (x1 * 100 / correctedcanvas.width) | 0;
+          y1 = (y1 * 100 / correctedcanvas.height) | 0;
+          x2 = (x2 * 100 / correctedcanvas.width) | 0;
+          y2 = (y2 * 100 / correctedcanvas.height) | 0;
+
+          let w = x2 - x1;
+          let h = y2 - y1;
+          sendClick(x1,y1,w,h,'Tap');
+          setTimeout(function () { currentMark = null}, 1000);
+        }
+      }
+  });
+}
 document.querySelector('#video').addEventListener('loadedmetadata',function (evt) {
   console.log('video loaded');
   drawVideo();
@@ -999,7 +1027,7 @@ function mergeAll(array) {
   return array.filter(a => a !== null);
 }
 
-function canny(canvas,showcanny)
+function canny(canvas,showcanny,showboxes)
 {
   let ctx = canvas.getContext('2d');
   let img_u8 = new jsfeat.matrix_t(canvas.width, canvas.height, jsfeat.U8C1_t);
@@ -1009,42 +1037,9 @@ function canny(canvas,showcanny)
   var kernel_size = (r+1) << 1;
   jsfeat.imgproc.gaussian_blur(img_u8, img_u8, kernel_size, 0);
   jsfeat.imgproc.canny(img_u8, img_u8, 0, 100);
-  /*let scaler = canvas.width;
-  if (canvas.height < scaler) {
-      scaler = canvas.height;
-  }
-  scaler = scaler * .4;
-  let h = jsfeat.imgproc.hough_transform(img_u8, 1, (Math.PI / 540), scaler);
-  var lines = [];
-  for (var i = 0; i < h.length; i++) {
-
-      var rho = h[i][0];
-      var theta = h[i][1];
-
-      var a = Math.cos(theta);
-      var b = Math.sin(theta);
-
-      var x0 = a * rho;
-      var y0 = b * rho;
-
-      var pt1 = {};
-      pt1.x = Math.round(x0 + 1000 * (-b));
-      pt1.y = Math.round(y0 + 1000 * (a));
-      var pt2 = {};
-      pt2.x = Math.round(x0 - 1000 * (-b));
-      pt2.y = Math.round(y0 - 1000 * (a));
-
-      var line = {};
-      line.start = pt1;
-      line.end = pt2;
-      lines.push(line);
-
-  }*/
-  //console.log(img_u8);
   let label = new Uint16Array(canvas.width * canvas.height);
   BlobExtractionLaurent_u8(label,img_u8.data,canvas.width, canvas.height);
   let boxes = BlobBounds_u8(label, canvas.width, canvas.height);
-  //console.log(boxes);
 
   if (showcanny)
   {
@@ -1073,104 +1068,20 @@ function canny(canvas,showcanny)
   });
 
   boxes = mergeAll(boxes);
-  ctx.strokeStyle = 'yellow';
-  ctx.lineWidth = 3;
-  boxes.forEach((item, i) => {
-    let w = item.x2 - item.x1;
-    let h = item.y2 - item.y1;
-    ctx.strokeRect(item.x1,item.y1,w,h);
-  });
 
-  /*ctx.strokeStyle = 'yellow';
-  ctx.lineWidth = 3;
-  lines.forEach((item, i) => {
-    ctx.beginPath();
-    ctx.moveTo(item.start.x,item.start.y);
-    ctx.lineTo(item.end.x,item.end.y);
-    ctx.stroke();
-  });*/
-
+  if (showboxes)
+  {
+    ctx.strokeStyle = 'yellow';
+    ctx.lineWidth = 3;
+    boxes.forEach((item, i) => {
+      let w = item.x2 - item.x1;
+      let h = item.y2 - item.y1;
+      ctx.strokeRect(item.x1,item.y1,w,h);
+    });
+  }
+  return boxes;
 }
 
-function binarize(c)
-{
-  let canvasw = c.width;
-  let canvash = c.height;
-  c.style.objectFit = 'contain';
-  let ctx = c.getContext('2d');
-  //ctx.drawImage(image,0,0,canvasw,canvash);
-  //results.appendChild(c)
-  //return
-  let d = ctx.getImageData(0,0,canvasw,canvash);
-  let data = d.data;
-  //let idx = 0;
-  let TH = 5;
-
-  let resData = ctx.createImageData(canvasw,canvash);
-  let res = resData.data;
-  function gray(pixels,i)
-  {
-    return pixels[i];//3*pixels[i] + 4*pixels[i + 1] + pixels[i + 2] >>> 3;
-    //return pixels[i]*.299 + pixels[i + 1]*.587 + pixels[i + 2]*.114;
-  }
-
-  /*for (let j=0;j<canvash;j++)
-  {
-    for (let i=0;i<canvasw-1;i++)
-    {
-      let idx = (canvasw * j + i) * 4;
-      let g1 = gray(data,idx);
-      let g2 = gray(data,idx+4);
-      let redd = Math.abs(g1 - g2);
-      if (redd < TH)
-      {
-        res[idx] = 0;
-      }
-      else {
-        res[idx] = 255;
-      }
-    }
-  }
-  let stride = 4 * canvasw;
-  for (let i=0;i<canvasw;i++)
-  {
-    for (let j=0;j<canvash-1;j++)
-    {
-      let idx = (canvasw * j + i) * 4;
-      let g1 = gray(data,idx);
-      let g2 = gray(data,idx+stride);
-      let redd = Math.abs(g1 - g2);
-      if (redd < TH && res[idx] === 0)
-      {
-        res[idx] = 0;
-      }
-      else {
-        res[idx] = 255;
-      }
-    }
-  }*/
-
-  let n = 4 * canvasw * canvash;
-  let THW = 100;
-  for (let i=0;i<n;i+=4)
-  {
-    if (data[i] > THW && data[i+1] > THW && data[i+2] > THW)
-    //if (data[i] < 160 && data[i+1] < 160 && data[i+2] > 160)
-    {
-      res[i] = 255;
-      res[i+1] = 255;
-      res[i+2] = 255;
-    }
-    else {
-      res[i] = 0;
-      res[i+1] = 0;
-      res[i+2] = 0;
-    }
-    res[i+3] = 255;
-  }
-  ctx.putImageData(resData,0,0);
-  //results.appendChild(c);
-}
 /* test widget detector */
 /*['download-root.png','download-print.png','download-device.png'].forEach((item, i) => {
   let img = document.createElement('img');
@@ -1182,7 +1093,6 @@ function binarize(c)
     let ctx = c.getContext('2d');
     ctx.filter = 'grayscale(0%) blur(2px)';//contrast(100%)
     ctx.drawImage(this,0,0);
-    //binarize(c);
     canny(c)
   }
   img.src = '/static/videoStor/' + item;
