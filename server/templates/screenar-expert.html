@@ -196,7 +196,9 @@ transition:opacity 0.3s ease-in-out;
 </div>
 <script src="/static/ext/socket.io/2.2.0/socket.io.js"></script>
 <script src="/static/ext/glfx/glfx.js"></script>
+<script src="/static/ext/glfx/jsfeat-min.js"></script>
 <script src="/static/js/webrtc.js"></script>
+<script src="/static/js/connected-component-labelling.js"></script>
 <script src="/static/ext/js-zip/jszip.min.js"></script>
 <script src="/static/ext/sweetalert/sweetalert2.js"></script>
 <script>
@@ -369,12 +371,9 @@ function drawVideo()
       [0,0,canvasw,0,canvasw,canvash,0,canvash]).update();
     correctedctx.drawImage(fxcanvas,0,0,correctedcanvas.width,correctedcanvas.height);
 
-    if (currentMark)
-    {
-      correctedctx.strokeStyle = 'yellow';
-      correctedctx.lineWidth = 3;
-      correctedctx.strokeRect(currentMark.x,currentMark.y,currentMark.w,currentMark.h);
-    }
+    //binarize(correctedcanvas);
+    canny(correctedcanvas);
+
     let fingerPosition = detectFingerTip(correctedctx.getImageData(0,0,correctedcanvas.width,correctedcanvas.height));
     if (fingerPosition)
     {
@@ -886,7 +885,6 @@ correctedcanvas.addEventListener('mousedown',function (evt) {
     x *= correctedcanvas.width / rect.width;
     y *= correctedcanvas.height / rect.height;
     currentMark = {px:x,py:y,cx:x+2,cy:y+2};
-    //drawCurrentMark();
 });
 
 correctedcanvas.addEventListener('mouseup',function (evt) {
@@ -913,6 +911,11 @@ correctedcanvas.addEventListener('mouseup',function (evt) {
     sendClick(x1,y1,w,h,'Tap');
 });
 
+correctedcanvas.addEventListener('mouseout',function (evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    currentMark = null;
+});
 correctedcanvas.addEventListener('mousemove',function (evt) {
     evt.preventDefault();
     evt.stopPropagation();
@@ -927,7 +930,7 @@ correctedcanvas.addEventListener('mousemove',function (evt) {
     y *= correctedcanvas.height / rect.height;
     currentMark.cx = x;
     currentMark.cy = y;
-    drawCurrentMark();
+    //drawCurrentMark();
 });
 
 document.querySelector('#video').addEventListener('loadedmetadata',function (evt) {
@@ -935,8 +938,261 @@ document.querySelector('#video').addEventListener('loadedmetadata',function (evt
   drawVideo();
 },false);
 
+function b1ContainsBox2(b1,b2)
+{
+  if (b2.x1 > b1.x2)
+    return false;
+  if (b2.x2 < b1.x1)
+    return false;
+  if (b2.y1 > b1.y2)
+    return false;
+  if (b2.y2 < b1.y1)
+    return false;
+  return true;
+}
+
+function canMergeImageBoxes(a,b) {
+  if (!b)
+    return null;
+  if (!(b1ContainsBox2(a,b) || b1ContainsBox2(b,a)))
+  {
+    if ((a.y2-a.y1<=1 || b.y2-b.y1<=1) && (a.x2-a.x1>15 || b.x2-b.x1>15))
+      return null;
+  }
+  if (a.x1 > b.x2)
+    return null;
+  if (b.x1 > a.x2)
+    return null;
+  if (a.y1 > b.y2)
+    return null;
+  if (b.y1 > a.y2)
+    return null;
+  return {x1:Math.min(a.x1,b.x1),y1:Math.min(a.y1,b.y1),x2:Math.max(a.x2,b.x2),y2:Math.max(a.y2,b.y2)};
+}
+
+function mergeAll(array) {
+  var encore = true;
+  var len = array.length;
+  while (encore)
+  {
+    encore = false;
+    for (var i=0;i<len-1;i++)
+    {
+      var b1 = array[i];
+      if (b1 === null)
+        continue;
+      for (var j=i+1;j<len;j++)
+      {
+        var b2 = array[j];
+        if (b2 === null)
+          continue;
+        var mergedBox = canMergeImageBoxes(b1, b2);
+        if (mergedBox !== null) {
+          array[i] = mergedBox;
+          array[j] = null;
+          encore = true;
+          break;
+        }
+      }
+    }
+  }
+  return array.filter(a => a !== null);
+}
+
+function canny(canvas,showcanny)
+{
+  let ctx = canvas.getContext('2d');
+  let img_u8 = new jsfeat.matrix_t(canvas.width, canvas.height, jsfeat.U8C1_t);
+  let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  jsfeat.imgproc.grayscale(imageData.data, canvas.width, canvas.height, img_u8);
+  var r = 1;
+  var kernel_size = (r+1) << 1;
+  jsfeat.imgproc.gaussian_blur(img_u8, img_u8, kernel_size, 0);
+  jsfeat.imgproc.canny(img_u8, img_u8, 0, 100);
+  /*let scaler = canvas.width;
+  if (canvas.height < scaler) {
+      scaler = canvas.height;
+  }
+  scaler = scaler * .4;
+  let h = jsfeat.imgproc.hough_transform(img_u8, 1, (Math.PI / 540), scaler);
+  var lines = [];
+  for (var i = 0; i < h.length; i++) {
+
+      var rho = h[i][0];
+      var theta = h[i][1];
+
+      var a = Math.cos(theta);
+      var b = Math.sin(theta);
+
+      var x0 = a * rho;
+      var y0 = b * rho;
+
+      var pt1 = {};
+      pt1.x = Math.round(x0 + 1000 * (-b));
+      pt1.y = Math.round(y0 + 1000 * (a));
+      var pt2 = {};
+      pt2.x = Math.round(x0 - 1000 * (-b));
+      pt2.y = Math.round(y0 - 1000 * (a));
+
+      var line = {};
+      line.start = pt1;
+      line.end = pt2;
+      lines.push(line);
+
+  }*/
+  //console.log(img_u8);
+  let label = new Uint16Array(canvas.width * canvas.height);
+  BlobExtractionLaurent_u8(label,img_u8.data,canvas.width, canvas.height);
+  let boxes = BlobBounds_u8(label, canvas.width, canvas.height);
+  //console.log(boxes);
+
+  if (showcanny)
+  {
+    // render result back to canvas
+    var data_u32 = new Uint32Array(imageData.data.buffer);
+    var alpha = (0xff << 24);
+    var i = img_u8.cols*img_u8.rows, pix = 0;
+    while(--i >= 0) {
+        pix = img_u8.data[i];
+        data_u32[i] = alpha | (pix << 16) | (pix << 8) | pix;
+    }
+    ctx.putImageData(imageData, 0, 0);
+  }
+
+  boxes = boxes.filter((item, i) => {
+    let w = item.x2 - item.x1;
+    let h = item.y2 - item.y1;
+    if (w > canvas.width / 4 || h > canvas.height / 2)
+    {
+      return false;
+    }
+    else if (w > 48 && h > 32)
+    {
+      return true;
+    }
+  });
+
+  boxes = mergeAll(boxes);
+  ctx.strokeStyle = 'yellow';
+  ctx.lineWidth = 3;
+  boxes.forEach((item, i) => {
+    let w = item.x2 - item.x1;
+    let h = item.y2 - item.y1;
+    ctx.strokeRect(item.x1,item.y1,w,h);
+  });
+
+  /*ctx.strokeStyle = 'yellow';
+  ctx.lineWidth = 3;
+  lines.forEach((item, i) => {
+    ctx.beginPath();
+    ctx.moveTo(item.start.x,item.start.y);
+    ctx.lineTo(item.end.x,item.end.y);
+    ctx.stroke();
+  });*/
+
+}
+
+function binarize(c)
+{
+  let canvasw = c.width;
+  let canvash = c.height;
+  c.style.objectFit = 'contain';
+  let ctx = c.getContext('2d');
+  //ctx.drawImage(image,0,0,canvasw,canvash);
+  //results.appendChild(c)
+  //return
+  let d = ctx.getImageData(0,0,canvasw,canvash);
+  let data = d.data;
+  //let idx = 0;
+  let TH = 5;
+
+  let resData = ctx.createImageData(canvasw,canvash);
+  let res = resData.data;
+  function gray(pixels,i)
+  {
+    return pixels[i];//3*pixels[i] + 4*pixels[i + 1] + pixels[i + 2] >>> 3;
+    //return pixels[i]*.299 + pixels[i + 1]*.587 + pixels[i + 2]*.114;
+  }
+
+  /*for (let j=0;j<canvash;j++)
+  {
+    for (let i=0;i<canvasw-1;i++)
+    {
+      let idx = (canvasw * j + i) * 4;
+      let g1 = gray(data,idx);
+      let g2 = gray(data,idx+4);
+      let redd = Math.abs(g1 - g2);
+      if (redd < TH)
+      {
+        res[idx] = 0;
+      }
+      else {
+        res[idx] = 255;
+      }
+    }
+  }
+  let stride = 4 * canvasw;
+  for (let i=0;i<canvasw;i++)
+  {
+    for (let j=0;j<canvash-1;j++)
+    {
+      let idx = (canvasw * j + i) * 4;
+      let g1 = gray(data,idx);
+      let g2 = gray(data,idx+stride);
+      let redd = Math.abs(g1 - g2);
+      if (redd < TH && res[idx] === 0)
+      {
+        res[idx] = 0;
+      }
+      else {
+        res[idx] = 255;
+      }
+    }
+  }*/
+
+  let n = 4 * canvasw * canvash;
+  let THW = 100;
+  for (let i=0;i<n;i+=4)
+  {
+    if (data[i] > THW && data[i+1] > THW && data[i+2] > THW)
+    //if (data[i] < 160 && data[i+1] < 160 && data[i+2] > 160)
+    {
+      res[i] = 255;
+      res[i+1] = 255;
+      res[i+2] = 255;
+    }
+    else {
+      res[i] = 0;
+      res[i+1] = 0;
+      res[i+2] = 0;
+    }
+    res[i+3] = 255;
+  }
+  ctx.putImageData(resData,0,0);
+  //results.appendChild(c);
+}
+/* test widget detector */
+/*['download-root.png','download-print.png','download-device.png'].forEach((item, i) => {
+  let img = document.createElement('img');
+  img.onload = function () {
+    let c = document.createElement('canvas');
+    results.appendChild(c);
+    c.width = this.naturalWidth;
+    c.height = this.naturalHeight;
+    let ctx = c.getContext('2d');
+    ctx.filter = 'grayscale(0%) blur(2px)';//contrast(100%)
+    ctx.drawImage(this,0,0);
+    //binarize(c);
+    canny(c)
+  }
+  img.src = '/static/videoStor/' + item;
+});*/
+
+
 /* function to test detectCorners */
-/*img.onload = function () {
+/*
+  let img = document.createElement('img');
+  img.onload = function () {
   let c = document.createElement('canvas');
   c.width = this.naturalWidth;
   c.height = this.naturalHeight;
