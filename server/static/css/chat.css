@@ -113,7 +113,7 @@ html {
   display: flex;
   padding: 10px;
   border-top: var(--border);
-  background: #eee;
+  background: #004c83;
 }
 .msger-inputarea * {
   padding: 10px;
@@ -127,8 +127,9 @@ html {
 }
 .msger-send-btn {
   margin-left: 10px;
-  background: rgb(0, 196, 65);
+  background: #004c83;
   color: #fff;
+  border: 2px solid #fff;
   font-weight: bold;
   cursor: pointer;
   transition: background 0.23s;
