@@ -31,6 +31,7 @@
 		D753162C23DA46D400D686EC /* AceARViewController+ScreenAR.swift in Sources */ = {isa = PBXBuildFile; fileRef = D753162B23DA46D400D686EC /* AceARViewController+ScreenAR.swift */; };
 		D753162E23DA47AB00D686EC /* AceARViewController+ARPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D753162D23DA47AB00D686EC /* AceARViewController+ARPointer.swift */; };
 		D76C1CCC23D78BD600208511 /* AceVRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76C1CCB23D78BD600208511 /* AceVRViewController.swift */; };
+		D7945404243FC27A00EFA58C /* AceNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7945403243FC27A00EFA58C /* AceNavigationController.swift */; };
 		D795E76623A2E64800E97162 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D795E76523A2E64800E97162 /* ChatViewController.swift */; };
 		D7AF69FD23C8F097005B67D8 /* Ace.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7AF69FC23C8F097005B67D8 /* Ace.storyboard */; };
 		D7AF69FF23C8F0D0005B67D8 /* AppStoryboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AF69FE23C8F0D0005B67D8 /* AppStoryboard.swift */; };
@@ -39,6 +40,7 @@
 		D7AF6A0623C90F91005B67D8 /* AceHandsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AF6A0523C90F91005B67D8 /* AceHandsViewController.swift */; };
 		D7AF6A0823C9151C005B67D8 /* AceARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AF6A0723C9151C005B67D8 /* AceARViewController.swift */; };
 		D7AF6A0A23C936DE005B67D8 /* AceSketchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AF6A0923C936DE005B67D8 /* AceSketchViewController.swift */; };
+		D7B006B7243F953C00B32D70 /* AceDCLandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B006B6243F953C00B32D70 /* AceDCLandingViewController.swift */; };
 		D7DA20D723AAE7CA005B1357 /* WA3DLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7DA20CD23AAE255005B1357 /* WA3DLib.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		D7DA20D823AAE7CA005B1357 /* WA3DLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D7DA20CD23AAE255005B1357 /* WA3DLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D7DA31EB239ECFCE00D1B73F /* SCNVector3+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E1239ECFCE00D1B73F /* SCNVector3+Extensions.swift */; };
@@ -138,6 +140,7 @@
 		D753162B23DA46D400D686EC /* AceARViewController+ScreenAR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AceARViewController+ScreenAR.swift"; sourceTree = "<group>"; };
 		D753162D23DA47AB00D686EC /* AceARViewController+ARPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AceARViewController+ARPointer.swift"; sourceTree = "<group>"; };
 		D76C1CCB23D78BD600208511 /* AceVRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceVRViewController.swift; sourceTree = "<group>"; };
+		D7945403243FC27A00EFA58C /* AceNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceNavigationController.swift; sourceTree = "<group>"; };
 		D795E76523A2E64800E97162 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		D7AF69FC23C8F097005B67D8 /* Ace.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Ace.storyboard; sourceTree = "<group>"; };
 		D7AF69FE23C8F0D0005B67D8 /* AppStoryboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoryboard.swift; sourceTree = "<group>"; };
@@ -146,6 +149,7 @@
 		D7AF6A0523C90F91005B67D8 /* AceHandsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceHandsViewController.swift; sourceTree = "<group>"; };
 		D7AF6A0723C9151C005B67D8 /* AceARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceARViewController.swift; sourceTree = "<group>"; };
 		D7AF6A0923C936DE005B67D8 /* AceSketchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceSketchViewController.swift; sourceTree = "<group>"; };
+		D7B006B6243F953C00B32D70 /* AceDCLandingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceDCLandingViewController.swift; sourceTree = "<group>"; };
 		D7DA20CD23AAE255005B1357 /* WA3DLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WA3DLib.framework; path = RemoteAssistance/Frameworks/WA3DLib.framework; sourceTree = "<group>"; };
 		D7DA20CF23AAE366005B1357 /* Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridging-Header.h"; sourceTree = "<group>"; };
 		D7DA31E1239ECFCE00D1B73F /* SCNVector3+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SCNVector3+Extensions.swift"; sourceTree = "<group>"; };
@@ -322,6 +326,8 @@
 				D7167ED223D8CDA900655A42 /* AceLandingViewController.swift */,
 				D753162923D926C200D686EC /* AceAPI.swift */,
 				D7031AF923E8EED80062A637 /* AceClipThumbnail.swift */,
+				D7B006B6243F953C00B32D70 /* AceDCLandingViewController.swift */,
+				D7945403243FC27A00EFA58C /* AceNavigationController.swift */,
 			);
 			path = Ace;
 			sourceTree = "<group>";
@@ -613,6 +619,7 @@
 				D7EAD85923D6684800EE1A56 /* AceVirtualObject.swift in Sources */,
 				D7455DBA2368BE77001594FA /* ViewController.swift in Sources */,
 				D7DA31F4239ED04600D1B73F /* SARViewController.swift in Sources */,
+				D7B006B7243F953C00B32D70 /* AceDCLandingViewController.swift in Sources */,
 				D7DB6A0C236DE7C700D7C367 /* AceState.swift in Sources */,
 				D7DB6A06236DE6CC00D7C367 /* TSRemoteHands.swift in Sources */,
 				D7455DB82368BE77001594FA /* AppDelegate.swift in Sources */,
@@ -625,6 +632,7 @@
 				D7AF6A0423C8FD8D005B67D8 /* AceUIViewController.swift in Sources */,
 				D7DA31ED239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift in Sources */,
 				D7031AFA23E8EED80062A637 /* AceClipThumbnail.swift in Sources */,
+				D7945404243FC27A00EFA58C /* AceNavigationController.swift in Sources */,
 				D7167ED323D8CDA900655A42 /* AceLandingViewController.swift in Sources */,
 				AD43D0CE23C68E5500AA4D24 /* QRCodeScanner.swift in Sources */,
 				D7DA31EC239ECFCE00D1B73F /* UIView+Extensions.swift in Sources */,

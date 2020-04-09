@@ -24,6 +24,10 @@ class AceLandingViewController : UIViewController {
         self.navigationController?.setNavigationBarHidden(true, animated: animated)
     }
     
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
+    
     @IBAction func onChatBtn(_ sender: Any) {
         let vc  = ChatViewController.instantiate(fromAppStoryboard: .Main)
         self.navigationController?.pushViewController(vc)

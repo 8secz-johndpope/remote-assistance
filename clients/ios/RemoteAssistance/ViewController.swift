@@ -22,11 +22,20 @@ class ViewController: UITabBarController {
   
         // uncomment to show the unified view ace view controller
         let vc = AceLandingViewController.instantiate(fromAppStoryboard: .Ace)
-        let navVC = UINavigationController()
+        let navVC = AceNavigationController()
         navVC.tabBarItem = vc.tabBarItem
         navVC.pushViewController(vc)
         self.viewControllers?.prepend(navVC)
         
+        // add digital companion
+        let vcDC = AceDCLandingViewController.instantiate(fromAppStoryboard: .Ace)
+        let navVCDC = AceNavigationController()
+        navVCDC.tabBarItem = vcDC.tabBarItem
+        navVCDC.pushViewController(vcDC)
+        self.viewControllers?.prepend(navVCDC)
+        
+        self.selectedIndex = 0
+
         let up = UISwipeGestureRecognizer(target: self, action: #selector(onSwipeUp))
         up.direction = .up
         self.view.addGestureRecognizer(up)
@@ -40,6 +49,33 @@ class ViewController: UITabBarController {
     override func viewDidAppear(_ animated: Bool) {
         // hide the bar for now
         self.changeTabBar(hidden:true, animated:true)
+    }
+        
+    override var shouldAutorotate : Bool{
+        if let selectedVC = self.selectedViewController {
+            if selectedVC.responds(to: #selector(getter: self.shouldAutorotate)) {
+                return selectedVC.shouldAutorotate
+            }
+        }
+        return true
+    }
+
+    override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+         if let selectedVC = self.selectedViewController {
+             if selectedVC.responds(to: #selector(getter: self.supportedInterfaceOrientations)) {
+                return selectedVC.supportedInterfaceOrientations
+            }
+        }
+        return .all
+    }
+    
+    override var preferredStatusBarStyle : UIStatusBarStyle {
+         if let selectedVC = self.selectedViewController {
+             if selectedVC.responds(to: #selector(getter: self.preferredStatusBarStyle)) {
+                return selectedVC.preferredStatusBarStyle
+            }
+        }
+        return .lightContent
     }
     
     func changeTabBar(hidden:Bool, animated: Bool){
