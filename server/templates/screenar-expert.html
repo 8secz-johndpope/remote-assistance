@@ -165,13 +165,15 @@ transition:opacity 0.3s ease-in-out;
   height:100vh;
 }
 #audioElement{display: none;}
+#controlbuttons > a {padding:0 4px}
+#stopSessionButton{display:none;text-transform: uppercase;font-size: 80%}
 </style>
 <div class='header'>
   <mytitle>ScreenAR</mytitle>
   <audio id='audioElement' controls></audio>
   <div id='controlbuttons'>
-    <button class='button'  onclick='stopSession()'>Stop Session</button>
-    <button class='button' onclick='downloadARAnnotations(event)'>Download</button>
+    <button id='stopSessionButton' class='button' onclick='stopSessionAndDownload(this)'>download</button>
+    <!--a class='button' onclick='downloadARAnnotations(event)'>Download</a-->
   </div>
 </div>
 <div id='screenarcontainer'>
@@ -279,10 +281,9 @@ function initRecordingVideo(videostream)
     console.log('videoRecorder stopped');
     let videoBlob = new Blob(recordedVideoChunks);
     let dlAnchorElem = document.createElement('a');
-    dlAnchorElem.textContent = 'download screenar.mp4';
+    dlAnchorElem.textContent = 'screenar.mp4';
     dlAnchorElem.setAttribute('href',URL.createObjectURL(videoBlob));
     dlAnchorElem.setAttribute('download', 'screenar.mp4');
-    //dlAnchorElem.click();
     document.querySelector('#controlbuttons').appendChild(dlAnchorElem);
   });
 
@@ -300,9 +301,15 @@ function initAudioRecorder(audiostream)
 
     mediaRecorder.addEventListener('stop', function() {
       console.log('stopped');
-      let blob = new Blob(recordedChunks);
-      audioElement.src = URL.createObjectURL(blob);
+      let audioBlob = new Blob(recordedChunks);
+      audioElement.src = URL.createObjectURL(audioBlob);
       recordedChunks = [];
+
+      let dlAnchorElem = document.createElement('a');
+      dlAnchorElem.textContent = 'screenar.ogg';
+      dlAnchorElem.setAttribute('href',URL.createObjectURL(audioBlob));
+      dlAnchorElem.setAttribute('download', 'screenar.ogg');
+      document.querySelector('#controlbuttons').appendChild(dlAnchorElem);
     });
 }
 
@@ -362,6 +369,7 @@ function drawVideo()
     {
       console.log('started audio recording',corners);
       sessionStarted = true;
+      stopSessionButton.style.display = 'inline-block';
       sessionStartedAtTime = new Date().getTime();
       if (mediaRecorder)
         mediaRecorder.start();
@@ -375,10 +383,10 @@ function drawVideo()
       [0,0,canvasw,0,canvasw,canvash,0,canvash]).update();
     correctedctx.drawImage(fxcanvas,0,0,correctedcanvas.width,correctedcanvas.height);
 
-    boxes = canny(correctedcanvas,false,true);
+    boxes = canny(correctedcanvas,false,false);
 
     let fingerPosition = detectFingerTip(correctedctx.getImageData(0,0,correctedcanvas.width,correctedcanvas.height));
-    if (fingerPosition)
+    if (currentAnchor && fingerPosition)
     {
       currentAnchor.points.push(fingerPosition);
       clearTimeout(captureTimeout);
@@ -475,23 +483,27 @@ function uuidv4() {
   );
 }
 
-function stopSession()
+function stopSessionAndDownload(button)
 {
   if (sessionStarted === false)
   {
     return Swal.fire({title:'No data',text:'The session has not yet started'});
   }
+  button.style.display = 'none';
   if (currentAnchor !== null)
     addARAnnotation(anchorPoints.length-1);
   sessionStopped = true;
-  //console.log('stopSession');
+  console.log('session stopped, generating download links');
   if (mediaRecorder)
     mediaRecorder.stop();
   if (videoRecorder)
     videoRecorder.stop();
+
+  let dlAnchorElem = download(JSON.stringify(anchorPoints),'screenar.json','application/json');
+  document.querySelector('#controlbuttons').appendChild(dlAnchorElem);
 }
 
-function downloadARAnnotations(e)
+/*function downloadARAnnotations(e)
 {
   e.preventDefault();
   let button = e.target;
@@ -508,7 +520,8 @@ function downloadARAnnotations(e)
     setTimeout(function () { button.disabled = false;},1000);
     download(JSON.stringify(anchorPoints),'screenar.json','application/json');
   }
-  /*var zip = new JSZip();
+  return;
+  var zip = new JSZip();
   let uuid = uuidv4();
   var img = zip.folder(uuid);
   img.file("rec.json", JSON.stringify(anchorPoints));
@@ -527,16 +540,18 @@ function downloadARAnnotations(e)
       dlAnchorElem.setAttribute('download', 'screenar.zip');
       dlAnchorElem.click();
     });
- });*/
-}
+ });
+}*/
 
-// from https://stackoverflow.com/questions/34156282/how-do-i-save-json-to-local-text-file
+// adapted from https://stackoverflow.com/questions/34156282/how-do-i-save-json-to-local-text-file
 function download(content, fileName, contentType) {
-    var a = document.createElement("a");
+    var a = document.createElement('a');
     var file = new Blob([content], {type: contentType});
     a.href = URL.createObjectURL(file);
     a.download = fileName;
-    a.click();
+    a.textContent = fileName;
+    //a.click();
+    return a;
 }
 
 function captureImage()
@@ -900,11 +915,10 @@ if (DRAW_MARK)
       let x2 = Math.max(currentMark.px,currentMark.cx);
       let y2 = Math.max(currentMark.py,currentMark.cy);
 
-
-      x1 = (x1 * 100 / correctedcanvas.width) | 0;
-      y1 = (y1 * 100 / correctedcanvas.height) | 0;
-      x2 = (x2 * 100 / correctedcanvas.width) | 0;
-      y2 = (y2 * 100 / correctedcanvas.height) | 0;
+      x1 = (x1 * 1024 / correctedcanvas.width) | 0;
+      y1 = (y1 * 1024 / correctedcanvas.height) | 0;
+      x2 = (x2 * 1024 / correctedcanvas.width) | 1;
+      y2 = (y2 * 1024 / correctedcanvas.height) | 1;
 
       let w = x2 - x1;
       let h = y2 - y1;
@@ -964,10 +978,10 @@ else {
           let y2 = Math.max(currentMark.py,currentMark.cy);
 
 
-          x1 = (x1 * 100 / correctedcanvas.width) | 0;
-          y1 = (y1 * 100 / correctedcanvas.height) | 0;
-          x2 = (x2 * 100 / correctedcanvas.width) | 0;
-          y2 = (y2 * 100 / correctedcanvas.height) | 0;
+          x1 = (x1 * 1024 / correctedcanvas.width) | 0;
+          y1 = (y1 * 1024 / correctedcanvas.height) | 0;
+          x2 = (x2 * 1024 / correctedcanvas.width) | 1;
+          y2 = (y2 * 1024 / correctedcanvas.height) | 1;
 
           let w = x2 - x1;
           let h = y2 - y1;
