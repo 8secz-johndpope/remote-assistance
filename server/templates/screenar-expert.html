@@ -224,7 +224,25 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+#fakecursor{
+  background-color: var(--blue);
+  width:32px;
+  height:32px;
+  border-radius: 50%;
+  position:absolute;
+  z-index: 20;
+  transform: translate(-50%,-50%);
+  pointer-events: none;
+  background:url(/static/images/cursor.svg) no-repeat;
+  background-position: 5px 5px;
+}
+.highlightcursor{
+  background-color:rgba(255,255,0,0.4)!important;
+}
 </style>
+<body>
+<div id='fakecursor'></div>
 <div class='header'>
   <mytitle>ScreenAR</mytitle>
   <audio id='audioElement' controls></audio>
@@ -492,11 +510,12 @@ function drawVideo()
 }
 
 let currentAnchor = null;
-
+const MARK_COLOR = 'red';
+const MARK_LINE_WIDTH = 10;
 function drawCurrentMark()
 {
-  correctedctx.strokeStyle = 'yellow';
-  correctedctx.lineWidth = 12;
+  correctedctx.strokeStyle = MARK_COLOR;
+  correctedctx.lineWidth = MARK_LINE_WIDTH;
   let x1 = Math.min(currentMark.px,currentMark.cx);
   let y1 = Math.min(currentMark.py,currentMark.cy);
   let x2 = Math.max(currentMark.px,currentMark.cx);
@@ -947,7 +966,7 @@ function goodPoint(pt)
 
 function sendClick(x,y,w,h,text)
 {
-  console.log('sendClick',x,y,w,h,text);
+  //console.log('sendClick',x,y,w,h,text);
   if (wrtc && wrtc.sendChannel)
     wrtc.sendChannel.send(`${x},${y},${w},${h},text`);
 }
@@ -1055,6 +1074,21 @@ else {
       }
   });
 }
+
+document.addEventListener('mousemove',function (event) {
+  fakecursor.style.left = event.clientX + 'px';
+  fakecursor.style.top = event.clientY + 'px';
+});
+document.addEventListener('mousedown',function (event) {
+  fakecursor.classList.add('highlightcursor');
+  //fakecursor.style.backgroundColor = 'red';
+  //console.log('mousedown');
+});
+
+document.addEventListener('mouseup',function (event) {
+  fakecursor.classList.remove('highlightcursor');
+});
+
 document.querySelector('#video').addEventListener('loadedmetadata',function (evt) {
   console.log('video loaded');
   drawVideo();
@@ -1154,6 +1188,11 @@ function canny(canvas,showcanny,showboxes)
     ctx.putImageData(imageData, 0, 0);
   }
 
+  const BOX_COLOR = 'yellow';
+  const BOX_MARGIN = 8;
+  const BOX_MIN_WIDTH = 32;
+  const BOX_MIN_HEIGHT = 32;
+  const BOX_LINE_WIDTH = 3;
   boxes = boxes.filter((item, i) => {
     let w = item.x2 - item.x1;
     let h = item.y2 - item.y1;
@@ -1161,15 +1200,24 @@ function canny(canvas,showcanny,showboxes)
     {
       return false;
     }
-    else if (item.x2 >= canvas.width - 8)
+    else if (item.x1 <= BOX_MARGIN) // not too close to the left
     {
       return false;
     }
-    else if (item.y2 >= canvas.height - 8)
+    else if (item.y1 <= BOX_MARGIN) // not too close to the top
     {
       return false;
     }
-    else if (w > 32 && h > 32)
+
+    else if (item.x2 >= canvas.width - BOX_MARGIN) // not too close to the right
+    {
+      return false;
+    }
+    else if (item.y2 >= canvas.height - BOX_MARGIN) // not too close to the bottom
+    {
+      return false;
+    }
+    else if (w > BOX_MIN_WIDTH && h > BOX_MIN_HEIGHT)
     {
       return true;
     }
@@ -1179,10 +1227,9 @@ function canny(canvas,showcanny,showboxes)
 
   if (showboxes)
   {
-    ctx.strokeStyle = '#2d43c3';
-    let cornerRadius = 8;
-    ctx.lineWidth = cornerRadius;
-    ctx.lineJoin = "round";
+    ctx.strokeStyle = BOX_COLOR;
+    ctx.lineWidth = BOX_LINE_WIDTH;
+    ctx.lineJoin = "cap";
     boxes.forEach((item, i) => {
       let w = item.x2 - item.x1;
       let h = item.y2 - item.y1;
