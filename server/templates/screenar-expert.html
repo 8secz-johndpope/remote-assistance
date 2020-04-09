@@ -51,18 +51,19 @@ body{
   width:100%;
   height:100%;
   overflow:hidden;
-  background-color:#222;
+  background-color:black;
 }
 
 #correctedcanvas{
   position:absolute;
-  right:16px;
-  bottom:16px;
+  right:0px;
+  bottom:0px;
   background-color:black;
   width:320px;
   height:auto;
-  border:3px solid var(--blue);
-  border-radius: 3px;
+  border-left:3px solid white;/*var(--blue);*/
+  border-top:3px solid white;/*var(--blue);*/
+  border-top-left-radius:3px;
 }
 
 /* first row of our flex */
@@ -167,11 +168,68 @@ transition:opacity 0.3s ease-in-out;
 #audioElement{display: none;}
 #controlbuttons > a {padding:0 4px}
 #stopSessionButton{display:none;text-transform: uppercase;font-size: 80%}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  transform:scale(0.8);
+  line-height: 32px;
+}
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: transform .2s;
+  transition: transform .2s;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: transform .2s;
+  transition: transform .2s;
+}
+input:checked + .slider {
+  background-color: #2196F3;
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+.slider.round:before {
+  border-radius: 50%;
+}
 </style>
 <div class='header'>
   <mytitle>ScreenAR</mytitle>
   <audio id='audioElement' controls></audio>
   <div id='controlbuttons'>
+    Marks <label class="switch"><input onchange="cropBorders=!cropBorders" type="checkbox"><span class="slider round"></span></label>
     <button id='stopSessionButton' class='button' onclick='stopSessionAndDownload(this)'>download</button>
     <!--a class='button' onclick='downloadARAnnotations(event)'>Download</a-->
   </div>
@@ -343,6 +401,7 @@ else {
 }
 
 let boxes = [];
+let cropBorders = true;
 function drawVideo()
 {
   if (canvas.width !== video.videoWidth || canvas.height !== video.videoHeight)
@@ -361,8 +420,8 @@ function drawVideo()
 
   }
   ctx.drawImage(video,0,0,canvasw,canvash);
-
   let corners = detectCorners(ctx);
+
   if (corners !== null)
   {
     if (sessionStarted === false)
@@ -383,7 +442,7 @@ function drawVideo()
       [0,0,canvasw,0,canvasw,canvash,0,canvash]).update();
     correctedctx.drawImage(fxcanvas,0,0,correctedcanvas.width,correctedcanvas.height);
 
-    boxes = canny(correctedcanvas,false,false);
+    boxes = canny(correctedcanvas,false,true);
 
     let fingerPosition = detectFingerTip(correctedctx.getImageData(0,0,correctedcanvas.width,correctedcanvas.height));
     if (currentAnchor && fingerPosition)
@@ -424,6 +483,11 @@ function drawVideo()
     drawCurrentMark();
   }
 
+  if (cropBorders)
+  {
+    let offset = 12;
+    ctx.drawImage(video,offset,offset,canvasw-2*offset,canvash-2*offset,0,0,canvasw,canvash);
+  }
   setTimeout(drawVideo,1000/10);
 }
 
@@ -431,7 +495,7 @@ let currentAnchor = null;
 
 function drawCurrentMark()
 {
-  correctedctx.strokeStyle = '#2d43c3';
+  correctedctx.strokeStyle = 'yellow';
   correctedctx.lineWidth = 12;
   let x1 = Math.min(currentMark.px,currentMark.cx);
   let y1 = Math.min(currentMark.py,currentMark.cy);
@@ -986,7 +1050,7 @@ else {
           let w = x2 - x1;
           let h = y2 - y1;
           sendClick(x1,y1,w,h,'Tap');
-          setTimeout(function () { currentMark = null}, 1000);
+          setTimeout(function () { currentMark = null}, 300);
         }
       }
   });
@@ -1097,7 +1161,15 @@ function canny(canvas,showcanny,showboxes)
     {
       return false;
     }
-    else if (w > 48 && h > 32)
+    else if (item.x2 >= canvas.width - 8)
+    {
+      return false;
+    }
+    else if (item.y2 >= canvas.height - 8)
+    {
+      return false;
+    }
+    else if (w > 32 && h > 32)
     {
       return true;
     }
@@ -1107,8 +1179,10 @@ function canny(canvas,showcanny,showboxes)
 
   if (showboxes)
   {
-    ctx.strokeStyle = 'yellow';
-    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#2d43c3';
+    let cornerRadius = 8;
+    ctx.lineWidth = cornerRadius;
+    ctx.lineJoin = "round";
     boxes.forEach((item, i) => {
       let w = item.x2 - item.x1;
       let h = item.y2 - item.y1;
