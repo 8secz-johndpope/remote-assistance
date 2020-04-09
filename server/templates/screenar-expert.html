@@ -5,6 +5,7 @@
 <meta name="description" content="ScreenAR from FXPAL">
 <meta name="author" content="FXPAL">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="shortcut icon"type="image/x-icon" href="data:image/x-icon;,">
 <!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"-->
 <style>
 @font-face {
@@ -503,8 +504,10 @@ function drawVideo()
 
   if (cropBorders)
   {
-    let offset = 12;
-    ctx.drawImage(video,offset,offset,canvasw-2*offset,canvash-2*offset,0,0,canvasw,canvash);
+    const BORDER_CROP_SIZE = 14;
+    ctx.drawImage(video,
+      BORDER_CROP_SIZE,BORDER_CROP_SIZE,canvasw-2*BORDER_CROP_SIZE,canvash-2*BORDER_CROP_SIZE,
+      0,0,canvasw,canvash);
   }
   setTimeout(drawVideo,1000/10);
 }
