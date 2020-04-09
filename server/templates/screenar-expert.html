@@ -5,7 +5,7 @@
 <meta name="description" content="ScreenAR from FXPAL">
 <meta name="author" content="FXPAL">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!--link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"-->
 <style>
 @font-face {
   font-family: 'Open Sans';
@@ -196,10 +196,11 @@ transition:opacity 0.3s ease-in-out;
 </div>
 <script src="/static/ext/socket.io/2.2.0/socket.io.js"></script>
 <script src="/static/ext/glfx/glfx.js"></script>
+<!--script src="/static/ext/tracking-js/tracking-min.js"></script-->
 <script src="/static/ext/glfx/jsfeat-min.js"></script>
 <script src="/static/js/webrtc.js"></script>
 <script src="/static/js/connected-component-labelling.js"></script>
-<script src="/static/ext/js-zip/jszip.min.js"></script>
+<!--script src="/static/ext/js-zip/jszip.min.js"></script-->
 <script src="/static/ext/sweetalert/sweetalert2.js"></script>
 <script>
 window.config = { room: 'fxpal' }
@@ -262,7 +263,7 @@ var anchorPoints = [];
 var sessionStarted = false;
 var sessionStopped = false;
 var stopSessionTimeout = null;
-
+var sessionStartedAtTime = null;
 
 function initRecordingVideo(videostream)
 {
@@ -353,6 +354,7 @@ function drawVideo()
 
   }
   ctx.drawImage(video,0,0,canvasw,canvash);
+
   let corners = detectCorners(ctx);
   if (corners !== null)
   {
@@ -360,6 +362,7 @@ function drawVideo()
     {
       console.log('started audio recording',corners);
       sessionStarted = true;
+      sessionStartedAtTime = new Date().getTime();
       if (mediaRecorder)
         mediaRecorder.start();
       if (videoRecorder)
@@ -372,7 +375,6 @@ function drawVideo()
       [0,0,canvasw,0,canvasw,canvash,0,canvash]).update();
     correctedctx.drawImage(fxcanvas,0,0,correctedcanvas.width,correctedcanvas.height);
 
-    //binarize(correctedcanvas);
     boxes = canny(correctedcanvas,false,true);
 
     let fingerPosition = detectFingerTip(correctedctx.getImageData(0,0,correctedcanvas.width,correctedcanvas.height));
@@ -482,7 +484,7 @@ function stopSession()
   if (currentAnchor !== null)
     addARAnnotation(anchorPoints.length-1);
   sessionStopped = true;
-  console.log('stopSession');
+  //console.log('stopSession');
   if (mediaRecorder)
     mediaRecorder.stop();
   if (videoRecorder)
@@ -493,16 +495,20 @@ function downloadARAnnotations(e)
 {
   e.preventDefault();
   let button = e.target;
-  button.innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i> Zipping';
+  //button.innerHTML = '<i class="fa fa-circle-o-notch fa-spin"></i> Zipping';
   button.disabled = true;
   if (anchorPoints.length === 0)
   {
-    Swal.fire({title:'Nothing to Zip',text:'No anchor points were added yet'}).then(e => {button.textContent = 'Download';
-    button.disabled = false;}).catch();
-    return;
+    Swal.fire({title:'Nothing to Zip',text:'No anchor points were added yet'}).then(e => {
+      button.textContent = 'Download';
+      button.disabled = false;
+    }).catch();
   }
-
-  var zip = new JSZip();
+  else {
+    setTimeout(function () { button.disabled = false;},1000);
+    download(JSON.stringify(anchorPoints),'screenar.json','application/json');
+  }
+  /*var zip = new JSZip();
   let uuid = uuidv4();
   var img = zip.folder(uuid);
   img.file("rec.json", JSON.stringify(anchorPoints));
@@ -521,7 +527,16 @@ function downloadARAnnotations(e)
       dlAnchorElem.setAttribute('download', 'screenar.zip');
       dlAnchorElem.click();
     });
- });
+ });*/
+}
+
+// from https://stackoverflow.com/questions/34156282/how-do-i-save-json-to-local-text-file
+function download(content, fileName, contentType) {
+    var a = document.createElement("a");
+    var file = new Blob([content], {type: contentType});
+    a.href = URL.createObjectURL(file);
+    a.download = fileName;
+    a.click();
 }
 
 function captureImage()
@@ -530,7 +545,8 @@ function captureImage()
     addARAnnotation(anchorPoints.length-1);
   let lastImageSrc = correctedcanvas.toDataURL('image/jpeg',0.8);
   console.log('captureImage');
-  currentAnchor = {points:[],src:lastImageSrc,timestamp:new Date().getTime()/1000}
+  let timeSinceStart = (new Date().getTime() - sessionStartedAtTime) / 1000;
+  currentAnchor = {points:[],src:lastImageSrc,timestamp:timeSinceStart};
   anchorPoints.push(currentAnchor);
 
   /*if (wrtc && wrtc.sendChannel)
@@ -1027,11 +1043,17 @@ function mergeAll(array) {
   return array.filter(a => a !== null);
 }
 
+//let blurRadius = 5;
 function canny(canvas,showcanny,showboxes)
 {
   let ctx = canvas.getContext('2d');
   let img_u8 = new jsfeat.matrix_t(canvas.width, canvas.height, jsfeat.U8C1_t);
   let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+  /*var gray1 = tracking.Image.grayscale(tracking.Image.blur(imageData.data, canvas.width, canvas.height, blurRadius), canvas.width, canvas.height);
+  var corners1 = tracking.Fast.findCorners(gray1, canvas.width, canvas.height);
+  var descriptors1 = tracking.Brief.getDescriptors(gray1, canvas.width, corners1);
+  let boxes = [];*/
   jsfeat.imgproc.grayscale(imageData.data, canvas.width, canvas.height, img_u8);
   var r = 1;
   var kernel_size = (r+1) << 1;
@@ -1079,6 +1101,12 @@ function canny(canvas,showcanny,showboxes)
       ctx.strokeRect(item.x1,item.y1,w,h);
     });
   }
+
+  /*ctx.fillStyle = 'yellow';
+  for (let i=0;i<corners1.length;i+=2)
+  {
+    ctx.fillRect(corners1[i],corners1[i+1],4,4);
+  }*/
   return boxes;
 }
 
