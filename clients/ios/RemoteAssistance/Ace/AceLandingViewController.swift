@@ -28,6 +28,10 @@ class AceLandingViewController : UIViewController {
         self.navigationController?.pushViewController(vc)
     }
     
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
+    }
+    
     @IBAction func onChatBtn(_ sender: Any) {
         let vc  = ChatViewController.instantiate(fromAppStoryboard: .Main)
         self.navigationController?.pushViewController(vc)
