@@ -41,8 +41,6 @@
 		D7AF6A0823C9151C005B67D8 /* AceARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AF6A0723C9151C005B67D8 /* AceARViewController.swift */; };
 		D7AF6A0A23C936DE005B67D8 /* AceSketchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7AF6A0923C936DE005B67D8 /* AceSketchViewController.swift */; };
 		D7B006B7243F953C00B32D70 /* AceDCLandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B006B6243F953C00B32D70 /* AceDCLandingViewController.swift */; };
-		D7DA20D723AAE7CA005B1357 /* WA3DLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7DA20CD23AAE255005B1357 /* WA3DLib.framework */; settings = {ATTRIBUTES = (Required, ); }; };
-		D7DA20D823AAE7CA005B1357 /* WA3DLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D7DA20CD23AAE255005B1357 /* WA3DLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D7DA31EB239ECFCE00D1B73F /* SCNVector3+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E1239ECFCE00D1B73F /* SCNVector3+Extensions.swift */; };
 		D7DA31EC239ECFCE00D1B73F /* UIView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E2239ECFCE00D1B73F /* UIView+Extensions.swift */; };
 		D7DA31ED239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E3239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift */; };
@@ -90,20 +88,6 @@
 			remoteInfo = RemoteAssistance;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		D7DA20D923AAE7CA005B1357 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				D7DA20D823AAE7CA005B1357 /* WA3DLib.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2903F780242D2DBD00226392 /* AceVirtualText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceVirtualText.swift; sourceTree = "<group>"; };
@@ -187,7 +171,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D7DA20D723AAE7CA005B1357 /* WA3DLib.framework in Frameworks */,
 				EEAD9CEAB1D2D56D6FE29BC5 /* Pods_RemoteAssistance.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -437,7 +420,6 @@
 				D7455DB02368BE77001594FA /* Sources */,
 				D7455DB12368BE77001594FA /* Frameworks */,
 				D7455DB22368BE77001594FA /* Resources */,
-				D7DA20D923AAE7CA005B1357 /* Embed Frameworks */,
 				D06192CCA272AF7EB28AEC10 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
