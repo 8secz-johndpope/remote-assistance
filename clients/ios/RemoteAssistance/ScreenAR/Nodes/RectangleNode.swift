@@ -3,7 +3,6 @@ import UIKit
 import SceneKit
 import ARKit
 import Vision
-import WebKit
 
 private let meters2inches = CGFloat(39.3701)
 

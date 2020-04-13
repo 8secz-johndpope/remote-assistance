@@ -130,7 +130,7 @@ extension AceARViewController {
         self.textObjects[identifier] = textObject
         self.textObjects[identifier]?.identifier = identifier
         var pointerObject = AceVirtualObject.object(byName: "\(pointerName).scn")
-
+        
         if self.pointerObjects.count > 0 && !self.pointerObjects.has(key: identifier) {
             pointerObject = pointerObject?.clone()
             print("new object")

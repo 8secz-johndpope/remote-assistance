@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -427,6 +427,35 @@
             </objects>
             <point key="canvasLocation" x="1161" y="1621"/>
         </scene>
+        <!--Ace Animator View Controller-->
+        <scene sceneID="oAW-bR-d1g">
+            <objects>
+                <viewController storyboardIdentifier="AceAnimatorViewController" id="w9J-GH-d7o" customClass="AceAnimatorViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Qci-FL-rHN">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Oz2-CU-pfB">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            </arscnView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="Oz2-CU-pfB" firstAttribute="centerY" secondItem="Qci-FL-rHN" secondAttribute="centerY" id="Dap-pl-duX"/>
+                            <constraint firstItem="Oz2-CU-pfB" firstAttribute="top" secondItem="Qci-FL-rHN" secondAttribute="topMargin" constant="-44" id="NOz-NZ-oHC"/>
+                            <constraint firstItem="Oz2-CU-pfB" firstAttribute="centerX" secondItem="Qci-FL-rHN" secondAttribute="centerX" id="j0g-0g-Udd"/>
+                            <constraint firstItem="Oz2-CU-pfB" firstAttribute="leading" secondItem="QhH-FK-l76" secondAttribute="leading" id="krf-pf-eHx"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="QhH-FK-l76"/>
+                    </view>
+                    <connections>
+                        <outlet property="sceneView" destination="Oz2-CU-pfB" id="PxS-8e-jZO"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sWx-1E-m4C" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1958" y="1621"/>
+        </scene>
         <!--Ace Assistant-->
         <scene sceneID="XLe-2N-PZD">
             <objects>
@@ -578,20 +607,20 @@
     <resources>
         <image name="FxpalLogo" width="622" height="376"/>
         <image name="Logo" width="2000" height="2000"/>
-        <image name="eyeglasses" catalog="system" width="64" height="26"/>
-        <image name="gear" catalog="system" width="64" height="58"/>
-        <image name="headphones" catalog="system" width="64" height="52"/>
-        <image name="list.dash" catalog="system" width="64" height="42"/>
-        <image name="magnifyingglass" catalog="system" width="64" height="56"/>
-        <image name="message.fill" catalog="system" width="64" height="56"/>
-        <image name="mic" catalog="system" width="54" height="64"/>
-        <image name="mic.slash" catalog="system" width="56" height="64"/>
-        <image name="person.crop.rectangle" catalog="system" width="64" height="46"/>
-        <image name="perspective" catalog="system" width="64" height="60"/>
-        <image name="phone.down.fill" catalog="system" width="64" height="26"/>
-        <image name="qrcode" catalog="system" width="64" height="56"/>
-        <image name="speaker" catalog="system" width="64" height="60"/>
-        <image name="video" catalog="system" width="64" height="40"/>
-        <image name="xmark.circle.fill" catalog="system" width="64" height="60"/>
+        <image name="eyeglasses" catalog="system" width="128" height="54"/>
+        <image name="gear" catalog="system" width="128" height="119"/>
+        <image name="headphones" catalog="system" width="128" height="107"/>
+        <image name="list.dash" catalog="system" width="128" height="85"/>
+        <image name="magnifyingglass" catalog="system" width="128" height="115"/>
+        <image name="message.fill" catalog="system" width="128" height="113"/>
+        <image name="mic" catalog="system" width="108" height="128"/>
+        <image name="mic.slash" catalog="system" width="112" height="128"/>
+        <image name="person.crop.rectangle" catalog="system" width="128" height="93"/>
+        <image name="perspective" catalog="system" width="128" height="122"/>
+        <image name="phone.down.fill" catalog="system" width="128" height="52"/>
+        <image name="qrcode" catalog="system" width="128" height="114"/>
+        <image name="speaker" catalog="system" width="128" height="121"/>
+        <image name="video" catalog="system" width="128" height="83"/>
+        <image name="xmark.circle.fill" catalog="system" width="128" height="121"/>
     </resources>
 </document>

@@ -126,9 +126,6 @@ class AceARViewController : UIViewController {
 //        configuration.detectionImages = refImages
         configuration.maximumNumberOfTrackedImages = 1
         
-        // search for objects to annotate
-//        self.searchForObjects()
-
         // Run the view's session
         self.arView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking, .stopTrackedRaycasts])
     }

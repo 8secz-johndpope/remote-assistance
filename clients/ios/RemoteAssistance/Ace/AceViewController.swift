@@ -111,7 +111,7 @@ class AceViewController : UIViewController {
                 handsVC?.view.isHidden = false
                 break
             case "sketch":
-                arVC?.searchForObjects()
+//                arVC?.searchForObjects()
                 sketchVC?.view.isHidden = false
                 break
             case "pointer":

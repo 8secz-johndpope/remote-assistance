@@ -22,6 +22,10 @@ class AceLandingViewController : UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(true, animated: animated)
+        
+        // Temporary switch to AceAnimatorViewController
+        let vc = AceAnimatorViewController.instantiate(fromAppStoryboard: .Ace)
+        self.navigationController?.pushViewController(vc)
     }
     
     @IBAction func onChatBtn(_ sender: Any) {

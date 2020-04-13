@@ -12,6 +12,7 @@
 		2941BECC23C9165F00AE3A4F /* clip1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2941BEC923C9165F00AE3A4F /* clip1.mp4 */; };
 		2941BECD23C9165F00AE3A4F /* clip2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2941BECA23C9165F00AE3A4F /* clip2.mp4 */; };
 		2959E0DF23C660BB00D0F98E /* ARSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2959E0DE23C660BB00D0F98E /* ARSceneViewController.swift */; };
+		29604992243FC6C10042B31A /* AceAnimatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29604991243FC6C10042B31A /* AceAnimatorViewController.swift */; };
 		2984E5112418216D00AA0B9C /* 3DPrinter2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2984E50E2418216B00AA0B9C /* 3DPrinter2.mp4 */; };
 		2984E5122418216D00AA0B9C /* 3DPrinter1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2984E50F2418216C00AA0B9C /* 3DPrinter1.mp4 */; };
 		2984E5132418216D00AA0B9C /* 3DPrinter3.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2984E5102418216D00AA0B9C /* 3DPrinter3.mp4 */; };
@@ -109,6 +110,7 @@
 		2941BEC923C9165F00AE3A4F /* clip1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = clip1.mp4; sourceTree = "<group>"; };
 		2941BECA23C9165F00AE3A4F /* clip2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = clip2.mp4; sourceTree = "<group>"; };
 		2959E0DE23C660BB00D0F98E /* ARSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSceneViewController.swift; sourceTree = "<group>"; };
+		29604991243FC6C10042B31A /* AceAnimatorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceAnimatorViewController.swift; sourceTree = "<group>"; };
 		297D37C623EB7E7200499CFA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		2984E50E2418216B00AA0B9C /* 3DPrinter2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3DPrinter2.mp4; sourceTree = "<group>"; };
 		2984E50F2418216C00AA0B9C /* 3DPrinter1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3DPrinter1.mp4; sourceTree = "<group>"; };
@@ -322,6 +324,7 @@
 				D7167ED223D8CDA900655A42 /* AceLandingViewController.swift */,
 				D753162923D926C200D686EC /* AceAPI.swift */,
 				D7031AF923E8EED80062A637 /* AceClipThumbnail.swift */,
+				29604991243FC6C10042B31A /* AceAnimatorViewController.swift */,
 			);
 			path = Ace;
 			sourceTree = "<group>";
@@ -626,6 +629,7 @@
 				D7DA31ED239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift in Sources */,
 				D7031AFA23E8EED80062A637 /* AceClipThumbnail.swift in Sources */,
 				D7167ED323D8CDA900655A42 /* AceLandingViewController.swift in Sources */,
+				29604992243FC6C10042B31A /* AceAnimatorViewController.swift in Sources */,
 				AD43D0CE23C68E5500AA4D24 /* QRCodeScanner.swift in Sources */,
 				D7DA31EC239ECFCE00D1B73F /* UIView+Extensions.swift in Sources */,
 				D795E76623A2E64800E97162 /* ChatViewController.swift in Sources */,

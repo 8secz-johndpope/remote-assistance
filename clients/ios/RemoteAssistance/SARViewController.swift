@@ -4,7 +4,6 @@ import ARKit
 import Vision
 //import Swifter
 //import Fritz
-//import WebKit
 import WebRTC
 
 //let use_fritz = false
@@ -106,6 +105,10 @@ class SARViewController: UIViewController, ARSCNViewDelegate, ARSessionDelegate 
     func initWebRTCClient() {
         self.wrtc = WRTCClient()
         self.wrtc.delegate = self
+        
+        // TODO: Remove these 2 lines
+        self.wrtc.enableSpeaker(false)
+        self.wrtc.setAudioEnabled(false)
     }
 
     /*func createHandMaskNode() {
