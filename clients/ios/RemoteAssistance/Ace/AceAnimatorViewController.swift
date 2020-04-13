@@ -24,9 +24,10 @@ class AceAnimatorViewController: UIViewController, ARSCNViewDelegate {
     var anchorFound = false
     var nodeFound:SCNNode?
     var copierNode:AceVirtualObject?
-    var lastNodeDisplayed:Int = 0
+    var lastTonerNOde:AceVirtualObject?
+    var lastSceneDisplayed:Int = 0
     
-    let graphPoints = ["pull-out-thing", "toner-1", "toner-2", "toner-3", "toner-4"]
+    let sceneNames = ["Copier.scn", "Toner1.scn", "Toner2.scn", "Toner3.scn", "Toner4.scn"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +36,6 @@ class AceAnimatorViewController: UIViewController, ARSCNViewDelegate {
         self.configuration.automaticImageScaleEstimationEnabled = true
         self.objectGroupName = "VariousPrinters"
         self.imageGroupName = "AR Resources"
-        self.copierNode = AceVirtualObject.object(byName: "Copier.scn")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -58,24 +58,25 @@ class AceAnimatorViewController: UIViewController, ARSCNViewDelegate {
     @objc func onTap(_ gesture: UITapGestureRecognizer) {
         print("onTap from ARSceneViewController")
 
-//        let location = gesture.location(in: self.sceneView)
-//
-//        let hitResults = self.renderer?.hitTest(location, options:nil)
-//        if let hit = hitResults?.first {
-//            _ = hit.node
-//        }
-        
         DispatchQueue.main.async {
-            let childNodes = self.copierNode?.childNodes
-            self.lastNodeDisplayed += 1
-            if (self.lastNodeDisplayed < childNodes!.count) {
-                let child = childNodes![self.lastNodeDisplayed]
-                child.scale = SCNVector3(5, 5, 5)
-                child.position = SCNVector3(+0.125,-0.25,-0.2)
-                self.nodeFound?.addChildNode(child)
+
+            self.lastSceneDisplayed += 1
+            if self.anchorFound && (self.lastSceneDisplayed < self.sceneNames.count) {
+                print(self.sceneNames[self.lastSceneDisplayed])
+                let tonerNode = AceVirtualObject.object(byName: self.sceneNames[self.lastSceneDisplayed])
+                if let _ = self.lastTonerNOde {
+                    tonerNode!.position = SCNVector3(0.0054, 0.0, 0.0)
+                    self.lastTonerNOde?.addChildNode(tonerNode!)
+                }
+                else {
+                    tonerNode!.scale = SCNVector3(0.9, 0.9, 0.9)
+                    tonerNode!.position = SCNVector3(-0.0175, +0.071, 0.05)
+                    self.copierNode?.addChildNode(tonerNode!)
+                }
+                self.lastTonerNOde = tonerNode
             }
             else {
-                print("no more children \(self.lastNodeDisplayed-1)")
+                print("no more scenes")
             }
         }
     }
@@ -123,36 +124,14 @@ class AceAnimatorViewController: UIViewController, ARSCNViewDelegate {
                 self.showToast(message: "Found image anchor: \(String(describing: anchor.name))")
                 DispatchQueue.main.async {
 
-//                    do {
-                        let url:URL = self.getModelUrl(name: "Copier.scn")!
-                        let source = SCNSceneSource(url: url, options: nil)
-                    let identifiers = source!.identifiersOfEntries(withClass: SCNNode.self)
-                    let copier = source?.entryWithIdentifier("toner-1", withClass: SCNNode.self)
-//                        let copier = source!.entryWithIdentifier("toner-1", withClass: SCNNode.self)!
-                    node.addChildNode(copier!)
-//                        let copierScene = try SCNScene(url: url, options: nil)
-//                        self.sceneView.scene = copierScene
-
-//                    }
-//                    catch {
-//                        print("It barfed")
-//                    }
-                    
-//                    if let url = self.getModelUrl(name: "Copier.scn") {
-//                        let source = SCNSceneSource(url: url, options: nil)
-//                        let copier = source!.entryWithIdentifier("toner-1", withClass: SCNNode.self)!
-//                        node.addChildNode(copier)
-//                    }
-                    
-//                    let orientationNode = SCNNode()
-//                    orientationNode.eulerAngles = SCNVector3(x:-Float.pi/2, y:0, z:0)
-//                    node.addChildNode(orientationNode)
-//                    self.nodeFound = orientationNode
-//                    self.copierNode = AceVirtualObject.object(byName: "Copier.scn")
-//                    self.copierNode!.scale = SCNVector3(5, 5, 5)
-//                    self.copierNode!.position = SCNVector3(+0.125,-0.25,-0.2)
-//
-//                    self.nodeFound?.addChildNode(self.copierNode!)
+                    let orientationNode = SCNNode()
+                    orientationNode.eulerAngles = SCNVector3(x:-Float.pi/2, y:0, z:0)
+                    node.addChildNode(orientationNode)
+                    self.nodeFound = orientationNode
+                    self.copierNode = AceVirtualObject.object(byName: self.sceneNames[self.lastSceneDisplayed])
+                    self.copierNode!.scale = SCNVector3(5, 5, 5)
+                    self.copierNode!.position = SCNVector3(+0.125,-0.25,-0.2)
+                    self.nodeFound?.addChildNode(self.copierNode!)
                 }
             }
             
