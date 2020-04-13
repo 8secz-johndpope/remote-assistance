@@ -18,8 +18,8 @@ class AceDCLandingViewController : UIViewController {
             labelVersion.text = "Version: \(version)"
         }
 
-//        btnChat.setTitle("DIGITAL\nCOMPANION", for: .normal)
         btnChat.titleLabel?.numberOfLines = 2
+        btnChat.imageView?.contentMode = .scaleAspectFit
     }
     
     override func viewWillAppear(_ animated: Bool) {
