@@ -50,7 +50,6 @@
 		D7DA31F0239ECFCE00D1B73F /* SurfaceNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E7239ECFCE00D1B73F /* SurfaceNode.swift */; };
 		D7DA31F1239ECFCE00D1B73F /* PlaneRectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E8239ECFCE00D1B73F /* PlaneRectangle.swift */; };
 		D7DA31F2239ECFCE00D1B73F /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E9239ECFCE00D1B73F /* Message.swift */; };
-		D7DA31F4239ED04600D1B73F /* SARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31F3239ED04600D1B73F /* SARViewController.swift */; };
 		D7DB69EB236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Right.dae in Resources */ = {isa = PBXBuildFile; fileRef = D7DB69DD236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Right.dae */; };
 		D7DB69EF236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Left.dae in Resources */ = {isa = PBXBuildFile; fileRef = D7DB69E1236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Left.dae */; };
 		D7DB69F0236DE2D500D7C367 /* materialdesignicons-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D7DB69E2236DE2D500D7C367 /* materialdesignicons-webfont.ttf */; };
@@ -146,7 +145,6 @@
 		D7DA31E7239ECFCE00D1B73F /* SurfaceNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SurfaceNode.swift; sourceTree = "<group>"; };
 		D7DA31E8239ECFCE00D1B73F /* PlaneRectangle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaneRectangle.swift; sourceTree = "<group>"; };
 		D7DA31E9239ECFCE00D1B73F /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
-		D7DA31F3239ED04600D1B73F /* SARViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SARViewController.swift; sourceTree = "<group>"; };
 		D7DB69DD236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Right.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = Leapmotion_Handsolo_Rig_Right.dae; sourceTree = "<group>"; };
 		D7DB69E1236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Left.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = Leapmotion_Handsolo_Rig_Left.dae; sourceTree = "<group>"; };
 		D7DB69E2236DE2D500D7C367 /* materialdesignicons-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "materialdesignicons-webfont.ttf"; sourceTree = "<group>"; };
@@ -262,7 +260,6 @@
 				D795E76523A2E64800E97162 /* ChatViewController.swift */,
 				AD43D0CD23C68E5500AA4D24 /* QRCodeScanner.swift */,
 				D7DB6A0D236DE91D00D7C367 /* SettingsViewController.swift */,
-				D7DA31F3239ED04600D1B73F /* SARViewController.swift */,
 				D7AF69FE23C8F0D0005B67D8 /* AppStoryboard.swift */,
 				D7AF6A0223C8FCDB005B67D8 /* Ace */,
 				2959E0DD23C65B6300D0F98E /* ObjectAnnotation */,
@@ -603,7 +600,6 @@
 				D7F39EC924099CC600911934 /* OCRScanner.swift in Sources */,
 				D7EAD85923D6684800EE1A56 /* AceVirtualObject.swift in Sources */,
 				D7455DBA2368BE77001594FA /* ViewController.swift in Sources */,
-				D7DA31F4239ED04600D1B73F /* SARViewController.swift in Sources */,
 				D7B006B7243F953C00B32D70 /* AceDCLandingViewController.swift in Sources */,
 				D7DB6A0C236DE7C700D7C367 /* AceState.swift in Sources */,
 				D7DB6A06236DE6CC00D7C367 /* TSRemoteHands.swift in Sources */,
