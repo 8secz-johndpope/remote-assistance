@@ -23,14 +23,23 @@ class ChatViewController: UIViewController {
         webView.load(request)
         webView.navigationDelegate = self
         
+        //let c = uicolorFromHex(rgbValue: 0x004c83)
         let c = UIColor(red: 0.30, green: 0.30, blue: 0.30, alpha: 1.0)
-        navigationController?.navigationBar.barStyle = UIBarStyle.black
+        navigationController?.navigationBar.tintColor = c
         navigationController?.navigationBar.barTintColor = c
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+
+    func uicolorFromHex(rgbValue:UInt32)->UIColor{
+        let red = CGFloat((rgbValue & 0xFF0000) >> 16)/256.0
+        let green = CGFloat((rgbValue & 0xFF00) >> 8)/256.0
+        let blue = CGFloat(rgbValue & 0xFF)/256.0
+
+        return UIColor(red:red, green:green, blue:blue, alpha:1.0)
     }
     
     func generateRandomId(_ length:Int = 9) -> String {
