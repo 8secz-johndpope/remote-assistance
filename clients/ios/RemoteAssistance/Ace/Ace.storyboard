@@ -455,8 +455,8 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sWx-1E-m4C" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1958" y="1621"/>
-        <!--Digital Companion-->
         </scene>
+        <!--Digital Companion-->
         <scene sceneID="cfH-6X-Kv1">
             <objects>
                 <viewController storyboardIdentifier="AceDCLandingViewController" id="4Rf-qs-vCv" customClass="AceDCLandingViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
@@ -513,7 +513,7 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CS3-ja-Slx">
-                                        <rect key="frame" x="25" y="26" width="329" height="100"/>
+                                        <rect key="frame" x="23" y="26" width="329" height="100"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="tintColor" red="0.0053730043580000001" green="0.29055434470000002" blue="0.51832705739999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -549,7 +549,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lwP-hR-KJR">
-                                        <rect key="frame" x="25" y="145" width="329" height="62"/>
+                                        <rect key="frame" x="23" y="145" width="329" height="62"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="23"/>

@@ -22,6 +22,10 @@ class ChatViewController: UIViewController {
         webView.configuration.userContentController.add(self, name: "launchOCRScanner")
         webView.load(request)
         webView.navigationDelegate = self
+        
+        let c = UIColor(red: 0.30, green: 0.30, blue: 0.30, alpha: 1.0)
+        navigationController?.navigationBar.barStyle = UIBarStyle.black
+        navigationController?.navigationBar.barTintColor = c
     }
     
     override func viewWillAppear(_ animated: Bool) {
