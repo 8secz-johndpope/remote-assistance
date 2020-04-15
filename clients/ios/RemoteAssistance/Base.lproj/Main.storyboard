@@ -128,7 +128,6 @@
                                     <action selector="scanUrlButtonClick:" destination="eo0-vv-RPq" eventType="touchUpInside" id="ksn-kS-Fek"/>
                                 </connections>
                             </button>
-<<<<<<< HEAD
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -143,34 +142,6 @@
                             <constraint firstItem="bqX-Qg-A9M" firstAttribute="top" secondItem="Asd-xH-EDc" secondAttribute="bottom" constant="36" id="peL-Fr-V1n"/>
                             <constraint firstItem="Asd-xH-EDc" firstAttribute="leading" secondItem="Oow-Cu-wuh" secondAttribute="leading" id="qat-Oc-88X"/>
                             <constraint firstItem="rXt-tp-uvj" firstAttribute="top" secondItem="bqX-Qg-A9M" secondAttribute="bottom" constant="8" id="xaU-6U-sG6"/>
-=======
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="414" placeholderIntrinsicHeight="643" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Asd-xH-EDc">
-                                <rect key="frame" x="-19" y="88" width="414" height="458"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </tableView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="FxpalLogo" translatesAutoresizingMaskIntoConstraints="NO" id="rXt-tp-uvj">
-                                <rect key="frame" x="125" y="690" width="165" height="88"/>
-                            </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="© 2020 FX Palo Alto Laboratory, Inc." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="77z-H1-NoH">
-                                <rect key="frame" x="-19" y="702" width="414" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="77z-H1-NoH" firstAttribute="leading" secondItem="bqX-Qg-A9M" secondAttribute="leading" id="2SJ-JJ-eZJ"/>
-                            <constraint firstItem="77z-H1-NoH" firstAttribute="trailing" secondItem="bqX-Qg-A9M" secondAttribute="trailing" id="KZk-bD-Irs"/>
-                            <constraint firstItem="Asd-xH-EDc" firstAttribute="top" secondItem="Oow-Cu-wuh" secondAttribute="top" id="PnW-iX-TFn"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="rXt-tp-uvj" secondAttribute="bottom" constant="-49" id="csw-7O-Tjr"/>
-                            <constraint firstItem="rXt-tp-uvj" firstAttribute="top" secondItem="bqX-Qg-A9M" secondAttribute="bottom" constant="92" id="f5o-8q-Pru"/>
-                            <constraint firstItem="bqX-Qg-A9M" firstAttribute="top" secondItem="Asd-xH-EDc" secondAttribute="bottom" constant="8" id="fcz-Kl-zCl"/>
-                            <constraint firstItem="Oow-Cu-wuh" firstAttribute="trailing" secondItem="rXt-tp-uvj" secondAttribute="trailing" constant="85" id="foV-OS-bsV"/>
-                            <constraint firstItem="rXt-tp-uvj" firstAttribute="leading" secondItem="Oow-Cu-wuh" secondAttribute="leading" constant="125" id="frF-xY-rm1"/>
-                            <constraint firstItem="Oow-Cu-wuh" firstAttribute="bottom" secondItem="77z-H1-NoH" secondAttribute="bottom" constant="6" id="qE6-kD-gSH"/>
-                            <constraint firstItem="Asd-xH-EDc" firstAttribute="leading" secondItem="bqX-Qg-A9M" secondAttribute="leading" id="vMq-qV-WNN"/>
->>>>>>> f593c3e98af8201ec28975ca23b2163afe9a781a
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Oow-Cu-wuh"/>
                     </view>
@@ -299,9 +270,6 @@
         <image name="gear" catalog="system" width="128" height="119"/>
         <image name="hand.draw.fill" catalog="system" width="128" height="107"/>
         <image name="message" catalog="system" width="128" height="113"/>
-<<<<<<< HEAD
         <image name="perspective" catalog="system" width="128" height="122"/>
-=======
->>>>>>> f593c3e98af8201ec28975ca23b2163afe9a781a
     </resources>
 </document>

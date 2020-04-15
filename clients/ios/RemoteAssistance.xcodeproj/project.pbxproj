@@ -18,6 +18,7 @@
 		2984E5132418216D00AA0B9C /* 3DPrinter3.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2984E5102418216D00AA0B9C /* 3DPrinter3.mp4 */; };
 		AD43D0CE23C68E5500AA4D24 /* QRCodeScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD43D0CD23C68E5500AA4D24 /* QRCodeScanner.swift */; };
 		D7031AFA23E8EED80062A637 /* AceClipThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7031AF923E8EED80062A637 /* AceClipThumbnail.swift */; };
+		D70FE3CD2447BF9E00E3A709 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D70FE3CC2447BF9E00E3A709 /* UIImageExtension.swift */; };
 		D7167ED323D8CDA900655A42 /* AceLandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7167ED223D8CDA900655A42 /* AceLandingViewController.swift */; };
 		D7249D4423D9804B004BDD71 /* AceAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7249D4323D9804B004BDD71 /* AceAPITests.swift */; };
 		D7455DB82368BE77001594FA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7455DB72368BE77001594FA /* AppDelegate.swift */; };
@@ -105,6 +106,7 @@
 		55C9CD29027533AEC28E2B0C /* Pods-RemoteAssistance.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.release.xcconfig"; path = "Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.release.xcconfig"; sourceTree = "<group>"; };
 		AD43D0CD23C68E5500AA4D24 /* QRCodeScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeScanner.swift; sourceTree = "<group>"; };
 		D7031AF923E8EED80062A637 /* AceClipThumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceClipThumbnail.swift; sourceTree = "<group>"; };
+		D70FE3CC2447BF9E00E3A709 /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		D7167ED223D8CDA900655A42 /* AceLandingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceLandingViewController.swift; sourceTree = "<group>"; };
 		D7249D4323D9804B004BDD71 /* AceAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceAPITests.swift; sourceTree = "<group>"; };
 		D7455DB42368BE77001594FA /* RemoteAssistance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RemoteAssistance.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -386,6 +388,7 @@
 				D7DB6A03236DE6AA00D7C367 /* SocketIOManager.swift */,
 				D7DB69F7236DE35100D7C367 /* WRTCClient.swift */,
 				D7DB69E4236DE2D500D7C367 /* Redux */,
+				D70FE3CC2447BF9E00E3A709 /* UIImageExtension.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -612,6 +615,7 @@
 				2959E0DF23C660BB00D0F98E /* ARSceneViewController.swift in Sources */,
 				D7AF6A0423C8FD8D005B67D8 /* AceUIViewController.swift in Sources */,
 				D7DA31ED239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift in Sources */,
+				D70FE3CD2447BF9E00E3A709 /* UIImageExtension.swift in Sources */,
 				D7031AFA23E8EED80062A637 /* AceClipThumbnail.swift in Sources */,
 				D7945404243FC27A00EFA58C /* AceNavigationController.swift in Sources */,
 				D7167ED323D8CDA900655A42 /* AceLandingViewController.swift in Sources */,
