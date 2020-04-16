@@ -12,19 +12,19 @@ import Toast_Swift
 
 // AR Screen
 extension AceARViewController {
-    
+
     func initScreenAR() {
-        let overlayContent = self.loadHTML()
+        /*let overlayContent = self.loadHTML()
         self.webView = UIWebView(frame:CGRect(x:0,y:0,width: 640, height:480))
         //self.webView = WKWebView(frame:CGRect(x:0,y:0,width: 640, height:480))
         self.webView?.isOpaque = false
         self.webView?.backgroundColor = UIColor.clear
         self.webView?.scrollView.backgroundColor = UIColor.clear
         self.webView?.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.webView?.loadHTMLString(overlayContent, baseURL: nil)
+        self.webView?.loadHTMLString(overlayContent, baseURL: nil)*/
     }
 
-    func loadHTML() -> String
+    /*func loadHTML() -> String
     {
         do {
             if let filepath = Bundle.main.path(forResource: "overlay", ofType: "html") {
@@ -35,25 +35,23 @@ extension AceARViewController {
             return ""
         }
         return ""
-    }
+    }*/
     
     func drawCornerPoints(context: CGContext?, rect: CGRect, points: [CGPoint])
     {
         let markSize: CGFloat = 8
         
-        // draw an outline in BLACK around the frame
-        // to make sure the WHITE blocks will be detected
+        // draw an outline in black around the frame
         context?.setFillColor(red: 0, green: 0, blue: 0, alpha: 1)
-        // top border black
+         // top border black
         context?.fill(CGRect(x: 0, y: 0, width: rect.width, height: markSize))
-        // bottom border black
+         // bottom border black
         context?.fill(CGRect(x: 0, y: rect.height-markSize, width: rect.width, height: markSize))
-        // left border black
+         // left border black
         context?.fill(CGRect(x: 0, y: 0, width: markSize, height: rect.height))
-        // right border black
+         // right border black
         context?.fill(CGRect(x: rect.width-markSize, y: 0, width: markSize, height: rect.height))
 
-        // now use WHITE to draw the blocks encoding the 4 points
         context?.setFillColor(red: 255, green: 255, blue: 255, alpha: 1)
 
         let tl = points[2]
@@ -96,13 +94,41 @@ extension AceARViewController {
 //        }
     }
     
+    func screenAR(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        if let anchor = anchor as? ARImageAnchor {
+            // users might overlap the image anchor with their hands
+            // so we don't hide the node even when the image anchor is not tracked
+            if anchor.isTracked {
+                if (self.visibleNode != node)
+                {
+                    if let vis = self.visibleNode {
+                        vis.isHidden = true
+                    }
+                    node.isHidden = false;
+                    self.visibleNode = node
+                    //self.clearWebView() // clear webview because we detected a new ARImageAnchor
+                    if let rectNode = self.rectangleNodes[node] {
+                        rectNode.clearMarks()
+                    }
+                    print("new ref image tracked",anchor.name!)
+                }
+                //node.isHidden = false
+            }
+            else
+            {
+                print("ref image not tracked",anchor.name!)
+                //node.isHidden = true
+            }
+        }
+    }
+
     func screenAR(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         if let imageAnchor = anchor as? ARImageAnchor {
             print("found imageAnchor!")
             if imageAnchor.name?.hasPrefix("screenar") == true {
                 DispatchQueue.main.async {
                     print("adding rectanglenode for imageanchor")
-                    let rectangleNode = RectangleNode(imageAnchor: imageAnchor, rootNode: node, view: self.webView!)
+                    let rectangleNode = RectangleNode(imageAnchor: imageAnchor, rootNode: node)
                     self.rectangleNodes[node] = rectangleNode
                 }
             }

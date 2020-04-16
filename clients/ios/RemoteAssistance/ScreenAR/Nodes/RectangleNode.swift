@@ -8,50 +8,109 @@ private let meters2inches = CGFloat(39.3701)
 
 class RectangleNode: SCNNode {
     
+    private let markTextureRed = UIImage(named: "hollow-mark-red.png")
+    private let markTexture = UIImage(named: "hollow-mark.png")
+    private let borderTexture = UIImage(named: "hollow-border.png")
     private(set) var textureImage: UIImage?
-    private var timer:Timer?
-    private var view:UIView
+    //private var timer:Timer?
+    //private var view:UIView
     private var material:SCNMaterial = SCNMaterial()
     //let renderingOrderFirst = -1
 
-    convenience init(_ planeRectangle: PlaneRectangle, view: UIView) {
+    convenience init(_ planeRectangle: PlaneRectangle, /*view: UIView,*/ color: UIColor?) {
         self.init(center: planeRectangle.position,
         width: planeRectangle.size.width,
         height: planeRectangle.size.height,
-        orientation: planeRectangle.orientation, vertical: planeRectangle.verticalPlaneAnchor, view: view)//, vorientation: planeRectangle.verticalOrientation, anchor: planeRectangle.anchor)
+        orientation: planeRectangle.orientation, vertical: planeRectangle.verticalPlaneAnchor)
     }
     
-    init(imageAnchor: ARImageAnchor, rootNode: SCNNode, view: UIView)
+    init(imageAnchor: ARImageAnchor, rootNode: SCNNode)
     {
-        self.view = view
+        //self.view = view
         super.init()
-        //self.renderingOrder = renderingOrderFirst
 
-        let webViewMaterial = self.material
-        webViewMaterial.diffuse.contents = UIImage.init(view)
-        self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(RectangleNode.update), userInfo: nil, repeats: true)
         let width = imageAnchor.referenceImage.physicalSize.width
         let height = imageAnchor.referenceImage.physicalSize.height
-        //let planeNode = SCNNode()
+
         let planeGeometry = SCNPlane(width: width, height: height)
-        planeGeometry.materials = [webViewMaterial]
-        //planeGeometry.firstMaterial?.diffuse.contents = UIColor.white
-        //planeNode.opacity = 1.0
-        //planeNode.geometry = planeGeometry
+        planeGeometry.firstMaterial?.diffuse.contents = UIColor.clear
         self.geometry = planeGeometry
 
         // Rotate The PlaneNode To Horizontal
         //planeNode.eulerAngles.x = -.pi/2
         self.eulerAngles.x = -.pi/2
 
-        //planeNode.position.y = 0.05
-        // The Node Is Centered In The Anchor (0,0,0)
-        //rootNode.addChildNode(planeNode)
         rootNode.addChildNode(self)
-
         createCornerAnchors(imageAnchor: imageAnchor, rootNode: rootNode)
+        
+        self.showMark(px: 0, py: 0, pw: 1024, ph: 1024, name: "title")
     }
     
+    func clearMarks()
+    {
+        print("clearing all marks")
+        self.childNodes.forEach { (mark) in
+            if mark.name != "title" {
+                mark.removeFromParentNode()
+            }
+        }
+    }
+    // px,py,pw,ph are in 1024 of the width/height
+    func showMark(px: Int, py: Int, pw: Int, ph: Int, name: String)
+    {
+        self.clearMarks()
+        /*let min = self.boundingBox.min
+        let max = self.boundingBox.max
+        let nodew = CGFloat(max.x - min.x)
+        let nodeh = CGFloat(max.y - min.y)*/
+        if let plane: SCNPlane = self.geometry as! SCNPlane {
+            let nodew = plane.width
+            let nodeh = plane.height
+            let w = CGFloat(pw) * nodew / 1024;
+            let h = CGFloat(ph) * nodeh / 1024;
+            let cx = CGFloat(px+pw/2) * nodew / 1024 - nodew / 2; // because nodes are positioned relative to the center
+            let cy = CGFloat(1024-py-ph/2) * nodeh / 1024 - nodeh / 2; // because nodes are positioned relative to the center
+            //let boxNode = self.createBox(width: CGFloat(w), height: CGFloat(h), color: UIColor.yellow)
+            
+            let planeNode = SCNPlane(width: w, height: h)
+            let planeMaterial = SCNMaterial()
+            //green.diffuse.contents = UIColor.green
+            //planeNode.materials = [green]
+            
+            //let img = UIImage(named: "hollow-mark.png")
+            if name == "title"
+            {
+                planeMaterial.diffuse.contents = borderTexture
+            }
+            else
+            {
+                planeMaterial.diffuse.contents = markTextureRed
+            }
+            planeMaterial.colorBufferWriteMask = .all // needs to be alpha to show original image above instead of black on white mask, other value=.all
+            planeNode.materials = [planeMaterial]
+            let boxNode = SCNNode(geometry: planeNode)
+            boxNode.position = SCNVector3Make(Float(cx), Float(cy), 0)
+            boxNode.name = name
+            boxNode.opacity = 1
+            self.addChildNode(boxNode)
+            
+            /*let fadeIn = SCNAction.customAction(duration: 1) { (node, elapsedTime) -> () in
+                boxNode.opacity = elapsedTime / 1
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now()) {
+                boxNode.runAction(fadeIn)
+            }*/
+            
+            if name != "title"
+            {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    boxNode.geometry?.firstMaterial?.diffuse.contents = self.markTexture
+                }
+            }
+
+        }
+    }
     func updateARImageAnchor(_ anchor: ARImageAnchor) {
         print("update corners?")
     }
@@ -93,20 +152,15 @@ class RectangleNode: SCNNode {
         box.name = name
     }
 
-    init(center position: SCNVector3, width: CGFloat, height: CGFloat, orientation: Float, vertical: Bool, view: UIView)//, vorientation: Float, anchor: ARPlaneAnchor)
+    init(center position: SCNVector3, width: CGFloat, height: CGFloat, orientation: Float, vertical: Bool)
     {
-        self.view = view
+        //self.view = view
         super.init()
-        //self.renderingOrder = renderingOrderFirst
-        //print("orientation: \(orientation) position: \(position) width: \(width) (\(width * meters2inches)\") height: \(height) (\(height * meters2inches)\")")
         
-        // Create the 3D plane geometry with the dimensions calculated from corners
         let planeGeometry = SCNPlane(width: width, height: height)
-        let webViewMaterial = self.material
-        webViewMaterial.diffuse.contents = UIImage.init(view)
-        
-        self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(RectangleNode.update), userInfo: nil, repeats: true)
-        planeGeometry.materials = [webViewMaterial]
+        planeGeometry.firstMaterial?.diffuse.contents = UIColor.clear
+        self.geometry = planeGeometry
+
         var transform: SCNMatrix4
         if (vertical) {
             print("vorientation=vertical")
@@ -125,32 +179,16 @@ class RectangleNode: SCNNode {
         //print("position=",position)
         self.position = position
         //self.position.y += 0.001
+        self.showMark(px: 0, py: 0, pw: 1024, ph: 1024, name: "title")
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    @objc
-    func update() {
-        DispatchQueue.main.async {
-            self.material.diffuse.contents = UIImage.init(self.view)
-            /*let v = self.view as! WKWebView
-            v.takeSnapshot(with: nil) { (image, err) in
-                if (err != nil) {
-                    print("error takeSnapshot wkwebview",err!)
-                }
-                else if image != nil {
-                    self.material.diffuse.contents = image
-                }
-            }*/
-
-        }
-    }
 }
 
 
-extension UIImage {
+/*extension UIImage {
     convenience init(_ view: UIView) {
         UIGraphicsBeginImageContext(view.frame.size)
         view.layer.render(in:UIGraphicsGetCurrentContext()!)
@@ -158,7 +196,7 @@ extension UIImage {
         UIGraphicsEndImageContext()
         self.init(cgImage: image!.cgImage!)
     }
-}
+}*/
 
 private class CornerTrackingNode: SCNNode {
 

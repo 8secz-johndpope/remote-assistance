@@ -70,6 +70,9 @@
 		D7EAD85B23D66ABC00EE1A56 /* Models.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = D7EAD85A23D66ABC00EE1A56 /* Models.scnassets */; };
 		D7F39EC924099CC600911934 /* OCRScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F39EC824099CC600911934 /* OCRScanner.swift */; };
 		EEAD9CEAB1D2D56D6FE29BC5 /* Pods_RemoteAssistance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33CD05DAC9A4FFE0F7D651A9 /* Pods_RemoteAssistance.framework */; };
+		F99E39E12448AC6C006F014B /* hollow-mark-red.png in Resources */ = {isa = PBXBuildFile; fileRef = F99E39DE2448AC6C006F014B /* hollow-mark-red.png */; };
+		F99E39E22448AC6C006F014B /* hollow-border.png in Resources */ = {isa = PBXBuildFile; fileRef = F99E39DF2448AC6C006F014B /* hollow-border.png */; };
+		F99E39E32448AC6C006F014B /* hollow-mark.png in Resources */ = {isa = PBXBuildFile; fileRef = F99E39E02448AC6C006F014B /* hollow-mark.png */; };
 		F9A7B77B23D0F39300F518C0 /* overlay.html in Resources */ = {isa = PBXBuildFile; fileRef = F9A7B77A23D0F39300F518C0 /* overlay.html */; };
 /* End PBXBuildFile section */
 
@@ -165,6 +168,9 @@
 		D7EAD85823D6684800EE1A56 /* AceVirtualObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceVirtualObject.swift; sourceTree = "<group>"; };
 		D7EAD85A23D66ABC00EE1A56 /* Models.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Models.scnassets; sourceTree = "<group>"; };
 		D7F39EC824099CC600911934 /* OCRScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRScanner.swift; sourceTree = "<group>"; };
+		F99E39DE2448AC6C006F014B /* hollow-mark-red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hollow-mark-red.png"; sourceTree = "<group>"; };
+		F99E39DF2448AC6C006F014B /* hollow-border.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hollow-border.png"; sourceTree = "<group>"; };
+		F99E39E02448AC6C006F014B /* hollow-mark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hollow-mark.png"; sourceTree = "<group>"; };
 		F9A7B77A23D0F39300F518C0 /* overlay.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = overlay.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -321,6 +327,9 @@
 			isa = PBXGroup;
 			children = (
 				F9A7B77A23D0F39300F518C0 /* overlay.html */,
+				F99E39DF2448AC6C006F014B /* hollow-border.png */,
+				F99E39DE2448AC6C006F014B /* hollow-mark-red.png */,
+				F99E39E02448AC6C006F014B /* hollow-mark.png */,
 				D7DA31E0239ECFCE00D1B73F /* Extensions + Utilities */,
 				D7DA31E5239ECFCE00D1B73F /* Nodes */,
 				D7DA31E8239ECFCE00D1B73F /* PlaneRectangle.swift */,
@@ -518,16 +527,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F99E39E32448AC6C006F014B /* hollow-mark.png in Resources */,
 				2941BECC23C9165F00AE3A4F /* clip1.mp4 in Resources */,
 				D7DB69F0236DE2D500D7C367 /* materialdesignicons-webfont.ttf in Resources */,
 				2941BECB23C9165F00AE3A4F /* clip3.mp4 in Resources */,
 				D7AF69FD23C8F097005B67D8 /* Ace.storyboard in Resources */,
+				F99E39E22448AC6C006F014B /* hollow-border.png in Resources */,
 				D7455DC42368BE7F001594FA /* LaunchScreen.storyboard in Resources */,
 				D7EAD85B23D66ABC00EE1A56 /* Models.scnassets in Resources */,
 				D7DB69EB236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Right.dae in Resources */,
 				F9A7B77B23D0F39300F518C0 /* overlay.html in Resources */,
 				2984E5122418216D00AA0B9C /* 3DPrinter1.mp4 in Resources */,
 				D7DB6A10236DF21C00D7C367 /* README.md in Resources */,
+				F99E39E12448AC6C006F014B /* hollow-mark-red.png in Resources */,
 				2941BECD23C9165F00AE3A4F /* clip2.mp4 in Resources */,
 				2984E5132418216D00AA0B9C /* 3DPrinter3.mp4 in Resources */,
 				2984E5112418216D00AA0B9C /* 3DPrinter2.mp4 in Resources */,
