@@ -157,3 +157,8 @@ html {
   margin-left: auto;
   margin-right: auto;
 }
+
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+  background-color: rgb(0,76,131) !important;
+  border-color: rgb(0,76,131) !important;
+}
