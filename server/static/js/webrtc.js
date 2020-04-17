@@ -42,10 +42,15 @@ function WebRTCClient(options) {
         }
 
         var config = {
-            "iceServers": [{ "urls": [
-                "stun:stun.l.google.com:19302",
-                "stun:rhelp.fxpal.net",
-            ] }]
+            "iceServers": [
+                { "urls": "stun:stun.l.google.com:19302" },
+                { "urls": "stun:ace.paldeploy.com" },
+                {
+                    "urls": "stuns:ace.paldeploy.com",
+                    "username": "fxpal",
+                    "credential": "j6NLrDvq4zCUkc2Y5SweHofU"
+                }
+            ]
         };
 
         var pc = new RTCPeerConnection(config);
