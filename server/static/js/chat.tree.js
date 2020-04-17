@@ -121,7 +121,7 @@ const CHAT_TREE_JSON = `
           <div style='padding:10px 0px 0px 0px'>
           Did you know that Fuji Xerox provides automated toner replenishment using smart remote service? 
           Would you like to know more about applying for eligibility? 
-          <a href=#>link to form</a> <a href=#>link to brochure</a> <a href=#>link to video</a></div>",
+          <a href=https://www.fujixerox.co.nz/en/Company/EP-BB>link to form</a></div>",
     "next": [13],
     "nextLabels": ["Continue"]
     },
@@ -133,7 +133,7 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 21,
-    "q": "Now that you've seen how, please try replacing your toner cartridge. <a href=#>Find out more here.</a>",
+    "q": "Now that you've seen how, please try replacing your toner cartridge. <a href=https://bit.ly/2z5FCIZ>Find out more here</a> or <a href=https://www.youtube.com/watch?v=uNdh-eS9R_Q>watch a video</a>.",
     "next": [13],
     "nextLabels": ["Continue"]
     }
