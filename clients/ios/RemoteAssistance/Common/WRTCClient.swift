@@ -227,7 +227,7 @@ class WRTCClient : NSObject {
             config.iceServers = [
                 RTCIceServer(urlStrings: ["stun:stun.l.google.com:19302"]),
                 RTCIceServer(urlStrings: ["stun:ace.paldeploy.com"]),
-                RTCIceServer(urlStrings: ["stun:ace.paldeploy.com"], username: "fxpal", credential: "j6NLrDvq4zCUkc2Y5SweHofU"),
+                RTCIceServer(urlStrings: ["turns:ace.paldeploy.com"], username: "fxpal", credential: "j6NLrDvq4zCUkc2Y5SweHofU"),
             ]
             config.sdpSemantics = .unifiedPlan
             config.certificate = RTCCertificate.generate(withParams: ["expires": 100000, "name": "RSASSA-PKCS1-v1_5"])
