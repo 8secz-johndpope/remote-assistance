@@ -64,7 +64,9 @@ app.get('/', function (req, res) {
     if (db !== null) {
         db.updateRoom(res,true,true,roomid,req.body,function(roomData) {
             res.redirect('/' + roomid)
-        });        
+        });
+    } else {
+        res.redirect('/' + roomid)
     }
 });
 
