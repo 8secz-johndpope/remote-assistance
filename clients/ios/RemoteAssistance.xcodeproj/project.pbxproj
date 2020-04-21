@@ -18,6 +18,7 @@
 		2984E5132418216D00AA0B9C /* 3DPrinter3.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2984E5102418216D00AA0B9C /* 3DPrinter3.mp4 */; };
 		AD43D0CE23C68E5500AA4D24 /* QRCodeScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD43D0CD23C68E5500AA4D24 /* QRCodeScanner.swift */; };
 		D7031AFA23E8EED80062A637 /* AceClipThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7031AF923E8EED80062A637 /* AceClipThumbnail.swift */; };
+		D70FE3CD2447BF9E00E3A709 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D70FE3CC2447BF9E00E3A709 /* UIImageExtension.swift */; };
 		D7167ED323D8CDA900655A42 /* AceLandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7167ED223D8CDA900655A42 /* AceLandingViewController.swift */; };
 		D7249D4423D9804B004BDD71 /* AceAPITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7249D4323D9804B004BDD71 /* AceAPITests.swift */; };
 		D7455DB82368BE77001594FA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7455DB72368BE77001594FA /* AppDelegate.swift */; };
@@ -50,7 +51,6 @@
 		D7DA31F0239ECFCE00D1B73F /* SurfaceNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E7239ECFCE00D1B73F /* SurfaceNode.swift */; };
 		D7DA31F1239ECFCE00D1B73F /* PlaneRectangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E8239ECFCE00D1B73F /* PlaneRectangle.swift */; };
 		D7DA31F2239ECFCE00D1B73F /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31E9239ECFCE00D1B73F /* Message.swift */; };
-		D7DA31F4239ED04600D1B73F /* SARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7DA31F3239ED04600D1B73F /* SARViewController.swift */; };
 		D7DB69EB236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Right.dae in Resources */ = {isa = PBXBuildFile; fileRef = D7DB69DD236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Right.dae */; };
 		D7DB69EF236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Left.dae in Resources */ = {isa = PBXBuildFile; fileRef = D7DB69E1236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Left.dae */; };
 		D7DB69F0236DE2D500D7C367 /* materialdesignicons-webfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D7DB69E2236DE2D500D7C367 /* materialdesignicons-webfont.ttf */; };
@@ -70,6 +70,9 @@
 		D7EAD85B23D66ABC00EE1A56 /* Models.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = D7EAD85A23D66ABC00EE1A56 /* Models.scnassets */; };
 		D7F39EC924099CC600911934 /* OCRScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F39EC824099CC600911934 /* OCRScanner.swift */; };
 		EEAD9CEAB1D2D56D6FE29BC5 /* Pods_RemoteAssistance.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33CD05DAC9A4FFE0F7D651A9 /* Pods_RemoteAssistance.framework */; };
+		F99E39E12448AC6C006F014B /* hollow-mark-red.png in Resources */ = {isa = PBXBuildFile; fileRef = F99E39DE2448AC6C006F014B /* hollow-mark-red.png */; };
+		F99E39E22448AC6C006F014B /* hollow-border.png in Resources */ = {isa = PBXBuildFile; fileRef = F99E39DF2448AC6C006F014B /* hollow-border.png */; };
+		F99E39E32448AC6C006F014B /* hollow-mark.png in Resources */ = {isa = PBXBuildFile; fileRef = F99E39E02448AC6C006F014B /* hollow-mark.png */; };
 		F9A7B77B23D0F39300F518C0 /* overlay.html in Resources */ = {isa = PBXBuildFile; fileRef = F9A7B77A23D0F39300F518C0 /* overlay.html */; };
 /* End PBXBuildFile section */
 
@@ -106,6 +109,7 @@
 		55C9CD29027533AEC28E2B0C /* Pods-RemoteAssistance.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.release.xcconfig"; path = "Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.release.xcconfig"; sourceTree = "<group>"; };
 		AD43D0CD23C68E5500AA4D24 /* QRCodeScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRCodeScanner.swift; sourceTree = "<group>"; };
 		D7031AF923E8EED80062A637 /* AceClipThumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceClipThumbnail.swift; sourceTree = "<group>"; };
+		D70FE3CC2447BF9E00E3A709 /* UIImageExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageExtension.swift; sourceTree = "<group>"; };
 		D7167ED223D8CDA900655A42 /* AceLandingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceLandingViewController.swift; sourceTree = "<group>"; };
 		D7249D4323D9804B004BDD71 /* AceAPITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceAPITests.swift; sourceTree = "<group>"; };
 		D7455DB42368BE77001594FA /* RemoteAssistance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RemoteAssistance.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -146,7 +150,6 @@
 		D7DA31E7239ECFCE00D1B73F /* SurfaceNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SurfaceNode.swift; sourceTree = "<group>"; };
 		D7DA31E8239ECFCE00D1B73F /* PlaneRectangle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaneRectangle.swift; sourceTree = "<group>"; };
 		D7DA31E9239ECFCE00D1B73F /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
-		D7DA31F3239ED04600D1B73F /* SARViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SARViewController.swift; sourceTree = "<group>"; };
 		D7DB69DD236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Right.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = Leapmotion_Handsolo_Rig_Right.dae; sourceTree = "<group>"; };
 		D7DB69E1236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Left.dae */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml.dae; path = Leapmotion_Handsolo_Rig_Left.dae; sourceTree = "<group>"; };
 		D7DB69E2236DE2D500D7C367 /* materialdesignicons-webfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "materialdesignicons-webfont.ttf"; sourceTree = "<group>"; };
@@ -165,6 +168,9 @@
 		D7EAD85823D6684800EE1A56 /* AceVirtualObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceVirtualObject.swift; sourceTree = "<group>"; };
 		D7EAD85A23D66ABC00EE1A56 /* Models.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Models.scnassets; sourceTree = "<group>"; };
 		D7F39EC824099CC600911934 /* OCRScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRScanner.swift; sourceTree = "<group>"; };
+		F99E39DE2448AC6C006F014B /* hollow-mark-red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hollow-mark-red.png"; sourceTree = "<group>"; };
+		F99E39DF2448AC6C006F014B /* hollow-border.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hollow-border.png"; sourceTree = "<group>"; };
+		F99E39E02448AC6C006F014B /* hollow-mark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hollow-mark.png"; sourceTree = "<group>"; };
 		F9A7B77A23D0F39300F518C0 /* overlay.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = overlay.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -262,7 +268,6 @@
 				D795E76523A2E64800E97162 /* ChatViewController.swift */,
 				AD43D0CD23C68E5500AA4D24 /* QRCodeScanner.swift */,
 				D7DB6A0D236DE91D00D7C367 /* SettingsViewController.swift */,
-				D7DA31F3239ED04600D1B73F /* SARViewController.swift */,
 				D7AF69FE23C8F0D0005B67D8 /* AppStoryboard.swift */,
 				D7AF6A0223C8FCDB005B67D8 /* Ace */,
 				2959E0DD23C65B6300D0F98E /* ObjectAnnotation */,
@@ -322,6 +327,9 @@
 			isa = PBXGroup;
 			children = (
 				F9A7B77A23D0F39300F518C0 /* overlay.html */,
+				F99E39DF2448AC6C006F014B /* hollow-border.png */,
+				F99E39DE2448AC6C006F014B /* hollow-mark-red.png */,
+				F99E39E02448AC6C006F014B /* hollow-mark.png */,
 				D7DA31E0239ECFCE00D1B73F /* Extensions + Utilities */,
 				D7DA31E5239ECFCE00D1B73F /* Nodes */,
 				D7DA31E8239ECFCE00D1B73F /* PlaneRectangle.swift */,
@@ -389,6 +397,7 @@
 				D7DB6A03236DE6AA00D7C367 /* SocketIOManager.swift */,
 				D7DB69F7236DE35100D7C367 /* WRTCClient.swift */,
 				D7DB69E4236DE2D500D7C367 /* Redux */,
+				D70FE3CC2447BF9E00E3A709 /* UIImageExtension.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -518,16 +527,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F99E39E32448AC6C006F014B /* hollow-mark.png in Resources */,
 				2941BECC23C9165F00AE3A4F /* clip1.mp4 in Resources */,
 				D7DB69F0236DE2D500D7C367 /* materialdesignicons-webfont.ttf in Resources */,
 				2941BECB23C9165F00AE3A4F /* clip3.mp4 in Resources */,
 				D7AF69FD23C8F097005B67D8 /* Ace.storyboard in Resources */,
+				F99E39E22448AC6C006F014B /* hollow-border.png in Resources */,
 				D7455DC42368BE7F001594FA /* LaunchScreen.storyboard in Resources */,
 				D7EAD85B23D66ABC00EE1A56 /* Models.scnassets in Resources */,
 				D7DB69EB236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Right.dae in Resources */,
 				F9A7B77B23D0F39300F518C0 /* overlay.html in Resources */,
 				2984E5122418216D00AA0B9C /* 3DPrinter1.mp4 in Resources */,
 				D7DB6A10236DF21C00D7C367 /* README.md in Resources */,
+				F99E39E12448AC6C006F014B /* hollow-mark-red.png in Resources */,
 				2941BECD23C9165F00AE3A4F /* clip2.mp4 in Resources */,
 				2984E5132418216D00AA0B9C /* 3DPrinter3.mp4 in Resources */,
 				2984E5112418216D00AA0B9C /* 3DPrinter2.mp4 in Resources */,
@@ -603,7 +615,6 @@
 				D7F39EC924099CC600911934 /* OCRScanner.swift in Sources */,
 				D7EAD85923D6684800EE1A56 /* AceVirtualObject.swift in Sources */,
 				D7455DBA2368BE77001594FA /* ViewController.swift in Sources */,
-				D7DA31F4239ED04600D1B73F /* SARViewController.swift in Sources */,
 				D7B006B7243F953C00B32D70 /* AceDCLandingViewController.swift in Sources */,
 				D7DB6A0C236DE7C700D7C367 /* AceState.swift in Sources */,
 				D7DB6A06236DE6CC00D7C367 /* TSRemoteHands.swift in Sources */,
@@ -616,6 +627,7 @@
 				2959E0DF23C660BB00D0F98E /* ARSceneViewController.swift in Sources */,
 				D7AF6A0423C8FD8D005B67D8 /* AceUIViewController.swift in Sources */,
 				D7DA31ED239ECFCE00D1B73F /* ARHitTestResult+Extensions.swift in Sources */,
+				D70FE3CD2447BF9E00E3A709 /* UIImageExtension.swift in Sources */,
 				D7031AFA23E8EED80062A637 /* AceClipThumbnail.swift in Sources */,
 				D7945404243FC27A00EFA58C /* AceNavigationController.swift in Sources */,
 				D7167ED323D8CDA900655A42 /* AceLandingViewController.swift in Sources */,
@@ -821,7 +833,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 6FE4WE8E4U;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -833,7 +845,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = "1.0.0-2020.04.10-1";
+				MARKETING_VERSION = "1.0.0-2020.04.16-2";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fxpal.RemoteAssistance;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "RemoteAssistance/Bridging-Header.h";
@@ -848,7 +860,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 6FE4WE8E4U;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -860,7 +872,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = "1.0.0-2020.04.10-1";
+				MARKETING_VERSION = "1.0.0-2020.04.16-2";
 				PRODUCT_BUNDLE_IDENTIFIER = com.fxpal.RemoteAssistance;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "RemoteAssistance/Bridging-Header.h";

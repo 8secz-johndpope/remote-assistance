@@ -111,7 +111,8 @@ class SettingsViewController: UIViewController,QRCodeScannerDelegate {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.tableFooterView = UIView.init()
-        //self.tableView.sizeToFit()
+        //self.tableView.contentInset = UIEdgeInsets.init(top: 0, left: 15, bottom: 0, right: -15)
+        self.tableView.sizeToFit()
 
         store.ace.subscribe(self)
             

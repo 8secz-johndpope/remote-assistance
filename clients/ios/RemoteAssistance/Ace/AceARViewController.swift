@@ -28,7 +28,7 @@ class AceARViewController : UIViewController {
     var configuration = ARWorldTrackingConfiguration()
 
     // ScreenAR
-    var webView:UIWebView?
+    var visibleNode: SCNNode? = nil
     var rectangleNodes = [SCNNode:RectangleNode]()
     let updateQueue = DispatchQueue(label: "com.fxpal.ace")
     
@@ -186,23 +186,25 @@ class AceARViewController : UIViewController {
 }
 
 extension AceARViewController: WRTCClientDelegate {
-    func wrtc(_ wrtc: WRTCClient, didReceiveData data: Data) {
-        //let text = String(data: data, encoding: .utf8) ?? "(Binary: \(data.count) bytes)"
-        //print("wrtc: received datachannel message \(text)")
+    func wrtc(_ wrtc:WRTCClient, didReceiveData data: Data) {
         let text = String(data: data, encoding: .utf8) ?? "(Binary: \(data.count) bytes)"
-        print("wrtc: received datachannel message \(text)")
         let coords = text.components(separatedBy: ",")
         var textContent = ""
-        if coords.count >= 3 {
+        var w: Int = 10
+        var h: Int = 15
+        if coords.count == 3 {
             textContent = coords[2]
         }
-        
+        else if coords.count == 5 {
+            if let ww = Int(coords[2]), let hh = Int(coords[3]) {
+                w = ww
+                h = hh
+                textContent = coords[4]
+            }
+        }
         if let x = Int(coords[0]), let y = Int(coords[1]) {
-            DispatchQueue.main.async {
-                let js = "showMark(\(x),\(y),\"\(textContent)\",\"rectangle\")"
-                //print("sending js=",js)
-                self.webView?.stringByEvaluatingJavaScript(from: js)
-                //self.webView?.evaluateJavaScript(js, completionHandler: { (res, err) in })
+            if let vis = self.visibleNode, let rectNode = self.rectangleNodes[vis] {
+                rectNode.showMark(px:x,py:y,pw:w,ph:h,name:textContent)
             }
         }
     }
@@ -224,6 +226,10 @@ extension AceARViewController: ARSCNViewDelegate {
         self.renderer = renderer
         screenAR(renderer, didAdd:node, for:anchor)
         objectAnnotation(renderer, didAdd:node, for:anchor)
+    }
+    
+    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        screenAR(renderer, didUpdate: node, for: anchor)
     }
 }
 

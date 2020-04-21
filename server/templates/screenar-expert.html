@@ -526,9 +526,8 @@ function drawCurrentMark()
   let w = x2 - x1;
   let h = y2 - y1;
   correctedctx.strokeRect(x1,y1,w,h);
-
-
 }
+
 function addARAnnotation(idx)
 {
   let img = document.createElement('img');
@@ -975,108 +974,51 @@ function sendClick(x,y,w,h,text)
 }
 
 let currentMark = null;
-const DRAW_MARK = false;
-if (DRAW_MARK)
-{
-  correctedcanvas.addEventListener('mousedown',function (evt) {
-      evt.preventDefault();
-      evt.stopPropagation();
-      let x = evt.pageX;
-      let y = evt.pageY;
-      let rect = correctedcanvas.getBoundingClientRect();
-      x -= rect.left;
-      y -= rect.top;
-      x *= correctedcanvas.width / rect.width;
-      y *= correctedcanvas.height / rect.height;
-      currentMark = {px:x,py:y,cx:x+2,cy:y+2};
-  });
-
-  correctedcanvas.addEventListener('mouseup',function (evt) {
-      evt.preventDefault();
-      evt.stopPropagation();
-      if (!currentMark)
-        return;
-      let x1 = Math.min(currentMark.px,currentMark.cx);
-      let y1 = Math.min(currentMark.py,currentMark.cy);
-      let x2 = Math.max(currentMark.px,currentMark.cx);
-      let y2 = Math.max(currentMark.py,currentMark.cy);
-
-      x1 = (x1 * 1024 / correctedcanvas.width) | 0;
-      y1 = (y1 * 1024 / correctedcanvas.height) | 0;
-      x2 = (x2 * 1024 / correctedcanvas.width) | 1;
-      y2 = (y2 * 1024 / correctedcanvas.height) | 1;
-
-      let w = x2 - x1;
-      let h = y2 - y1;
-
-      currentMark = null;
-
-      sendClick(x1,y1,w,h,'Tap');
-  });
-
-  correctedcanvas.addEventListener('mouseout',function (evt) {
-      evt.preventDefault();
-      evt.stopPropagation();
-      currentMark = null;
-  });
-  correctedcanvas.addEventListener('mousemove',function (evt) {
-      evt.preventDefault();
-      evt.stopPropagation();
-      if (!currentMark)
-        return;
-      let x = evt.pageX;
-      let y = evt.pageY;
-      let rect = correctedcanvas.getBoundingClientRect();
-      x -= rect.left;
-      y -= rect.top;
-      x *= correctedcanvas.width / rect.width;
-      y *= correctedcanvas.height / rect.height;
-      currentMark.cx = x;
-      currentMark.cy = y;
-  });
-}
-else {
-  correctedcanvas.addEventListener('click',function (evt) {
-      evt.preventDefault();
-      evt.stopPropagation();
-      let x = evt.pageX;
-      let y = evt.pageY;
-      let rect = correctedcanvas.getBoundingClientRect();
-      x -= rect.left;
-      y -= rect.top;
-      // convert from displayed size (rect) to pixel size (canvas.width/height)
-      x *= correctedcanvas.width / rect.width;
-      y *= correctedcanvas.height / rect.height;
-      if (boxes)
+correctedcanvas.addEventListener('click',function (evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+    let x = evt.pageX;
+    let y = evt.pageY;
+    let rect = correctedcanvas.getBoundingClientRect();
+    x -= rect.left;
+    y -= rect.top;
+    // convert from displayed size (rect) to pixel size (canvas.width/height)
+    x *= correctedcanvas.width / rect.width;
+    y *= correctedcanvas.height / rect.height;
+    if (boxes)
+    {
+      let b2 = {x1:x,y1:y,x2:x+1,y2:y+1};
+      let matchingBox = [];
+      boxes.forEach((item, i) => {
+        if (b1ContainsBox2(item,b2))
+          matchingBox = item;
+      });
+      if (matchingBox)
       {
-        let b2 = {x1:x,y1:y,x2:x+1,y2:y+1};
-        let matchingBox = [];
-        boxes.forEach((item, i) => {
-          if (b1ContainsBox2(item,b2))
-            matchingBox = item;
-        });
-        if (matchingBox)
-        {
-          currentMark = {px:matchingBox.x1,py:matchingBox.y1,cx:matchingBox.x2,cy:matchingBox.y2};
-          let x1 = Math.min(currentMark.px,currentMark.cx);
-          let y1 = Math.min(currentMark.py,currentMark.cy);
-          let x2 = Math.max(currentMark.px,currentMark.cx);
-          let y2 = Math.max(currentMark.py,currentMark.cy);
+        currentMark = {px:matchingBox.x1,py:matchingBox.y1,cx:matchingBox.x2,cy:matchingBox.y2};
+        let x1 = Math.min(currentMark.px,currentMark.cx);
+        let y1 = Math.min(currentMark.py,currentMark.cy);
+        let x2 = Math.max(currentMark.px,currentMark.cx);
+        let y2 = Math.max(currentMark.py,currentMark.cy);
 
+        const OFFSET = 4;
+        x1 = ((x1-OFFSET) * 1024 / correctedcanvas.width) | 0;
+        y1 = ((y1-OFFSET) * 1024 / correctedcanvas.height) | 0;
+        x2 = ((x2+OFFSET) * 1024 / correctedcanvas.width) | 1;
+        y2 = ((y2+OFFSET) * 1024 / correctedcanvas.height) | 1;
 
-          x1 = (x1 * 1024 / correctedcanvas.width) | 0;
-          y1 = (y1 * 1024 / correctedcanvas.height) | 0;
-          x2 = (x2 * 1024 / correctedcanvas.width) | 1;
-          y2 = (y2 * 1024 / correctedcanvas.height) | 1;
+        let w = x2 - x1;
+        let h = y2 - y1;
 
-          let w = x2 - x1;
-          let h = y2 - y1;
+        setTimeout(function () {
+          currentMark = null;
+        }, 500);
+        setTimeout(function () {
           sendClick(x1,y1,w,h,'Tap');
-          setTimeout(function () { currentMark = null}, 300);
-        }
+        }, 500);
       }
-  });
-}
+    }
+});
 
 document.addEventListener('mousemove',function (event) {
   fakecursor.style.left = event.clientX + 'px';
