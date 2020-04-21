@@ -2,7 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -438,6 +438,42 @@
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Oz2-CU-pfB">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                             </arscnView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Eru-WM-HGK">
+                                <rect key="frame" x="364" y="437" width="25" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES"/>
+                                <state key="normal" image="forward" catalog="system"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="image" keyPath="imageForNormal" value="forward" catalog="system"/>
+                                    <userDefinedRuntimeAttribute type="image" keyPath="imageForSelected" value="forward.fill" catalog="system"/>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="titleColorForNormal">
+                                        <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="titleColorForSelected">
+                                        <color key="value" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="nextButtonTUI:" destination="w9J-GH-d7o" eventType="touchUpInside" id="rRL-TB-PBw"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cVR-cT-2Z9">
+                                <rect key="frame" x="23" y="437" width="25" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES"/>
+                                <state key="normal" image="backward" catalog="system"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="image" keyPath="imageForNormal" value="backward" catalog="system"/>
+                                    <userDefinedRuntimeAttribute type="image" keyPath="imageForSelected" value="backward.fill" catalog="system"/>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="titleColorForNormal">
+                                        <color key="value" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="titleColorForSelected">
+                                        <color key="value" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="prevButtonTUI:" destination="w9J-GH-d7o" eventType="touchUpInside" id="a9Z-HU-4pd"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
@@ -449,14 +485,16 @@
                         <viewLayoutGuide key="safeArea" id="QhH-FK-l76"/>
                     </view>
                     <connections>
+                        <outlet property="nextButton" destination="Eru-WM-HGK" id="nqK-Sg-MKL"/>
+                        <outlet property="prevButton" destination="cVR-cT-2Z9" id="Dqd-nt-8y0"/>
                         <outlet property="sceneView" destination="Oz2-CU-pfB" id="PxS-8e-jZO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sWx-1E-m4C" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1958" y="1621"/>
-        <!--Digital Companion-->
         </scene>
+        <!--Digital Companion-->
         <scene sceneID="cfH-6X-Kv1">
             <objects>
                 <viewController storyboardIdentifier="AceDCLandingViewController" id="4Rf-qs-vCv" customClass="AceDCLandingViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
@@ -748,7 +786,11 @@
         <image name="Logo-ACE" width="2000" height="2000"/>
         <image name="Logo-FXPAL" width="2000" height="2000"/>
         <image name="Main-base-base" width="2772" height="6000"/>
+        <image name="backward" catalog="system" width="128" height="79"/>
+        <image name="backward.fill" catalog="system" width="128" height="79"/>
         <image name="eyeglasses" catalog="system" width="128" height="54"/>
+        <image name="forward" catalog="system" width="128" height="79"/>
+        <image name="forward.fill" catalog="system" width="128" height="79"/>
         <image name="gear" catalog="system" width="128" height="119"/>
         <image name="headphones" catalog="system" width="128" height="107"/>
         <image name="list.dash" catalog="system" width="128" height="85"/>
