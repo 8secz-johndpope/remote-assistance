@@ -463,7 +463,7 @@ function drawVideo()
       [0,0,canvasw,0,canvasw,canvash,0,canvash]).update();
     correctedctx.drawImage(fxcanvas,0,0,correctedcanvas.width,correctedcanvas.height);
 
-    boxes = canny(correctedcanvas,false,true);
+    //boxes = canny(correctedcanvas,false,true);
 
     let fingerPosition = detectFingerTip(correctedctx.getImageData(0,0,correctedcanvas.width,correctedcanvas.height));
     if (currentAnchor && fingerPosition)
@@ -482,6 +482,8 @@ function drawVideo()
     }
     else
     {
+      // only try detecting widget bounding boxes when hand is not visible
+      boxes = canny(correctedcanvas,false,true);
       if (sessionStopped === false && captureTimeout === null)
         captureTimeout = setTimeout(captureImage,1000);
     }
@@ -1102,6 +1104,12 @@ function mergeAll(array) {
   return array.filter(a => a !== null);
 }
 
+let BOX_COLOR = 'blue';
+let BOX_MARGIN = 16;
+let BOX_MIN_WIDTH = 64;
+let BOX_MIN_HEIGHT = 32;
+let BOX_LINE_WIDTH = 3;
+
 //let blurRadius = 5;
 function canny(canvas,showcanny,showboxes)
 {
@@ -1135,11 +1143,6 @@ function canny(canvas,showcanny,showboxes)
     ctx.putImageData(imageData, 0, 0);
   }
 
-  const BOX_COLOR = 'yellow';
-  const BOX_MARGIN = 8;
-  const BOX_MIN_WIDTH = 32;
-  const BOX_MIN_HEIGHT = 32;
-  const BOX_LINE_WIDTH = 3;
   boxes = boxes.filter((item, i) => {
     let w = item.x2 - item.x1;
     let h = item.y2 - item.y1;
