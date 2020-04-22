@@ -442,7 +442,9 @@ function drawVideo()
   }
   ctx.drawImage(video,0,0,canvasw,canvash);
   let corners = detectCorners(ctx);
-
+  //detectScreen(ctx);
+  //setTimeout(drawVideo,1000/10);
+  //return;
   if (corners !== null)
   {
     if (sessionStarted === false)
@@ -792,6 +794,41 @@ const BORDER_SIZE = 2; // number of pixels to check for dark pixels around
 function darkPixel(data,idx)
 {
   return data[idx] < blackth && data[idx+1] < blackth && data[idx+2] < blackth;
+}
+
+function detectScreen(ctx)
+{
+  let canvasw = ctx.canvas.width;
+  let canvash = ctx.canvas.height;
+  if (canvasw === 0 || canvash === 0)
+    return;
+  let imgData = ctx.getImageData(0,0,canvasw,canvash);
+  let data = imgData.data;
+  let idx = 0;
+  function isBlue(data,idx)
+  {
+    let r = data[idx];
+    let g = data[idx+1];
+    let b = data[idx+2];
+    //#48AADA
+    return r < 100 && g < 200 && b > 200;
+  }
+
+  for (let idx=0;idx<4*canvasw*canvash;idx+=4)
+  {
+    if (isBlue(data,idx))
+    {
+      data[idx] = 255;
+      data[idx+1] = 255;
+      data[idx+2] = 255;
+    }
+    else {
+      data[idx] = 0;
+      data[idx+1] = 0;
+      data[idx+2] = 0;
+    }
+  }
+  ctx.putImageData(imgData,0,0);
 }
 
 function detectCorners(ctx)
@@ -1225,4 +1262,17 @@ function canny(canvas,showcanny,showboxes)
   console.log(detectCorners(c.getContext('2d')));
 }
 img.src = '/static/videoStor/download.png';*/
+
+/*let img = document.createElement('img');
+img.onload = function () {
+let c = document.createElement('canvas');
+c.width = this.naturalWidth;
+c.height = this.naturalHeight;
+canvasw = c.width;
+canvash = c.height;
+c.getContext('2d').drawImage(this,0,0,canvasw,canvash);
+console.log(detectScreen(c.getContext('2d')));
+document.body.appendChild(c);
+}
+img.src = '/static/videoStor/image-from-lcd.jpg';*/
 </script>
