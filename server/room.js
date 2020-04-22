@@ -134,6 +134,7 @@ module.exports = function(io) {
             'pointer_clear',
             'conversation_archive',
             'set_mode',
+            'close',
         ]
         events.forEach(function(eventName) {
             socket.on(eventName, function(data) {

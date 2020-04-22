@@ -35,6 +35,35 @@ function WebRTCClient(options) {
             onDataChannelCallback(event.data);
       };
     }
+    function createOffer(id) {
+        var pc = getPC(id);
+        var offer = null;
+        pc.createOffer(mediaConstraints).then(function(result) {
+            offer = result;
+            return pc.setLocalDescription(new RTCSessionDescription(offer));
+        })
+        .then(function() {
+            socket.emit('webrtc', id, {
+                type:'offer',
+                payload: {
+                    sdp: offer.sdp,
+                    type: offer.type
+                }
+            });
+        })
+        .catch(function(error) {
+            console.error(error);
+        })
+    }
+
+    function closePC(id) {
+        var pc = self.pcs[id];
+        if (pc) {
+            pc.close();
+        }
+        delete self.pcs[id];
+    }
+
     function getPC(id) {
         if (self.pcs[id])
         {
@@ -50,16 +79,6 @@ function WebRTCClient(options) {
 
         var pc = new RTCPeerConnection(config);
 
-        /*pc.ondatachannel = function(event) {
-          var channel = event.channel;
-            channel.onopen = function(event) {
-            channel.send('Hi back!');
-          }
-          channel.onmessage = function(event) {
-            console.log(event.data);
-          }
-        }*/
-
         self.pcs[id] = pc;
         if (self.stream) {
             self.stream.getAudioTracks().forEach(function(track) {
@@ -69,10 +88,6 @@ function WebRTCClient(options) {
                 pc.addTrack(track, self.stream);
             });
         }
-
-        /*pc.onnegotiationneeded = function (event) {
-          console.error('negociation needed');
-        }*/
 
         if (dataChannelName)
         {
@@ -109,11 +124,12 @@ function WebRTCClient(options) {
 
     socket.on('left', function(data) {
         console.log('left', data);
-        var pc = self.pcs[data.sid];
-        if (pc) {
-            pc.close();
-        }
-        delete self.pcs[data.sid];
+        closePC(data.sid);
+    });
+
+    socket.on('close', function(data) {
+        console.log('close', data);
+        closePC(data.sid);
     });
 
     socket.on('sid', function(data) {
@@ -243,16 +259,23 @@ function WebRTCClient(options) {
     }
 
     WebRTCClient.prototype.setStream = function(stream) {
-        for (var key in this.pcs) {
-            var pc = wrtc.pcs[key];
-            stream.getVideoTracks().forEach(function(track) {
-                var sender = pc.getSenders().find(function(s) {
-                    return s.track.kind == track.kind;
-                });
-                sender.replaceTrack(track);
-           });
-        }
-        this.stream = stream;
+        var ids = Object.keys(this.pcs);
+        var self = this;
+
+        // tell everyone we are going to close the peer connection
+        socket.emit('close', {sid: self.sid});
+
+        // set the stream
+        self.stream = stream;
+
+        // reconnect by creating a new offer for each connection
+        ids.forEach(function(id) {
+            // close peer connection
+            closePC(id);
+
+            // re-initialize connection
+            createOffer(id);
+        });
     }
 }
 
