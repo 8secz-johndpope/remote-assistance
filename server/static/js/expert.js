@@ -22,6 +22,7 @@ var connected = false;
 var lmConnected = false;
 var currentFrame;
 var frameUpdateInterval;
+var frameUpdateIntervalTime = 1000.0/15.0;
 
 let user_uuid;
 
@@ -778,7 +779,7 @@ function reconnectLeapmotion() {
                 SIOConnection.socket.emit('frame', currentFrame);
             }
         }
-    }, 1000.0/30.0);
+    }, frameUpdateIntervalTime);
 
     socket.addEventListener('close', function(code, reason) {
         console.log(code, reason);
