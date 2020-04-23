@@ -159,18 +159,7 @@ class AceAnimatorViewController: UIViewController, ARSCNViewDelegate {
                 print("ObjectAnnotation found imageAnchor!")
                 self.showToast(message: "Found image anchor: \(String(describing: anchor.name))")
                 DispatchQueue.main.async {
-
-                    
-                    let orientationNode = SCNNode()
-                    orientationNode.eulerAngles = SCNVector3(x:-Float.pi/2, y:0, z:0)
-                    node.addChildNode(orientationNode)
-                    self.nodeFound = orientationNode
-                    let tonerNode = self.tonerNodes[0]!
-                    tonerNode.scale = SCNVector3(5, 5, 5)
-                    tonerNode.position = SCNVector3(+0.125,-0.25,-0.2)
-                    self.nodeFound?.addChildNode(tonerNode)
-                    self.prevButton.isHidden = false
-                    self.nextButton.isHidden = false
+                    self.addFirstTonerNode(node: node)
                 }
             }
             
@@ -179,10 +168,25 @@ class AceAnimatorViewController: UIViewController, ARSCNViewDelegate {
                 print("ObjectAnnotation found objectAnchor!")
                 self.showToast(message: "Found object anchor: \(String(describing: anchor.name))")
                 DispatchQueue.main.async {
-                    self.nodeFound = node
+                    self.addFirstTonerNode(node: node)
                 }
             }
         }
+    }
+    
+    func addFirstTonerNode(node:SCNNode) {
+        let orientationNode = SCNNode()
+        orientationNode.eulerAngles = SCNVector3(x:-Float.pi/2, y:0, z:0)
+        node.addChildNode(orientationNode)
+        self.nodeFound = orientationNode
+        let tonerNode = self.tonerNodes[0]!
+        tonerNode.scale = SCNVector3(5, 5, 5)
+        tonerNode.position = SCNVector3(+0.125,-0.25,-0.2)
+        self.nodeFound?.addChildNode(tonerNode)
+        self.prevButton.isHidden = false
+        self.prevButton.backgroundColor = UIColor.systemGray4
+        self.nextButton.isHidden = false
+        self.nextButton.backgroundColor = UIColor.systemGray4
     }
     
     func buildNode(scnVector3: SCNVector3, nodeQuat:SCNQuaternion) -> SCNNode {
