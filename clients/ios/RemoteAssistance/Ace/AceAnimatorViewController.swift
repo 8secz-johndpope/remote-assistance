@@ -32,9 +32,12 @@ class AceAnimatorViewController: UIViewController, ARSCNViewDelegate {
     var nodeFound:SCNNode?
     var copierNode:AceVirtualObject?
     var tonerNodes:[AceVirtualObject?] = []
-    var lastTonerNodeDisplayed:Int = 0
+    var stepInScene:Int = 0
     
     let sceneNames = ["Toner1.scn", "Toner2.scn", "Toner3.scn", "Toner4.scn"]
+    var trayNode:AceVirtualObject = AceVirtualObject.object(byName: "CopierCover.scn")!
+    
+    let maxSteps = 6
   
     weak var delegate: AceAnimatorDelegate?
 
@@ -46,7 +49,7 @@ class AceAnimatorViewController: UIViewController, ARSCNViewDelegate {
         self.objectGroupName = "VariousPrinters"
         self.imageGroupName = "AR Resources"
         
-        for i in 0..<4 {
+        for i in 0..<self.sceneNames.count {
             let tonerNode = AceVirtualObject.object(byName: self.sceneNames[i])
             tonerNode?.identifier = "toner\(i+1)"
             self.tonerNodes.append(tonerNode)
@@ -79,30 +82,57 @@ class AceAnimatorViewController: UIViewController, ARSCNViewDelegate {
     }
     
     @IBAction func prevButtonTUI(_ sender: Any) {
-        if self.lastTonerNodeDisplayed > 0 {
-            self.tonerNodes[self.lastTonerNodeDisplayed]?.removeFromParentNode()
-            self.lastTonerNodeDisplayed -= 1
+        if self.stepInScene > 0 {
+            self.stepInScene -= 1
+            if self.stepInScene == 1 {
+                self.trayNode.rotation = SCNVector4Make(1, 0, 0, -(.pi/2))
+            }
+            else if self.stepInScene == 2 {
+                self.tonerNodes[0]?.removeFromParentNode()
+            }
+            else if self.stepInScene == 3 {
+                self.tonerNodes[1]?.removeFromParentNode()
+            }
+            else if self.stepInScene == 4 {
+                self.tonerNodes[2]?.removeFromParentNode()
+            }
+            else if self.stepInScene == 5 {
+                self.tonerNodes[3]?.removeFromParentNode()
+            }
         }
     }
     
     @IBAction func nextButtonTUI(_ sender: Any) {
-        if self.lastTonerNodeDisplayed < self.tonerNodes.count - 1 {
-            
-            let lastTonerNode = self.tonerNodes[self.lastTonerNodeDisplayed]
-            let thisTonerNode = self.tonerNodes[self.lastTonerNodeDisplayed+1]
-            thisTonerNode!.position = SCNVector3(0.0054, 0.0, 0.0)
-            lastTonerNode!.addChildNode(thisTonerNode!)
-            
-            self.lastTonerNodeDisplayed += 1
-//            self.nodeFound?.addChildNode(thisTonerNode!)
+        if self.stepInScene < self.maxSteps {
+            if self.stepInScene == 1 {
+                self.trayNode.rotation = SCNVector4Make(1, 0, 0, +(0))
+            }
+            else if self.stepInScene == 2 {
+                self.tonerNodes[0]!.position = SCNVector3(0.0054, 0.0, 0.0)
+                self.trayNode.addChildNode(self.tonerNodes[0]!)
+            }
+            else if self.stepInScene == 3 {
+                self.tonerNodes[1]!.position = SCNVector3(0.0054, 0.0, 0.0)
+                self.tonerNodes[0]!.addChildNode(self.tonerNodes[1]!)
+            }
+            else if self.stepInScene == 4 {
+                self.tonerNodes[2]!.position = SCNVector3(0.0054, 0.0, 0.0)
+                self.tonerNodes[1]!.addChildNode(self.tonerNodes[2]!)
+            }
+            else if self.stepInScene == 5 {
+                self.tonerNodes[3]!.position = SCNVector3(0.0054, 0.0, 0.0)
+                self.tonerNodes[2]!.addChildNode(self.tonerNodes[3]!)
+            }
+
+            self.stepInScene += 1
         }
     }
     
-    @objc func onTap(_ gesture: UITapGestureRecognizer) {
-        print("onTap from ARSceneViewController")
-
-        DispatchQueue.main.async {
-
+//    @objc func onTap(_ gesture: UITapGestureRecognizer) {
+//        print("onTap from ARSceneViewController")
+//
+//        DispatchQueue.main.async {
+//
 //            self.lastSceneDisplayed += 1
 //            if self.anchorFound && (self.lastSceneDisplayed < self.sceneNames.count) {
 //                print(self.sceneNames[self.lastSceneDisplayed])
@@ -121,8 +151,8 @@ class AceAnimatorViewController: UIViewController, ARSCNViewDelegate {
 //            else {
 //                print("no more scenes")
 //            }
-        }
-    }
+//        }
+//    }
 
     @objc func searchForObjects() {
         let referenceObjects = ARReferenceObject.referenceObjects(inGroupNamed: self.objectGroupName, bundle: Bundle.main)
@@ -166,7 +196,7 @@ class AceAnimatorViewController: UIViewController, ARSCNViewDelegate {
                 print("ObjectAnnotation found imageAnchor!")
                 self.showToast(message: "Found image anchor: \(String(describing: anchor.name))")
                 DispatchQueue.main.async {
-                    self.addFirstTonerNode(node: node)
+                    self.addFirstAnimationNode(node: node)
                 }
             }
             
@@ -175,25 +205,26 @@ class AceAnimatorViewController: UIViewController, ARSCNViewDelegate {
                 print("ObjectAnnotation found objectAnchor!")
                 self.showToast(message: "Found object anchor: \(String(describing: anchor.name))")
                 DispatchQueue.main.async {
-                    self.addFirstTonerNode(node: node)
+                    self.addFirstAnimationNode(node: node)
                 }
             }
         }
     }
     
-    func addFirstTonerNode(node:SCNNode) {
+    func addFirstAnimationNode(node:SCNNode) {
         let orientationNode = SCNNode()
         orientationNode.eulerAngles = SCNVector3(x:-Float.pi/2, y:0, z:0)
         node.addChildNode(orientationNode)
         self.nodeFound = orientationNode
-        let tonerNode = self.tonerNodes[0]!
-        tonerNode.scale = SCNVector3(5, 5, 5)
-        tonerNode.position = SCNVector3(+0.125,-0.25,-0.2)
-        self.nodeFound?.addChildNode(tonerNode)
+        self.trayNode.scale = SCNVector3(5, 5, 5)
+        self.trayNode.position = SCNVector3(+0.125,-0.25,-0.2)
+        self.trayNode.rotation = SCNVector4Make(1, 0, 0, -(.pi/2))
+        self.nodeFound?.addChildNode(self.trayNode)
         self.prevButton.isHidden = false
         self.prevButton.backgroundColor = UIColor.systemGray4
         self.nextButton.isHidden = false
         self.nextButton.backgroundColor = UIColor.systemGray4
+        self.stepInScene += 1
     }
     
     func buildNode(scnVector3: SCNVector3, nodeQuat:SCNQuaternion) -> SCNNode {
