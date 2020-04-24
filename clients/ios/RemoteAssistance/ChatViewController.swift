@@ -12,11 +12,12 @@ import WebKit
 class ChatViewController: UIViewController {
 
     @IBOutlet weak var webView: WKWebView!
-    
+
     override func viewDidLoad() {
         let url = "\(store.ace.state.serverUrl)/chat"
         let chatUrl = URL(string:url)
         let request = URLRequest(url: chatUrl!)
+
         webView.configuration.userContentController.add(self, name: "launchRA")
         webView.configuration.userContentController.add(self, name: "launchQRScanner")
         webView.configuration.userContentController.add(self, name: "launchOCRScanner")
@@ -31,6 +32,18 @@ class ChatViewController: UIViewController {
         let c = #colorLiteral(red: 0, green: 0.1762945354, blue: 0.3224477768, alpha: 1)
         navigationController?.navigationBar.tintColor = c
         navigationController?.navigationBar.barTintColor = c
+        
+        self.navigationItem.hidesBackButton = true
+        let myBackButton = UIBarButtonItem(title: "< Back", style: UIBarButtonItem.Style.plain, target: self, action: #selector(back))
+        self.navigationItem.leftBarButtonItem = myBackButton
+    }
+    
+    @objc func back (sender: UIBarButtonItem) {
+        if (webView.canGoBack) {
+            webView.goBack()
+        } else {
+            self.navigationController?.popViewController(animated:true)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
