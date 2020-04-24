@@ -63,7 +63,7 @@ class RectangleNode: SCNNode {
         let max = self.boundingBox.max
         let nodew = CGFloat(max.x - min.x)
         let nodeh = CGFloat(max.y - min.y)*/
-        if let plane: SCNPlane = self.geometry as! SCNPlane {
+        if let plane: SCNPlane = self.geometry as? SCNPlane {
             let nodew = plane.width
             let nodeh = plane.height
             let w = CGFloat(pw) * nodew / 1024;

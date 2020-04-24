@@ -28,8 +28,7 @@ class ChatViewController: UIViewController {
         webView.load(request)
         webView.navigationDelegate = self
         
-        //let c = uicolorFromHex(rgbValue: 0x004c83)
-        let c = UIColor(red: 0.30, green: 0.30, blue: 0.30, alpha: 1.0)
+        let c = #colorLiteral(red: 0, green: 0.1762945354, blue: 0.3224477768, alpha: 1)
         navigationController?.navigationBar.tintColor = c
         navigationController?.navigationBar.barTintColor = c
     }
