@@ -20,6 +20,11 @@ class ChatViewController: UIViewController {
         webView.configuration.userContentController.add(self, name: "launchRA")
         webView.configuration.userContentController.add(self, name: "launchQRScanner")
         webView.configuration.userContentController.add(self, name: "launchOCRScanner")
+        webView.configuration.userContentController.add(self, name: "launchARScene")
+        
+        // Next one to add
+        //webView.configuration.userContentController.add(self, name: "launchARVideo")
+
         webView.load(request)
         webView.navigationDelegate = self
         
@@ -74,6 +79,12 @@ class ChatViewController: UIViewController {
         self.navigationController?.pushViewController(nvc, animated: true)
     }
     
+    func launchARScene(dict: NSDictionary) {
+        let nvc = AceAnimatorViewController()
+        nvc.delegate = self
+        self.navigationController?.pushViewController(nvc, animated: true)
+    }
+    
     func launchOCRScanner(dict: NSDictionary) {
         var options = [String]()
         if let arr1 = dict["options"] as? [String:Any] {
@@ -95,22 +106,24 @@ class ChatViewController: UIViewController {
 }
     
 extension ChatViewController : QRCodeScannerDelegate {
-
     func qrCodeScannerResponse(code: String) {
         webView.evaluateJavaScript("onQRCodeScanned('\(code)')", completionHandler: nil)
     }
-
 }
 
 extension ChatViewController : OCRDelegate {
-
         func ocrResponse(text: String) {
             self.webView.evaluateJavaScript("onOCRScanned('\(text)')", completionHandler: nil)
             //self.navigationController?.popViewController(animated: true)
     }
-    
 }
 
+extension ChatViewController : AceAnimatorDelegate {
+        func aceAnimatorResponse(text: String) {
+            self.webView.evaluateJavaScript("onARSceneResponse('\(text)')", completionHandler: nil)
+            //self.navigationController?.popViewController(animated: true)
+    }
+}
 
 extension ChatViewController: WKNavigationDelegate {
     
@@ -138,6 +151,8 @@ extension ChatViewController: WKScriptMessageHandler {
             launchQRScanner(dict: dict)
         } else if message.name == "launchOCRScanner", let dict = message.body as? NSDictionary {
             launchOCRScanner(dict: dict)
+        } else if message.name == "launchARScene", let dict = message.body as? NSDictionary {
+            launchARScene(dict: dict)
         }
     }
 }

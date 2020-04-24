@@ -12,6 +12,11 @@ import AVKit
 import AVFoundation
 import SceneKit
 
+protocol AceAnimatorDelegate: class
+{
+    func aceAnimatorResponse(text: String)
+}
+
 class AceAnimatorViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet weak var sceneView: ARSCNView!
@@ -30,6 +35,8 @@ class AceAnimatorViewController: UIViewController, ARSCNViewDelegate {
     var lastTonerNodeDisplayed:Int = 0
     
     let sceneNames = ["Toner1.scn", "Toner2.scn", "Toner3.scn", "Toner4.scn"]
+  
+    weak var delegate: AceAnimatorDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
