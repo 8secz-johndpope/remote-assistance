@@ -83,7 +83,7 @@ class ChatViewController: UIViewController {
     }
     
     func launchARScene(dict: NSDictionary) {
-        let nvc = AceAnimatorViewController()
+        let nvc = AceAnimatorViewController.instantiate(fromAppStoryboard: .Ace)
         nvc.delegate = self
         self.navigationController?.pushViewController(nvc, animated: true)
     }
