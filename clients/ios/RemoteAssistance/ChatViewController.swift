@@ -20,11 +20,15 @@ class ChatViewController: UIViewController {
         webView.configuration.userContentController.add(self, name: "launchRA")
         webView.configuration.userContentController.add(self, name: "launchQRScanner")
         webView.configuration.userContentController.add(self, name: "launchOCRScanner")
+        webView.configuration.userContentController.add(self, name: "launchARScene")
+        
+        // Next one to add
+        //webView.configuration.userContentController.add(self, name: "launchARVideo")
+
         webView.load(request)
         webView.navigationDelegate = self
         
-        //let c = uicolorFromHex(rgbValue: 0x004c83)
-        let c = UIColor(red: 0.30, green: 0.30, blue: 0.30, alpha: 1.0)
+        let c = #colorLiteral(red: 0, green: 0.1762945354, blue: 0.3224477768, alpha: 1)
         navigationController?.navigationBar.tintColor = c
         navigationController?.navigationBar.barTintColor = c
     }
@@ -32,6 +36,10 @@ class ChatViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .portrait
     }
 
     func uicolorFromHex(rgbValue:UInt32)->UIColor{
@@ -74,6 +82,12 @@ class ChatViewController: UIViewController {
         self.navigationController?.pushViewController(nvc, animated: true)
     }
     
+    func launchARScene(dict: NSDictionary) {
+        let nvc = AceAnimatorViewController.instantiate(fromAppStoryboard: .Ace)
+        nvc.delegate = self
+        self.navigationController?.pushViewController(nvc, animated: true)
+    }
+    
     func launchOCRScanner(dict: NSDictionary) {
         var options = [String]()
         if let arr1 = dict["options"] as? [String:Any] {
@@ -95,22 +109,24 @@ class ChatViewController: UIViewController {
 }
     
 extension ChatViewController : QRCodeScannerDelegate {
-
     func qrCodeScannerResponse(code: String) {
         webView.evaluateJavaScript("onQRCodeScanned('\(code)')", completionHandler: nil)
     }
-
 }
 
 extension ChatViewController : OCRDelegate {
-
         func ocrResponse(text: String) {
             self.webView.evaluateJavaScript("onOCRScanned('\(text)')", completionHandler: nil)
             //self.navigationController?.popViewController(animated: true)
     }
-    
 }
 
+extension ChatViewController : AceAnimatorDelegate {
+        func aceAnimatorResponse(text: String) {
+            self.webView.evaluateJavaScript("onARSceneResponse('\(text)')", completionHandler: nil)
+            //self.navigationController?.popViewController(animated: true)
+    }
+}
 
 extension ChatViewController: WKNavigationDelegate {
     
@@ -138,6 +154,8 @@ extension ChatViewController: WKScriptMessageHandler {
             launchQRScanner(dict: dict)
         } else if message.name == "launchOCRScanner", let dict = message.body as? NSDictionary {
             launchOCRScanner(dict: dict)
+        } else if message.name == "launchARScene", let dict = message.body as? NSDictionary {
+            launchARScene(dict: dict)
         }
     }
 }

@@ -90,9 +90,10 @@ class AceViewController : UIViewController {
         self.mode = mode
         print("set_mode: \(mode)")
         
-        if (mode != "hands") {
-            handsVC?.view.isHidden = true
-        }
+// Request from DATT to always show hands
+//        if (mode != "hands") {
+//            handsVC?.view.isHidden = true
+//        }
         
         if (mode != "sketch") {
             sketchVC?.view.isHidden = true

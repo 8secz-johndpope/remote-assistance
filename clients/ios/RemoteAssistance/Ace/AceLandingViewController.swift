@@ -87,7 +87,7 @@ extension AceLandingViewController : QRCodeScannerDelegate {
             
             AceAPI.sharedInstance.createRoom() { result, error in
                 guard let roomId = result?.uuid else {
-                    print("API Error: createRoom failed: \(error)")
+                    print("API Error: createRoom failed: \(String(describing:error))")
                     return
                 }
                 

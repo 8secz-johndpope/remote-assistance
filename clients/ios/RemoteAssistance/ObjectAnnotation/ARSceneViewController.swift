@@ -305,9 +305,9 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
                 print("getAllAnchors exception: \(err)")
                 return
             }
-            if let anchors = result {
-                
-            }
+//            if let anchors = result {
+//                
+//            }
         }
     }
     

@@ -198,7 +198,11 @@ extension SettingsViewController : UITableViewDelegate, UITableViewDataSource {
         switch (type) {
         case .help:
             if let url = URL(string: "\(store.ace.state.serverUrl)/help") {
-                UIApplication.shared.openURL(url)
+                UIApplication.shared.open(url, options: [:],
+                                             completionHandler: {
+                                                 (success) in
+                                                    print("Open \(url): \(success)")
+                                             })
             }
         default:
             alert(type: type)
