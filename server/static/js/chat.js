@@ -39,74 +39,6 @@ function injectMsg(msg,msgLabel) {
   botResponse(msg,msgLabel);
 }
 
-function launchRA() {
-  localStorage.setItem('convArchive',JSON.stringify(convArchive));
-  $.post(SERVER_API + "room").then( 
-    function(roomData) {
-      if (runningNative()) {
-        window.webkit.messageHandlers.launchRA.postMessage(
-          { 
-            user_uuid: user_uuid,
-            room_uuid: roomData.room_uuid,
-            archive: convArchive //JSON.stringify(convArchive)
-          });                
-      } else {
-          window.location.href = "/" + roomData.uuid + "/customer"; 
-      }
-    })
-}
-
-function launchARScene(action) {
-  savedAction = action;
-
-  // DEBUG
-  // Launch AR scene
-  // DEBUG
-
-  injectMsg(savedAction,"");
-}
-
-function launchARVideo(action) {
-  savedAction = action;
-
-  // DEBUG
-  // Launch AR scene
-  // DEBUG
-
-  injectMsg(savedAction,"");
-}
-
-async function launchOCRScanner(action,url) {
-  savedAction = action;
-  // Launch native text scanner
-  let options = await getURL(url);
-  console.log(options);
-  if (runningNative()) {
-      window.webkit.messageHandlers.launchOCRScanner.postMessage(
-      { 
-          options: options
-      }); 
-      } else {
-        // DEBUG
-        let scannedText = "";
-        if (action == 5) {
-          scannedText = "ApeosPort-VII C7773";    
-        } else if (action == 7) {
-          scannedText = "32342";
-        }
-        injectMsg(savedAction,scannedText);
-        // DEBUG
-      }
-}
-
-function onOCRScanned(scannedText)
-{
-  if (!runningNative()) {
-    //
-  }
-  injectMsg(savedAction,scannedText);
-}
-
 function launchLink(url,action) {
   savedAction = action;
   window.open(url,'_blank');
@@ -350,6 +282,101 @@ function random(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 }
 
+// Launchers (connect to iOS native)
+function launchRA() {
+  localStorage.setItem('convArchive',JSON.stringify(convArchive));
+  $.post(SERVER_API + "room").then( 
+    function(roomData) {
+      if (runningNative()) {
+        window.webkit.messageHandlers.launchRA.postMessage(
+          { 
+            user_uuid: user_uuid,
+            room_uuid: roomData.room_uuid,
+            archive: convArchive //JSON.stringify(convArchive)
+          });                
+      } else {
+          window.location.href = "/" + roomData.uuid + "/customer"; 
+      }
+    })
+}
+
+function launchARScene(action) {
+  savedAction = action;
+
+  if (runningNative()) {
+      console.log("Launching ARScene ...")
+      window.webkit.messageHandlers.launchARScene.postMessage(
+      { 
+      }); 
+      } else {
+        // DEBUG
+          injectMsg(savedAction,"If I were on a mobile device I could show you how with AR!");
+        // DEBUG
+      }
+}
+
+function onARSceneResponse()
+{
+  if (!runningNative()) {
+    //console.log("Back from AR scene")
+  }
+  injectMsg(savedAction,"OK");
+}
+
+function launchARVideo(action) {
+  savedAction = action;
+
+  // DEBUG
+  // Launch AR scene
+  // DEBUG
+
+  injectMsg(savedAction,"");
+}
+
+async function launchOCRScanner(action,url) {
+  savedAction = action;
+  // Launch native text scanner
+  let options = await getURL(url);
+  console.log(options);
+  if (runningNative()) {
+      window.webkit.messageHandlers.launchOCRScanner.postMessage(
+      { 
+          options: options
+      }); 
+      } else {
+        // DEBUG
+        let scannedText = "";
+        if (action == 5) {
+          scannedText = "ApeosPort-VII C7773";    
+        } else if (action == 7) {
+          scannedText = "32342";
+        }
+        injectMsg(savedAction,scannedText);
+        // DEBUG
+      }
+}
+
+function onOCRScanned(scannedText)
+{
+  if (!runningNative()) {
+    //
+  }
+  injectMsg(savedAction,scannedText);
+}
+
+function launchQRScanner(action) {
+    savedAction = action;
+    if (runningNative()) {
+      window.webkit.messageHandlers.launchQRScanner.postMessage(
+      { 
+      });                
+    } else {
+      let scannerParentElement = document.getElementById("scanner");
+      jbScanner.appendTo(scannerParentElement);
+      $('#myModal').modal('show');
+    }
+}
+
 function onQRCodeScanned(scannedText)
 {
   if (!runningNative()) {
@@ -375,18 +402,6 @@ function JsQRScannerReady()
     //launchQRScanner();
 }
 
-function launchQRScanner(action) {
-    savedAction = action;
-    if (runningNative()) {
-      window.webkit.messageHandlers.launchQRScanner.postMessage(
-      { 
-      });                
-    } else {
-      let scannerParentElement = document.getElementById("scanner");
-      jbScanner.appendTo(scannerParentElement);
-      $('#myModal').modal('show');
-    }
-}
 
 function runningNative() {
   let n = false;

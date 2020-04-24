@@ -120,8 +120,8 @@ const CHAT_TREE_JSON = `
     "q": "Here are the part numbers for toner for your device: {{partList}}. Please <a href=#>visit the digital store to purchase toner</a>.
           <div style='padding:10px 0px 0px 0px'>
           Did you know that Fuji Xerox provides automated toner replenishment using smart remote service? 
-          Would you like to know more about applying for eligibility? 
-          <a href=https://www.fujixerox.co.nz/en/Company/EP-BB>link to form</a></div>",
+          <a href=https://www.fujixerox.co.nz/en/Company/EP-BB>Click here to learn more about applying for eligibility.</a>
+          </div>",
     "next": [13],
     "nextLabels": ["Continue"]
     },
