@@ -43,7 +43,7 @@ class AceAnimatorViewController: UIViewController, ARSCNViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+       
         self.sceneView.delegate = self
         self.configuration.automaticImageScaleEstimationEnabled = true
         self.objectGroupName = "VariousPrinters"
@@ -77,7 +77,7 @@ class AceAnimatorViewController: UIViewController, ARSCNViewDelegate {
         super.viewWillDisappear(animated)
         self.sceneView.session.pause()
         self.anchorFound = false
-        
+        self.delegate?.aceAnimatorResponse(text: "")
         self.view.removeGestureRecognizers()
     }
     

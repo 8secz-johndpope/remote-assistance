@@ -10,7 +10,7 @@ import UIKit
 import WebKit
 
 class ChatViewController: UIViewController {
-
+   
     @IBOutlet weak var webView: WKWebView!
 
     override func viewDidLoad() {
@@ -90,6 +90,7 @@ class ChatViewController: UIViewController {
     }
     
     func launchQRScanner(dict: NSDictionary) {
+
         let nvc = QRCodeSCanner()
         nvc.delegate = self
         self.navigationController?.pushViewController(nvc, animated: true)
