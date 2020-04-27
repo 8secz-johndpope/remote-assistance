@@ -72,7 +72,7 @@ module.exports = {
 			})		
 	},
 
-	getPrinterName: (res,cb) => {
+	getPrinterNames: (res,cb) => {
 		connection.query('select * from printerName',
 			[
 			],
@@ -81,9 +81,24 @@ module.exports = {
 				if (err) throw err
 				for (let i = 0; i < rows.length; i++) {
 					if (rows.length > 0) {
-						let obj = { name: rows[i].name, id: rows[i].id };
+						let obj = { name: rows[i].name, id: rows[i].id, partsList: rows[i].partsList };
 						ret.unshift(obj);
 					}
+				}
+				cb(ret);
+			})		
+	},
+
+	getPrinter: (res,name,cb) => {
+		connection.query('select * from printerName where name = ?',
+			[
+				name
+			],
+			function (err, rows, fields) {
+				if (err) throw err
+				let ret = {}
+				if (rows.length > 0) {
+						ret = { name: rows[0].name, id: rows[0].id, partsList: rows[0].partsList };
 				}
 				cb(ret);
 			})		

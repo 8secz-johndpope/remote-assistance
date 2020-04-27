@@ -34,9 +34,15 @@ if (db !== null) {
         })
     });
 
-    // Printer name
+    // Printer 
     router.get('/printerName/', function (req, res) {
-        db.getPrinterName(res,function(data) {
+        db.getPrinterNames(res,function(data) {
+            res.json(data);
+        })
+    });
+
+    router.get('/printerName/:name', function (req, res) {
+        db.getPrinter(res,req.params.name,function(data) {
             res.json(data);
         })
     });

@@ -24,12 +24,12 @@ const CHAT_TREE_JSON = `
     {
     "id": 3,
     "q": "What do you want help with?",
-    "next": [4,18,11],
+    "next": [4,22,11],
     "nextLabels": ["Fix my printer","I need to replace my printer toner","Speak to someone"]
     },
     {
     "id": 4,
-    "q": "OK, great! We need to know your printer model. Please press the button below then frame your device's model name in the camera window.",
+    "q": "Sounds good. Now we need to know your printer model. Please press the button below then frame your device's model name in the camera window.",
     "next": ["scanText",5],
     "url": "printerName",
     "setVar":"printerName"
@@ -38,7 +38,7 @@ const CHAT_TREE_JSON = `
     "id": 5,
     "q": "Great! You've got a {{printerName}}. Do you want to...",
     "next": [6,12,14],
-    "nextLabels": ["address a fault code","clear a paper jam","install a print driver"]
+    "nextLabels": ["Address a fault code","Clear a paper jam","Install a print driver"]
     },
     {
     "id": 6,
@@ -49,8 +49,8 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 7,
-    "q": "Got it. Please check out this video:",
-    "next": ["https://www.youtube.com/watch?v=Sagg08DrO5U",8]
+    "q": "Error {{errorCode}}. Got it. Please check out this video:",
+    "next": ["https://www.youtube.com/watch?v=kmNdi8S4Utg",8]
     },
     {
     "id": 8,
@@ -87,12 +87,12 @@ const CHAT_TREE_JSON = `
     {
     "id": 14,
     "q": "I see you are on a {{deviceType}}. Do you want to print from:",
-    "next": ["15m16",17],
+    "next": ["15m16m17",17],
     "nextLabels": ["A mobile device","A desktop"]
     },
     {
-    "id": 15,
-    "q": "You're on Android, so please download <a href='intent://example.com#Intent;scheme=app;package=my.package.name;end;'>this app</a> from the Google Play Store.",
+    "id": 15,  
+    "q": "You're on Android, so please download <a href='https://play.google.com/store/apps/details?id=com.xerox.printservice'>this app</a> from the Google Play Store.",
     "next": [13],
     "nextLabels": ["Continue"]
     },
@@ -105,22 +105,29 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 17,
-    "q": "Please visit <a href=https://bit.ly/3c6Qs0w>this link</a> on a desktop or email to {{userEmail}} to download.",
+    "q": "Please visit <a href=https://onlinesupport.fujixerox.com/setupDriverForm.do?ctry_code=SG&lang_code=en&d_lang=en&pid=AP7C7773>this link</a> on a desktop or <a href='mailto:?body=Hello!%0D%0A%0D%0AThis%20link%20can%20help%20you%20configure%20drivers%20on%20your%20device:%20https://bit.ly/2xdI9jV&subject=Your%20Digital%20Companion%20link'>send email with instructions.</a>",
     "next": [13],
     "nextLabels": ["Continue"]
     },
     {
-    "id": 18,
-    "q": "Do you... ",
+    "id": 22,
+    "q": "OK, great! We need to know your printer model. Please press the button below then frame your device's model name in the camera window.",
+    "next": ["scanText",23],
+    "url": "printerName",
+    "setVar":"printerName"
+    },
+    {
+    "id": 23,
+    "q": "Got it. For your {{printerName}} do you need to... ",
     "next": [19,20],
-    "nextLabels": ["need to order more toner","need to install new toner"]
+    "nextLabels": ["Order more toner","Install new toner"]
     },
     {
     "id": 19,
-    "q": "Here are the part numbers for toner for your device: {{partList}}. Please <a href=#>visit the digital store to purchase toner</a>.
+    "q": "Here are the part numbers for toner for your device: <span style='color:orange'>{{partList}}</span>. Please <a href=https://www.fujixerox.com.au/en/Contact/Order-Supplies>visit the digital store to purchase toner</a>.
           <div style='padding:10px 0px 0px 0px'>
           Did you know that Fuji Xerox provides automated toner replenishment using smart remote service? 
-          <a href=https://www.fujixerox.co.nz/en/Company/EP-BB>Click here to learn more about applying for eligibility.</a>
+          <a href=https://www.fujixerox.co.nz/en/Company/EP-BB>Find out more about applying for eligibility.</a>
           </div>",
     "next": [13],
     "nextLabels": ["Continue"]

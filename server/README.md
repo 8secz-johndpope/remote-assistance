@@ -326,8 +326,14 @@ get /api/errorCode
 return [{"id":int,url":"url_string","code":"string"}]
 ```
 
-Get all printer names
+Get printer details
+```
+get /api/printerName/:name
+return {"id":int,name":"string",partsList:"string"}
+```
+
+Get all printers
 ```
 get /api/printerName
-return [{"id":int,name":"string"}]
+return [{"id":int,name":"string",partsList:"string"}]
 ```

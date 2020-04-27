@@ -12,13 +12,14 @@ const SERVER_API = "/api/";
 const NATIVE_UA = "ace";
 
 const CTJ = CHAT_TREE_JSON.replace(/(\r\n|\n|\r)/gm, "")
-console.log(CTJ);
-const CHAT_TREE = JSON.parse(CTJ);
+//console.log(CTJ);
+let responses = []
 
 let convArchive = {}; convArchive.responses = []; 
 let currentIndex = 1;
 let jbScanner;
 let savedAction;
+let printerDetails;
 
 msgerForm.addEventListener("submit", event => {
   event.preventDefault();
@@ -33,9 +34,9 @@ msgerForm.addEventListener("submit", event => {
 });
 
 function injectMsg(msg,msgLabel) {
-  console.log(msg,msgLabel);
+  //console.log(msg,msgLabel);
   appendMessage(PERSON_NAME, PERSON_IMG, "right", msgLabel,[]);
-  saveResponse(CHAT_TREE.responses[currentIndex-1],msg,msgLabel);
+  saveResponse(responses[currentIndex],msg,msgLabel);
   botResponse(msg,msgLabel);
 }
 
@@ -134,7 +135,12 @@ function appendMessage(name, img, side, text, botResponseArr) {
 function saveResponse(item,r,rl) {
   let res = new Object();
   res.question = item.q; res.response = r; res.responseLabel = rl;
-  if (item.setVar) { let sv = item.setVar; convArchive[sv] = rl; }
+  if (item.setVar) { 
+    let sv = item.setVar; convArchive[sv] = rl; 
+    if (sv == "printerName") {
+      getPrinterDetails(rl);
+    }
+  }
   convArchive.responses.push(res);
   //console.log(JSON.stringify(convArchive));
 }
@@ -152,17 +158,12 @@ function parseQuestion(q) {
       replaceWith = "test@fxpal.com";
       // DEBUG
     } else if (toReplace =="partList") {
-      // DEBUG
-      replaceWith = "PT-234324, PT-112, PTx-232";
-      // DEBUG
+      replaceWith = printerDetails.data.partsList;
     } else if (toReplace =="deviceType") {
-      // DEBUG
-      replaceWith = "Android";
+      replaceWith = deviceType;
       convArchive["deviceType"] = replaceWith; // When to set this?
-      // DEBUG
-    } 
-    else if (toReplace in convArchive) {
-        replaceWith = convArchive[toReplace];
+    } else if (toReplace in convArchive) {
+      replaceWith = convArchive[toReplace];
     }
     q = q.replace(toReplaceRaw,replaceWith);
   }
@@ -175,61 +176,66 @@ function botResponse(msgText,msgLabel="") {
   let botResponseArr = [];
 
   let msgTextInt = parseInt(msgText);
-  console.log(msgText + " " + msgTextInt);
+  //console.log(msgText + " " + msgTextInt);
 
-  const regex = /[0-9]+m[0-9]+/g;
+  const regex = /[0-9]+m[0-9]+m[0-9]+/g;
   const found = msgText.match(regex);
-  console.log(msgText + " " + regex);
+  //console.log(msgText + " " + regex);
   if ( found !== null ) {
+    // Example: "next": ["15m16m17"],
+    //          is parsed as Android,iOS,other 
     const tmp = found[0].split("m");
     if (convArchive["deviceType"] == "Android") {
       currentIndex = parseInt(tmp[0]);
-    } else {
+    } else if (convArchive["deviceType"] == "iOS") {
       currentIndex = parseInt(tmp[1]);
+    } else {
+      currentIndex = parseInt(tmp[2]);
+    console.log(found[0] + " " + tmp[2]);
     }
   } else if (isNaN(msgTextInt)) {
-      currentIndex = CHAT_TREE.responses[currentIndex-1].next[1];      
+      currentIndex = responses[currentIndex].next[1];      
   } else if (msgText == 0) { 
       currentIndex = 1;
-  } else if (CHAT_TREE.responses[currentIndex-1].next.length  == 0) {
+  } else if (responses[currentIndex].next.length  == 0) {
     return;
   } else {
-    for (let i = 0; i < CHAT_TREE.responses[currentIndex-1].next.length; i++) {
-     if ((CHAT_TREE.responses[currentIndex-1].next.length == 1) || (msgTextInt == CHAT_TREE.responses[currentIndex-1].next[i])) {
+    for (let i = 0; i < responses[currentIndex].next.length; i++) {
+     if ((responses[currentIndex].next.length == 1) || (msgTextInt == responses[currentIndex].next[i])) {
       //console.log(msgTextInt);
-      currentIndex = CHAT_TREE.responses[currentIndex-1].next[i];
+      currentIndex = responses[currentIndex].next[i];
      }
     }
   }  
 
-  botMsgText = parseQuestion(CHAT_TREE.responses[currentIndex-1].q); 
+  botMsgText = parseQuestion(responses[currentIndex].q); 
 
   // + " " + runningNative();
 
-  for (let i = 0; i < CHAT_TREE.responses[currentIndex-1].next.length; i++) {
+  for (let i = 0; i < responses[currentIndex].next.length; i++) {
     let pReg = /\+[0-9]+/;
     let eReg = /.+?@.+?\..+/;
-    let t = CHAT_TREE.responses[currentIndex-1].next[i].toString();
+    let t = responses[currentIndex].next[i].toString();
     let nextBtn = new Object();
     if (t == "barcode") {
         nextBtn.type = "barcode"; 
-        nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
+        nextBtn.action = responses[currentIndex].next[i+1];
         botResponseArr.push(nextBtn);
         break;
     } else if (t == "scanText") {
         nextBtn.type = "scanText"; 
-        nextBtn.url = CHAT_TREE.responses[currentIndex-1].url;
-        nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
+        nextBtn.url = responses[currentIndex].url;
+        nextBtn.action = responses[currentIndex].next[i+1];
         botResponseArr.push(nextBtn);
         break;
     } else if (t == "showARScene") {
         nextBtn.type = "showARScene"; 
-        nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
+        nextBtn.action = responses[currentIndex].next[i+1];
         botResponseArr.push(nextBtn);
         break;
     } else if (t == "showARVideo") {
         nextBtn.type = "showARVideo"; 
-        nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
+        nextBtn.action = responses[currentIndex].next[i+1];
         botResponseArr.push(nextBtn);
         break;
     } else if (t == "ra") {
@@ -241,11 +247,11 @@ function botResponse(msgText,msgLabel="") {
     } else if (validURL(t)) {
         nextBtn.type = "link"; 
         nextBtn.url = t;
-        nextBtn.action = CHAT_TREE.responses[currentIndex-1].next[i+1];
+        nextBtn.action = responses[currentIndex].next[i+1];
         botResponseArr.push(nextBtn);
         break;
     } else {
-      let tL = CHAT_TREE.responses[currentIndex-1].nextLabels ? CHAT_TREE.responses[currentIndex-1].nextLabels[i] : t;
+      let tL = responses[currentIndex].nextLabels ? responses[currentIndex].nextLabels[i] : t;
       nextBtn.type = "response"; nextBtn.action = t; nextBtn.actionLabel = tL;
     }
     botResponseArr.push(nextBtn);
@@ -262,7 +268,8 @@ function get(selector, root = document) {
 }
 
 function getURL(url) {
-  url = SERVER_API + url; console.log(url);
+  url = encodeURI(SERVER_API + url); 
+  console.log(url);
   return $.getJSON(url)
     .then(function(data){
       return {
@@ -309,9 +316,7 @@ function launchARScene(action) {
       { 
       }); 
       } else {
-        // DEBUG
           injectMsg(savedAction,"If I were on a mobile device I could show you how with AR!");
-        // DEBUG
       }
 }
 
@@ -337,23 +342,28 @@ async function launchOCRScanner(action,url) {
   savedAction = action;
   // Launch native text scanner
   let options = await getURL(url);
-  console.log(options);
+  //console.log(options);
   if (runningNative()) {
       window.webkit.messageHandlers.launchOCRScanner.postMessage(
       { 
           options: options
       }); 
-      } else {
-        // DEBUG
-        let scannedText = "";
-        if (action == 5) {
-          scannedText = "ApeosPort-VII C7773";    
-        } else if (action == 7) {
-          scannedText = "32342";
-        }
-        injectMsg(savedAction,scannedText);
-        // DEBUG
-      }
+  } else {
+    // DEBUG
+    let scannedText = "";
+    if ( (action == 5) || (action == 23) ) {
+      scannedText = "ApeosPort-VII C7773";    
+    } else if (action == 7) {
+      scannedText = "32342";
+    }
+    injectMsg(savedAction,scannedText);
+    // DEBUG
+    }
+}
+
+async function getPrinterDetails(printerName) {
+    let url = "printerName/" + printerName
+    printerDetails = await getURL(url);
 }
 
 function onOCRScanned(scannedText)
@@ -422,6 +432,38 @@ function loadUser() {
   }
 }
 
+// Determine the mobile operating system.
+// Returns one of 'iOS', 'Android', 'Windows Phone', or 'desktop'.
+function getMobileOperatingSystem() {
+  var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+      // Windows Phone must come first because its UA also contains "Android"
+    if (/windows phone/i.test(userAgent)) {
+        return "Windows Phone";
+    }
+
+    if (/android/i.test(userAgent)) {
+        return "Android";
+    }
+
+    // iOS detection from: http://stackoverflow.com/a/9039885/177710
+    if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        return "iOS";
+    }
+
+    return "desktop";
+}
+
+function fillResponses() {
+  const ct = JSON.parse(CTJ);
+  for (let i=0;i<ct.responses.length;i++) {
+    let id = ct.responses[i].id;
+    responses[id] = ct.responses[i];
+  }
+}
+
+fillResponses();
+var deviceType = getMobileOperatingSystem();
 let user_uuid = Cookies.get('customer_uuid');
 loadUser();
 botResponse("0");
