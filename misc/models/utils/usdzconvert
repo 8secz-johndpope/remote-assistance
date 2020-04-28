@@ -1,0 +1,9 @@
+#!/bin/sh
+BASEPATH=$(dirname "$0")/usdpython
+export PATH=$PATH:$BASEPATH/USD:$PATH:$BASEPATH/usdzconvert;
+export PYTHONPATH=$PYTHONPATH:$BASEPATH/USD/lib/python
+
+# uncomment to set the PYTHONPATH to FBX Bindings here:
+export PYTHONPATH=$PYTHONPATH:/Applications/Autodesk/FBX\ Python\ SDK/2019.0/lib/Python27_x86
+
+exec $BASEPATH/usdzconvert/usdzconvert $*
