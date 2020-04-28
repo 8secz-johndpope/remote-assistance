@@ -1,0 +1,42 @@
+[
+  {
+    "libraryIdentifier" : "4bcd187c9e46762b279d159b004632b8",
+    "format" : "model",
+    "displayName" : "copier-export.usdz"
+  },
+  {
+    "libraryIdentifier" : "85ce8a667c16bb364e10671576a747ec",
+    "format" : "model",
+    "displayName" : "copier-export.usdz"
+  },
+  {
+    "libraryIdentifier" : "37bb3344dddf87a0779a9d3800b29a0e",
+    "format" : "model",
+    "displayName" : "cover.usdz"
+  },
+  {
+    "libraryIdentifier" : "30d7bbc3b6d2f5dd34f70f98c82e3e1b",
+    "format" : "model",
+    "displayName" : "copier.usdz"
+  },
+  {
+    "libraryIdentifier" : "1b7b0637bac02820dd83395554688c20",
+    "format" : "model",
+    "displayName" : "toner-1.usdz"
+  },
+  {
+    "libraryIdentifier" : "23ea58ef9bb532539b6e1609a377f411",
+    "format" : "model",
+    "displayName" : "toner-2.usdz"
+  },
+  {
+    "libraryIdentifier" : "5dbde3eb16595c6b6fd91c0a49019340",
+    "format" : "model",
+    "displayName" : "toner-3.usdz"
+  },
+  {
+    "libraryIdentifier" : "0de9c8bbe23c56714daadf8c744daa04",
+    "format" : "model",
+    "displayName" : "toner-4.usdz"
+  }
+]
