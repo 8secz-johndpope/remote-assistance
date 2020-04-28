@@ -42,8 +42,8 @@ function injectMsg(msg,msgLabel) {
 
 function launchLink(url,action) {
   savedAction = action;
-  window.open(url,'_blank');
-  injectMsg(savedAction,"");
+  setTimeout(injectMsg,1000,savedAction,"(viewing link)");
+  window.location = url;
 }
 
 function launchEmail(msg) { 
@@ -342,7 +342,7 @@ async function launchOCRScanner(action,url) {
   savedAction = action;
   // Launch native text scanner
   let options = await getURL(url);
-  //console.log(options);
+  console.log(options);
   if (runningNative()) {
       window.webkit.messageHandlers.launchOCRScanner.postMessage(
       { 
