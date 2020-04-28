@@ -504,6 +504,31 @@
             </objects>
             <point key="canvasLocation" x="1957.9710144927537" y="1620.5357142857142"/>
         </scene>
+        <!--RC Project Viewer-->
+        <scene sceneID="WBH-gU-0dH">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="A1R-5g-tjy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <viewController storyboardIdentifier="AceRCProjectViewController" title="RC Project Viewer" id="6Pi-65-B8a" customClass="AceRCProjectViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="uep-6f-nuf">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <arView multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8RR-T6-oEE">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </arView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="9D9-fk-QgP"/>
+                    </view>
+                    <connections>
+                        <outlet property="arView" destination="8RR-T6-oEE" id="WG4-fS-mqd"/>
+                    </connections>
+                </viewController>
+                <tabBarItem title="RC Project Viewer" image="person.crop.rectangle" catalog="system" id="pDT-zE-eNb"/>
+            </objects>
+            <point key="canvasLocation" x="2708.6956521739135" y="1620.5357142857142"/>
+        </scene>
         <!--Digital Companion-->
         <scene sceneID="cfH-6X-Kv1">
             <objects>

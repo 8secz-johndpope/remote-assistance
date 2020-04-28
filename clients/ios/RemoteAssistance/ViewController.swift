@@ -20,19 +20,33 @@ class ViewController: UITabBarController {
         let currentScreenBrightness = UIScreen.main.brightness
         UIScreen.main.brightness = currentScreenBrightness
   
-        // uncomment to show the unified view ace view controller
-        let vc = AceLandingViewController.instantiate(fromAppStoryboard: .Ace)
-        let navVC = AceNavigationController()
-        navVC.tabBarItem = vc.tabBarItem
-        navVC.pushViewController(vc)
-        self.viewControllers?.prepend(navVC)
+        do {
+            // uncomment to show the unified view ace view controller
+            let vc = AceLandingViewController.instantiate(fromAppStoryboard: .Ace)
+            let navVC = AceNavigationController()
+            navVC.tabBarItem = vc.tabBarItem
+            navVC.pushViewController(vc)
+            self.viewControllers?.prepend(navVC)
+        }
         
-        // add digital companion
-        let vcDC = AceDCLandingViewController.instantiate(fromAppStoryboard: .Ace)
-        let navVCDC = AceNavigationController()
-        navVCDC.tabBarItem = vcDC.tabBarItem
-        navVCDC.pushViewController(vcDC)
-        self.viewControllers?.prepend(navVCDC)
+        do {
+            // add digital companion
+            let vc = AceDCLandingViewController.instantiate(fromAppStoryboard: .Ace)
+            let navVC = AceNavigationController()
+            navVC.tabBarItem = vc.tabBarItem
+            navVC.pushViewController(vc)
+            self.viewControllers?.prepend(navVC)
+        }
+        
+        do {
+            // add digital companion
+            let vc = AceRCProjectViewController.instantiate(fromAppStoryboard: .Ace)
+            let navVC = AceNavigationController()
+            navVC.tabBarItem = vc.tabBarItem
+            navVC.pushViewController(vc)
+            // add to the end
+            self.viewControllers?.append(navVC)
+        }
         
         self.selectedIndex = 0
 
