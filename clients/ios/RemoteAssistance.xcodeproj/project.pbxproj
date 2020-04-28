@@ -33,6 +33,7 @@
 		D753162C23DA46D400D686EC /* AceARViewController+ScreenAR.swift in Sources */ = {isa = PBXBuildFile; fileRef = D753162B23DA46D400D686EC /* AceARViewController+ScreenAR.swift */; };
 		D753162E23DA47AB00D686EC /* AceARViewController+ARPointer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D753162D23DA47AB00D686EC /* AceARViewController+ARPointer.swift */; };
 		D76C1CCC23D78BD600208511 /* AceVRViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76C1CCB23D78BD600208511 /* AceVRViewController.swift */; };
+		D787DD6B2458A39000573C59 /* AceRCProjectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D787DD6A2458A39000573C59 /* AceRCProjectViewController.swift */; };
 		D7945404243FC27A00EFA58C /* AceNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7945403243FC27A00EFA58C /* AceNavigationController.swift */; };
 		D795E76623A2E64800E97162 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D795E76523A2E64800E97162 /* ChatViewController.swift */; };
 		D7AF69FD23C8F097005B67D8 /* Ace.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D7AF69FC23C8F097005B67D8 /* Ace.storyboard */; };
@@ -130,6 +131,7 @@
 		D753162B23DA46D400D686EC /* AceARViewController+ScreenAR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AceARViewController+ScreenAR.swift"; sourceTree = "<group>"; };
 		D753162D23DA47AB00D686EC /* AceARViewController+ARPointer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AceARViewController+ARPointer.swift"; sourceTree = "<group>"; };
 		D76C1CCB23D78BD600208511 /* AceVRViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceVRViewController.swift; sourceTree = "<group>"; };
+		D787DD6A2458A39000573C59 /* AceRCProjectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceRCProjectViewController.swift; sourceTree = "<group>"; };
 		D7945403243FC27A00EFA58C /* AceNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AceNavigationController.swift; sourceTree = "<group>"; };
 		D795E76523A2E64800E97162 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		D7AF69FC23C8F097005B67D8 /* Ace.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Ace.storyboard; sourceTree = "<group>"; };
@@ -319,6 +321,7 @@
 				29604991243FC6C10042B31A /* AceAnimatorViewController.swift */,
 				D7B006B6243F953C00B32D70 /* AceDCLandingViewController.swift */,
 				D7945403243FC27A00EFA58C /* AceNavigationController.swift */,
+				D787DD6A2458A39000573C59 /* AceRCProjectViewController.swift */,
 			);
 			path = Ace;
 			sourceTree = "<group>";
@@ -651,6 +654,7 @@
 				D7DB69F8236DE35100D7C367 /* MathExtension.swift in Sources */,
 				D7AF6A0A23C936DE005B67D8 /* AceSketchViewController.swift in Sources */,
 				D7DB6A04236DE6AA00D7C367 /* SocketIOManager.swift in Sources */,
+				D787DD6B2458A39000573C59 /* AceRCProjectViewController.swift in Sources */,
 				D7AF6A0123C8F4FD005B67D8 /* AceViewController.swift in Sources */,
 				D7DA31EF239ECFCE00D1B73F /* RectangleNode.swift in Sources */,
 				D753162823D911AC00D686EC /* AceARViewController+ObjectAnnotation.swift in Sources */,
