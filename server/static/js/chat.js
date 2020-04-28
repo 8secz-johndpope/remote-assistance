@@ -87,7 +87,7 @@ function getButtonHTML(botResponseArr) {
        html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchRA()'><span class="fa fa-user fa-2x"></span></button> `;
        break;
       case "showARScene":
-       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchARScene(\"${action}\")'><span class="fa fa-camera fa-2x"></span></button> `;
+       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchAR3D(\"${action}\")'><span class="fa fa-camera fa-2x"></span></button> `;
        break;
       case "showARVideo":
        html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchARVideo(\"${action}\")'><span class="fa fa-camera fa-2x"></span></button> `;
@@ -307,12 +307,11 @@ function launchRA() {
     })
 }
 
-function launchARScene(action) {
+function launchAR3D(action) {
   savedAction = action;
-
   if (runningNative()) {
-      console.log("Launching ARScene ...")
-      window.webkit.messageHandlers.launchARScene.postMessage(
+      console.log("Launching AR3D...")
+      window.webkit.messageHandlers.launchAR3D.postMessage(
       { 
       }); 
       } else {
@@ -320,22 +319,32 @@ function launchARScene(action) {
       }
 }
 
-function onARSceneResponse()
+function onAR3DResponse()
 {
   if (!runningNative()) {
-    //console.log("Back from AR scene")
+    //console.log("Back from AR 3D scene")
   }
   injectMsg(savedAction,"OK");
 }
 
 function launchARVideo(action) {
   savedAction = action;
+  if (runningNative()) {
+      console.log("Launching ARVideo...")
+      window.webkit.messageHandlers.launchARVideo.postMessage(
+      { 
+      }); 
+      } else {
+          injectMsg(savedAction,"If I were on a mobile device I could show you how with AR!");
+      }
+}
 
-  // DEBUG
-  // Launch AR scene
-  // DEBUG
-
-  injectMsg(savedAction,"");
+function onARVideoResponse()
+{
+  if (!runningNative()) {
+    //console.log("Back from AR video scene")
+  }
+  injectMsg(savedAction,"OK");
 }
 
 async function launchOCRScanner(action,url) {
