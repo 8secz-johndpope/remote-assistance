@@ -20,8 +20,11 @@ Can be downloaded here:
 
 https://developer.apple.com/download/more/?=USDPython
 
-<details><summary>usdzconvert help</summary>
+<details><summary>usdzconvert Help</summary>
 <p>
+  
+### usdzconver Help Summary
+  
 ```
 usdzconvert 0.64
 usage: usdzconvert inputFile [outputFile]
@@ -164,6 +167,9 @@ https://github.com/KhronosGroup/COLLADA2GLTF
 
 <details><summary>COLLADA2GLTF help</summary>
 <p>
+
+#### COLLADA2GLTF Help Summary
+
 ```
 COLLADA2GLTF
 Usage:
