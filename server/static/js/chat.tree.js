@@ -66,12 +66,12 @@ const CHAT_TREE_JSON = `
     {
     "id": 10,
     "q": "Sorry about that. Please connect to a remote assistant.",
-    "next": ["ra"]
+    "next": ["ra","+61429575654"]
     },
     {
     "id": 11,
     "q": "Please connect to a remote assistant.",
-    "next": ["ra"]
+    "next": ["ra","+61429575654"]
     },
     {
     "id": 12,
