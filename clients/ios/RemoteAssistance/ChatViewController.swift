@@ -21,10 +21,8 @@ class ChatViewController: UIViewController {
         webView.configuration.userContentController.add(self, name: "launchRA")
         webView.configuration.userContentController.add(self, name: "launchQRScanner")
         webView.configuration.userContentController.add(self, name: "launchOCRScanner")
-        webView.configuration.userContentController.add(self, name: "launchARScene")
-        
-        // Next one to add
-        //webView.configuration.userContentController.add(self, name: "launchARVideo")
+        webView.configuration.userContentController.add(self, name: "launchAR3D")
+        webView.configuration.userContentController.add(self, name: "launchARVideo")
 
         webView.load(request)
         webView.navigationDelegate = self
@@ -96,12 +94,19 @@ class ChatViewController: UIViewController {
         self.navigationController?.pushViewController(nvc, animated: true)
     }
     
-    func launchARScene(dict: NSDictionary) {
+    func launchAR3D(dict: NSDictionary) {
         let nvc = AceAnimatorViewController.instantiate(fromAppStoryboard: .Ace)
         nvc.delegate = self
         self.navigationController?.pushViewController(nvc, animated: true)
     }
-    
+
+    func launchARVideo(dict: NSDictionary) {
+        //let nvc = AceARViewController.instantiate(fromAppStoryboard: .Ace)
+        //nvc.initObjectDetection()
+        //nvc.delegate = self
+        //self.navigationController?.pushViewController(nvc, animated: true)
+    }
+
     func launchOCRScanner(dict: NSDictionary) {
         var options = [String]()
         if let arr1 = dict["options"] as? [String:Any] {
@@ -125,7 +130,6 @@ class ChatViewController: UIViewController {
     
 }
 
-
 extension ChatViewController : QRCodeScannerDelegate {
     func qrCodeScannerResponse(code: String) {
         webView.evaluateJavaScript("onQRCodeScanned('\(code)')", completionHandler: nil)
@@ -141,13 +145,19 @@ extension ChatViewController : OCRDelegate {
 
 extension ChatViewController : AceAnimatorDelegate {
         func aceAnimatorResponse(text: String) {
-            self.webView.evaluateJavaScript("onARSceneResponse('\(text)')", completionHandler: nil)
+            self.webView.evaluateJavaScript("onAR3DResponse('\(text)')", completionHandler: nil)
             //self.navigationController?.popViewController(animated: true)
     }
 }
 
-extension ChatViewController: WKNavigationDelegate {
+//extension ChatViewController : AceARViewControllerDelegate {
+//        func aceARViewControllerResponse(text: String) {
+//            self.webView.evaluateJavaScript("onARVideoResponse('\(text)')", completionHandler: nil)
+            //self.navigationController?.popViewController(animated: true)
+//    }
+//}
 
+extension ChatViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
 
         if webView != self.webView {
@@ -201,8 +211,10 @@ extension ChatViewController: WKScriptMessageHandler {
             launchQRScanner(dict: dict)
         } else if message.name == "launchOCRScanner", let dict = message.body as? NSDictionary {
             launchOCRScanner(dict: dict)
-        } else if message.name == "launchARScene", let dict = message.body as? NSDictionary {
-            launchARScene(dict: dict)
+        } else if message.name == "launchAR3D", let dict = message.body as? NSDictionary {
+            launchAR3D(dict: dict)
+        } else if message.name == "launchARVideo", let dict = message.body as? NSDictionary {
+            launchARVideo(dict: dict)
         }
     }
 }

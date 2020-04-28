@@ -12,6 +12,11 @@ import SceneKit
 import WebRTC
 import CoreMotion
 
+//protocol AceARViewControllerDelegate: class
+//{
+//    func aceARViewControllerResponse(text: String)
+//}
+
 class AceARViewController : UIViewController {
     
     @IBOutlet var arView: ARSCNView!
@@ -60,6 +65,8 @@ class AceARViewController : UIViewController {
     // mode
     var mode = "none"
 
+    //weak var delegate: AceARViewControllerDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -89,6 +96,8 @@ class AceARViewController : UIViewController {
         // Pause the view's session
         self.arView.session.pause()
         
+        //self.delegate?.aceARViewControllerResponse(text: "")
+
         self.objectAnnotationViewWillDisappear()
         self.arPointerVieWillDisappear()
     }
@@ -134,8 +143,7 @@ class AceARViewController : UIViewController {
         self.videoSource = self.wrtc?.factory.videoSource()
         let capturer = WRTCCustomCapturer(delegate: self.videoSource)
         self.capturer = capturer
-
-        
+       
         let mediaContraints = RTCMediaConstraints(mandatoryConstraints: [
             "OfferToReceiveAudio": "true",
             "OfferToReceiveVideo": "true",

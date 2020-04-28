@@ -71,7 +71,7 @@ extension AceARViewController {
 //        self.loadInteralAssets()
     }
     
-    func objectAnnotationViewWillDisappear() {
+    func objectAnnotationViewWillDisappear() {       
         if let tap = self.objectTap {
             self.parent?.view.removeGestureRecognizer(tap)
         }
