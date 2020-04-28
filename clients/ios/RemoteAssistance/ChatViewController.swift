@@ -110,7 +110,10 @@ class ChatViewController: UIViewController {
                     if let item = object as? [String: Any] {
                         if let itemName = item["name"] as? String {
                             options.append(itemName)
+                        } else if let itemCode = item["code"] as? String {
+                            options.append(itemCode)
                         }
+
                     }
                 }
             }
@@ -119,9 +122,10 @@ class ChatViewController: UIViewController {
         nvc.delegate = self
         self.navigationController?.pushViewController(nvc, animated: true)
     }
-        
-}
     
+}
+
+
 extension ChatViewController : QRCodeScannerDelegate {
     func qrCodeScannerResponse(code: String) {
         webView.evaluateJavaScript("onQRCodeScanned('\(code)')", completionHandler: nil)
@@ -143,15 +147,44 @@ extension ChatViewController : AceAnimatorDelegate {
 }
 
 extension ChatViewController: WKNavigationDelegate {
+
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+
+        if webView != self.webView {
+            decisionHandler(.allow)
+            return
+        }
+
+        let app = UIApplication.shared
+        if let url = navigationAction.request.url {
+            // Handle target="_blank"
+            if navigationAction.targetFrame == nil {
+                if app.canOpenURL(url) {
+                    app.open(url)
+                    decisionHandler(.cancel)
+                    return
+                }
+            }
+
+            // Handle phone and email links
+            if url.scheme == "tel" || url.scheme == "mailto" {
+                if app.canOpenURL(url) {
+                    app.open(url)
+                }
+
+                decisionHandler(.cancel)
+                return
+            }
+
+            decisionHandler(.allow)
+        }
+
+    }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         print("error: \(error)")
     }
-    
-    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        print("provisional nav error: \(error)")
-    }
-    
+        
     func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge,
                  completionHandler: (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         // allow any ssl cert
