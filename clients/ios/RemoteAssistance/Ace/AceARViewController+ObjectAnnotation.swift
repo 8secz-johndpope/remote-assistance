@@ -310,7 +310,8 @@ extension AceARViewController {
 //                                    material.diffuse.contents = self.createThumbnail(recordingThumbnail!)
 //                                    let thumbnailNode = self.buildNode(material: material, scnVector3: SCNVector3(x:+0.1, y: +0.1, z: +0.05), url: self.recordingUrl)
 //                                    node.addChildNode(thumbnailNode)
-                                } else {
+                                }
+                                else {
                                     self.showMessage(title: "Get Thumbnail Error", message: "Invalid thumbnail data")
                                 }
                             }

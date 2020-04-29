@@ -24,8 +24,7 @@ class AceLandingViewController : UIViewController {
         self.navigationController?.setNavigationBarHidden(true, animated: animated)
         
         // Temporary switch to AceAnimatorViewController
-        let vc = AceAnimatorViewController.instantiate(fromAppStoryboard: .Ace)
-        self.navigationController?.pushViewController(vc)
+        // let vc = AceAnimatorViewController.instantiate(fromAppStoryboard: .Ace)
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {

@@ -32,9 +32,10 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
     var clipThumbnailReady = false
     var clipReady = false
     var remoteReferenceObject:ARReferenceObject?
-    
+    var clipNode = [String:ObjectAnnotationNode]()
+
     // Yulius - this is my mode switch
-    var liveAnnotation = true
+    var liveAnnotation = false
     
     var recordingUrl:URL?
 
@@ -131,15 +132,22 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
             if let _ = anchor as? ARImageAnchor {
                 self.anchorFound = true
                 print("ObjectAnnotation found imageAnchor!")
-                self.showToast(message: "Found image anchor: \(String(describing: anchor.name))")
+
                 DispatchQueue.main.async {
-                    self.nodeFound = node
+                    self.view.makeToast("Found image anchor \(anchor.name ?? "Unknown")", position: .center)
+                    let orientationNode = SCNNode()
+                    orientationNode.eulerAngles = SCNVector3(x:-Float.pi/2, y:0, z:0)
+                    node.addChildNode(orientationNode)
+                    self.nodeFound = orientationNode
+
+                    self.addPointer(node)
                     if !self.liveAnnotation {
                         for i in 0..<self.clickableImages.count {
                             let material = SCNMaterial()
-                            material.diffuse.contents = self.clickableImages[i]
-                            let clickableNode = self.buildNode(material: material, scnVector3: self.imagePositions[i], nodeQuat: node.orientation)
-                            node.addChildNode(clickableNode)
+                            material.diffuse.contents = self.createThumbnail(self.clickableImages[i])
+                            let url = self.videoURLs[i]
+                            let clickableNode = self.buildNode(material: material, scnVector3: self.imagePositions[i], url: url)
+                            self.nodeFound?.addChildNode(clickableNode)
                         }
                     }
                 }
@@ -148,14 +156,16 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
             if let _ = anchor as? ARObjectAnchor {
                 self.anchorFound = true
                 print("ObjectAnnotation found objectAnchor!")
-                self.showToast(message: "Found object anchor: \(String(describing: anchor.name))")
                 DispatchQueue.main.async {
+                    self.view.makeToast("Found object anchor \(anchor.name ?? "Unknown")", position: .center)
                     self.nodeFound = node
+                    self.addPointer(node)
                     if !self.liveAnnotation {
                         for i in 0..<self.clickableImages.count {
                             let material = SCNMaterial()
-                            material.diffuse.contents = self.clickableImages[i]
-                            let clickableNode = self.buildNode(material: material, scnVector3: self.imagePositions[i])
+                            material.diffuse.contents = self.createThumbnail(self.clickableImages[i])
+                            let url = self.videoURLs[i]
+                            let clickableNode = self.buildNode(material: material, scnVector3: self.imagePositions[i], url: url)
                             node.addChildNode(clickableNode)
                         }
                     }
@@ -164,22 +174,22 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
         }
     }
     
-    func buildNode(material: SCNMaterial, scnVector3: SCNVector3) -> SCNNode {
-        let node = SCNNode(geometry: SCNBox(width: 0.3, height: 0.3, length: 0.001))
+    func createThumbnail(_ image:UIImage) -> UIImage {
+        let imgView = AceClipThumbnail(image:image)
+        imgView.frame = CGRect(x:0, y:0, width: 800, height:800)
+        return imgView.asImage()
+    }
+    
+    func buildNode(material: SCNMaterial, scnVector3: SCNVector3, url:URL?) -> ObjectAnnotationNode {
+        let node = ObjectAnnotationNode(geometry: SCNPlane(width: 0.2, height: 0.2))
+        node.url = url
         node.geometry?.firstMaterial = material
         node.position = scnVector3
         node.opacity = 1
+        node.constraints = [SCNBillboardConstraint()]
         return node
     }
     
-    func buildNode(material: SCNMaterial, scnVector3: SCNVector3, nodeQuat:SCNQuaternion) -> SCNNode {
-        let node = self.buildNode(material: material, scnVector3: scnVector3)
-        let orientationNode = SCNNode()
-        orientationNode.orientation = SCNVector4(x: -nodeQuat.x, y: -nodeQuat.y, z:-nodeQuat.z, w: nodeQuat.w)
-        orientationNode.addChildNode(node)
-        return orientationNode
-    }
-
     func showMessage(title: String, message:String) {
         DispatchQueue.main.async {
             let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
@@ -247,41 +257,51 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
         socket.connect()
     }
     
+    func addPointer(_ node:SCNNode) {
+        let pointerNode = SCNNode(geometry: SCNPlane(width: 0.05, height: 0.05))
+        pointerNode.geometry?.firstMaterial?.diffuse.contents = UIImage(named: "ObjectPointer")
+        pointerNode.position = SCNVector3(0, 0, 0)
+        pointerNode.constraints = [SCNBillboardConstraint()]
+        node.addChildNode(pointerNode)
+    }
+
     func annotateObjectWithRecordingPlaceholder() {
         if let node = self.nodeFound {
             let material = SCNMaterial()
-            material.diffuse.contents = UIImage(named: "Standby")!
-            let placeholderNode = self.buildNode(material: material, scnVector3: SCNVector3(x: 0.0, y: 0.0, z: 0.0), nodeQuat: node.orientation)
+            material.diffuse.contents = self.createThumbnail(UIImage(named: "Standby")!)
+            let placeholderNode = self.buildNode(material: material, scnVector3: SCNVector3(x:+0.1, y: +0.1, z: +0.05), url: nil)
+            self.clipNode[self.recordingUuid ?? "none"] = placeholderNode
             node.addChildNode(placeholderNode)
         }
     }
-    
+
     func tryAnnotateObjectWithRecording() {
         if self.clipThumbnailReady && self.clipReady {
-            if let recUuid = self.recordingUuid, let node = self.nodeFound {
-                self.api.getClip(recUuid) { result, error in
+            if let recUuid = self.recordingUuid, let _ = self.nodeFound {
+                let api = AceAPI.sharedInstance
+                api.getClip(recUuid) { result, error in
                     if let err = error {
                         self.showToast(message: "getClip exception: \(err)")
                         return
                     }
-                    if let clip = result {
-                        let thumb_url_string = store.ace.state.serverUrl + clip.thumbnail_url!
-                        let mp4_url = store.ace.state.serverUrl + clip.mp4_url!
+                    if let res = result {
+                        let thumb_url_string = "\(store.ace.state.serverUrl)/\(res.thumbnail_url!)"
+                        let mp4_url = "\(store.ace.state.serverUrl)/\(res.mp4_url!)"
                         print(thumb_url_string)
                         print(mp4_url)
                         self.recordingUrl = URL(string: mp4_url)
                         AF.request(thumb_url_string).responseData { (response) in
                             if response.error == nil {
                                 print(response.result)
-                                if let data = response.data {
-                                    let recordingThumbnail = UIImage(data: data)
-                                    node.enumerateChildNodes { (nd, stop) in
-                                        nd.removeFromParentNode()
-                                    }
-                                    let material = SCNMaterial()
-                                    material.diffuse.contents = recordingThumbnail
-                                    let thumbnailNode = self.buildNode(material: material, scnVector3: SCNVector3(x: 0.0, y: 0.0, z: 0.0), nodeQuat: node.orientation)
-                                    node.addChildNode(thumbnailNode)
+                                if let data = response.data,
+                                    let recordingThumbnail = UIImage(data: data)  {
+                                        if let placeholderNode = self.clipNode[self.recordingUuid ?? "none"] {
+                                            placeholderNode.url = self.recordingUrl
+                                            placeholderNode.geometry?.firstMaterial?.diffuse.contents = self.createThumbnail(recordingThumbnail)
+                                        }
+                                }
+                                else {
+                                    self.showMessage(title: "Get Thumbnail Error", message: "Invalid thumbnail data")
                                 }
                             }
                             else {
