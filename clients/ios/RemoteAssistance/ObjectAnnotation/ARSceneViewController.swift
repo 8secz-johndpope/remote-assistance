@@ -12,6 +12,11 @@ import AVKit
 import AVFoundation
 import Alamofire
 
+protocol ARSceneViewControllerDelegate: class
+{
+    func arSceneViewControllerResponse(text: String)
+}
+
 class ARSceneViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet weak var sceneView: ARSCNView!
@@ -38,6 +43,8 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
     var liveAnnotation = false
     
     var recordingUrl:URL?
+
+    weak var delegate: ARSceneViewControllerDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,7 +74,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
         super.viewWillDisappear(animated)
         self.sceneView.session.pause()
         self.anchorFound = false
-        
+        self.delegate?.arSceneViewControllerResponse(text: "")
         self.view.removeGestureRecognizers()
     }
     

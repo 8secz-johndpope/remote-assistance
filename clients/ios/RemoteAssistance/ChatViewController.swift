@@ -101,10 +101,9 @@ class ChatViewController: UIViewController {
     }
 
     func launchARVideo(dict: NSDictionary) {
-        //let nvc = AceARViewController.instantiate(fromAppStoryboard: .Ace)
-        //nvc.initObjectDetection()
-        //nvc.delegate = self
-        //self.navigationController?.pushViewController(nvc, animated: true)
+        let nvc = ARSceneViewController.instantiate(fromAppStoryboard: .Main)
+        nvc.delegate = self
+        self.navigationController?.pushViewController(nvc, animated: true)
     }
 
     func launchOCRScanner(dict: NSDictionary) {
@@ -150,12 +149,12 @@ extension ChatViewController : AceAnimatorDelegate {
     }
 }
 
-//extension ChatViewController : AceARViewControllerDelegate {
-//        func aceARViewControllerResponse(text: String) {
-//            self.webView.evaluateJavaScript("onARVideoResponse('\(text)')", completionHandler: nil)
+extension ChatViewController : ARSceneViewControllerDelegate {
+        func arSceneViewControllerResponse(text: String) {
+            self.webView.evaluateJavaScript("onARVideoResponse('\(text)')", completionHandler: nil)
             //self.navigationController?.popViewController(animated: true)
-//    }
-//}
+    }
+}
 
 extension ChatViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {

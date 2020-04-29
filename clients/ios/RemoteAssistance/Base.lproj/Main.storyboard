@@ -2,7 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="giu-C5-QdP">
     <device id="retina5_9" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -30,7 +30,7 @@
         <!--Scene View Controller-->
         <scene sceneID="GVe-eZ-ePb">
             <objects>
-                <viewController storyboardIdentifier="objectAnnotationVC" id="GlK-ev-vYM" customClass="ARSceneViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ARSceneViewController" id="GlK-ev-vYM" customClass="ARSceneViewController" customModule="RemoteAssistance" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="W4t-D7-Y4q">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -270,6 +270,5 @@
         <image name="gear" catalog="system" width="128" height="119"/>
         <image name="hand.draw.fill" catalog="system" width="128" height="107"/>
         <image name="message" catalog="system" width="128" height="113"/>
-        <image name="perspective" catalog="system" width="128" height="122"/>
     </resources>
 </document>
