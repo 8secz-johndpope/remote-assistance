@@ -15,6 +15,8 @@ import Alamofire
 class ARSceneViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet weak var sceneView: ARSCNView!
+    @IBOutlet weak var prevButton: UIButton!
+    @IBOutlet weak var nextButton: UIButton!
     
     let api = AceAPI.sharedInstance
     let configuration = ARWorldTrackingConfiguration()
@@ -33,6 +35,9 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
     var clipReady = false
     var remoteReferenceObject:ARReferenceObject?
     var clipNode = [String:ObjectAnnotationNode]()
+    var clickableNodes:[ObjectAnnotationNode] = []
+    var thumbNails:[UIImage] = []
+    var stepInScene:Int = 0
 
     // Yulius - this is my mode switch
     var liveAnnotation = false
@@ -49,18 +54,40 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
         // TODO: This should be pulled from previous activity in other sections of the app
         self.objectGroupName = "VariousPrinters"
         self.imageGroupName = "AR Resources"
+        
         self.initSocket()
+    }
+    
+    @IBAction func prevButtonTUI(_ sender: Any) {
+        if self.stepInScene > 0 {
+            self.clickableNodes[self.stepInScene].removeFromParentNode()
+            self.stepInScene -= 1
+        }
+    }
+    
+    @IBAction func nextButtonTUI(_ sender: Any) {
+        if self.stepInScene < self.clickableNodes.count {
+            self.stepInScene += 1
+            self.nodeFound?.addChildNode(self.clickableNodes[self.stepInScene])
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.searchForObjects()
-
+        
         let tap = UITapGestureRecognizer(target: self, action: #selector(onTap))
         self.view.addGestureRecognizer(tap)
-        // TODO: Optionally load assets from API
-        self.loadInteralAssets()
-//        self.loadAnchorFromServer(anchorUuid: "demo_image_1")
+        
+        if let _ = self.nodeFound {
+            self.prevButton.isHidden = false
+            self.nextButton.isHidden = false
+        }
+        else {
+            self.prevButton.isHidden = true
+            self.nextButton.isHidden = true
+        }
+        
+        self.searchForObjects()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -69,6 +96,11 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
         self.anchorFound = false
         
         self.view.removeGestureRecognizers()
+        
+        let socket = SocketIOManager.sharedInstance
+        socket.off("recording_started")
+        socket.off("clip_ready")
+        socket.off("clip_thumbnail_ready")
     }
     
     @objc func onTap(_ gesture: UITapGestureRecognizer) {
@@ -84,7 +116,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
                     self.showVideo(tag: -1)
                 }
                 else {
-                    if let tag = self.clickableImages.firstIndex(of: obj) {
+                    if let tag = self.thumbNails.firstIndex(of: obj) {
                         self.showVideo(tag: tag)
                     }
                 }
@@ -132,9 +164,9 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
             if let _ = anchor as? ARImageAnchor {
                 self.anchorFound = true
                 print("ObjectAnnotation found imageAnchor!")
-
                 DispatchQueue.main.async {
-                    self.view.makeToast("Found image anchor \(anchor.name ?? "Unknown")", position: .center)
+                    self.loadInteralAssets(detectedName: anchor.name ?? "Unknown")
+                    self.view.makeToast("Found image anchor \(anchor.name ?? "Unknown")", position: .bottom)
                     let orientationNode = SCNNode()
                     orientationNode.eulerAngles = SCNVector3(x:-Float.pi/2, y:0, z:0)
                     node.addChildNode(orientationNode)
@@ -142,13 +174,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
 
                     self.addPointer(node)
                     if !self.liveAnnotation {
-                        for i in 0..<self.clickableImages.count {
-                            let material = SCNMaterial()
-                            material.diffuse.contents = self.createThumbnail(self.clickableImages[i])
-                            let url = self.videoURLs[i]
-                            let clickableNode = self.buildNode(material: material, scnVector3: self.imagePositions[i], url: url)
-                            self.nodeFound?.addChildNode(clickableNode)
-                        }
+                        self.addFirstClickableNode()
                     }
                 }
             }
@@ -157,27 +183,32 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
                 self.anchorFound = true
                 print("ObjectAnnotation found objectAnchor!")
                 DispatchQueue.main.async {
-                    self.view.makeToast("Found object anchor \(anchor.name ?? "Unknown")", position: .center)
+                    self.loadInteralAssets(detectedName: anchor.name ?? "Unknown")
+                    self.view.makeToast("Found object anchor \(anchor.name ?? "Unknown")", position: .bottom)
                     self.nodeFound = node
                     self.addPointer(node)
                     if !self.liveAnnotation {
-                        for i in 0..<self.clickableImages.count {
-                            let material = SCNMaterial()
-                            material.diffuse.contents = self.createThumbnail(self.clickableImages[i])
-                            let url = self.videoURLs[i]
-                            let clickableNode = self.buildNode(material: material, scnVector3: self.imagePositions[i], url: url)
-                            node.addChildNode(clickableNode)
-                        }
+                        self.nodeFound?.addChildNode(self.clickableNodes[self.stepInScene])
                     }
                 }
             }
         }
     }
     
+    func addFirstClickableNode() {
+        self.nodeFound?.addChildNode(self.clickableNodes[self.stepInScene])
+        self.prevButton.isHidden = false
+        self.prevButton.backgroundColor = UIColor.systemGray4
+        self.nextButton.isHidden = false
+        self.nextButton.backgroundColor = UIColor.systemGray4
+    }
+    
     func createThumbnail(_ image:UIImage) -> UIImage {
         let imgView = AceClipThumbnail(image:image)
         imgView.frame = CGRect(x:0, y:0, width: 800, height:800)
-        return imgView.asImage()
+        let img = imgView.asImage()
+        self.thumbNails.append(img)
+        return img
     }
     
     func buildNode(material: SCNMaterial, scnVector3: SCNVector3, url:URL?) -> ObjectAnnotationNode {
@@ -226,10 +257,49 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
         }
     }
     
-    func loadInteralAssets() {
-        self.clickableImages = [UIImage(named: "PrinterThumb1")!, UIImage(named: "PrinterThumb2")!, UIImage(named: "PrinterThumb3")!]
-        self.imagePositions = [SCNVector3(x: -0.2, y: +0.4, z: +0.05), SCNVector3(x: +0.1, y: +0.4, z: +0.05), SCNVector3(x: -0.2, y: +0.1, z: +0.05)]
-        self.videoURLs = [URL(fileURLWithPath: Bundle.main.path(forResource: "clip1", ofType: "mp4")!), URL(fileURLWithPath: Bundle.main.path(forResource: "clip2", ofType: "mp4")!), URL(fileURLWithPath: Bundle.main.path(forResource: "clip3", ofType: "mp4")!)]
+    func loadInteralAssets(detectedName: String) {
+        switch detectedName.uppercased() {
+        case "FAKEPRINTER":
+            self.clickableImages = [UIImage(named: "PrinterThumb1")!, UIImage(named: "PrinterThumb2")!, UIImage(named: "PrinterThumb3")!]
+            self.imagePositions = [SCNVector3(x: -0.2, y: +0.4, z: +0.05), SCNVector3(x: +0.1, y: +0.4, z: +0.05), SCNVector3(x: -0.2, y: +0.1, z: +0.05)]
+            self.videoURLs = [
+                URL(string:"\(store.ace.state.serverUrl)/static/clipStor/demo1.mp4")!,
+                URL(string:"\(store.ace.state.serverUrl)/static/clipStor/demo2.mp4")!,
+                URL(string:"\(store.ace.state.serverUrl)/static/clipStor/demo3.mp4")!,
+            ]
+        case "3DPRINTER":
+            self.clickableImages = [UIImage(named: "3DPrinterThumb1")!, UIImage(named: "3DPrinterThumb2")!, UIImage(named: "3DPrinterThumb3")!]
+            self.imagePositions = [SCNVector3(x: -0.2, y: +0.4, z: +0.05), SCNVector3(x: +0.1, y: +0.4, z: +0.05), SCNVector3(x: -0.2, y: +0.1, z: +0.05)]
+            self.videoURLs = [
+                URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter1", ofType: "mp4")!),
+                URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter2", ofType: "mp4")!),
+                URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter3", ofType: "mp4")!)
+            ]
+        case "DOCUCOLORTONER":
+            self.clickableImages = [UIImage(named: "3DPrinterThumb1")!, UIImage(named: "3DPrinterThumb2")!, UIImage(named: "3DPrinterThumb3")!]
+            self.imagePositions = [SCNVector3(x: -0.2, y: +0.4, z: +0.05), SCNVector3(x: +0.1, y: +0.4, z: +0.05), SCNVector3(x: -0.2, y: +0.1, z: +0.05)]
+            self.videoURLs = [
+                URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter1", ofType: "mp4")!),
+                URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter2", ofType: "mp4")!),
+                URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter3", ofType: "mp4")!)
+            ]
+        default:
+            self.clickableImages = [UIImage(named: "3DPrinterThumb1")!, UIImage(named: "3DPrinterThumb2")!, UIImage(named: "3DPrinterThumb3")!]
+            self.imagePositions = [SCNVector3(x: -0.2, y: +0.4, z: +0.05), SCNVector3(x: +0.1, y: +0.4, z: +0.05), SCNVector3(x: -0.2, y: +0.1, z: +0.05)]
+            self.videoURLs = [
+                URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter1", ofType: "mp4")!),
+                URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter2", ofType: "mp4")!),
+                URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter3", ofType: "mp4")!)
+            ]
+        }
+
+        for i in 0..<self.clickableImages.count {
+            let material = SCNMaterial()
+            material.diffuse.contents = self.createThumbnail(self.clickableImages[i])
+            let url = self.videoURLs[i]
+            let clickableNode = self.buildNode(material: material, scnVector3: self.imagePositions[i], url: url)
+            self.clickableNodes.append(clickableNode)
+        }
     }
     
     func initSocket() {

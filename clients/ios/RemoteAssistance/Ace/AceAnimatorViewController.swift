@@ -70,6 +70,7 @@ class AceAnimatorViewController: UIViewController, ARSCNViewDelegate {
             self.prevButton.isHidden = true
             self.nextButton.isHidden = true
         }
+        
         self.searchForObjects()
     }
 
