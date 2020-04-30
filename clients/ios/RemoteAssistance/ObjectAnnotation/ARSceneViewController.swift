@@ -73,7 +73,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
     }
     
     @IBAction func nextButtonTUI(_ sender: Any) {
-        if self.stepInScene < self.clickableNodes.count {
+        if self.stepInScene < self.clickableNodes.count-1 {
             self.stepInScene += 1
             self.nodeFound?.addChildNode(self.clickableNodes[self.stepInScene])
         }
