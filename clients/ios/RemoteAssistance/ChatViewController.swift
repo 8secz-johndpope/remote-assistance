@@ -18,6 +18,11 @@ class ChatViewController: UIViewController {
         let chatUrl = URL(string:url)
         let request = URLRequest(url: chatUrl!)
 
+        // clear the cache
+        let websiteDataTypes = NSSet(array: [WKWebsiteDataTypeDiskCache, WKWebsiteDataTypeMemoryCache])
+        let date = Date(timeIntervalSince1970: 0)
+        WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes as! Set<String>, modifiedSince: date, completionHandler:{ })
+        
         webView.configuration.userContentController.add(self, name: "launchRA")
         webView.configuration.userContentController.add(self, name: "launchQRScanner")
         webView.configuration.userContentController.add(self, name: "launchOCRScanner")
