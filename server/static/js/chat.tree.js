@@ -99,7 +99,7 @@ const CHAT_TREE_JSON = `
     {
     "id": 16,
     "q": "Your're on iOS, so you can print natively from your iPhone using AirPrint. Here's an instruction how to do it:",
-    "next": ["https://www.youtube.com/watch?v=Sagg08DrO5U",13]
+    "next": ["https://www.youtube.com/watch?v=P_64MdjFoL0",13]
     },
     {
     "id": 17,
