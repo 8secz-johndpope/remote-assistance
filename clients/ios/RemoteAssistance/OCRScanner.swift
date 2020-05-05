@@ -21,7 +21,7 @@ class OCRScanner: UIViewController {
 
     let options : [String]
     var foundMatch = false
-    let levDistance = 2
+    let maxLevDistance = 2 // Can do 1 if DB contains many similar strings
     
     init(options: [String]) {
         self.options = options
@@ -136,7 +136,7 @@ class OCRScanner: UIViewController {
                         let rString = string.replacingOccurrences(of: "\\s",with:"",options:.regularExpression).lowercased()
                         let lev = rString.levenshtein(rObs)
                         print(rObs,rString,lev)
-                        if ((lev <= levDistance) && !foundMatch) {
+                        if ((lev <= maxLevDistance) && !foundMatch) {
                             foundMatch = true
                             DispatchQueue.main.async {
                                 self.captureSession.stopRunning()
