@@ -19,7 +19,10 @@ let convArchive = {}; convArchive.responses = [];
 let currentIndex = 1;
 let jbScanner;
 let savedAction;
+let savedUrl;
 let printerDetails;
+let ocrConfirmText = "";
+let ocrConfirm = false;
 
 msgerForm.addEventListener("submit", event => {
   event.preventDefault();
@@ -30,14 +33,25 @@ msgerForm.addEventListener("submit", event => {
   appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText,[]);
   msgerInput.value = "";
 
-  botResponse(msgText);
+  if (ocrConfirm) {
+    injectMsg(savedAction,msgText,false);
+  } else {
+    botResponse(msgText);    
+  }
 });
 
-function injectMsg(msg,msgLabel) {
+function injectMsg(msg,msgLabel,userResponse=true) {
   //console.log(msg,msgLabel);
-  appendMessage(PERSON_NAME, PERSON_IMG, "right", msgLabel,[]);
+  let msgLabelO = msgLabel;
+  if (ocrConfirmText) {
+    msgLabelO += " is correct";
+  }
+  if (userResponse) {
+    appendMessage(PERSON_NAME, PERSON_IMG, "right", msgLabelO,[]);    
+  }
   saveResponse(responses[currentIndex],msg,msgLabel);
   botResponse(msg,msgLabel);
+  ocrConfirm = false; ocrConfirmText = "";
 }
 
 function launchLink(url,action) {
@@ -72,10 +86,13 @@ function getButtonHTML(botResponseArr) {
   for (let i = 0; i < botResponseArr.length; i++) {
     let url = botResponseArr[i].url; 
     let action = botResponseArr[i].action;
+    let actionLabel = botResponseArr[i].actionLabel;
     switch (botResponseArr[i].type) {
       case "response":
-       let actionLabel = botResponseArr[i].actionLabel;
        html += `<button class="btn btn-primary" style="margin-top: 10px; margin-right: 25px" onclick='injectMsg(\"${action}\",\"${actionLabel}\")'>${actionLabel}</button> `;
+       break;
+      case "ocrResponse":
+       html += `<button class="btn btn-primary" style="margin-top: 10px; margin-right: 25px" onclick='injectMsg(\"${action}\",\"${actionLabel}\")'>Continue</button> `;
        break;
       case "barcode":
        html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchQRScanner(\"${action}\")'><span class="fa fa-qrcode fa-2x"></span></button> `;
@@ -93,13 +110,13 @@ function getButtonHTML(botResponseArr) {
        html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchARVideo(\"${action}\")'><span class="fa fa-camera fa-2x"></span></button> `;
        break;
       case "scanText":
-       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchOCRScanner(\"${action}\",\"${url}\")'><span class="fa fa-camera fa-2x"></span></button> `;
+       html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchOCRScanner(\"${action}\",\"${url}\")'><span class="fa fa-camera fa-2x"></span></button> `;
        break;
       case "email":
-       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchEmail(\"${action}\")'><span class="fa fa-envelope fa-2x"></span></button> `;
+       html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchEmail(\"${action}\")'><span class="fa fa-envelope fa-2x"></span></button> `;
        break;
       case "phone":
-       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchPhoneCall(\"${action}\")'><span class="fa fa-phone fa-2x"></span></button> `;
+       html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchPhoneCall(\"${action}\")'><span class="fa fa-phone fa-2x"></span></button> `;
        break;
      }
   }
@@ -348,7 +365,7 @@ function onARVideoResponse()
 }
 
 async function launchOCRScanner(action,url) {
-  savedAction = action;
+  savedAction = action; savedUrl = url;
   // Launch native text scanner
   let options = await getURL(url);
   console.log(options);
@@ -377,10 +394,23 @@ async function getPrinterDetails(printerName) {
 
 function onOCRScanned(scannedText)
 {
+  appendMessage(PERSON_NAME, PERSON_IMG, "right", "...",[]);
+  ocrConfirmText = scannedText; ocrConfirm = true;
   if (!runningNative()) {
     //
   }
-  injectMsg(savedAction,scannedText);
+  let botResponseArr = []; let nextBtn = new Object();
+  let botMsgText = "";
+  if (scannedText.length == 0) {
+    botMsgText = "I am sorry I did not find any matches. Please type in the text manually or scan again.";
+    nextBtn.type = "scanText"; nextBtn.action = savedAction; nextBtn.url = savedUrl;
+  } else {
+    nextBtn.type = "ocrResponse"; nextBtn.action = savedAction; nextBtn.actionLabel = scannedText;
+    botMsgText = 'I found: ' + scannedText + 
+                   '. If that is not correct, please type in the text manually. Otherwise, press "Continue".';
+  }
+  botResponseArr.push(nextBtn);
+  appendMessage(BOT_NAME, BOT_IMG, "left", botMsgText, botResponseArr);
 }
 
 function launchQRScanner(action) {
