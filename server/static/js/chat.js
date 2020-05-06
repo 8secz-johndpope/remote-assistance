@@ -39,7 +39,7 @@ msgerForm.addEventListener("submit", event => {
   if (ocrConfirm) {
     injectMsg(savedAction,msgText,false);
   } else {
-    botResponse(msgText);    
+    //botResponse(msgText);    
   }
 });
 
