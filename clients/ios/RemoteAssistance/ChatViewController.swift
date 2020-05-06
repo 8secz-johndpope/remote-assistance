@@ -12,6 +12,7 @@ import WebKit
 class ChatViewController: UIViewController {
    
     @IBOutlet weak var webView: WKWebView!
+    @IBOutlet weak var indicator: UIActivityIndicatorView!
     
     // There appears to be a bug where ARView w/ animations cannot be cleaned up properly
     // We keep the view controller around to reuse
@@ -27,6 +28,14 @@ class ChatViewController: UIViewController {
         let date = Date(timeIntervalSince1970: 0)
         WKWebsiteDataStore.default().removeData(ofTypes: websiteDataTypes as! Set<String>, modifiedSince: date, completionHandler:{ })
         
+        // disable scrolling
+        webView.scrollView.isScrollEnabled = false;
+        webView.scrollView.panGestureRecognizer.isEnabled = false;
+        webView.scrollView.bounces = false;
+        
+        // add progress observer
+        webView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
+        
         webView.configuration.userContentController.add(self, name: "launchRA")
         webView.configuration.userContentController.add(self, name: "launchQRScanner")
         webView.configuration.userContentController.add(self, name: "launchOCRScanner")
@@ -35,6 +44,10 @@ class ChatViewController: UIViewController {
 
         webView.load(request)
         webView.navigationDelegate = self
+        
+        // add start over button
+        let barButton = UIBarButtonItem(title: "Start Over", style: .done, target: self, action: #selector(onStartOver))
+        self.navigationItem.rightBarButtonItem = barButton;
         
         let c = #colorLiteral(red: 0, green: 0.1762945354, blue: 0.3224477768, alpha: 1)
         navigationController?.navigationBar.tintColor = c
@@ -137,6 +150,21 @@ class ChatViewController: UIViewController {
         let nvc = OCRScanner(options: options)
         nvc.delegate = self
         self.navigationController?.pushViewController(nvc, animated: true)
+    }
+    
+    @objc
+    func onStartOver() {
+        self.indicator.isHidden = false
+        webView.reload()
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        
+        if keyPath == "estimatedProgress" {
+            if webView.estimatedProgress == 1.0 {
+                self.indicator.isHidden = true
+            }
+        }
     }
     
 }

@@ -32,6 +32,9 @@ html {
   background: var(--msger-bg);
   box-shadow: 0 15px 15px -5px rgba(0, 0, 0, 0.2);
   height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .msger-header {
