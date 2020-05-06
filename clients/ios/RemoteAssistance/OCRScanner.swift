@@ -99,6 +99,10 @@ class OCRScanner: UIViewController {
         if (captureSession?.isRunning == true) {
             captureSession.stopRunning()
         }
+        
+        if (!foundMatch) {
+            self.delegate?.ocrResponse(text: "")
+        }
     }
 
     override var prefersStatusBarHidden: Bool {
