@@ -36,13 +36,15 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 5,
-    "q": "Great! You've got a {{printerName}}. Do you want to...",
+    "q": "Great! You've got a <b>{{printerName}}</b?.
+        <img class=\\"img-thumbnail\\" src=\\"/static/images/printers/{{printerName}}.jpg\\" />
+        Do you want to...",
     "next": [6,12,14],
     "nextLabels": ["Address a fault code","Clear a paper jam","Install a print driver"]
     },
     {
     "id": 6,
-    "q": "Sorry to hear that your {{printerName}} has faulted. So we can help you best, please scan your fault code.",
+    "q": "Sorry to hear that your <b>{{printerName}}</b> has faulted. So we can help you best, please scan your fault code.",
     "next": ["scanText",7],
     "url": "errorCode",
     "setVar":"errorCode"
@@ -75,7 +77,7 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 12,
-    "q": "Sorry to hear that your {{printerName}} has a paper jam. Please point the phone at the device and follow the video attached to the problem area.",
+    "q": "Sorry to hear that your <b>{{printerName}}</b> has a paper jam. Please point the phone at the device and follow the video attached to the problem area.",
     "next": ["showARVideo",13]
     },
     {
@@ -116,7 +118,9 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 23,
-    "q": "Got it. For your {{printerName}} do you need to... ",
+    "q": "We found <b>{{printerName}}</b>.
+        <img class=\\"img-thumbnail\\" src=\\"/static/images/printers/{{printerName}}.jpg\\" />
+        For your <b>{{printerName}}</b> do you need to... ",
     "next": [19,20],
     "nextLabels": ["Order more toner","Install new toner"]
     },

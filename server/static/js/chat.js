@@ -441,8 +441,8 @@ function onOCRScanned(scannedText)
     nextBtn.type = "scanText"; nextBtn.action = savedAction; nextBtn.url = savedUrl;
   } else {
     nextBtn.type = "ocrResponse"; nextBtn.action = savedAction; nextBtn.actionLabel = scannedText;
-    botMsgText = 'I found: ' + scannedText + 
-                   '. If that is not correct, please type in the text manually. Otherwise, press "Continue".';
+    botMsgText = 'I found: <b>' + scannedText + 
+                   '</b>. If that is not correct, please type in the text manually. Otherwise, press <span class="btn btn-primary btn-sm">Continue</span>.';
   }
   botResponseArr.push(nextBtn);
   appendMessage(BOT_NAME, BOT_IMG, "left", botMsgText, botResponseArr);
