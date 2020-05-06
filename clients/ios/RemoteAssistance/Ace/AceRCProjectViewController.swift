@@ -16,10 +16,15 @@ class AceRCProjectViewController : UIViewController {
     
     private let configuration = ARWorldTrackingConfiguration()
     
+    var sceneName = "Copier"
+    var showDebug = false
+    
     override func viewDidLoad() {
         configuration.planeDetection = [.horizontal]
-        arView.debugOptions = [.showFeaturePoints, .showWorldOrigin]
-        loadScene("Copier")
+        if showDebug {
+            arView.debugOptions = [.showFeaturePoints, .showWorldOrigin]
+        }
+        loadScene(sceneName)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -27,7 +32,7 @@ class AceRCProjectViewController : UIViewController {
         arView.session.run(configuration, options: [])
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         arView.session.pause()
     }

@@ -38,5 +38,15 @@
     "libraryIdentifier" : "0de9c8bbe23c56714daadf8c744daa04",
     "format" : "model",
     "displayName" : "toner-4.usdz"
+  },
+  {
+    "libraryIdentifier" : "f6e42516eb1cdba990c8dcd112977f55",
+    "format" : "image",
+    "displayName" : "demo_image_1.png"
+  },
+  {
+    "libraryIdentifier" : "694a66d4c93224ed6c80376e98c1db7e",
+    "format" : "image",
+    "displayName" : "demo_image_2.png"
   }
 ]

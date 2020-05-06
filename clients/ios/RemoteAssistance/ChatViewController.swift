@@ -12,6 +12,10 @@ import WebKit
 class ChatViewController: UIViewController {
    
     @IBOutlet weak var webView: WKWebView!
+    
+    // There appears to be a bug where ARView w/ animations cannot be cleaned up properly
+    // We keep the view controller around to reuse
+    var rcProjectView:AceRCProjectViewController = AceRCProjectViewController.instantiate(fromAppStoryboard: .Ace)
 
     override func viewDidLoad() {
         let url = "\(store.ace.state.serverUrl)/chat"
@@ -100,8 +104,11 @@ class ChatViewController: UIViewController {
     }
     
     func launchAR3D(dict: NSDictionary) {
-        let nvc = AceAnimatorViewController.instantiate(fromAppStoryboard: .Ace)
-        nvc.delegate = self
+//        let nvc = AceRCProjectViewController.instantiate(fromAppStoryboard: .Ace)
+        let nvc = rcProjectView
+        nvc.sceneName = "Copier"
+        nvc.title = "Install New Toner"
+//        nvc.showDebug = true
         self.navigationController?.pushViewController(nvc, animated: true)
     }
 
