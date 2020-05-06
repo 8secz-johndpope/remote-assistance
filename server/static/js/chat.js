@@ -20,6 +20,7 @@ let currentIndex = 1;
 let jbScanner;
 let savedAction;
 let savedUrl;
+let savedOptions;
 let printerDetails;
 let ocrConfirmText = "";
 let ocrConfirm = false;
@@ -33,6 +34,8 @@ msgerForm.addEventListener("submit", event => {
   appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText,[]);
   msgerInput.value = "";
 
+   console.log(ocrConfirm);
+
   if (ocrConfirm) {
     injectMsg(savedAction,msgText,false);
   } else {
@@ -43,14 +46,37 @@ msgerForm.addEventListener("submit", event => {
 function injectMsg(msg,msgLabel,userResponse=true) {
   //console.log(msg,msgLabel);
   let msgLabelO = msgLabel;
-  if (ocrConfirmText) {
+  let validTxt = true;
+
+  if (ocrConfirm) {
     msgLabelO += " is correct";
   }
+
   if (userResponse) {
-    appendMessage(PERSON_NAME, PERSON_IMG, "right", msgLabelO,[]);    
+     appendMessage(PERSON_NAME, PERSON_IMG, "right", msgLabelO,[]);          
+  } else if (ocrConfirm) {     
+      validTxt = false;
+      for (let i=0; i < savedOptions.data.length; i++) {
+        if ( (savedOptions.data[i].name && savedOptions.data[i].name==msgLabel) ||
+             ((savedOptions.data[i].code && savedOptions.data[i].code==msgLabel)) ) {
+            validTxt = true;
+          break;
+        }
+      }
   }
+
   saveResponse(responses[currentIndex],msg,msgLabel);
-  botResponse(msg,msgLabel);
+
+  if (!validTxt) {
+    let botResponseArr = []; let nextBtn = new Object();
+    nextBtn.type = "ra"; nextBtn.action = ""; nextBtn.actionLabel = "";
+    let botMsgText = "We did not find that in our database. Please connect to a remote assistant.";
+    botResponseArr.push(nextBtn);
+    appendMessage(BOT_NAME, BOT_IMG, "left", botMsgText, botResponseArr);
+  } else {
+    console.log(msg);
+    botResponse(msg+"",msgLabel);    
+  } 
   ocrConfirm = false; ocrConfirmText = "";
 }
 
@@ -110,6 +136,8 @@ function getButtonHTML(botResponseArr) {
        html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchARVideo(\"${action}\")'><span class="fa fa-camera fa-2x"></span></button> `;
        break;
       case "scanText":
+       ocrConfirm = true;
+       savedAction = action;
        html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchOCRScanner(\"${action}\",\"${url}\")'><span class="fa fa-camera fa-2x"></span></button> `;
        break;
       case "email":
@@ -187,7 +215,7 @@ function parseQuestion(q) {
   return q;
 }
 
-function botResponse(msgText,msgLabel="") {
+function botResponse(msgText,msgLabel="",q="") {
   //const r = random(0, BOT_MSGS.length - 1);
   let botMsgText = BOT_MSG_UNKNOWN;
   let botResponseArr = [];
@@ -225,7 +253,11 @@ function botResponse(msgText,msgLabel="") {
     }
   }  
 
-  botMsgText = parseQuestion(responses[currentIndex].q); 
+  if (q.length == 0) {
+    botMsgText = parseQuestion(responses[currentIndex].q);     
+  } else {
+    botMsgText = q;
+  }
 
   // + " " + runningNative();
 
@@ -244,6 +276,7 @@ function botResponse(msgText,msgLabel="") {
         nextBtn.url = responses[currentIndex].url;
         nextBtn.action = responses[currentIndex].next[i+1];
         botResponseArr.push(nextBtn);
+        setSavedOptions(nextBtn.url);
         break;
     } else if (t == "showARScene") {
         nextBtn.type = "showARScene"; 
@@ -282,6 +315,10 @@ function botResponse(msgText,msgLabel="") {
 // Utils
 function get(selector, root = document) {
   return root.querySelector(selector);
+}
+
+async function setSavedOptions(url) {
+  savedOptions = await getURL(url);
 }
 
 function getURL(url) {
@@ -367,12 +404,10 @@ function onARVideoResponse()
 async function launchOCRScanner(action,url) {
   savedAction = action; savedUrl = url;
   // Launch native text scanner
-  let options = await getURL(url);
-  console.log(options);
   if (runningNative()) {
       window.webkit.messageHandlers.launchOCRScanner.postMessage(
       { 
-          options: options
+          options: savedOptions
       }); 
   } else {
     // DEBUG
@@ -395,7 +430,7 @@ async function getPrinterDetails(printerName) {
 function onOCRScanned(scannedText)
 {
   appendMessage(PERSON_NAME, PERSON_IMG, "right", "...",[]);
-  ocrConfirmText = scannedText; ocrConfirm = true;
+  ocrConfirmText = scannedText; 
   if (!runningNative()) {
     //
   }
