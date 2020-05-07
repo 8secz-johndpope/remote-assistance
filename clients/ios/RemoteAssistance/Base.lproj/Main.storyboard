@@ -237,10 +237,6 @@
                                     <wkPreferences key="preferences"/>
                                 </wkWebViewConfiguration>
                             </wkWebView>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="kKm-fg-6a1">
-                                <rect key="frame" x="177" y="415" width="20" height="20"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                            </activityIndicatorView>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="SS7-Tl-Pht">
                                 <rect key="frame" x="0.0" y="88" width="375" height="2"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
@@ -252,7 +248,6 @@
                     <navigationItem key="navigationItem" title="Chat" id="8er-v0-vhO"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="indicator" destination="kKm-fg-6a1" id="3Fg-8c-OAP"/>
                         <outlet property="progressBar" destination="SS7-Tl-Pht" id="YnE-jY-C6N"/>
                         <outlet property="webView" destination="ge9-sI-DbC" id="xd4-ca-RFn"/>
                     </connections>
