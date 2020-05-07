@@ -52,10 +52,12 @@ class ViewController: UITabBarController {
 
         let up = UISwipeGestureRecognizer(target: self, action: #selector(onSwipeUp))
         up.direction = .up
+        up.numberOfTouchesRequired = 2
         self.view.addGestureRecognizer(up)
 
         let down = UISwipeGestureRecognizer(target: self, action: #selector(onSwipeDown))
         down.direction = .down
+        down.numberOfTouchesRequired = 2
         self.view.addGestureRecognizer(down)
         
     }
