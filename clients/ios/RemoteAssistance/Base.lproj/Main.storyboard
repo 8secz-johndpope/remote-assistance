@@ -241,6 +241,10 @@
                                 <rect key="frame" x="177" y="415" width="20" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                             </activityIndicatorView>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="SS7-Tl-Pht">
+                                <rect key="frame" x="0.0" y="88" width="375" height="2"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            </progressView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="c8M-fU-SJv"/>
@@ -249,6 +253,7 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="indicator" destination="kKm-fg-6a1" id="3Fg-8c-OAP"/>
+                        <outlet property="progressBar" destination="SS7-Tl-Pht" id="YnE-jY-C6N"/>
                         <outlet property="webView" destination="ge9-sI-DbC" id="xd4-ca-RFn"/>
                     </connections>
                 </viewController>

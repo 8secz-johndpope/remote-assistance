@@ -12,7 +12,7 @@ import WebKit
 class ChatViewController: UIViewController {
    
     @IBOutlet weak var webView: WKWebView!
-    @IBOutlet weak var indicator: UIActivityIndicatorView!
+    @IBOutlet weak var progressBar: UIProgressView!
     
     // There appears to be a bug where ARView w/ animations cannot be cleaned up properly
     // We keep the view controller around to reuse
@@ -36,6 +36,9 @@ class ChatViewController: UIViewController {
         // add progress observer
         webView.addObserver(self, forKeyPath: "estimatedProgress", options: .new, context: nil)
         
+        progressBar.progress = 0
+        progressBar.transform = CGAffineTransform(scaleX: 1, y: 4)
+
         webView.configuration.userContentController.add(self, name: "launchRA")
         webView.configuration.userContentController.add(self, name: "launchQRScanner")
         webView.configuration.userContentController.add(self, name: "launchOCRScanner")
@@ -117,7 +120,6 @@ class ChatViewController: UIViewController {
     }
     
     func launchAR3D(dict: NSDictionary) {
-//        let nvc = AceRCProjectViewController.instantiate(fromAppStoryboard: .Ace)
         let nvc = rcProjectView
         nvc.sceneName = "Copier"
         nvc.title = "Install New Toner"
@@ -154,15 +156,20 @@ class ChatViewController: UIViewController {
     
     @objc
     func onStartOver() {
-        self.indicator.isHidden = false
         webView.reload()
     }
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         
         if keyPath == "estimatedProgress" {
+            progressBar.progress = Float(webView.estimatedProgress)
             if webView.estimatedProgress == 1.0 {
-                self.indicator.isHidden = true
+                UIView.animate(withDuration: 1.5, animations: {
+                    self.progressBar.alpha = 0
+                })
+                
+            } else {
+                progressBar.alpha = 1.0
             }
         }
     }
