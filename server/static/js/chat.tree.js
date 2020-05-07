@@ -94,7 +94,7 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 15,  
-    "q": "You're on Android, so please download <a href='https://play.google.com/store/apps/details?id=com.xerox.printservice'>this app</a> from the Google Play Store.",
+    "q": "You're on Android, so please download <a href='https://play.google.com/store/apps/details?id=com.xerox.printservice' target=_blank>this app</a> from the Google Play Store.",
     "next": [13],
     "nextLabels": ["Continue"]
     },
@@ -105,7 +105,7 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 17,
-    "q": "Please visit <a href=https://onlinesupport.fujixerox.com/setupDriverForm.do?ctry_code=SG&lang_code=en&d_lang=en&pid=AP7C7773>this link</a> on a desktop or <a href='mailto:?body=Hello!%0D%0A%0D%0AThis%20link%20can%20help%20you%20configure%20drivers%20on%20your%20device:%20https://bit.ly/2xdI9jV&subject=Your%20Digital%20Companion%20link'>send email with instructions.</a>",
+    "q": "Please visit <a href=https://onlinesupport.fujixerox.com/setupDriverForm.do?ctry_code=SG&lang_code=en&d_lang=en&pid=AP7C7773 target=_blank>this link</a> on a desktop or <a href='mailto:?body=Hello!%0D%0A%0D%0AThis%20link%20can%20help%20you%20configure%20drivers%20on%20your%20device:%20https://bit.ly/2xdI9jV&subject=Your%20Digital%20Companion%20link'>send email with instructions.</a>",
     "next": [13],
     "nextLabels": ["Continue"]
     },
@@ -126,10 +126,10 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 19,
-    "q": "Here are the part numbers for toner for your device: <span style='color:orange'>{{partList}}</span>. Please <a href=https://www.fujixerox.com.au/en/Contact/Order-Supplies>visit the digital store to purchase toner</a>.
+    "q": "Here are the part numbers for toner for your device: <span style='color:orange'>{{partList}}</span>. Please <a href=https://www.fujixerox.com.au/en/Contact/Order-Supplies target=_blank>visit the digital store to purchase toner</a>.
           <div style='padding:10px 0px 0px 0px'>
           Did you know that Fuji Xerox provides automated toner replenishment using smart remote service? 
-          <a href=https://www.fujixerox.co.nz/en/Company/EP-BB>Find out more about applying for eligibility.</a>
+          <a href=https://www.fujixerox.co.nz/en/Company/EP-BB  target=_blank>Find out more about applying for eligibility.</a>
           </div>",
     "next": [13],
     "nextLabels": ["Continue"]
@@ -142,7 +142,7 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 21,
-    "q": "Now that you've seen how, please try replacing your toner cartridge. <a href=https://bit.ly/2z5FCIZ>Find out more here</a> or <a href=https://www.youtube.com/watch?v=uNdh-eS9R_Q>watch a video</a>.",
+    "q": "Now that you've seen how, please try replacing your toner cartridge. <a href=https://bit.ly/2z5FCIZ target=_blank>Find out more here</a> or <a href=https://www.youtube.com/watch?v=uNdh-eS9R_Q target=_blank>watch a video</a>.",
     "next": [13],
     "nextLabels": ["Continue"]
     }
