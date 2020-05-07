@@ -36,7 +36,7 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 5,
-    "q": "Great! You've got a <b>{{printerName}}</b?.
+    "q": "Great! You've got a <b>{{printerName}}</b>?.
         <img class=\\"img-thumbnail\\" src=\\"/static/images/printers/{{printerName}}.jpg\\" />
         Do you want to...",
     "next": [6,12,14],
