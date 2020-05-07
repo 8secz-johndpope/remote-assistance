@@ -442,7 +442,7 @@ function onOCRScanned(scannedText)
   } else {
     nextBtn.type = "ocrResponse"; nextBtn.action = savedAction; nextBtn.actionLabel = scannedText;
     botMsgText = 'I found: <b>' + scannedText + 
-                   '</b>. If that is not correct, please type in the text manually. Otherwise, press <span class="btn btn-primary btn-sm">Continue</span>.';
+                   '</b>. If that is not correct, please type in the text manually. Otherwise, press';
   }
   botResponseArr.push(nextBtn);
   appendMessage(BOT_NAME, BOT_IMG, "left", botMsgText, botResponseArr);
