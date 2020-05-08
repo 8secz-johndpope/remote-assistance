@@ -52,7 +52,7 @@ const CHAT_TREE_JSON = `
     {
     "id": 7,
     "q": "Error {{errorCode}}. Got it. Please check out this video:",
-    "next": ["https://www.youtube.com/watch?v=kmNdi8S4Utg",8]
+    "next": ["https://youtu.be/kmNdi8S4Utg",8]
     },
     {
     "id": 8,
@@ -118,7 +118,7 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 23,
-    "q": "We found <b>{{printerName}}</b>.
+    "q": "Great! You've got a <b>{{printerName}}</b>.
         <img class=\\"img-thumbnail\\" src=\\"/static/images/printers/{{printerName}}.jpg\\" />
         For your <b>{{printerName}}</b> do you need to... ",
     "next": [19,20],
@@ -126,7 +126,7 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 19,
-    "q": "Here are the part numbers for toner for your device: <span style='color:orange'>{{partList}}</span>. Please <b><a href=https://www.fujixerox.com.au/en/Contact/Order-Supplies target=_blank>visit the digital store to purchase toner</a></b>.
+    "q": "Here are the part numbers for toner for your device: <b>{{partList}}</b>. Please <b><a href=https://www.fujixerox.com.au/en/Contact/Order-Supplies target=_blank>visit the digital store to purchase toner</a></b>.
           <div style='padding:10px 0px 0px 0px'>
           Did you know that Fuji Xerox provides automated toner replenishment using smart remote service? 
           <b><a href=https://www.fujixerox.co.nz/en/Company/EP-BB target=_blank>Find out more about applying for eligibility.</a></b>

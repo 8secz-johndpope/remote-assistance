@@ -83,6 +83,7 @@ function injectMsg(msg,msgLabel,userResponse=true) {
 function launchLink(url,action) {
   savedAction = action;
   setTimeout(injectMsg,1000,savedAction,"(viewing link)");
+  console.log(url);
   window.open(url, '_blank');
 }
 
@@ -110,7 +111,7 @@ function validURL(str) {
 function getButtonHTML(botResponseArr) {
   let html = "";
   for (let i = 0; i < botResponseArr.length; i++) {
-    let url = botResponseArr[i].url; if (url) { url = url.toLowerCase(); }
+    let url = botResponseArr[i].url; 
     let action = botResponseArr[i].action;
     let actionLabel = botResponseArr[i].actionLabel;
     switch (botResponseArr[i].type) {
@@ -124,20 +125,20 @@ function getButtonHTML(botResponseArr) {
        html += `<img style="margin-top: 10px" onclick='launchQRScanner(\"${action}\")' src='/static/images/blueSCAN-QR_64.png'></img>`;
        break;
       case "link":
-       if ( (url.includes("youtube")) || (url.includes("vimeo")) ) {
+       if ( (url.toLowerCase().includes("youtu.be")) || (url.toLowerCase().includes("youtube")) || (url.toLowerCase().includes("vimeo")) ) {
          html += `<img style="margin-top: 10px" onclick='launchLink(\"${url}\",\"${action}\")' src='/static/images/goldCONTENT-video_64.png'></img> `;
        } else {
          html += `<img style="margin-top: 10px" onclick='launchLink(\"${url}\",\"${action}\")' src='/static/images/ goldCONTENT-web_64.png'></img> `;        
        }
        break;
       case "ra":
-       html += `<img style="margin-top: 10px" onclick='launchRA()' src='/static/images/blueCHAT-AR_64.png'></img> `;
+       html += `<img style="margin-top: 10px; margin-right: 10px" onclick='launchRA()' src='/static/images/blueCHAT-AR_64.png'></img> `;
        break;
       case "showARScene":
-       html += `<img style="margin-top: 10px" onclick='launchAR3D(\"${action}\")' src='blueSCAN-AR_64.png'></img> `;
+       html += `<img style="margin-top: 10px" onclick='launchAR3D(\"${action}\")' src='/static/images/blueSCAN-AR_64.png'></img> `;
        break;
       case "showARVideo":
-       html += `<img style="margin-top: 10px" onclick='launchARVideo(\"${action}\")' src='blueSCAN-AR_64.png'></img> `;
+       html += `<img style="margin-top: 10px" onclick='launchARVideo(\"${action}\")' src='/static/images/blueSCAN-AR_64.png'></img> `;
        break;
       case "scanText":
        ocrConfirm = true;
