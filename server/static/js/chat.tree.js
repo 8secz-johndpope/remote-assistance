@@ -37,7 +37,9 @@ const CHAT_TREE_JSON = `
     {
     "id": 5,
     "q": "Great! You've got a <b>{{printerName}}</b>.
+        <a href=\\"/static/images/printers/{{printerName}}.jpg\\" target=\\"_blank\\">
         <img class=\\"img-thumbnail\\" src=\\"/static/images/printers/{{printerName}}.jpg\\" />
+        </a>
         Do you want to...",
     "next": [6,12,14],
     "nextLabels": ["Address a fault code","Clear a paper jam","Install a print driver"]
@@ -119,7 +121,9 @@ const CHAT_TREE_JSON = `
     {
     "id": 23,
     "q": "Great! You've got a <b>{{printerName}}</b>.
+        <a href=\\"/static/images/printers/{{printerName}}.jpg\\" target=\\"_blank\\">
         <img class=\\"img-thumbnail\\" src=\\"/static/images/printers/{{printerName}}.jpg\\" />
+        </a>
         For your <b>{{printerName}}</b> do you need to... ",
     "next": [19,20],
     "nextLabels": ["Order more toner","Install new toner"]
