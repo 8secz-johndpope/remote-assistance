@@ -53,7 +53,14 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 7,
-    "q": "Error {{errorCode}}. Got it. Please check out this video:",
+    "q": "Error <b>{{errorCode}}</b>. Got it. Please check out this video:
+    <p class=\\"mt-4\\">
+    <strong>How To Perform a Combined Calibration -Apeosport/DocuCentre VII C6673 -EN</strong>
+    <a href=\\"https://youtu.be/kmNdi8S4Utg\\" target=\\"_blank\\">
+    <img class=\\"img-thumbnail\\" src=\\"http://i3.ytimg.com/vi/kmNdi8S4Utg/hqdefault.jpg\\" />
+    </a>
+    </p>
+    ",
     "next": ["https://youtu.be/kmNdi8S4Utg",8]
     },
     {
@@ -102,7 +109,13 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 16,
-    "q": "Your're on iOS, so you can print natively from your iPhone using AirPrint. Here's an instruction guide:",
+    "q": "Your're on iOS, so you can print natively from your iPhone using AirPrint. Here's an instruction guide:
+    <p class=\\"mt-4\\">
+    <strong>How to Print to ANY Printer from iPhone, iPod, iPad via Windows</strong>
+    <a href=\\"https://youtu.be/P_64MdjFoL0\\" target=\\"_blank\\">
+    <img class=\\"img-thumbnail\\" src=\\"http://i3.ytimg.com/vi/P_64MdjFoL0/hqdefault.jpg\\" />
+    </a>
+    </p>",
     "next": ["https://www.youtube.com/watch?v=P_64MdjFoL0",13]
     },
     {
@@ -146,7 +159,16 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 21,
-    "q": "Now that you've seen how, please try replacing your toner cartridge. <b><a href=https://bit.ly/2z5FCIZ target=_blank>Find out more here</a></b> or <b><a href=https://www.youtube.com/watch?v=uNdh-eS9R_Q target=_blank>watch a video</a></b>.",
+    "q": "Now that you've seen how, please try replacing your toner cartridge.
+    <b><a href=https://bit.ly/2z5FCIZ target=_blank>Find out more here</a></b> or
+    <b><a href=https://www.youtube.com/watch?v=uNdh-eS9R_Q target=_blank>watch a video</a></b>.
+    <p class=\\"mt-4\\">
+    <strong>How To Remove or Replace the Toner Cartridge -Apeosport/DocuCentre VII C6673 -EN</strong>
+    <a href=\\"https://youtu.be/uNdh-eS9R_Q\\" target=\\"_blank\\">
+    <img class=\\"img-thumbnail\\" src=\\"http://i3.ytimg.com/vi/uNdh-eS9R_Q/hqdefault.jpg\\" />
+    </a>
+    </p>
+    ",
     "next": [13],
     "nextLabels": ["Continue"]
     }
