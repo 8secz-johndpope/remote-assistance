@@ -47,6 +47,7 @@ class ChatViewController: UIViewController {
 
         webView.load(request)
         webView.navigationDelegate = self
+        webView.uiDelegate = self
         
         // add start over button
         let barButton = UIBarButtonItem(title: "Start Over", style: .done, target: self, action: #selector(onStartOver))
@@ -203,8 +204,27 @@ extension ChatViewController : ARSceneViewControllerDelegate {
     }
 }
 
+extension ChatViewController: WKUIDelegate {
+    func webView(_ webView: WKWebView, createWebViewWith: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+     
+        let app = UIApplication.shared
+        
+        if let url = navigationAction.request.url {
+            // Handle target="_blank"
+            if navigationAction.targetFrame == nil {
+                if app.canOpenURL(url) {
+                    app.open(url)
+                    return nil
+                }
+            }
+
+        }
+        return nil
+    }
+}
+
 extension ChatViewController: WKNavigationDelegate {
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
 
         if webView != self.webView {
             decisionHandler(.allow)
