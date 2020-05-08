@@ -10,6 +10,7 @@ const BOT_DELAY = 500;
 const BOT_MSG_UNKNOWN = "I'm sorry, I didn't understand your response.";
 const SERVER_API = "/api/";
 const NATIVE_UA = "ace";
+const DEFAULT_RESPONSE = "Continue";
 
 const CTJ = CHAT_TREE_JSON.replace(/(\r\n|\n|\r)/gm, "")
 //console.log(CTJ);
@@ -52,7 +53,7 @@ function injectMsg(msg,msgLabel,userResponse=true) {
     msgLabelO += " is correct";
   }
 
-  if (userResponse) {
+  if (userResponse && (msgLabelO.length > 0)) {
      appendMessage(PERSON_NAME, PERSON_IMG, "right", msgLabelO,[]);          
   } else if (ocrConfirm) {     
       validTxt = false;
@@ -82,7 +83,7 @@ function injectMsg(msg,msgLabel,userResponse=true) {
 
 function launchLink(url,action) {
   savedAction = action;
-  setTimeout(injectMsg,1000,savedAction,"(viewing link)");
+  //setTimeout(injectMsg,1000,savedAction,"(viewing link)");
   console.log(url);
   window.open(url, '_blank');
 }
@@ -116,7 +117,7 @@ function getButtonHTML(botResponseArr) {
     let actionLabel = botResponseArr[i].actionLabel;
     switch (botResponseArr[i].type) {
       case "response":
-       html += `<button class="btn btn-primary" style="margin-top: 10px; margin-right: 25px" onclick='injectMsg(\"${action}\",\"${actionLabel}\")'>${actionLabel}</button> `;
+       html += `<button class="btn btn-primary" style="margin-top: 10px; margin-right: 25px" onclick='injectMsg(\"${action}\",\"\")'>${actionLabel}</button> `;
        break;
       case "ocrResponse":
        html += `<button class="btn btn-primary" style="margin-top: 10px; margin-right: 25px" onclick='injectMsg(\"${action}\",\"${actionLabel}\")'>Continue</button> `;
@@ -130,6 +131,7 @@ function getButtonHTML(botResponseArr) {
        } else {
          html += `<img style="margin-top: 10px" onclick='launchLink(\"${url}\",\"${action}\")' src='/static/images/ goldCONTENT-web_64.png'></img> `;        
        }
+       html += `<div style="margin-top: 20px"><button class="btn btn-primary" style="margin-top: 10px; margin-right: 25px" onclick='injectMsg(\"${action}\",\"\")'>${DEFAULT_RESPONSE}</button></div>`;
        break;
       case "ra":
        html += `<img style="margin-top: 10px; margin-right: 10px" onclick='launchRA()' src='/static/images/blueCHAT-AR_64.png'></img> `;
@@ -304,6 +306,7 @@ function botResponse(msgText,msgLabel="",q="") {
         nextBtn.url = t;
         nextBtn.action = responses[currentIndex].next[i+1];
         botResponseArr.push(nextBtn);
+        nextBtn.actionLabel = DEFAULT_RESPONSE;
         break;
     } else {
       let tL = responses[currentIndex].nextLabels ? responses[currentIndex].nextLabels[i] : t;
