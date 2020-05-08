@@ -123,35 +123,35 @@ function getButtonHTML(botResponseArr) {
        html += `<button class="btn btn-primary" style="margin-top: 10px; margin-right: 25px" onclick='injectMsg(\"${action}\",\"${actionLabel}\")'>Continue</button> `;
        break;
       case "barcode":
-       html += `<img style="margin-top: 10px" onclick='launchQRScanner(\"${action}\")' src='/static/images/blueSCAN-QR_64.png'></img>`;
+       html += `<img style="margin-top: 10px" onclick='launchQRScanner(\"${action}\")' width=64 height=64 src='/static/images/blueSCAN-QR_64.png'></img>`;
        break;
       case "link":
        if ( (url.toLowerCase().includes("youtu.be")) || (url.toLowerCase().includes("youtube")) || (url.toLowerCase().includes("vimeo")) ) {
-         html += `<img style="margin-top: 10px" onclick='launchLink(\"${url}\",\"${action}\")' src='/static/images/goldCONTENT-video_64.png'></img> `;
+         html += `<img style="margin-top: 10px" onclick='launchLink(\"${url}\",\"${action}\")' width=64 height=64 src='/static/images/goldCONTENT-video_64.png'></img> `;
        } else {
-         html += `<img style="margin-top: 10px" onclick='launchLink(\"${url}\",\"${action}\")' src='/static/images/ goldCONTENT-web_64.png'></img> `;        
+         html += `<img style="margin-top: 10px" onclick='launchLink(\"${url}\",\"${action}\")' width=64 height=64 src='/static/images/ goldCONTENT-web_64.png'></img> `;        
        }
        html += `<div style="margin-top: 20px"><button class="btn btn-primary" style="margin-top: 10px; margin-right: 25px" onclick='injectMsg(\"${action}\",\"\")'>${DEFAULT_RESPONSE}</button></div>`;
        break;
       case "ra":
-       html += `<img style="margin-top: 10px; margin-right: 10px" onclick='launchRA()' src='/static/images/blueCHAT-AR_64.png'></img> `;
+       html += `<img style="margin-top: 10px; margin-right: 10px" onclick='launchRA()' width=64 height=64 src='/static/images/blueCHAT-AR_64.png'></img> `;
        break;
       case "showARScene":
-       html += `<img style="margin-top: 10px" onclick='launchAR3D(\"${action}\")' src='/static/images/blueSCAN-AR_64.png'></img> `;
+       html += `<img style="margin-top: 10px" onclick='launchAR3D(\"${action}\")' width=64 height=64 src='/static/images/blueSCAN-AR_64.png'></img> `;
        break;
       case "showARVideo":
-       html += `<img style="margin-top: 10px" onclick='launchARVideo(\"${action}\")' src='/static/images/blueSCAN-AR_64.png'></img> `;
+       html += `<img style="margin-top: 10px" onclick='launchARVideo(\"${action}\")' width=64 height=64 src='/static/images/blueSCAN-AR_64.png'></img> `;
        break;
       case "scanText":
        ocrConfirm = true;
        savedAction = action;
-       html += `<img style="margin-top: 10px" onclick='launchOCRScanner(\"${action}\",\"${url}\")' src='/static/images/blueSCAN-OCR_64.png'>`;
+       html += `<img style="margin-top: 10px" onclick='launchOCRScanner(\"${action}\",\"${url}\")' width=64 height=64 src='/static/images/blueSCAN-OCR_64.png'>`;
        break;
       case "email":
        html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchEmail(\"${action}\")'><span class="fa fa-envelope fa-2x"></span></button> `;
        break;
       case "phone":
-       html += `<img style="margin-top: 10px" onclick='launchPhoneCall(\"${action}\")' src='/static/images/blueCHAT-phone_64.png'></img>`;
+       html += `<img style="margin-top: 10px" onclick='launchPhoneCall(\"${action}\")' width=64 height=64 src='/static/images/blueCHAT-phone_64.png'></img>`;
        break;
      }
   }
