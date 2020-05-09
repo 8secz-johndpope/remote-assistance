@@ -16,6 +16,7 @@
 		2984E5112418216D00AA0B9C /* 3DPrinter2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2984E50E2418216B00AA0B9C /* 3DPrinter2.mp4 */; };
 		2984E5122418216D00AA0B9C /* 3DPrinter1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2984E50F2418216C00AA0B9C /* 3DPrinter1.mp4 */; };
 		2984E5132418216D00AA0B9C /* 3DPrinter3.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2984E5102418216D00AA0B9C /* 3DPrinter3.mp4 */; };
+		29D079D12464B18B0080481F /* AppUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D079D02464B18B0080481F /* AppUtility.swift */; };
 		AD43D0CE23C68E5500AA4D24 /* QRCodeScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD43D0CD23C68E5500AA4D24 /* QRCodeScanner.swift */; };
 		D7031AFA23E8EED80062A637 /* AceClipThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7031AF923E8EED80062A637 /* AceClipThumbnail.swift */; };
 		D70FE3CD2447BF9E00E3A709 /* UIImageExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D70FE3CC2447BF9E00E3A709 /* UIImageExtension.swift */; };
@@ -106,6 +107,7 @@
 		2984E50E2418216B00AA0B9C /* 3DPrinter2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3DPrinter2.mp4; sourceTree = "<group>"; };
 		2984E50F2418216C00AA0B9C /* 3DPrinter1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3DPrinter1.mp4; sourceTree = "<group>"; };
 		2984E5102418216D00AA0B9C /* 3DPrinter3.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3DPrinter3.mp4; sourceTree = "<group>"; };
+		29D079D02464B18B0080481F /* AppUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUtility.swift; sourceTree = "<group>"; };
 		33CD05DAC9A4FFE0F7D651A9 /* Pods_RemoteAssistance.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RemoteAssistance.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		53D42A241ED05FFC83CEF12E /* Pods-RemoteAssistance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.debug.xcconfig"; path = "Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.debug.xcconfig"; sourceTree = "<group>"; };
 		55C9CD29027533AEC28E2B0C /* Pods-RemoteAssistance.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.release.xcconfig"; path = "Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.release.xcconfig"; sourceTree = "<group>"; };
@@ -412,6 +414,7 @@
 				D7DB69F7236DE35100D7C367 /* WRTCClient.swift */,
 				D7DB69E4236DE2D500D7C367 /* Redux */,
 				D70FE3CC2447BF9E00E3A709 /* UIImageExtension.swift */,
+				29D079D02464B18B0080481F /* AppUtility.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -635,6 +638,7 @@
 				D7455DB82368BE77001594FA /* AppDelegate.swift in Sources */,
 				D7DA31F0239ECFCE00D1B73F /* SurfaceNode.swift in Sources */,
 				D76C1CCC23D78BD600208511 /* AceVRViewController.swift in Sources */,
+				29D079D12464B18B0080481F /* AppUtility.swift in Sources */,
 				D7DA31F1239ECFCE00D1B73F /* PlaneRectangle.swift in Sources */,
 				D787DD6E246220F800573C59 /* Copier.rcproject in Sources */,
 				D7DB6A0B236DE7C700D7C367 /* Reducer.swift in Sources */,

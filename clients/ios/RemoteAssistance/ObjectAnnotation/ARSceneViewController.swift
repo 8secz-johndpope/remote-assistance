@@ -12,24 +12,26 @@ import AVKit
 import AVFoundation
 import Alamofire
 
+
 protocol ARSceneViewControllerDelegate: class
 {
     func arSceneViewControllerResponse(text: String)
 }
 
-class ARSceneViewController: UIViewController, ARSCNViewDelegate {
+class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    
 
     @IBOutlet weak var sceneView: ARSCNView!
-    @IBOutlet weak var prevButton: UIButton!
-    @IBOutlet weak var nextButton: UIButton!
+    @IBOutlet weak var thumbNailCollectionView: UICollectionView!
+    @IBOutlet weak var warningLabel: UILabel!
     
     let api = AceAPI.sharedInstance
     let configuration = ARWorldTrackingConfiguration()
     var objectGroupName:String!
     var imageGroupName:String!
-    var clickableImages:[UIImage]!
-    var imagePositions:[SCNVector3]!
-    var videoURLs:[URL]!
+    var clickableImages:[UIImage] = []
+    var imagePositions:[SCNVector3] = []
+    var videoURLs:[URL] = []
     var searchBarButton:UIBarButtonItem!
     var pauseBarButton:UIBarButtonItem!
     var renderer:SCNSceneRenderer?
@@ -43,10 +45,9 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
     var clickableNodes:[ObjectAnnotationNode] = []
     var thumbNails:[UIImage] = []
     var stepInScene:Int = 0
+    var lastVideoEnabled:Int = -1
+    var nowPlayingVideo:Bool = false
 
-    // Yulius - this is my mode switch
-    var liveAnnotation = false
-    
     var recordingUrl:URL?
 
     weak var delegate: ARSceneViewControllerDelegate?
@@ -58,76 +59,100 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
         //self.sceneView.debugOptions = [ARSCNDebugOptions.showWorldOrigin]
         self.sceneView.delegate = self
         self.configuration.automaticImageScaleEstimationEnabled = true
-        // TODO: This should be pulled from previous activity in other sections of the app
         self.objectGroupName = "VariousPrinters"
         self.imageGroupName = "AR Resources"
+        self.thumbNailCollectionView.delegate = self
+        self.thumbNailCollectionView.dataSource = self
+        self.thumbNailCollectionView.backgroundColor = UIColor.systemGray.withAlphaComponent(0.5)
+        self.thumbNailCollectionView.isHidden = true
+        self.warningLabel.text = ""
         
         self.initSocket()
-    }
-    
-    @IBAction func prevButtonTUI(_ sender: Any) {
-        if self.stepInScene > 0 {
-            self.clickableNodes[self.stepInScene].removeFromParentNode()
-            self.stepInScene -= 1
-        }
-    }
-    
-    @IBAction func nextButtonTUI(_ sender: Any) {
-        if self.stepInScene < self.clickableNodes.count-1 {
-            self.stepInScene += 1
-            self.nodeFound?.addChildNode(self.clickableNodes[self.stepInScene])
-        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(onTap))
-        self.view.addGestureRecognizer(tap)
-        
-        if let _ = self.nodeFound {
-            self.prevButton.isHidden = false
-            self.nextButton.isHidden = false
+        if !self.nowPlayingVideo {
+            AppUtility.lockOrientation(.landscape, andRotateTo: .landscapeRight)
+            self.searchForObjects()
         }
         else {
-            self.prevButton.isHidden = true
-            self.nextButton.isHidden = true
+            self.nowPlayingVideo = false
         }
         
-        self.searchForObjects()
+//        let tap = UITapGestureRecognizer(target: self, action: #selector(onTap))
+//        self.view.addGestureRecognizer(tap)
+        
+//        if let _ = self.nodeFound {
+//            self.prevButton.isHidden = false
+//            self.nextButton.isHidden = false
+//        }
+//        else {
+//            self.prevButton.isHidden = true
+//            self.nextButton.isHidden = true
+//        }
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.sceneView.session.pause()
-        self.anchorFound = false
-        self.delegate?.arSceneViewControllerResponse(text: "")
-        self.view.removeGestureRecognizers()
-        
-        let socket = SocketIOManager.sharedInstance
-        socket.off("recording_started")
-        socket.off("clip_ready")
-        socket.off("clip_thumbnail_ready")
+
+        if !self.nowPlayingVideo {
+            self.sceneView.session.pause()
+            self.anchorFound = false
+            self.delegate?.arSceneViewControllerResponse(text: "")
+            
+            let socket = SocketIOManager.sharedInstance
+            socket.off("recording_started")
+            socket.off("clip_ready")
+            socket.off("clip_thumbnail_ready")
+            
+            AppUtility.lockOrientation(.all)
+        }
+        //        self.view.removeGestureRecognizers()
     }
     
-    @objc func onTap(_ gesture: UITapGestureRecognizer) {
-        print("onTap from ARSceneViewController")
-
-        let location = gesture.location(in: self.sceneView)
-
-        let hitResults = self.renderer?.hitTest(location, options:nil)
-        if let hit = hitResults?.first {
-            let node = hit.node
-            if let obj = node.geometry?.firstMaterial?.diffuse.contents as? UIImage {
-                if self.liveAnnotation {
-                    self.showVideo(tag: -1)
-                }
-                else {
-                    if let tag = self.thumbNails.firstIndex(of: obj) {
-                        self.showVideo(tag: tag)
-                    }
-                }
-            }
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.clickableImages.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: (collectionView.frame.width * 0.75), height: (collectionView.frame.width * 0.5))
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "thumbnailCell", for: indexPath as IndexPath)
+        var image = self.clickableImages[indexPath.row]
+        image = image.resize(toWidth: collectionView.frame.width * 0.75)!
+        let imageView = UIImageView(image: image)
+        imageView.layer.masksToBounds = true
+        imageView.layer.borderWidth = 2
+        imageView.layer.cornerRadius = 5
+        if indexPath.row == self.lastVideoEnabled {
+            imageView.layer.borderColor = UIColor.systemYellow.cgColor
+        }
+        else {
+            imageView.layer.borderColor = UIColor.systemGray.cgColor
+        }
+        cell.addSubview(imageView)
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat
+    {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat
+    {
+        return 2
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.row <= self.lastVideoEnabled {
+            self.showVideo(tag: indexPath.row)
         }
     }
     
@@ -155,6 +180,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
         if haveDetectionAssets {
             let options: ARSession.RunOptions = [.resetTracking, .removeExistingAnchors, .stopTrackedRaycasts]
             self.configuration.automaticImageScaleEstimationEnabled = true
+//            sceneView.session.delegate = self
             sceneView.session.run(self.configuration, options: options)
         }
     }
@@ -163,6 +189,12 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
         self.sceneView.session.pause()
     }
     
+//    func session(_ session: ARSession, didUpdate frame: ARFrame) {
+//        // Do something with the new transform
+//        let currentTransform = frame.camera.transform
+//        print(currentTransform)
+//    }
+
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
 
         self.renderer = renderer
@@ -177,12 +209,9 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
                     let orientationNode = SCNNode()
                     orientationNode.eulerAngles = SCNVector3(x:-Float.pi/2, y:0, z:0)
                     node.addChildNode(orientationNode)
-                    self.nodeFound = orientationNode
-
-                    self.addPointer(node)
-                    if !self.liveAnnotation {
-                        self.addFirstClickableNode()
-                    }
+                    self.nodeFound = node
+                    
+                    self.enableNextVideo()
                 }
             }
             
@@ -193,10 +222,8 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
                     self.loadInteralAssets(detectedName: anchor.name ?? "Unknown")
                     self.view.makeToast("Found object anchor \(anchor.name ?? "Unknown")", position: .bottom)
                     self.nodeFound = node
-                    self.addPointer(node)
-                    if !self.liveAnnotation {
-                        self.nodeFound?.addChildNode(self.clickableNodes[self.stepInScene])
-                    }
+
+                    self.enableNextVideo()
                 }
             }
         }
@@ -204,10 +231,10 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
     
     func addFirstClickableNode() {
         self.nodeFound?.addChildNode(self.clickableNodes[self.stepInScene])
-        self.prevButton.isHidden = false
-        self.prevButton.backgroundColor = UIColor.systemGray4
-        self.nextButton.isHidden = false
-        self.nextButton.backgroundColor = UIColor.systemGray4
+//        self.prevButton.isHidden = false
+//        self.prevButton.backgroundColor = UIColor.systemGray4
+//        self.nextButton.isHidden = false
+//        self.nextButton.backgroundColor = UIColor.systemGray4
     }
     
     func createThumbnail(_ image:UIImage) -> UIImage {
@@ -247,23 +274,45 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
     
     func showVideo(tag:Int) {
                 
-        if tag == -1 {
-            if let url = self.recordingUrl {
-                let player = AVPlayer(url: url)
-                let playerViewController = AVKit.AVPlayerViewController()
-                playerViewController.player = player
-                self.navigationController?.pushViewController(playerViewController)
-            }
-        }
-        else {
-            let videoURL = self.videoURLs[tag]
-            let player = AVPlayer(url: videoURL)
-            let playerViewController = AVKit.AVPlayerViewController()
-            playerViewController.player = player
-            self.navigationController?.pushViewController(playerViewController)
-        }
+        let videoURL = self.videoURLs[tag]
+        let player = AVPlayer(url: videoURL)
+        NotificationCenter.default.addObserver(self, selector: #selector(videoDidEnd), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
+        let playerViewController = AVKit.AVPlayerViewController()
+        playerViewController.player = player
+        // This flag gets reset in viewWillAppear as player is dismissed
+        self.nowPlayingVideo = true
+        self.navigationController?.pushViewController(playerViewController)
     }
     
+    @objc func videoDidEnd() {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
+        
+        // TODO: This may be too restrictive - Scott suggests simply enabling next as video player is launched,
+        // rather than forcing user to complete the video
+        self.enableNextVideo()
+    }
+    
+    func enableNextVideo() {
+        DispatchQueue.main.async {
+            if self.lastVideoEnabled < (self.clickableImages.count - 1) {
+                self.lastVideoEnabled += 1
+                print("Enabling video # \(self.lastVideoEnabled) (zero based)")
+                self.addPointer2(self.nodeFound!, position: self.imagePositions[self.lastVideoEnabled])
+                let positionInCameraSpace = self.nodeFound!.convertPosition(self.nodeFound!.position, to: self.sceneView.pointOfView)
+                print(positionInCameraSpace)
+                // TODO: These positions and calculations need tuning for good visual performance
+                if positionInCameraSpace.z < +0.05 {
+                    self.warningLabel.text = "If the marker is not visible, back up or walk around the object"
+                }
+                else {
+                    self.warningLabel.text = ""
+                }
+                self.thumbNailCollectionView.isHidden = false
+                self.thumbNailCollectionView.reloadData()
+            }
+        }
+    }
+
     func loadInteralAssets(detectedName: String) {
         switch detectedName.uppercased() {
         case "FAKEPRINTER":
@@ -291,8 +340,9 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
                 URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter3", ofType: "mp4")!)
             ]
         default:
+            // The QR codes end up in this option
             self.clickableImages = [UIImage(named: "3DPrinterThumb1")!, UIImage(named: "3DPrinterThumb2")!, UIImage(named: "3DPrinterThumb3")!]
-            self.imagePositions = [SCNVector3(x: -0.2, y: +0.4, z: +0.05), SCNVector3(x: +0.1, y: +0.4, z: +0.05), SCNVector3(x: -0.2, y: +0.1, z: +0.05)]
+            self.imagePositions = [SCNVector3(x: -0.1, y: +0.1, z: +0.05), SCNVector3(x: +0.1, y: +0.1, z: +0.05), SCNVector3(x: -0.1, y: -0.1, z: +0.05)]
             self.videoURLs = [
                 URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter1", ofType: "mp4")!),
                 URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter2", ofType: "mp4")!),
@@ -333,6 +383,16 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
         }
         socket.connect()
     }
+    
+    func addPointer2(_ node:SCNNode, position: SCNVector3) {
+        let pointerNode = SCNNode(geometry: SCNPlane(width: 0.05, height: 0.05))
+        pointerNode.geometry?.firstMaterial?.diffuse.contents = UIImage(named: "ObjectPointer")
+        pointerNode.position = position
+        pointerNode.constraints = [SCNBillboardConstraint()]
+        node.addChildNode(pointerNode)
+    }
+    
+    // MARK: - Likely deprecated functions
     
     func addPointer(_ node:SCNNode) {
         let pointerNode = SCNNode(geometry: SCNPlane(width: 0.05, height: 0.05))
@@ -465,6 +525,36 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate {
                     print(error)
                 }
             }
+        }
+    }
+
+    @objc func onTap(_ gesture: UITapGestureRecognizer) {
+        print("onTap from ARSceneViewController")
+
+        let location = gesture.location(in: self.sceneView)
+
+        let hitResults = self.renderer?.hitTest(location, options:nil)
+        if let hit = hitResults?.first {
+            let node = hit.node
+            if let obj = node.geometry?.firstMaterial?.diffuse.contents as? UIImage {
+                if let tag = self.thumbNails.firstIndex(of: obj) {
+                    self.showVideo(tag: tag)
+                }
+            }
+        }
+    }
+
+    @IBAction func prevButtonTUI(_ sender: Any) {
+        if self.stepInScene > 0 {
+            self.clickableNodes[self.stepInScene].removeFromParentNode()
+            self.stepInScene -= 1
+        }
+    }
+    
+    @IBAction func nextButtonTUI(_ sender: Any) {
+        if self.stepInScene < self.clickableNodes.count-1 {
+            self.stepInScene += 1
+            self.nodeFound?.addChildNode(self.clickableNodes[self.stepInScene])
         }
     }
 }
