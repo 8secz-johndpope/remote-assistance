@@ -10,6 +10,7 @@ const BOT_DELAY = 500;
 const BOT_MSG_UNKNOWN = "I'm sorry, I didn't understand your response.";
 const SERVER_API = "/api/";
 const NATIVE_UA = "ace";
+const DEFAULT_RESPONSE = "Continue";
 
 const CTJ = CHAT_TREE_JSON.replace(/(\r\n|\n|\r)/gm, "")
 //console.log(CTJ);
@@ -52,7 +53,7 @@ function injectMsg(msg,msgLabel,userResponse=true) {
     msgLabelO += " is correct";
   }
 
-  if (userResponse) {
+  if (userResponse && (msgLabelO.length > 0)) {
      appendMessage(PERSON_NAME, PERSON_IMG, "right", msgLabelO,[]);          
   } else if (ocrConfirm) {     
       validTxt = false;
@@ -82,8 +83,9 @@ function injectMsg(msg,msgLabel,userResponse=true) {
 
 function launchLink(url,action) {
   savedAction = action;
-  setTimeout(injectMsg,1000,savedAction,"(viewing link)");
-  window.location = url;
+  //setTimeout(injectMsg,1000,savedAction,"(viewing link)");
+  console.log(url);
+  window.open(url, '_blank');
 }
 
 function launchEmail(msg) { 
@@ -115,36 +117,41 @@ function getButtonHTML(botResponseArr) {
     let actionLabel = botResponseArr[i].actionLabel;
     switch (botResponseArr[i].type) {
       case "response":
-       html += `<button class="btn btn-primary" style="margin-top: 10px; margin-right: 25px" onclick='injectMsg(\"${action}\",\"${actionLabel}\")'>${actionLabel}</button> `;
+       html += `<button class="btn btn-primary" style="margin-top: 10px; margin-right: 25px" onclick='injectMsg(\"${action}\",\"\")'>${actionLabel}</button> `;
        break;
       case "ocrResponse":
        html += `<button class="btn btn-primary" style="margin-top: 10px; margin-right: 25px" onclick='injectMsg(\"${action}\",\"${actionLabel}\")'>Continue</button> `;
        break;
       case "barcode":
-       html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchQRScanner(\"${action}\")'><span class="fa fa-qrcode fa-2x"></span></button> `;
+       html += `<img style="margin-top: 10px" onclick='launchQRScanner(\"${action}\")' width=64 height=64 src='/static/images/blueSCAN-QR_64.png'></img>`;
        break;
       case "link":
-       html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchLink(\"${url}\",\"${action}\")'><span class="fa fa-link fa-2x"></span></button> `;
+       if ( (url.toLowerCase().includes("youtu.be")) || (url.toLowerCase().includes("youtube")) || (url.toLowerCase().includes("vimeo")) ) {
+         html += `<img style="margin-top: 10px" onclick='launchLink(\"${url}\",\"${action}\")' width=64 height=64 src='/static/images/goldCONTENT-video_64.png'></img> `;
+       } else {
+         html += `<img style="margin-top: 10px" onclick='launchLink(\"${url}\",\"${action}\")' width=64 height=64 src='/static/images/ goldCONTENT-web_64.png'></img> `;        
+       }
+       html += `<div style="margin-top: 20px"><button class="btn btn-primary" style="margin-top: 10px; margin-right: 25px" onclick='injectMsg(\"${action}\",\"\")'>${DEFAULT_RESPONSE}</button></div>`;
        break;
       case "ra":
-       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchRA()'><span class="fa fa-user fa-2x"></span></button> `;
+       html += `<img style="margin-top: 10px; margin-right: 10px" onclick='launchRA()' width=64 height=64 src='/static/images/blueCHAT-AR_64.png'></img> `;
        break;
       case "showARScene":
-       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchAR3D(\"${action}\")'><span class="fa fa-camera fa-2x"></span></button> `;
+       html += `<img style="margin-top: 10px" onclick='launchAR3D(\"${action}\")' width=64 height=64 src='/static/images/blueSCAN-AR_64.png'></img> `;
        break;
       case "showARVideo":
-       html += `<button class="btn btn-danger" style="margin-top: 10px" onclick='launchARVideo(\"${action}\")'><span class="fa fa-camera fa-2x"></span></button> `;
+       html += `<img style="margin-top: 10px" onclick='launchARVideo(\"${action}\")' width=64 height=64 src='/static/images/blueSCAN-AR_64.png'></img> `;
        break;
       case "scanText":
        ocrConfirm = true;
        savedAction = action;
-       html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchOCRScanner(\"${action}\",\"${url}\")'><span class="fa fa-camera fa-2x"></span></button> `;
+       html += `<img style="margin-top: 10px" onclick='launchOCRScanner(\"${action}\",\"${url}\")' width=64 height=64 src='/static/images/blueSCAN-OCR_64.png'>`;
        break;
       case "email":
        html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchEmail(\"${action}\")'><span class="fa fa-envelope fa-2x"></span></button> `;
        break;
       case "phone":
-       html += `<button class="btn btn-warning" style="margin-top: 10px" onclick='launchPhoneCall(\"${action}\")'><span class="fa fa-phone fa-2x"></span></button> `;
+       html += `<img style="margin-top: 10px" onclick='launchPhoneCall(\"${action}\")' width=64 height=64 src='/static/images/blueCHAT-phone_64.png'></img>`;
        break;
      }
   }
@@ -299,6 +306,7 @@ function botResponse(msgText,msgLabel="",q="") {
         nextBtn.url = t;
         nextBtn.action = responses[currentIndex].next[i+1];
         botResponseArr.push(nextBtn);
+        nextBtn.actionLabel = DEFAULT_RESPONSE;
         break;
     } else {
       let tL = responses[currentIndex].nextLabels ? responses[currentIndex].nextLabels[i] : t;

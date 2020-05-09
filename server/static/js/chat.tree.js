@@ -36,8 +36,10 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 5,
-    "q": "Great! You've got a <b>{{printerName}}</b>?
+    "q": "Great! You've got a <b>{{printerName}}</b>.
+        <a href=\\"/static/images/printers/{{printerName}}.jpg\\" target=\\"_blank\\">
         <img class=\\"img-thumbnail\\" src=\\"/static/images/printers/{{printerName}}.jpg\\" />
+        </a>
         Do you want to...",
     "next": [6,12,14],
     "nextLabels": ["Address a fault code","Clear a paper jam","Install a print driver"]
@@ -51,8 +53,15 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 7,
-    "q": "Error {{errorCode}}. Got it. Please check out this video:",
-    "next": ["https://www.youtube.com/watch?v=kmNdi8S4Utg",8]
+    "q": "Error <b>{{errorCode}}</b>. Got it. Please check out this video:
+    <p class=\\"mt-4\\">
+    <strong>How To Perform a Combined Calibration -Apeosport/DocuCentre VII C6673 -EN</strong>
+    <a href=\\"https://youtu.be/kmNdi8S4Utg\\" target=\\"_blank\\">
+    <img class=\\"img-thumbnail\\" src=\\"http://i3.ytimg.com/vi/kmNdi8S4Utg/hqdefault.jpg\\" />
+    </a>
+    </p>
+    ",
+    "next": ["https://youtu.be/kmNdi8S4Utg",8]
     },
     {
     "id": 8,
@@ -94,18 +103,24 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 15,  
-    "q": "You're on Android, so please download <a href='https://play.google.com/store/apps/details?id=com.xerox.printservice' target=_blank>this app</a> from the Google Play Store.",
-    "next": [13],
+    "q": "You're on Android, so please download this app from the Google Play Store using the link below.",
+    "next": ["https://play.google.com/store/apps/details?id=com.xerox.printservice",13],
     "nextLabels": ["Continue"]
     },
     {
     "id": 16,
-    "q": "Your're on iOS, so you can print natively from your iPhone using AirPrint. Here's an instruction how to do it:",
+    "q": "Your're on iOS, so you can print natively from your iPhone using AirPrint. Here's an instruction guide:
+    <p class=\\"mt-4\\">
+    <strong>How to Print to ANY Printer from iPhone, iPod, iPad via Windows</strong>
+    <a href=\\"https://youtu.be/P_64MdjFoL0\\" target=\\"_blank\\">
+    <img class=\\"img-thumbnail\\" src=\\"http://i3.ytimg.com/vi/P_64MdjFoL0/hqdefault.jpg\\" />
+    </a>
+    </p>",
     "next": ["https://www.youtube.com/watch?v=P_64MdjFoL0",13]
     },
     {
     "id": 17,
-    "q": "Please visit <a href=https://onlinesupport.fujixerox.com/setupDriverForm.do?ctry_code=SG&lang_code=en&d_lang=en&pid=AP7C7773 target=_blank>this link</a> on a desktop or <a href='mailto:?body=Hello!%0D%0A%0D%0AThis%20link%20can%20help%20you%20configure%20drivers%20on%20your%20device:%20https://bit.ly/2xdI9jV&subject=Your%20Digital%20Companion%20link'>send email with instructions.</a>",
+    "q": "Please visit <b><a href=https://onlinesupport.fujixerox.com/setupDriverForm.do?ctry_code=SG&lang_code=en&d_lang=en&pid=AP7C7773 target=_blank>this link</a></b> on a desktop or <b><a href='mailto:?body=Hello!%0D%0A%0D%0AThis%20link%20can%20help%20you%20configure%20drivers%20on%20your%20device:%20https://bit.ly/2xdI9jV&subject=Your%20Digital%20Companion%20link'>send email with instructions.</a></b>",
     "next": [13],
     "nextLabels": ["Continue"]
     },
@@ -118,18 +133,20 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 23,
-    "q": "We found <b>{{printerName}}</b>.
+    "q": "Great! You've got a <b>{{printerName}}</b>.
+        <a href=\\"/static/images/printers/{{printerName}}.jpg\\" target=\\"_blank\\">
         <img class=\\"img-thumbnail\\" src=\\"/static/images/printers/{{printerName}}.jpg\\" />
+        </a>
         For your <b>{{printerName}}</b> do you need to... ",
     "next": [19,20],
     "nextLabels": ["Order more toner","Install new toner"]
     },
     {
     "id": 19,
-    "q": "Here are the part numbers for toner for your device: <span style='color:orange'>{{partList}}</span>. Please <a href=https://www.fujixerox.com.au/en/Contact/Order-Supplies target=_blank>visit the digital store to purchase toner</a>.
+    "q": "Here are the part numbers for toner for your device: <b>{{partList}}</b>. Please <b><a href=https://www.fujixerox.com.au/en/Contact/Order-Supplies target=_blank>visit the digital store to purchase toner</a></b>.
           <div style='padding:10px 0px 0px 0px'>
           Did you know that Fuji Xerox provides automated toner replenishment using smart remote service? 
-          <a href=https://www.fujixerox.co.nz/en/Company/EP-BB  target=_blank>Find out more about applying for eligibility.</a>
+          <b><a href=https://www.fujixerox.co.nz/en/Company/EP-BB target=_blank>Find out more about applying for eligibility.</a></b>
           </div>",
     "next": [13],
     "nextLabels": ["Continue"]
@@ -142,7 +159,16 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 21,
-    "q": "Now that you've seen how, please try replacing your toner cartridge. <a href=https://bit.ly/2z5FCIZ target=_blank>Find out more here</a> or <a href=https://www.youtube.com/watch?v=uNdh-eS9R_Q target=_blank>watch a video</a>.",
+    "q": "Now that you've seen how, please try replacing your toner cartridge.
+    <b><a href=https://bit.ly/2z5FCIZ target=_blank>Find out more here</a></b> or
+    <b><a href=https://www.youtube.com/watch?v=uNdh-eS9R_Q target=_blank>watch a video</a></b>.
+    <p class=\\"mt-4\\">
+    <strong>How To Remove or Replace the Toner Cartridge -Apeosport/DocuCentre VII C6673 -EN</strong>
+    <a href=\\"https://youtu.be/uNdh-eS9R_Q\\" target=\\"_blank\\">
+    <img class=\\"img-thumbnail\\" src=\\"http://i3.ytimg.com/vi/uNdh-eS9R_Q/hqdefault.jpg\\" />
+    </a>
+    </p>
+    ",
     "next": [13],
     "nextLabels": ["Continue"]
     }
