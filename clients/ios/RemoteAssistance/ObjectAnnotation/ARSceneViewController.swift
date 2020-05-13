@@ -282,6 +282,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
         // This flag gets reset in viewWillAppear as player is dismissed
         self.nowPlayingVideo = true
         self.navigationController?.pushViewController(playerViewController)
+        self.enableNextVideo()
     }
     
     @objc func videoDidEnd() {
@@ -289,7 +290,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
         
         // TODO: This may be too restrictive - Scott suggests simply enabling next as video player is launched,
         // rather than forcing user to complete the video
-        self.enableNextVideo()
+//        self.enableNextVideo()
     }
     
     func enableNextVideo() {
