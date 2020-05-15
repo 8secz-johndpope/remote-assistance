@@ -18,7 +18,7 @@ protocol ARSceneViewControllerDelegate: class
     func arSceneViewControllerResponse(text: String)
 }
 
-class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
     
 
     @IBOutlet weak var sceneView: ARSCNView!
@@ -46,6 +46,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
     var thumbNails:[UIImage] = []
     var stepInScene:Int = 0
     var lastVideoEnabled:Int = -1
+    var thumbNailSelectedIndex:Int = -1
     var nowPlayingVideo:Bool = false
 
     var recordingUrl:URL?
@@ -80,19 +81,6 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
         else {
             self.nowPlayingVideo = false
         }
-        
-//        let tap = UITapGestureRecognizer(target: self, action: #selector(onTap))
-//        self.view.addGestureRecognizer(tap)
-        
-//        if let _ = self.nodeFound {
-//            self.prevButton.isHidden = false
-//            self.nextButton.isHidden = false
-//        }
-//        else {
-//            self.prevButton.isHidden = true
-//            self.nextButton.isHidden = true
-//        }
-        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -110,7 +98,6 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
             
             AppUtility.lockOrientation(.all)
         }
-        //        self.view.removeGestureRecognizers()
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -123,20 +110,21 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "thumbnailCell", for: indexPath as IndexPath)
+        
         var image = self.clickableImages[indexPath.row]
         image = image.resize(toWidth: collectionView.frame.width * 0.75)!
         let imageView = UIImageView(image: image)
         imageView.layer.masksToBounds = true
         imageView.layer.borderWidth = 2
         imageView.layer.cornerRadius = 5
-        if indexPath.row == self.lastVideoEnabled {
+        if indexPath.row == self.thumbNailSelectedIndex {
             imageView.layer.borderColor = UIColor.systemYellow.cgColor
         }
         else {
             imageView.layer.borderColor = UIColor.systemGray.cgColor
         }
         cell.addSubview(imageView)
-        
+                
         return cell
     }
     
@@ -152,7 +140,16 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row <= self.lastVideoEnabled {
-            self.showVideo(tag: indexPath.row)
+            self.thumbNailSelectedIndex = indexPath.row
+            self.addPointer2(self.nodeFound!, position: self.imagePositions[indexPath.row])
+            let positionInCameraSpace = self.nodeFound!.convertPosition(self.nodeFound!.position, to: self.sceneView.pointOfView)
+            if positionInCameraSpace.z < +0.05 {
+                self.warningLabel.text = "If the marker is not visible, back up or walk around the object"
+            }
+            else {
+                self.warningLabel.text = ""
+            }
+            self.thumbNailCollectionView.reloadData()
         }
     }
     
@@ -180,7 +177,6 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
         if haveDetectionAssets {
             let options: ARSession.RunOptions = [.resetTracking, .removeExistingAnchors, .stopTrackedRaycasts]
             self.configuration.automaticImageScaleEstimationEnabled = true
-//            sceneView.session.delegate = self
             sceneView.session.run(self.configuration, options: options)
         }
     }
@@ -189,12 +185,6 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
         self.sceneView.session.pause()
     }
     
-//    func session(_ session: ARSession, didUpdate frame: ARFrame) {
-//        // Do something with the new transform
-//        let currentTransform = frame.camera.transform
-//        print(currentTransform)
-//    }
-
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
 
         self.renderer = renderer
@@ -211,7 +201,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
                     node.addChildNode(orientationNode)
                     self.nodeFound = node
                     
-                    self.enableNextVideo()
+                    self.startSequence()
                 }
             }
             
@@ -223,18 +213,23 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
                     self.view.makeToast("Found object anchor \(anchor.name ?? "Unknown")", position: .bottom)
                     self.nodeFound = node
 
-                    self.enableNextVideo()
+                    self.startSequence()
                 }
             }
         }
     }
     
-    func addFirstClickableNode() {
-        self.nodeFound?.addChildNode(self.clickableNodes[self.stepInScene])
-//        self.prevButton.isHidden = false
-//        self.prevButton.backgroundColor = UIColor.systemGray4
-//        self.nextButton.isHidden = false
-//        self.nextButton.backgroundColor = UIColor.systemGray4
+    func startSequence() {
+        DispatchQueue.main.async {
+            self.lastVideoEnabled = 0
+            self.thumbNailCollectionView.isHidden = false
+            self.thumbNailCollectionView.reloadData()
+            let lpgr = UILongPressGestureRecognizer(target: self, action: #selector(ARSceneViewController.handleLongPress(_:)))
+            lpgr.minimumPressDuration = 0.5
+            lpgr.delaysTouchesBegan = true
+            lpgr.delegate = self
+            self.thumbNailCollectionView.addGestureRecognizer(lpgr)
+        }
     }
     
     func createThumbnail(_ image:UIImage) -> UIImage {
@@ -272,48 +267,6 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
         }
     }
     
-    func showVideo(tag:Int) {
-                
-        let videoURL = self.videoURLs[tag]
-        let player = AVPlayer(url: videoURL)
-        NotificationCenter.default.addObserver(self, selector: #selector(videoDidEnd), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
-        let playerViewController = AVKit.AVPlayerViewController()
-        playerViewController.player = player
-        // This flag gets reset in viewWillAppear as player is dismissed
-        self.nowPlayingVideo = true
-        self.navigationController?.pushViewController(playerViewController)
-        self.enableNextVideo()
-    }
-    
-    @objc func videoDidEnd() {
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
-        
-        // TODO: This may be too restrictive - Scott suggests simply enabling next as video player is launched,
-        // rather than forcing user to complete the video
-//        self.enableNextVideo()
-    }
-    
-    func enableNextVideo() {
-        DispatchQueue.main.async {
-            if self.lastVideoEnabled < (self.clickableImages.count - 1) {
-                self.lastVideoEnabled += 1
-                print("Enabling video # \(self.lastVideoEnabled) (zero based)")
-                self.addPointer2(self.nodeFound!, position: self.imagePositions[self.lastVideoEnabled])
-                let positionInCameraSpace = self.nodeFound!.convertPosition(self.nodeFound!.position, to: self.sceneView.pointOfView)
-                print(positionInCameraSpace)
-                // TODO: These positions and calculations need tuning for good visual performance
-                if positionInCameraSpace.z < +0.05 {
-                    self.warningLabel.text = "If the marker is not visible, back up or walk around the object"
-                }
-                else {
-                    self.warningLabel.text = ""
-                }
-                self.thumbNailCollectionView.isHidden = false
-                self.thumbNailCollectionView.reloadData()
-            }
-        }
-    }
-
     func loadInteralAssets(detectedName: String) {
         switch detectedName.uppercased() {
         case "FAKEPRINTER":
@@ -341,13 +294,13 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
                 URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter3", ofType: "mp4")!)
             ]
         default:
-            // The QR codes end up in this option
-            self.clickableImages = [UIImage(named: "3DPrinterThumb1")!, UIImage(named: "3DPrinterThumb2")!, UIImage(named: "3DPrinterThumb3")!]
+            // 5-14-20 Scott - Set these as the default - since neither BOOMBOX or OLDAPEOSPORT are in the switch/case above
+            self.clickableImages = [UIImage(named: "paperJam1")!, UIImage(named: "paperJam2")!, UIImage(named: "paperJam3")!]
             self.imagePositions = [SCNVector3(x: -0.1, y: +0.1, z: +0.05), SCNVector3(x: +0.1, y: +0.1, z: +0.05), SCNVector3(x: -0.1, y: -0.1, z: +0.05)]
             self.videoURLs = [
-                URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter1", ofType: "mp4")!),
-                URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter2", ofType: "mp4")!),
-                URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter3", ofType: "mp4")!)
+                URL(fileURLWithPath: Bundle.main.path(forResource: "paperJam1", ofType: "mp4")!),
+                URL(fileURLWithPath: Bundle.main.path(forResource: "paperJam2", ofType: "mp4")!),
+                URL(fileURLWithPath: Bundle.main.path(forResource: "paperJam3", ofType: "mp4")!)
             ]
         }
 
@@ -386,6 +339,9 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
     }
     
     func addPointer2(_ node:SCNNode, position: SCNVector3) {
+        for node in node.childNodes {
+            node.removeFromParentNode()
+        }
         let pointerNode = SCNNode(geometry: SCNPlane(width: 0.05, height: 0.05))
         pointerNode.geometry?.firstMaterial?.diffuse.contents = UIImage(named: "ObjectPointer")
         pointerNode.position = position
@@ -393,8 +349,74 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
         node.addChildNode(pointerNode)
     }
     
+    @objc func handleLongPress(_ sender: UILongPressGestureRecognizer) {
+        
+        if sender.state != UIGestureRecognizer.State.ended {
+            return
+        }
+        
+        let p = sender.location(in: self.thumbNailCollectionView)
+        let indexPath = self.thumbNailCollectionView.indexPathForItem(at: p)
+        
+        if let index = indexPath {
+            self.showVideo(tag: index.row)
+        }
+    }
+    
+    func showVideo(tag:Int) {
+                
+        let videoURL = self.videoURLs[tag]
+        let player = AVPlayer(url: videoURL)
+        NotificationCenter.default.addObserver(self, selector: #selector(videoDidEnd), name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
+        let playerViewController = AVKit.AVPlayerViewController()
+        playerViewController.player = player
+        // This flag gets reset in viewWillAppear as player is dismissed
+        self.nowPlayingVideo = true
+        self.navigationController?.pushViewController(playerViewController)
+        if self.lastVideoEnabled < (self.clickableImages.count - 1) && tag == self.lastVideoEnabled  {
+            self.lastVideoEnabled += 1
+        }
+    }
+    
     // MARK: - Likely deprecated functions
     
+        @objc func videoDidEnd() {
+            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
+            
+            // TODO: This may be too restrictive - Scott suggests simply enabling next as video player is launched,
+            // rather than forcing user to complete the video
+    //        self.enableNextVideo()
+        }
+            
+        func addFirstClickableNode() {
+            self.nodeFound?.addChildNode(self.clickableNodes[self.stepInScene])
+    //        self.prevButton.isHidden = false
+    //        self.prevButton.backgroundColor = UIColor.systemGray4
+    //        self.nextButton.isHidden = false
+    //        self.nextButton.backgroundColor = UIColor.systemGray4
+        }
+        
+    func enableNextVideo() {
+        DispatchQueue.main.async {
+            if self.lastVideoEnabled < (self.clickableImages.count - 1) {
+                self.lastVideoEnabled += 1
+                print("Enabling video # \(self.lastVideoEnabled) (zero based)")
+                self.addPointer2(self.nodeFound!, position: self.imagePositions[self.lastVideoEnabled])
+                let positionInCameraSpace = self.nodeFound!.convertPosition(self.nodeFound!.position, to: self.sceneView.pointOfView)
+                print(positionInCameraSpace)
+                // TODO: These positions and calculations need tuning for good visual performance
+                if positionInCameraSpace.z < +0.05 {
+                    self.warningLabel.text = "If the marker is not visible, back up or walk around the object"
+                }
+                else {
+                    self.warningLabel.text = ""
+                }
+                self.thumbNailCollectionView.isHidden = false
+                self.thumbNailCollectionView.reloadData()
+            }
+        }
+    }
+
     func addPointer(_ node:SCNNode) {
         let pointerNode = SCNNode(geometry: SCNPlane(width: 0.05, height: 0.05))
         pointerNode.geometry?.firstMaterial?.diffuse.contents = UIImage(named: "ObjectPointer")
