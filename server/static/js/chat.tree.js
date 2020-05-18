@@ -120,7 +120,7 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 17,
-    "q": "Please visit <b><a href=https://onlinesupport.fujixerox.com/setupDriverForm.do?ctry_code=SG&lang_code=en&d_lang=en&pid=AP7C7773 target=_blank>this link</a></b> on a desktop or <b><a href='mailto:?body=Hello!%0D%0A%0D%0AThis%20link%20can%20help%20you%20configure%20drivers%20on%20your%20device:%20https://bit.ly/2xdI9jV&subject=Your%20Digital%20Companion%20link'>send email with instructions.</a></b>",
+    "q": "Please visit <b><a href=https://onlinesupport.fujixerox.com/setupDriverForm.do?ctry_code=SG&lang_code=en&d_lang=en&pid=AP7C7773 target=_blank>this link</a></b> on a desktop or <b><a href='mailto:?body=Hello!%0D%0A%0D%0AThese%20links%20can%20help%20you%20configure%20drivers%20on%20your%20device:%20https://bit.ly/2xdI9jV%20https://bit.ly/2LGyEgJ&subject=Your%20Digital%20Companion%20link'>send email with instructions.</a></b>",
     "next": [13],
     "nextLabels": ["Continue"]
     },
