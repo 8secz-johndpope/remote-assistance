@@ -53,7 +53,7 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 7,
-    "q": "Error <b>{{errorCode}}</b>. Got it. Please check out this video:
+    "q": "Error <b>{{errorCode}}</b>. Got it. Please <b><a href=\\"http://m1-onlinesupport.fujixerox.com/driver_downloads/OTS/AP7C7773/OTS_Solution16195_EN.html\\" target=\\"_blank\\">read this document</a></b> or check out this video:
     <p class=\\"mt-4\\">
     <strong>How To Perform a Combined Calibration -Apeosport/DocuCentre VII C6673 -EN</strong>
     <a href=\\"https://youtu.be/kmNdi8S4Utg\\" target=\\"_blank\\">
@@ -76,12 +76,12 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 10,
-    "q": "Sorry about that. Please connect to a remote assistant.",
+    "q": "Sorry about that. Please <b><a href=https://onlinesupport.fujixerox.com/processDriverForm.do?ctry_code=AU&lang_code=en&d_lang=en&corp_pid=AP7C7773&rts=null&model=ApeosPort-VII+C7773&type_id=7&oslist=Windows+10+64bit&lang_list=en target=_blank>visit our online FAQ</a>, <b><a href=http://m1-onlinesupport.fujixerox.com/driver_downloads/OTS/OTS_APDC7_ApeosPort_DocuCentre_VII_C7773_EN.html target=_blank>view online training guides</a></b>, <b><a href=https://www.youtube.com/fujixeroxsupport target=_blank>peruse online training videos</a></b>, or connect to a remote assistant using live video chat or phone:",
     "next": ["ra","+61429575654"]
     },
     {
     "id": 11,
-    "q": "Please connect to a remote assistant.",
+    "q": "Please <b><a href=https://onlinesupport.fujixerox.com/setupSupport.do?cid=2&ctry_code=AU&lang_code=en target=_blank>visit the online support page</a></b> or connect to a remote assistant using live video chat or phone:",
     "next": ["ra","+61429575654"]
     },
     {
@@ -109,7 +109,7 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 16,
-    "q": "Your're on iOS, so you can print natively from your iPhone using AirPrint. Here's an instruction guide:
+    "q": "Your're on iOS, so you can print natively from your iPhone using AirPrint. Please <b><a href=http://m1-onlinesupport.fujixerox.com/driver_downloads/OTS/AP7C7773/OTS_Solution16160_EN.html target=_blank>view this instruction guide</a></b> or watch the video below:
     <p class=\\"mt-4\\">
     <strong>How to Print to ANY Printer from iPhone, iPod, iPad via Windows</strong>
     <a href=\\"https://youtu.be/P_64MdjFoL0\\" target=\\"_blank\\">
