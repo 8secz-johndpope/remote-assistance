@@ -273,9 +273,9 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
             self.clickableImages = [UIImage(named: "PrinterThumb1")!, UIImage(named: "PrinterThumb2")!, UIImage(named: "PrinterThumb3")!]
             self.imagePositions = [SCNVector3(x: -0.2, y: +0.4, z: +0.05), SCNVector3(x: +0.1, y: +0.4, z: +0.05), SCNVector3(x: -0.2, y: +0.1, z: +0.05)]
             self.videoURLs = [
-                URL(string:"\(store.ace.state.serverUrl)/static/clipStor/demo1.mp4")!,
-                URL(string:"\(store.ace.state.serverUrl)/static/clipStor/demo2.mp4")!,
-                URL(string:"\(store.ace.state.serverUrl)/static/clipStor/demo3.mp4")!,
+                URL(string:"\(store.ace.state.serverUrl)/static/clipStor/paperJam1.mp4")!,
+                URL(string:"\(store.ace.state.serverUrl)/static/clipStor/paperJam2.mp4")!,
+                URL(string:"\(store.ace.state.serverUrl)/static/clipStor/paperJam3.mp4")!,
             ]
         case "3DPRINTER":
             self.clickableImages = [UIImage(named: "3DPrinterThumb1")!, UIImage(named: "3DPrinterThumb2")!, UIImage(named: "3DPrinterThumb3")!]

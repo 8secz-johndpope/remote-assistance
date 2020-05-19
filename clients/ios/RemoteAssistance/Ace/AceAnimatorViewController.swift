@@ -214,10 +214,12 @@ class AceAnimatorViewController: UIViewController, ARSCNViewDelegate {
     
     func addFirstAnimationNode(node:SCNNode) {
         let orientationNode = SCNNode()
+        // Edit this to change rotation
         orientationNode.eulerAngles = SCNVector3(x:-Float.pi/2, y:0, z:0)
         node.addChildNode(orientationNode)
         self.nodeFound = orientationNode
         self.trayNode.scale = SCNVector3(5, 5, 5)
+        // Edit this to move the 3D scene around
         self.trayNode.position = SCNVector3(+0.125,-0.25,-0.2)
         self.trayNode.rotation = SCNVector4Make(1, 0, 0, -(.pi/2))
         self.nodeFound?.addChildNode(self.trayNode)
