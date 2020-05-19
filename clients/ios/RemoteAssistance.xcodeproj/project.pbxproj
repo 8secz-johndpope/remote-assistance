@@ -16,6 +16,9 @@
 		2984E5112418216D00AA0B9C /* 3DPrinter2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2984E50E2418216B00AA0B9C /* 3DPrinter2.mp4 */; };
 		2984E5122418216D00AA0B9C /* 3DPrinter1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2984E50F2418216C00AA0B9C /* 3DPrinter1.mp4 */; };
 		2984E5132418216D00AA0B9C /* 3DPrinter3.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 2984E5102418216D00AA0B9C /* 3DPrinter3.mp4 */; };
+		29886A29246DF7F000E15228 /* paperJam1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 29886A26246DF7EF00E15228 /* paperJam1.mp4 */; };
+		29886A2A246DF7F000E15228 /* paperJam2.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 29886A27246DF7EF00E15228 /* paperJam2.mp4 */; };
+		29886A2B246DF7F000E15228 /* paperJam3.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 29886A28246DF7F000E15228 /* paperJam3.mp4 */; };
 		29D079D12464B18B0080481F /* AppUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D079D02464B18B0080481F /* AppUtility.swift */; };
 		AD43D0CE23C68E5500AA4D24 /* QRCodeScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD43D0CD23C68E5500AA4D24 /* QRCodeScanner.swift */; };
 		D7031AFA23E8EED80062A637 /* AceClipThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7031AF923E8EED80062A637 /* AceClipThumbnail.swift */; };
@@ -107,6 +110,9 @@
 		2984E50E2418216B00AA0B9C /* 3DPrinter2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3DPrinter2.mp4; sourceTree = "<group>"; };
 		2984E50F2418216C00AA0B9C /* 3DPrinter1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3DPrinter1.mp4; sourceTree = "<group>"; };
 		2984E5102418216D00AA0B9C /* 3DPrinter3.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 3DPrinter3.mp4; sourceTree = "<group>"; };
+		29886A26246DF7EF00E15228 /* paperJam1.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = paperJam1.mp4; sourceTree = "<group>"; };
+		29886A27246DF7EF00E15228 /* paperJam2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = paperJam2.mp4; sourceTree = "<group>"; };
+		29886A28246DF7F000E15228 /* paperJam3.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = paperJam3.mp4; sourceTree = "<group>"; };
 		29D079D02464B18B0080481F /* AppUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUtility.swift; sourceTree = "<group>"; };
 		33CD05DAC9A4FFE0F7D651A9 /* Pods_RemoteAssistance.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RemoteAssistance.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		53D42A241ED05FFC83CEF12E /* Pods-RemoteAssistance.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RemoteAssistance.debug.xcconfig"; path = "Target Support Files/Pods-RemoteAssistance/Pods-RemoteAssistance.debug.xcconfig"; sourceTree = "<group>"; };
@@ -209,6 +215,9 @@
 		2941BEBF23C9013000AE3A4F /* Videos */ = {
 			isa = PBXGroup;
 			children = (
+				29886A26246DF7EF00E15228 /* paperJam1.mp4 */,
+				29886A27246DF7EF00E15228 /* paperJam2.mp4 */,
+				29886A28246DF7F000E15228 /* paperJam3.mp4 */,
 				2984E50F2418216C00AA0B9C /* 3DPrinter1.mp4 */,
 				2984E50E2418216B00AA0B9C /* 3DPrinter2.mp4 */,
 				2984E5102418216D00AA0B9C /* 3DPrinter3.mp4 */,
@@ -544,6 +553,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				29886A2A246DF7F000E15228 /* paperJam2.mp4 in Resources */,
 				F99E39E32448AC6C006F014B /* hollow-mark.png in Resources */,
 				2941BECC23C9165F00AE3A4F /* clip1.mp4 in Resources */,
 				D7DB69F0236DE2D500D7C367 /* materialdesignicons-webfont.ttf in Resources */,
@@ -553,12 +563,14 @@
 				D7455DC42368BE7F001594FA /* LaunchScreen.storyboard in Resources */,
 				D7EAD85B23D66ABC00EE1A56 /* Models.scnassets in Resources */,
 				D7DB69EB236DE2D500D7C367 /* Leapmotion_Handsolo_Rig_Right.dae in Resources */,
+				29886A29246DF7F000E15228 /* paperJam1.mp4 in Resources */,
 				F9A7B77B23D0F39300F518C0 /* overlay.html in Resources */,
 				2984E5122418216D00AA0B9C /* 3DPrinter1.mp4 in Resources */,
 				D7DB6A10236DF21C00D7C367 /* README.md in Resources */,
 				F99E39E12448AC6C006F014B /* hollow-mark-red.png in Resources */,
 				2941BECD23C9165F00AE3A4F /* clip2.mp4 in Resources */,
 				2984E5132418216D00AA0B9C /* 3DPrinter3.mp4 in Resources */,
+				29886A2B246DF7F000E15228 /* paperJam3.mp4 in Resources */,
 				2984E5112418216D00AA0B9C /* 3DPrinter2.mp4 in Resources */,
 				D7455DC12368BE7F001594FA /* Assets.xcassets in Resources */,
 				D7455DBF2368BE77001594FA /* Main.storyboard in Resources */,
