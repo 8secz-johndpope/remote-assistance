@@ -76,7 +76,7 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 10,
-    "q": "Sorry about that. Please <b><a href=https://onlinesupport.fujixerox.com/processDriverForm.do?ctry_code=AU&lang_code=en&d_lang=en&corp_pid=AP7C7773&rts=null&model=ApeosPort-VII+C7773&type_id=7&oslist=Windows+10+64bit&lang_list=en target=_blank>visit our online FAQ</a>, <b><a href=http://m1-onlinesupport.fujixerox.com/driver_downloads/OTS/OTS_APDC7_ApeosPort_DocuCentre_VII_C7773_EN.html target=_blank>view online training guides</a></b>, <b><a href=https://www.youtube.com/fujixeroxsupport target=_blank>peruse online training videos</a></b>, or connect to a remote assistant using live video chat or phone:",
+    "q": "Sorry about that. Please <b><a href=https://onlinesupport.fujixerox.com/processDriverForm.do?ctry_code=AU&lang_code=en&d_lang=en&corp_pid=AP7C7773&rts=null&model=ApeosPort-VII+C7773&type_id=7&oslist=Windows+10+64bit&lang_list=en target=_blank>visit our online FAQ</a></b>, <b><a href=http://m1-onlinesupport.fujixerox.com/driver_downloads/OTS/OTS_APDC7_ApeosPort_DocuCentre_VII_C7773_EN.html target=_blank>view online training guides</a></b>, <b><a href=https://www.youtube.com/fujixeroxsupport target=_blank>peruse online training videos</a></b>, or connect to a remote assistant using live video chat or phone:",
     "next": ["ra","+61429575654"]
     },
     {
@@ -120,7 +120,7 @@ const CHAT_TREE_JSON = `
     },
     {
     "id": 17,
-    "q": "Please visit <b><a href=https://onlinesupport.fujixerox.com/setupDriverForm.do?ctry_code=SG&lang_code=en&d_lang=en&pid=AP7C7773 target=_blank>this link</a></b> on a desktop or <b><a href='mailto:?body=Hello!%0D%0A%0D%0AThese%20links%20can%20help%20you%20configure%20drivers%20on%20your%20device:%20https://bit.ly/2xdI9jV%20https://bit.ly/2LGyEgJ&subject=Your%20Digital%20Companion%20link'>send email with instructions.</a></b>",
+    "q": "Please visit <b><a href=https://onlinesupport.fujixerox.com/setupDriverForm.do?ctry_code=SG&lang_code=en&d_lang=en&pid=AP7C7773 target=_blank>this link</a></b> on a desktop or <b><a href='mailto:?body=Hello!%0D%0A%0D%0AThese%20links%20can%20help%20you%20configure%20drivers%20on%20your%20device:%20https://bit.ly/2xdI9jV%20and%20https://bit.ly/2LGyEgJ&subject=Your%20Digital%20Companion%20link'>send email with instructions.</a></b>",
     "next": [13],
     "nextLabels": ["Continue"]
     },
