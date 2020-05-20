@@ -223,12 +223,15 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
         DispatchQueue.main.async {
             self.lastVideoEnabled = 0
             self.thumbNailCollectionView.isHidden = false
-            self.thumbNailCollectionView.reloadData()
             let lpgr = UILongPressGestureRecognizer(target: self, action: #selector(ARSceneViewController.handleLongPress(_:)))
             lpgr.minimumPressDuration = 0.5
             lpgr.delaysTouchesBegan = true
             lpgr.delegate = self
             self.thumbNailCollectionView.addGestureRecognizer(lpgr)
+            // To add the first selection and pointer
+            self.thumbNailSelectedIndex = 0
+            self.addPointer2(self.nodeFound!, position: self.imagePositions[0])
+            self.thumbNailCollectionView.reloadData()
         }
     }
     
