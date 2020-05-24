@@ -26,6 +26,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
     @IBOutlet weak var warningLabel: UILabel!
     
     let api = AceAPI.sharedInstance
+    let WARNING_LABEL_DEFAULT = "Press and hold thumbnail to play video.";
     let configuration = ARWorldTrackingConfiguration()
     var objectGroupName:String!
     var imageGroupName:String!
@@ -147,7 +148,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
                 self.warningLabel.text = "If the marker is not visible, back up or walk around the object"
             }
             else {
-                self.warningLabel.text = ""
+                self.warningLabel.text = WARNING_LABEL_DEFAULT
             }
             self.thumbNailCollectionView.reloadData()
         }
@@ -190,12 +191,14 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
         self.renderer = renderer
 
         if !self.anchorFound {
+
             if let _ = anchor as? ARImageAnchor {
                 self.anchorFound = true
                 print("ObjectAnnotation found imageAnchor!")
                 DispatchQueue.main.async {
                     self.loadInteralAssets(detectedName: anchor.name ?? "Unknown")
                     self.view.makeToast("Found image anchor \(anchor.name ?? "Unknown")", position: .bottom)
+                    self.warningLabel.text = self.WARNING_LABEL_DEFAULT
                     let orientationNode = SCNNode()
                     orientationNode.eulerAngles = SCNVector3(x:-Float.pi/2, y:0, z:0)
                     node.addChildNode(orientationNode)
@@ -211,6 +214,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
                 DispatchQueue.main.async {
                     self.loadInteralAssets(detectedName: anchor.name ?? "Unknown")
                     self.view.makeToast("Found object anchor \(anchor.name ?? "Unknown")", position: .bottom)
+                    self.warningLabel.text = self.WARNING_LABEL_DEFAULT
                     self.nodeFound = node
 
                     self.startSequence()
@@ -412,7 +416,7 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
                     self.warningLabel.text = "If the marker is not visible, back up or walk around the object"
                 }
                 else {
-                    self.warningLabel.text = ""
+                    self.warningLabel.text = self.WARNING_LABEL_DEFAULT
                 }
                 self.thumbNailCollectionView.isHidden = false
                 self.thumbNailCollectionView.reloadData()
