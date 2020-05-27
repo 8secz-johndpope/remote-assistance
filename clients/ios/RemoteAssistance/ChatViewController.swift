@@ -124,7 +124,8 @@ class ChatViewController: UIViewController {
         let nvc = rcProjectView
         nvc.sceneName = "Copier"
         nvc.title = "Install New Toner"
-//        nvc.showDebug = true
+        nvc.delegate = self
+        //        nvc.showDebug = true
         self.navigationController?.pushViewController(nvc, animated: true)
     }
 
@@ -190,8 +191,8 @@ extension ChatViewController : OCRDelegate {
     }
 }
 
-extension ChatViewController : AceAnimatorDelegate {
-        func aceAnimatorResponse(text: String) {
+extension ChatViewController : AceRCProjectViewControllerDelegate {
+        func aceRCProjectViewControllerResponse(text: String) {
             self.webView.evaluateJavaScript("onAR3DResponse('\(text)')", completionHandler: nil)
             //self.navigationController?.popViewController(animated: true)
     }

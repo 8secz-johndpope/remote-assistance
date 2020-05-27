@@ -10,6 +10,11 @@ import UIKit
 import RealityKit
 import ARKit
 
+protocol AceRCProjectViewControllerDelegate: class
+{
+    func aceRCProjectViewControllerResponse(text: String)
+}
+
 class AceRCProjectViewController : UIViewController {
     
     @IBOutlet weak var arView: ARView!
@@ -18,7 +23,8 @@ class AceRCProjectViewController : UIViewController {
     
     var sceneName = "Copier"
     var showDebug = false
-    
+    weak var delegate: AceRCProjectViewControllerDelegate?
+
     override func viewDidLoad() {
         configuration.planeDetection = [.horizontal]
         if showDebug {
@@ -33,8 +39,14 @@ class AceRCProjectViewController : UIViewController {
     }
     
     override func viewDidDisappear(_ animated: Bool) {
+        self.delegate?.aceRCProjectViewControllerResponse(text: "")
         super.viewWillDisappear(animated)
         arView.session.pause()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.delegate?.aceRCProjectViewControllerResponse(text: "")
     }
     
     func loadScene(_ name:String) {

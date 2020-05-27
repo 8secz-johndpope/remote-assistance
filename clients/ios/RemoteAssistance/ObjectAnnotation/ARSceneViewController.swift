@@ -300,6 +300,14 @@ class ARSceneViewController: UIViewController, ARSCNViewDelegate, UICollectionVi
                 URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter2", ofType: "mp4")!),
                 URL(fileURLWithPath: Bundle.main.path(forResource: "3DPrinter3", ofType: "mp4")!)
             ]
+        case "OLDAPEOSPORT":
+            self.clickableImages = [UIImage(named: "paperJam1")!, UIImage(named: "paperJam2")!, UIImage(named: "paperJam3")!]
+            self.imagePositions = [SCNVector3(x: -0.2, y: +0.5, z: +0.05), SCNVector3(x: -0.3, y: +0.1, z: +0.05), SCNVector3(x: +0.2, y: +0.1, z: +0.05)]
+            self.videoURLs = [
+                URL(fileURLWithPath: Bundle.main.path(forResource: "paperJam1", ofType: "mp4")!),
+                URL(fileURLWithPath: Bundle.main.path(forResource: "paperJam2", ofType: "mp4")!),
+                URL(fileURLWithPath: Bundle.main.path(forResource: "paperJam3", ofType: "mp4")!)
+            ]
         default:
             // 5-14-20 Scott - Set these as the default - since neither BOOMBOX or OLDAPEOSPORT are in the switch/case above
             self.clickableImages = [UIImage(named: "paperJam1")!, UIImage(named: "paperJam2")!, UIImage(named: "paperJam3")!]
