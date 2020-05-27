@@ -45,11 +45,7 @@ class AceRCProjectViewController : UIViewController {
 //            configuration.detectionObjects = referenceObjects
 //        }
         
-        anchorEntity = AnchorEntity()
         copierAnchor = try! Copier.loadStart()
-        anchorEntity.addChild(copierAnchor)
-        arView.scene.anchors.append(anchorEntity)
-
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(onTap))
         tap.delegate = self.parent as? UIGestureRecognizerDelegate
@@ -87,19 +83,18 @@ class AceRCProjectViewController : UIViewController {
 
 extension AceRCProjectViewController : ARSessionDelegate {
 
-//    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
-//        anchors.forEach { _ in
-//            // create object
-//            anchorEntity = AnchorEntity()
-//            copierAnchor = try! Copier.loadStart()
-//            anchorEntity.addChild(copierAnchor)
-//            arView.scene.anchors.append(anchorEntity)
-//
-//        }
-//    }
+    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        anchors.forEach { _ in
+            // create object
+            anchorEntity = AnchorEntity()
+            anchorEntity.addChild(copierAnchor)
+            arView.scene.anchors.append(anchorEntity)
+
+        }
+    }
 
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {  
-        anchors.forEach {
+        anchors.compactMap { $0 as? ARImageAnchor }.forEach {
             // update position
             anchorEntity.transform.matrix = $0.transform
         }  
