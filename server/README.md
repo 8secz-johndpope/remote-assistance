@@ -81,7 +81,8 @@ Note that there are some special cases for the *next* array:
 - Phone numbers and email addresses are converted to phone call and email buttons respectively.
 - Text "ra" will generate a button that launches the remote assistance application.
 - Text "barcode" followed by a single *id* indicates that the app will navigate to question *id* after the user scans a barcode. If setVar is also present, the payload of the barcode is also set to that variable name.
-
+- Valid web addresses are automatically converted to hotlinked icons in the chat. 
+- The next array supports device-specific branching. This has the form #m#m# (e.g., "15m16m17"). This redirects the user to different branches based on whether they are using an Android, iOS, or other device (e.g., in this example, if the user is using an Android device, they would be redirected to question 15, if they are using an iOS device they would be redirected to 16, and in any other case they would be redirected to question 17).
 
 API Documentation
 -----------------
