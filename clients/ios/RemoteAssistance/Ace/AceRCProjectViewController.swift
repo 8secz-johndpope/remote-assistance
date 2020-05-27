@@ -23,6 +23,9 @@ class AceRCProjectViewController : UIViewController {
     
     var sceneName = "Copier"
     var showDebug = false
+    var anchorEntity:AnchorEntity!
+    var copierAnchor:Copier.Start!
+    var open = false
     weak var delegate: AceRCProjectViewControllerDelegate?
 
     override func viewDidLoad() {
@@ -30,7 +33,27 @@ class AceRCProjectViewController : UIViewController {
         if showDebug {
             arView.debugOptions = [.showFeaturePoints, .showWorldOrigin]
         }
-        loadScene(sceneName)
+        
+        arView.session.delegate = self
+        
+        if let referenceImages = ARReferenceImage.referenceImages(inGroupNamed: "AR Resources", bundle: Bundle.main) {
+            configuration.detectionImages = referenceImages
+        }
+        
+// uncomment to detect objects
+//        if let referenceObjects = ARReferenceObject.referenceObjects(inGroupNamed: "VariousPrinters", bundle: Bundle.main) {
+//            configuration.detectionObjects = referenceObjects
+//        }
+        
+        anchorEntity = AnchorEntity()
+        copierAnchor = try! Copier.loadStart()
+        anchorEntity.addChild(copierAnchor)
+        arView.scene.anchors.append(anchorEntity)
+
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(onTap))
+        tap.delegate = self.parent as? UIGestureRecognizerDelegate
+        self.view.addGestureRecognizer(tap)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -48,20 +71,37 @@ class AceRCProjectViewController : UIViewController {
         super.viewWillDisappear(animated)
         self.delegate?.aceRCProjectViewControllerResponse(text: "")
     }
-    
-    func loadScene(_ name:String) {
         
-        guard let realityFileURL = Bundle.main.url(forResource: name, withExtension: "reality") else {
-            return
+    @IBAction func onTap(_ sender: UITapGestureRecognizer) {
+        // trigger on any taps
+        if open {
+            open = false
+            copierAnchor.notifications.prevTrigger.post()
+        } else {
+            open = true
+            copierAnchor.notifications.nextTrigger.post()
         }
+    }
+}
 
-        let realityFileSceneURL = realityFileURL.appendingPathComponent("Start", isDirectory: false)
-        if let anchorEntity = try? AnchorEntity.loadAnchor(contentsOf: realityFileSceneURL) {
-            let start = AnchorEntity()
-            start.anchoring = anchorEntity.anchoring
-            start.addChild(anchorEntity)
-            
-            arView.scene.anchors.append(start)
-        }
+
+extension AceRCProjectViewController : ARSessionDelegate {
+
+//    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+//        anchors.forEach { _ in
+//            // create object
+//            anchorEntity = AnchorEntity()
+//            copierAnchor = try! Copier.loadStart()
+//            anchorEntity.addChild(copierAnchor)
+//            arView.scene.anchors.append(anchorEntity)
+//
+//        }
+//    }
+
+    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {  
+        anchors.forEach {
+            // update position
+            anchorEntity.transform.matrix = $0.transform
+        }  
     }
 }

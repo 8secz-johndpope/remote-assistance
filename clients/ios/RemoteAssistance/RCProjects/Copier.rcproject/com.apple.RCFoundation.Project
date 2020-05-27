@@ -184,13 +184,11 @@
                             {
                               "configurationBox" : {
                                 "configuration" : {
-                                  "target" : [
-                                    "A66AEB63-AD67-4B09-8089-711348863B6A"
-                                  ]
+                                  "userIdentifier" : "NextTrigger"
                                 },
-                                "name" : "tapTarget"
+                                "name" : "custom"
                               },
-                              "identifier" : "1EB8EBD9-19F8-4E7E-8829-FE3421D976D4",
+                              "identifier" : "6E5CED5D-3CE4-4E50-A094-AAECE94B6584",
                               "isEnabled" : true
                             }
                           ],
@@ -279,13 +277,11 @@
                             {
                               "configurationBox" : {
                                 "configuration" : {
-                                  "target" : [
-                                    "C58AC8E5-C9D2-47CB-90BE-1F23C2CDFB65"
-                                  ]
+                                  "userIdentifier" : "PrevTrigger"
                                 },
-                                "name" : "tapTarget"
+                                "name" : "custom"
                               },
-                              "identifier" : "15CE70D2-A724-40E8-9F72-37AB70C5A4EB",
+                              "identifier" : "67BFB160-3FB7-4F52-8A9D-6931D540146D",
                               "isEnabled" : true
                             }
                           ],
@@ -603,6 +599,13 @@
                             "typeName" : "UUID",
                             "value" : "6F773F4B-1457-45B4-9FC3-8E991A6A81E9"
                           }
+                        ],
+                        [
+                          "entityName",
+                          {
+                            "typeName" : "String",
+                            "value" : "Tray"
+                          }
                         ]
                       ]
                     },
@@ -863,6 +866,13 @@
                           {
                             "typeName" : "UUID",
                             "value" : "A66AEB63-AD67-4B09-8089-711348863B6A"
+                          }
+                        ],
+                        [
+                          "entityName",
+                          {
+                            "typeName" : "String",
+                            "value" : "Next"
                           }
                         ]
                       ]
@@ -1229,6 +1239,13 @@
                             "typeName" : "UUID",
                             "value" : "C58AC8E5-C9D2-47CB-90BE-1F23C2CDFB65"
                           }
+                        ],
+                        [
+                          "entityName",
+                          {
+                            "typeName" : "String",
+                            "value" : "Prev"
+                          }
                         ]
                       ]
                     },
@@ -1400,20 +1417,20 @@
               "viewTransform" : {
                 "cameraTransform" : [
                   0.99965947866439819,
-                  -2.3283064365386963e-10,
-                  -0.026092186570167542,
+                  2.0489094865183688e-08,
+                  -0.026092188432812691,
                   0,
-                  -0.026076318696141243,
-                  0.03489958867430687,
-                  -0.9990505576133728,
+                  -0.026076300069689751,
+                  0.034899771213531494,
+                  -0.99905049800872803,
                   0,
-                  0.00091059337137266994,
+                  0.00091058679390698671,
                   0.99939078092575073,
-                  0.034887731075286865,
+                  0.034887854009866714,
                   0,
-                  0.23662026226520538,
-                  1.0374826192855835,
-                  0.018989020958542824,
+                  0.63181424140930176,
+                  1.7396969795227051,
+                  0.032696302980184555,
                   1
                 ],
                 "sceneTransform" : [
