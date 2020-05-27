@@ -6,8 +6,9 @@
           "__content" : [
             {
               "arAnchorSpecification" : {
-                "alignment" : "horizontal",
-                "name" : "surface"
+                "name" : "image",
+                "physicalWidth" : 0.076200000941753387,
+                "url" : "image:f6e42516eb1cdba990c8dcd112977f55\/demo_image_1.png"
               },
               "behaviors" : [
                 {
@@ -65,34 +66,6 @@
                                 }
                               ],
                               "identifier" : "499BB8FE-F3DE-469F-AE08-E11A085A7B71",
-                              "isEnabled" : true
-                            }
-                          ],
-                          "__version" : 1
-                        },
-                        {
-                          "__content" : [
-                            {
-                              "configurations" : [
-                                {
-                                  "__content" : [
-                                    {
-                                      "configurationBox" : {
-                                        "configuration" : {
-                                          "targetScene" : "D55563A1-19DD-4B62-86D6-42612E1CF1B7"
-                                        },
-                                        "name" : {
-                                          "type" : "changeScene"
-                                        }
-                                      },
-                                      "identifier" : "2FAC9BCC-EF51-411C-8115-DC7FF0827054",
-                                      "isEnabled" : true
-                                    }
-                                  ],
-                                  "__version" : 1
-                                }
-                              ],
-                              "identifier" : "47DC058E-7D4B-4D99-A416-042D743E63BE",
                               "isEnabled" : true
                             }
                           ],
@@ -192,34 +165,6 @@
                             }
                           ],
                           "__version" : 1
-                        },
-                        {
-                          "__content" : [
-                            {
-                              "configurations" : [
-                                {
-                                  "__content" : [
-                                    {
-                                      "configurationBox" : {
-                                        "configuration" : {
-                                          "targetScene" : "D55563A1-19DD-4B62-86D6-42612E1CF1B7"
-                                        },
-                                        "name" : {
-                                          "type" : "changeScene"
-                                        }
-                                      },
-                                      "identifier" : "787ED4E7-9607-4444-8C38-8A868CC5862C",
-                                      "isEnabled" : true
-                                    }
-                                  ],
-                                  "__version" : 1
-                                }
-                              ],
-                              "identifier" : "B080CDCE-BF97-4A26-9E5D-C3A8E2892749",
-                              "isEnabled" : true
-                            }
-                          ],
-                          "__version" : 1
                         }
                       ],
                       "color" : [
@@ -255,6 +200,101 @@
                     }
                   ],
                   "__version" : 3
+                },
+                {
+                  "__content" : [
+                    {
+                      "accessibility" : {
+                        "__content" : [
+                          {
+                            "isEnabled" : false
+                          }
+                        ],
+                        "__version" : 1
+                      },
+                      "actionGroups" : [
+                        {
+                          "__content" : [
+                            {
+                              "configurations" : [
+                                {
+                                  "__content" : [
+                                    {
+                                      "configurationBox" : {
+                                        "configuration" : {
+                                          "angularCoefficient" : 1,
+                                          "duration" : 1,
+                                          "isTransformInitKeyPath" : true,
+                                          "linearCoefficient" : 1,
+                                          "location" : [
+                                            0,
+                                            0,
+                                            0
+                                          ],
+                                          "moveEase" : "easeInOut",
+                                          "orientation" : [
+                                            -0.70710676908493042,
+                                            0,
+                                            0,
+                                            0.70710676908493042
+                                          ],
+                                          "respectPhysics" : false,
+                                          "target" : [
+                                            "6F773F4B-1457-45B4-9FC3-8E991A6A81E9"
+                                          ]
+                                        },
+                                        "name" : {
+                                          "arguments" : "local",
+                                          "type" : "transform"
+                                        }
+                                      },
+                                      "identifier" : "20FF3693-844F-4D73-860E-1B135A4C791F",
+                                      "isEnabled" : true
+                                    }
+                                  ],
+                                  "__version" : 1
+                                }
+                              ],
+                              "identifier" : "9975CE68-EE77-4A10-952F-D9177EAF99BB",
+                              "isEnabled" : true
+                            }
+                          ],
+                          "__version" : 1
+                        }
+                      ],
+                      "color" : [
+                        0.49019607901573181,
+                        0.7450980544090271,
+                        0.94901961088180542,
+                        1
+                      ],
+                      "identifier" : "402D965B-0988-4558-AAD9-4BA11E6DF842",
+                      "isEnabled" : true,
+                      "isLooping" : false,
+                      "isModal" : false,
+                      "name" : "TapPrev",
+                      "triggers" : [
+                        {
+                          "__content" : [
+                            {
+                              "configurationBox" : {
+                                "configuration" : {
+                                  "target" : [
+                                    "C58AC8E5-C9D2-47CB-90BE-1F23C2CDFB65"
+                                  ]
+                                },
+                                "name" : "tapTarget"
+                              },
+                              "identifier" : "15CE70D2-A724-40E8-9F72-37AB70C5A4EB",
+                              "isEnabled" : true
+                            }
+                          ],
+                          "__version" : 1
+                        }
+                      ]
+                    }
+                  ],
+                  "__version" : 3
                 }
               ],
               "gravity" : [
@@ -266,7 +306,222 @@
               "material" : "concrete",
               "overrides" : {
                 "children" : {
-                  "8AEC85C6-EDA2-4934-9C61-B15F856BD4A6" : {
+                  "1A1358C2-7864-4E68-BC39-4D4C994971CA" : null,
+                  "1F3ADA34-1AB2-4D59-8787-7EEFBC714700" : {
+                    "overrides" : {
+                      "children" : {
+                        "USDScene" : {
+                          "overrides" : {
+                            "arguments" : [
+                              [
+                                "includeSceneScaling",
+                                {
+                                  "typeName" : "Bool",
+                                  "value" : false
+                                }
+                              ],
+                              [
+                                "subpath",
+                                {
+                                  "typeName" : "String",
+                                  "value" : ""
+                                }
+                              ],
+                              [
+                                "url",
+                                {
+                                  "typeName" : "String",
+                                  "value" : "model:0de9c8bbe23c56714daadf8c744daa04\/toner-4.usdz"
+                                }
+                              ],
+                              [
+                                "withDescendants",
+                                {
+                                  "typeName" : "Bool",
+                                  "value" : true
+                                }
+                              ]
+                            ],
+                            "factory" : {
+                              "identifier" : "com.apple.af.FileImportAssetFactory",
+                              "version" : "0.0"
+                            },
+                            "runtimeAttributes" : [
+                              [
+                                "RuntimeIdentifier",
+                                {
+                                  "typeName" : "UUID",
+                                  "value" : "CF977F39-9E86-47D0-AEF4-2CF298FC077E"
+                                }
+                              ]
+                            ]
+                          },
+                          "transform" : {
+                            "matrix" : [
+                              3.2799999713897705,
+                              0,
+                              0,
+                              0,
+                              0,
+                              3.2799999713897705,
+                              0,
+                              0,
+                              0,
+                              0,
+                              3.2799999713897705,
+                              0,
+                              0,
+                              0,
+                              0,
+                              1
+                            ]
+                          }
+                        }
+                      },
+                      "factory" : {
+                        "identifier" : "com.apple.af.Group",
+                        "version" : "0.0"
+                      },
+                      "runtimeAttributes" : [
+                        [
+                          "RuntimeIdentifier",
+                          {
+                            "typeName" : "UUID",
+                            "value" : "149DFF71-0E67-48E2-A29B-3C4502D53DC6"
+                          }
+                        ]
+                      ]
+                    },
+                    "transform" : {
+                      "matrix" : [
+                        1.5000001192092896,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5.3644175750378054e-06,
+                        -1.4999997615814209,
+                        0,
+                        0,
+                        1.4999997615814209,
+                        5.3644175750378054e-06,
+                        0,
+                        0.31119590997695923,
+                        -0.068817168474197388,
+                        0.0045458739623427391,
+                        1
+                      ]
+                    }
+                  },
+                  "02E88A5B-7AD2-4936-B00B-9ECB1FEAFA36" : null,
+                  "3B6F406D-CA6F-46DA-BA5F-0D2446A4A1FC" : {
+                    "overrides" : {
+                      "children" : {
+                        "USDScene" : {
+                          "overrides" : {
+                            "arguments" : [
+                              [
+                                "includeSceneScaling",
+                                {
+                                  "typeName" : "Bool",
+                                  "value" : false
+                                }
+                              ],
+                              [
+                                "subpath",
+                                {
+                                  "typeName" : "String",
+                                  "value" : ""
+                                }
+                              ],
+                              [
+                                "url",
+                                {
+                                  "typeName" : "String",
+                                  "value" : "model:5dbde3eb16595c6b6fd91c0a49019340\/toner-3.usdz"
+                                }
+                              ],
+                              [
+                                "withDescendants",
+                                {
+                                  "typeName" : "Bool",
+                                  "value" : true
+                                }
+                              ]
+                            ],
+                            "factory" : {
+                              "identifier" : "com.apple.af.FileImportAssetFactory",
+                              "version" : "0.0"
+                            },
+                            "runtimeAttributes" : [
+                              [
+                                "RuntimeIdentifier",
+                                {
+                                  "typeName" : "UUID",
+                                  "value" : "827A6108-6650-4BC2-87F2-2243E927CAC9"
+                                }
+                              ]
+                            ]
+                          },
+                          "transform" : {
+                            "matrix" : [
+                              3.2799999713897705,
+                              0,
+                              0,
+                              0,
+                              0,
+                              3.2799999713897705,
+                              0,
+                              0,
+                              0,
+                              0,
+                              3.2799999713897705,
+                              0,
+                              0,
+                              0,
+                              0,
+                              1
+                            ]
+                          }
+                        }
+                      },
+                      "factory" : {
+                        "identifier" : "com.apple.af.Group",
+                        "version" : "0.0"
+                      },
+                      "runtimeAttributes" : [
+                        [
+                          "RuntimeIdentifier",
+                          {
+                            "typeName" : "UUID",
+                            "value" : "72CD823F-DA52-4BC0-894D-B09F504525D4"
+                          }
+                        ]
+                      ]
+                    },
+                    "transform" : {
+                      "matrix" : [
+                        1.5000001192092896,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5.3644175750378054e-06,
+                        -1.4999997615814209,
+                        0,
+                        0,
+                        1.4999997615814209,
+                        5.3644175750378054e-06,
+                        0,
+                        0.28957304358482361,
+                        -0.068817168474197388,
+                        0.0045545687898993492,
+                        1
+                      ]
+                    }
+                  },
+                  "3FBEA7EB-1FE0-4809-991A-BD2D61BC4936" : null,
+                  "4D6334CB-B50A-46E6-9AFD-55E8464F8F75" : {
                     "overrides" : {
                       "children" : {
                         "USDScene" : {
@@ -353,29 +608,34 @@
                     },
                     "transform" : {
                       "matrix" : [
-                        0.99999994039535522,
+                        1.5000001192092896,
                         0,
                         0,
                         0,
                         0,
-                        0.99999964237213135,
+                        5.3644175750378054e-06,
+                        -1.4999997615814209,
                         0,
                         0,
+                        1.4999997615814209,
+                        5.3644175750378054e-06,
                         0,
-                        0,
-                        0.99999970197677612,
-                        0,
-                        -0.08205161988735199,
-                        0.17316260933876038,
-                        0.15671014785766602,
+                        0.22807788848876953,
+                        -0.013445843942463398,
+                        0.069486156105995178,
                         1
                       ]
                     }
                   },
+                  "6AA65056-AEC0-4EF1-883C-93E37DCC18C2" : null,
+                  "6C122B44-209B-40F5-9862-AA0DB96A6FA0" : null,
+                  "7F69C593-223D-40B0-8915-8DEC651F886F" : null,
+                  "8AEC85C6-EDA2-4934-9C61-B15F856BD4A6" : null,
+                  "8DD190FB-4060-4901-B2C2-F07A1A35EB8B" : null,
                   "59E0AFFE-D11B-440B-AEB1-8214C7F610EB" : null,
-                  "95EB2C49-6259-4933-9219-A1C013BF2CAD" : null,
-                  "607D68F6-D106-4037-ADD3-9AED88EC365E" : null,
-                  "0747AA6A-C1A3-4D7C-8ECA-B4A0F1329881" : {
+                  "72A926F9-FD6C-47F6-B79D-4F035DFAFE95" : null,
+                  "88A15869-15C8-49DA-932E-193A7589CD71" : null,
+                  "92EC4029-D7CA-4213-8CC6-18A06216C1AF" : {
                     "overrides" : {
                       "children" : {
                         "BA577110-E083-49AE-8D2E-E48D61808F66" : {
@@ -614,21 +874,23 @@
                         0,
                         0,
                         0,
-                        1,
+                        5.9604644775390625e-08,
+                        -1.0000001192092896,
                         0,
                         0,
+                        1.0000001192092896,
+                        5.9604644775390625e-08,
                         0,
-                        0,
-                        1,
-                        0,
-                        0.14421799778938293,
-                        0.14532820880413055,
-                        0.16289910674095154,
+                        0.45434749126434326,
+                        -0.0070006772875785828,
+                        0.069543272256851196,
                         1
                       ]
                     }
                   },
-                  "989DEC65-D5DA-4171-8551-37317BFD00A3" : {
+                  "95EB2C49-6259-4933-9219-A1C013BF2CAD" : null,
+                  "445A6C78-3E12-4867-8666-B12A3F0ECDC2" : null,
+                  "594E0DF6-074B-4169-9A2A-7AFF8C12FE35" : {
                     "overrides" : {
                       "children" : {
                         "USDScene" : {
@@ -652,7 +914,7 @@
                                 "url",
                                 {
                                   "typeName" : "String",
-                                  "value" : "model:0de9c8bbe23c56714daadf8c744daa04\/toner-4.usdz"
+                                  "value" : "model:1b7b0637bac02820dd83395554688c20\/toner-1.usdz"
                                 }
                               ],
                               [
@@ -672,7 +934,7 @@
                                 "RuntimeIdentifier",
                                 {
                                   "typeName" : "UUID",
-                                  "value" : "CF977F39-9E86-47D0-AEF4-2CF298FC077E"
+                                  "value" : "AEF83BDF-6C90-4BFE-A0CE-3EE84059013D"
                                 }
                               ]
                             ]
@@ -708,142 +970,37 @@
                           "RuntimeIdentifier",
                           {
                             "typeName" : "UUID",
-                            "value" : "149DFF71-0E67-48E2-A29B-3C4502D53DC6"
+                            "value" : "50FCD71A-9AD8-4BB2-B096-89E00474DC81"
                           }
                         ]
                       ]
                     },
                     "transform" : {
                       "matrix" : [
-                        1.0000001192092896,
+                        1.5000001192092896,
                         0,
                         0,
                         0,
                         0,
-                        1.0000001192092896,
+                        5.3644175750378054e-06,
+                        -1.4999997615814209,
                         0,
                         0,
+                        1.4999997615814209,
+                        5.3644175750378054e-06,
                         0,
-                        0,
-                        1.0000001192092896,
-                        0,
-                        -0.01103141438215971,
-                        0.23489780724048615,
-                        0.12700000405311584,
+                        0.2408437579870224,
+                        -0.068817138671875,
+                        0.0044080419465899467,
                         1
                       ]
                     }
                   },
+                  "607D68F6-D106-4037-ADD3-9AED88EC365E" : null,
+                  "0747AA6A-C1A3-4D7C-8ECA-B4A0F1329881" : null,
+                  "989DEC65-D5DA-4171-8551-37317BFD00A3" : null,
                   "1074A142-ABDA-4C38-9E31-28B0061549E1" : null,
-                  "52121FC4-1AAF-4E78-96ED-BC42B711153F" : null,
-                  "ACD9E418-9C4E-4067-885D-C11C5616D4F5" : {
-                    "overrides" : {
-                      "children" : {
-                        "USDScene" : {
-                          "overrides" : {
-                            "arguments" : [
-                              [
-                                "includeSceneScaling",
-                                {
-                                  "typeName" : "Bool",
-                                  "value" : false
-                                }
-                              ],
-                              [
-                                "subpath",
-                                {
-                                  "typeName" : "String",
-                                  "value" : ""
-                                }
-                              ],
-                              [
-                                "url",
-                                {
-                                  "typeName" : "String",
-                                  "value" : "model:23ea58ef9bb532539b6e1609a377f411\/toner-2.usdz"
-                                }
-                              ],
-                              [
-                                "withDescendants",
-                                {
-                                  "typeName" : "Bool",
-                                  "value" : true
-                                }
-                              ]
-                            ],
-                            "factory" : {
-                              "identifier" : "com.apple.af.FileImportAssetFactory",
-                              "version" : "0.0"
-                            },
-                            "runtimeAttributes" : [
-                              [
-                                "RuntimeIdentifier",
-                                {
-                                  "typeName" : "UUID",
-                                  "value" : "C69591D6-5540-424A-979A-B451C3BDF968"
-                                }
-                              ]
-                            ]
-                          },
-                          "transform" : {
-                            "matrix" : [
-                              3.2799999713897705,
-                              0,
-                              0,
-                              0,
-                              0,
-                              3.2799999713897705,
-                              0,
-                              0,
-                              0,
-                              0,
-                              3.2799999713897705,
-                              0,
-                              0,
-                              0,
-                              0,
-                              1
-                            ]
-                          }
-                        }
-                      },
-                      "factory" : {
-                        "identifier" : "com.apple.af.Group",
-                        "version" : "0.0"
-                      },
-                      "runtimeAttributes" : [
-                        [
-                          "RuntimeIdentifier",
-                          {
-                            "typeName" : "UUID",
-                            "value" : "AF2CED62-94D2-440D-9FF3-C7F42C480BCE"
-                          }
-                        ]
-                      ]
-                    },
-                    "transform" : {
-                      "matrix" : [
-                        1,
-                        0,
-                        0,
-                        0,
-                        0,
-                        1,
-                        0,
-                        0,
-                        0,
-                        0,
-                        1,
-                        0,
-                        -0.041085857897996902,
-                        0.23488882184028625,
-                        0.12700000405311584,
-                        1
-                      ]
-                    }
-                  },
-                  "BA577110-E083-49AE-8D2E-E48D61808F66" : null,
-                  "C1E79AE3-62B5-4BD5-AB67-823CE0364B75" : {
+                  "6536ED7E-B2D7-4D6D-8666-CEA63A9C7DE9" : {
                     "overrides" : {
                       "children" : {
                         "BA577110-E083-49AE-8D2E-E48D61808F66" : {
@@ -1077,241 +1234,154 @@
                     },
                     "transform" : {
                       "matrix" : [
-                        -0.99999850988388062,
-                        -8.7422641570356063e-08,
-                        -8.3475310930225533e-07,
+                        -0.99999624490737915,
+                        -2.9814259505656082e-06,
+                        -3.9034500787238358e-07,
                         0,
-                        8.7421248906593974e-08,
-                        -0.99999850988388062,
-                        1.6687860124875442e-06,
+                        -3.9033821508382971e-07,
+                        -2.145759253835422e-06,
+                        0.99999618530273438,
                         0,
-                        -8.3475447354430798e-07,
-                        1.6687885135979741e-06,
-                        1,
+                        -2.9814264053129591e-06,
+                        0.99999618530273438,
+                        2.3841769234422827e-06,
                         0,
-                        -0.30555516481399536,
-                        0.2453281581401825,
-                        0.16289894282817841,
+                        0.0045745372772216797,
+                        -0.0070006921887397766,
+                        -0.030456665903329849,
                         1
                       ]
                     }
                   },
+                  "26806A6E-F0D9-4C0D-9E65-B7003B08CBED" : null,
+                  "52121FC4-1AAF-4E78-96ED-BC42B711153F" : null,
+                  "665266A2-CE35-47E2-B45A-0D331DA0D820" : null,
+                  "44315644-88AA-42BB-8B1A-0812347F36D4" : {
+                    "overrides" : {
+                      "children" : {
+                        "USDScene" : {
+                          "overrides" : {
+                            "arguments" : [
+                              [
+                                "includeSceneScaling",
+                                {
+                                  "typeName" : "Bool",
+                                  "value" : false
+                                }
+                              ],
+                              [
+                                "subpath",
+                                {
+                                  "typeName" : "String",
+                                  "value" : ""
+                                }
+                              ],
+                              [
+                                "url",
+                                {
+                                  "typeName" : "String",
+                                  "value" : "model:23ea58ef9bb532539b6e1609a377f411\/toner-2.usdz"
+                                }
+                              ],
+                              [
+                                "withDescendants",
+                                {
+                                  "typeName" : "Bool",
+                                  "value" : true
+                                }
+                              ]
+                            ],
+                            "factory" : {
+                              "identifier" : "com.apple.af.FileImportAssetFactory",
+                              "version" : "0.0"
+                            },
+                            "runtimeAttributes" : [
+                              [
+                                "RuntimeIdentifier",
+                                {
+                                  "typeName" : "UUID",
+                                  "value" : "C69591D6-5540-424A-979A-B451C3BDF968"
+                                }
+                              ]
+                            ]
+                          },
+                          "transform" : {
+                            "matrix" : [
+                              3.2799999713897705,
+                              0,
+                              0,
+                              0,
+                              0,
+                              3.2799999713897705,
+                              0,
+                              0,
+                              0,
+                              0,
+                              3.2799999713897705,
+                              0,
+                              0,
+                              0,
+                              0,
+                              1
+                            ]
+                          }
+                        }
+                      },
+                      "factory" : {
+                        "identifier" : "com.apple.af.Group",
+                        "version" : "0.0"
+                      },
+                      "runtimeAttributes" : [
+                        [
+                          "RuntimeIdentifier",
+                          {
+                            "typeName" : "UUID",
+                            "value" : "AF2CED62-94D2-440D-9FF3-C7F42C480BCE"
+                          }
+                        ]
+                      ]
+                    },
+                    "transform" : {
+                      "matrix" : [
+                        1.5000001192092896,
+                        0,
+                        0,
+                        0,
+                        0,
+                        5.3644175750378054e-06,
+                        -1.4999997615814209,
+                        0,
+                        0,
+                        1.4999997615814209,
+                        5.3644175750378054e-06,
+                        0,
+                        0.26708662509918213,
+                        -0.068817168474197388,
+                        0.0045553324744105339,
+                        1
+                      ]
+                    }
+                  },
+                  "51731699-819A-4C29-A0DE-9031729EB1AE" : null,
+                  "A4C347A1-4963-4DB9-B94E-BD772853409F" : null,
+                  "A418F9E9-A9B0-410F-9B71-8F4171AE6E13" : null,
+                  "A828861D-AA70-41D6-841A-14659A6B9ABA" : null,
+                  "ACD9E418-9C4E-4067-885D-C11C5616D4F5" : null,
+                  "B15ACE97-B80E-4995-87CC-DCD33F041604" : null,
+                  "B45A11B8-8FA0-417D-82BD-94B253BF7084" : null,
+                  "B6724B84-757B-4B0E-BC09-B396C0810390" : null,
+                  "BA577110-E083-49AE-8D2E-E48D61808F66" : null,
+                  "C1E79AE3-62B5-4BD5-AB67-823CE0364B75" : null,
                   "C18DB387-2721-48DB-8221-409C548A2E7D" : null,
+                  "CD013EA8-3959-4B79-92A5-A24CF2316F87" : null,
                   "Cube" : null,
-                  "DC276499-11BF-4BFD-8B05-F7FD5D0DBD69" : {
-                    "overrides" : {
-                      "children" : {
-                        "USDScene" : {
-                          "overrides" : {
-                            "arguments" : [
-                              [
-                                "includeSceneScaling",
-                                {
-                                  "typeName" : "Bool",
-                                  "value" : false
-                                }
-                              ],
-                              [
-                                "subpath",
-                                {
-                                  "typeName" : "String",
-                                  "value" : ""
-                                }
-                              ],
-                              [
-                                "url",
-                                {
-                                  "typeName" : "String",
-                                  "value" : "model:5dbde3eb16595c6b6fd91c0a49019340\/toner-3.usdz"
-                                }
-                              ],
-                              [
-                                "withDescendants",
-                                {
-                                  "typeName" : "Bool",
-                                  "value" : true
-                                }
-                              ]
-                            ],
-                            "factory" : {
-                              "identifier" : "com.apple.af.FileImportAssetFactory",
-                              "version" : "0.0"
-                            },
-                            "runtimeAttributes" : [
-                              [
-                                "RuntimeIdentifier",
-                                {
-                                  "typeName" : "UUID",
-                                  "value" : "827A6108-6650-4BC2-87F2-2243E927CAC9"
-                                }
-                              ]
-                            ]
-                          },
-                          "transform" : {
-                            "matrix" : [
-                              3.2799999713897705,
-                              0,
-                              0,
-                              0,
-                              0,
-                              3.2799999713897705,
-                              0,
-                              0,
-                              0,
-                              0,
-                              3.2799999713897705,
-                              0,
-                              0,
-                              0,
-                              0,
-                              1
-                            ]
-                          }
-                        }
-                      },
-                      "factory" : {
-                        "identifier" : "com.apple.af.Group",
-                        "version" : "0.0"
-                      },
-                      "runtimeAttributes" : [
-                        [
-                          "RuntimeIdentifier",
-                          {
-                            "typeName" : "UUID",
-                            "value" : "72CD823F-DA52-4BC0-894D-B09F504525D4"
-                          }
-                        ]
-                      ]
-                    },
-                    "transform" : {
-                      "matrix" : [
-                        1,
-                        0,
-                        0,
-                        0,
-                        0,
-                        1,
-                        0,
-                        0,
-                        0,
-                        0,
-                        1,
-                        0,
-                        -0.026247534900903702,
-                        0.23488953709602356,
-                        0.12700000405311584,
-                        1
-                      ]
-                    }
-                  },
+                  "D00B224B-C3B0-4ECD-AD15-00BC88CACDC1" : null,
+                  "DC276499-11BF-4BFD-8B05-F7FD5D0DBD69" : null,
                   "E2C92986-61A0-4C93-BA02-42D6FC1AE956" : null,
+                  "E58F09C8-A09E-4234-91F6-D7935F463B81" : null,
                   "EB092ECD-F85C-4288-B1BC-4024CF398B4E" : null,
-                  "FD6A0582-EE7A-41B9-95A0-07034E2E67D0" : {
-                    "overrides" : {
-                      "children" : {
-                        "USDScene" : {
-                          "overrides" : {
-                            "arguments" : [
-                              [
-                                "includeSceneScaling",
-                                {
-                                  "typeName" : "Bool",
-                                  "value" : false
-                                }
-                              ],
-                              [
-                                "subpath",
-                                {
-                                  "typeName" : "String",
-                                  "value" : ""
-                                }
-                              ],
-                              [
-                                "url",
-                                {
-                                  "typeName" : "String",
-                                  "value" : "model:1b7b0637bac02820dd83395554688c20\/toner-1.usdz"
-                                }
-                              ],
-                              [
-                                "withDescendants",
-                                {
-                                  "typeName" : "Bool",
-                                  "value" : true
-                                }
-                              ]
-                            ],
-                            "factory" : {
-                              "identifier" : "com.apple.af.FileImportAssetFactory",
-                              "version" : "0.0"
-                            },
-                            "runtimeAttributes" : [
-                              [
-                                "RuntimeIdentifier",
-                                {
-                                  "typeName" : "UUID",
-                                  "value" : "AEF83BDF-6C90-4BFE-A0CE-3EE84059013D"
-                                }
-                              ]
-                            ]
-                          },
-                          "transform" : {
-                            "matrix" : [
-                              3.2799999713897705,
-                              0,
-                              0,
-                              0,
-                              0,
-                              3.2799999713897705,
-                              0,
-                              0,
-                              0,
-                              0,
-                              3.2799999713897705,
-                              0,
-                              0,
-                              0,
-                              0,
-                              1
-                            ]
-                          }
-                        }
-                      },
-                      "factory" : {
-                        "identifier" : "com.apple.af.Group",
-                        "version" : "0.0"
-                      },
-                      "runtimeAttributes" : [
-                        [
-                          "RuntimeIdentifier",
-                          {
-                            "typeName" : "UUID",
-                            "value" : "50FCD71A-9AD8-4BB2-B096-89E00474DC81"
-                          }
-                        ]
-                      ]
-                    },
-                    "transform" : {
-                      "matrix" : [
-                        1,
-                        0,
-                        0,
-                        0,
-                        0,
-                        1,
-                        0,
-                        0,
-                        0,
-                        0,
-                        1,
-                        0,
-                        -0.057613231241703033,
-                        0.23502883315086365,
-                        0.12700000405311584,
-                        1
-                      ]
-                    }
-                  },
+                  "FD5A956D-4DF8-4D2D-BFE6-27CFB0A7E092" : null,
+                  "FD6A0582-EE7A-41B9-95A0-07034E2E67D0" : null,
                   "Plate" : null
                 },
                 "factory" : null,
@@ -1329,21 +1399,21 @@
               "title" : "Start",
               "viewTransform" : {
                 "cameraTransform" : [
-                  0.98389518260955811,
+                  0.99965947866439819,
+                  -2.3283064365386963e-10,
+                  -0.026092186570167542,
                   0,
-                  -0.17874611914157867,
+                  -0.026076318696141243,
+                  0.03489958867430687,
+                  -0.9990505576133728,
                   0,
-                  -0.086614713072776794,
-                  0.87475353479385376,
-                  -0.47676417231559753,
+                  0.00091059337137266994,
+                  0.99939078092575073,
+                  0.034887731075286865,
                   0,
-                  0.15635886788368225,
-                  0.4845680296421051,
-                  0.86066579818725586,
-                  0,
-                  0.044673733413219452,
-                  0.558563232421875,
-                  1.0778257846832275,
+                  0.23662026226520538,
+                  1.0374826192855835,
+                  0.018989020958542824,
                   1
                 ],
                 "sceneTransform" : [
@@ -2844,21 +2914,21 @@
               "title" : "Open",
               "viewTransform" : {
                 "cameraTransform" : [
-                  0.98389518260955811,
-                  3.7252899431905462e-08,
-                  -0.1787460595369339,
+                  0.99999850988388062,
+                  -4.6566128730773926e-10,
+                  -0.0017159756971523166,
                   0,
-                  -0.083940014243125916,
-                  0.88287675380706787,
-                  -0.46204176545143127,
+                  -0.0017149681225419044,
+                  0.034899614751338959,
+                  -0.99938929080963135,
                   0,
-                  0.15781073272228241,
-                  0.46960464119911194,
-                  0.86865824460983276,
+                  5.9873913414776325e-05,
+                  0.99939078092575073,
+                  0.034899577498435974,
                   0,
-                  0.29661649465560913,
-                  1.0318052768707275,
-                  1.5587146282196045,
+                  0.23563164472579956,
+                  1.0374826192855835,
+                  -0.012741833925247192,
                   1
                 ],
                 "sceneTransform" : [
@@ -2867,12 +2937,12 @@
                   0,
                   0,
                   0,
-                  0.99999994039535522,
+                  1,
                   0,
                   0,
                   0,
                   0,
-                  0.99999994039535522,
+                  1,
                   0,
                   0,
                   0,
