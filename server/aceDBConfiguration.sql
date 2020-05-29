@@ -1,8 +1,8 @@
 -- --------------------------------------------------------
 -- Host:                         harddb.fxpal.net
--- Server version:               5.7.18-0ubuntu0.16.04.1 - (Ubuntu)
+-- Server version:               5.7.29-0ubuntu0.16.04.1 - (Ubuntu)
 -- Server OS:                    Linux
--- HeidiSQL Version:             10.3.0.5771
+-- HeidiSQL Version:             11.0.0.5919
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `clip` (
   `room_uuid` text,
   `uuid` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=158 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=159 DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
 
@@ -52,6 +52,26 @@ CREATE TABLE IF NOT EXISTS `clipAnchor` (
 
 -- Data exporting was unselected.
 
+-- Dumping structure for table ace.errorCode
+CREATE TABLE IF NOT EXISTS `errorCode` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` text,
+  `url` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+-- Data exporting was unselected.
+
+-- Dumping structure for table ace.printerName
+CREATE TABLE IF NOT EXISTS `printerName` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` text,
+  `partsList` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+-- Data exporting was unselected.
+
 -- Dumping structure for table ace.room
 CREATE TABLE IF NOT EXISTS `room` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -60,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `room` (
   `time_created` bigint(20) DEFAULT '0',
   `uuid` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=272 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=1096 DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
 
@@ -74,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `email` text,
   `name` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=269 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=937 DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
 
@@ -87,7 +107,7 @@ CREATE TABLE IF NOT EXISTS `userRoom` (
   `uuid` text,
   `state` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=424 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=497 DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
 
