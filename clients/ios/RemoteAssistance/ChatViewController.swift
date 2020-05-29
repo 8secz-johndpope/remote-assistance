@@ -98,12 +98,12 @@ class ChatViewController: UIViewController {
             UserDefaults.standard.set(archive, forKey: "conversation_archive")
 
             // create room name based on printer
-            if let printerName = archive["printerName"] as? String {
-                let roomId = "\(printerName.replacingOccurrences(of:" ", with: "-"))-\(generateRandomId())"
+            //if let printerName = archive["printerName"] as? String {
+                //let roomId = "\(printerName.replacingOccurrences(of:" ", with: "-"))-\(generateRandomId())"
                 // Launch remote assist view controller with room uuid: roomId
-                let action = AceAction.SetRoomName(roomName: roomId)
-                store.ace.dispatch(action)
-            }
+                //let action = AceAction.SetRoomName(roomName: roomId)
+                //store.ace.dispatch(action)
+            //}
         }
         
         let vc = AceViewController.instantiate(fromAppStoryboard: .Ace)
