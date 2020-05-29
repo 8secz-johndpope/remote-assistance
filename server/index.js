@@ -99,9 +99,6 @@ app.get('/expert', function (req, res) {
         return room.users <= 1;
     });
     roomArray.sort((a, b) => b.modifiedMS-a.modifiedMS);
-    // roomArray = roomArray.filter(function(room) {
-    //     return room.users == 1;
-    // });
     res.render('dashboard.html', { rooms: roomArray });
 });
 
