@@ -94,9 +94,9 @@ app.get('/expert', function (req, res) {
             users: Object.keys(rooms[id].users).length
         });
     });
-    // look for rooms with only 1 users
+    // look for rooms with only 0 or 1 users
     roomArray = roomArray.filter(function(room) {
-        return room.users == 1;
+        return room.users <= 1;
     });
     roomArray.sort((a, b) => b.modifiedMS-a.modifiedMS);
     // roomArray = roomArray.filter(function(room) {
