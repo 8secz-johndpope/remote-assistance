@@ -15,6 +15,7 @@
                     <tr>
                         <th scope="col">Room Id</th>
                         <th scope="col">Last activity</th>
+                        <th scope="col">User status</th>
                         <th scope="col">Connect</th>
                     </tr>
                 </thead>
@@ -23,6 +24,13 @@
                     <tr>
                         <td>{{room.id}}</td>
                         <td>{{room.modified}}</td>
+                        <td>
+                            {% if room.users > 0 %}
+                            <b>User is waiting</b>
+                            {% else %}
+                            User not in room
+                            {% endif %}
+                        </td>
                         <th><a href="/{{room.id}}/expert" data-users="{{room.users}}">Join</a></th>
                     </tr>
                     {% else %}
