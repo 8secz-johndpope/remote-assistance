@@ -89,7 +89,7 @@ app.get('/expert', function (req, res) {
     Object.keys(rooms).forEach(function(id) {
         roomArray.push({
             id,
-            createdMS: rooms[id].created,
+            modified: rooms[id].created,
             created: new Date(rooms[id].created),
             users: Object.keys(rooms[id].users).length
         });
@@ -98,7 +98,10 @@ app.get('/expert', function (req, res) {
     roomArray = roomArray.filter(function(room) {
         return room.users == 1;
     });
-    roomArray.sort((a, b) => b.createdMS-a.createdMS);
+    roomArray.sort((a, b) => b.modified-a.modified);
+    // roomArray = roomArray.filter(function(room) {
+    //     return room.users == 1;
+    // });
     res.render('dashboard.html', { rooms: roomArray });
 });
 

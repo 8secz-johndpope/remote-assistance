@@ -57,6 +57,12 @@ Run
 $ yarn start
 ```
 
+Install and run MySQL and then import the DB configuration
+``` bash
+mysql -u username -p database_name < aceDBConfiguration.sql
+```
+Note that aceDBConfiguration.sql includes only table information whereas aceDBConfigurationWithData.sql includes table and data info.
+
 Connect with browser
 --------------------
 

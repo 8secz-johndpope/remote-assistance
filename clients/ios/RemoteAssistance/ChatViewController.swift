@@ -93,22 +93,19 @@ class ChatViewController: UIViewController {
     }
 
     func launchRA(dict: NSDictionary) {
-        var roomId = "fxpal"
-        
         if let archive = dict["archive"] as? [String:Any] {
             // save conversation archive to user defaults
             UserDefaults.standard.set(archive, forKey: "conversation_archive")
 
             // create room name based on printer
             if let printerName = archive["printerName"] as? String {
-                roomId = "\(printerName.replacingOccurrences(of:" ", with: "-"))-\(generateRandomId())"
+                let roomId = "\(printerName.replacingOccurrences(of:" ", with: "-"))-\(generateRandomId())"
+                // Launch remote assist view controller with room uuid: roomId
+                let action = AceAction.SetRoomName(roomName: roomId)
+                store.ace.dispatch(action)
             }
         }
         
-        // Launch remote assist view controller with room uuid: roomId
-        let action = AceAction.SetRoomName(roomName: roomId)
-        store.ace.dispatch(action)
-
         let vc = AceViewController.instantiate(fromAppStoryboard: .Ace)
         self.navigationController?.pushViewController(vc, animated: true)
     }
