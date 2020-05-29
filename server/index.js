@@ -89,7 +89,7 @@ app.get('/expert', function (req, res) {
     Object.keys(rooms).forEach(function(id) {
         roomArray.push({
             id,
-            modified: rooms[id].created,
+            modified: rooms[id].modified,
             created: new Date(rooms[id].created),
             users: Object.keys(rooms[id].users).length
         });

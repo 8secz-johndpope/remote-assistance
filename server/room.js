@@ -56,7 +56,7 @@ module.exports = function(io) {
                 };
             } else {
                 users = rooms[room].users;
-                rooms[room].modified - Date.now();
+                rooms[room].modified = Date.now();
             }
 
             socket.join(data.room, function() {
