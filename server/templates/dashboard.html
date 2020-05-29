@@ -14,7 +14,7 @@
                 <thead>
                     <tr>
                         <th scope="col">Room Id</th>
-                        <th scope="col">Created</th>
+                        <th scope="col">Last activity</th>
                         <th scope="col">Connect</th>
                     </tr>
                 </thead>
@@ -22,8 +22,8 @@
                     {% for room in rooms %}
                     <tr>
                         <td>{{room.id}}</td>
-                        <td>{{room.created}}</td>
-                        <th><a href="/{{room.id}}/expert" data-useres="{{room.users}}">Join</a></th>
+                        <td>{{room.modified}}</td>
+                        <th><a href="/{{room.id}}/expert" data-users="{{room.users}}">Join</a></th>
                     </tr>
                     {% else %}
                     <tr>
