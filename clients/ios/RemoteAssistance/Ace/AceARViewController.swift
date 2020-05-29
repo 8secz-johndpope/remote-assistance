@@ -81,6 +81,7 @@ class AceARViewController : UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated: true)
 
+        AppUtility.lockOrientation(.landscape, andRotateTo: .landscapeRight)
         super.viewWillAppear(animated)
         self.setupAR()
         self.wrtc?.connect()
@@ -90,6 +91,7 @@ class AceARViewController : UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
+        AppUtility.lockOrientation(.all)
         rectangleNodes.forEach({ $1.removeFromParentNode() })
         rectangleNodes.removeAll()
         
