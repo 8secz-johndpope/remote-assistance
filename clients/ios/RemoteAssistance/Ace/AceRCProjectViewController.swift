@@ -53,18 +53,18 @@ class AceRCProjectViewController : UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+        super.viewWillAppear(animated)
+        AppUtility.lockOrientation(.landscape, andRotateTo: .landscapeRight)
         arView.session.run(configuration, options: [])
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        self.delegate?.aceRCProjectViewControllerResponse(text: "")
-        super.viewWillDisappear(animated)
         arView.session.pause()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        AppUtility.lockOrientation(.all)
         self.delegate?.aceRCProjectViewControllerResponse(text: "")
     }
         

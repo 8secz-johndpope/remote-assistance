@@ -106,7 +106,6 @@ class ChatViewController: UIViewController {
             }
         }
         
-
         let vc = AceViewController.instantiate(fromAppStoryboard: .Ace)
         self.navigationController?.pushViewController(vc, animated: true)
     }
