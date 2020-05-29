@@ -94,9 +94,9 @@ app.get('/expert', function (req, res) {
         });
     });
     // look for rooms with only 1 users
-    roomArray = roomArray.filter(function(room) {
-        return room.users == 1;
-    });
+    // roomArray = roomArray.filter(function(room) {
+    //     return room.users == 1;
+    // });
     res.render('dashboard.html', { rooms: roomArray });
 });
 
