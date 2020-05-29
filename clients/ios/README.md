@@ -19,3 +19,5 @@ How to build & run the app
    ```
 6. Select your iOS device in Xcode
 7. Click build and run
+8. Click "Development Tools" to set your room name. We advise that you set a room name for each demonstration site (e.g., room names could be, "FXA", "FXJP", "FXSING" etc.).
+9. Click "Back" and then "Digital Companion" to get started.

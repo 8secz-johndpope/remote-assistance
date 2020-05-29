@@ -51,10 +51,12 @@ module.exports = function(io) {
                 rooms[room] = {
                     id: room,
                     created: Date.now(),
+                    modified: Date.now(),
                     users
                 };
             } else {
                 users = rooms[room].users;
+                rooms[room].modified = Date.now();
             }
 
             socket.join(data.room, function() {

@@ -13,8 +13,9 @@
             <table class="table table-striped table-hover table-bordered mt-5">
                 <thead>
                     <tr>
-                        <th scope="col">Room Id</th>
-                        <th scope="col">Created</th>
+                        <th scope="col">Room ID</th>
+                        <th scope="col">Last activity</th>
+                        <th scope="col">User status</th>
                         <th scope="col">Connect</th>
                     </tr>
                 </thead>
@@ -22,12 +23,19 @@
                     {% for room in rooms %}
                     <tr>
                         <td>{{room.id}}</td>
-                        <td>{{room.created}}</td>
-                        <th><a href="/{{room.id}}/expert" data-useres="{{room.users}}">Join</a></th>
+                        <td>{{room.modified}}</td>
+                        <td>
+                            {% if room.users %}
+                            <b>User is waiting</b>
+                            {% else %}
+                            User not in room
+                            {% endif %}
+                        </td>
+                        <th><a href="/{{room.id}}/expert" data-users="{{room.users}}">Join</a></th>
                     </tr>
                     {% else %}
                     <tr>
-                        <td colspan="3">
+                        <td colspan="4">
                             <div class="m-5 text-center">
                                 No customers need help right now.
                             </div>
